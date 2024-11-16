@@ -1,1 +1,3 @@
 # grh_solutions
+- Nuestro Software tiene como objetivo la Gestión de Recursos Humanos para Disolin, con el fin de optimizar y automatizar sus procesos internos. ya que enfrenta la necesidad de evitar problemas como la pérdida de documentos, demoras en la contratación y dificultades en la gestión de horarios y actividades, lo que afecta la productividad y la eficiencia operativa.
+El software centralizará la información de empleados, gestionará vacantes, solicitudes, horarios y contratos, y generará reportes analíticos. Esto mejorará la eficiencia, reducirá los errores y facilitará la toma de decisiones en tiempo real, permitiendo a Disolin gestionar sus recursos humanos de manera más ágil, precisa y organizada.
