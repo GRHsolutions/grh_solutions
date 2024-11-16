@@ -16,4 +16,9 @@
 # Herramientas a trabajar
  - node.js para back (mongoDB)
  - react (typescrpit) para front
-
+# Arrancar proyecto
+- hacer pull de archivos
+Si no tienen node instalar node v20.18 link de instalacion
+en .cient y .server, en ambas carpets usar en powershell el comando 'npm i', esto para instalar las dependencias necesarias
+Investigar comandos git.
+Ejecutar el siguiente comando en la terminal de git bash 'bash run-proyect1.sh'(en la carpeta principal donde esta la carpeta test.client y test.server), esto ejecutara ambos proyectos al mismo tiempo, abriendo dos terminales de powershell nuevas, click si no tiene instalado git bash.
