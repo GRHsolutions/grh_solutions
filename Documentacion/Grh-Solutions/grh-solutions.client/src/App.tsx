@@ -6,7 +6,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Main name="hola"/> }/>
+        <Route path="/" element={<Main name="hola papa yiyi"/> }/>
       </Routes>
     </Router>
   );
