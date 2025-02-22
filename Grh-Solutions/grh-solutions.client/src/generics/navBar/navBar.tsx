@@ -32,7 +32,7 @@ export const NavBar: React.FC = () => {
     setSearch(newValue);
   }
 
-  return (
+  return (   
     <>
       <nav className={Styles.navbar}>
         <div className={Styles.left} >
