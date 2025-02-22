@@ -1,4 +1,4 @@
-import { SideBar } from "../generics/sidebar/sideBar"
+
 import style from './main.module.scss';
 import { NavBar } from "../generics/navBar/navBar";
 
@@ -12,10 +12,9 @@ export const Main = ({
     return(
         <>
         <div className={style.main}>
-        <NavBar />
+        <NavBar/>
         </div>
-        <div className={style.main}>
-            <SideBar />
+        <div className={style.main}>          
             {name}
         </div>
         </>

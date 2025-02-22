@@ -4,7 +4,7 @@ import Styles from "./sideBar.module.scss";
 import { Backdrop, Button, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useRenderedItems } from "./renderedItems";
-import AlignHorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeft';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export const SideBar: React.FC = () => {
     const [collapse, setCollapse] = React.useState(false);
@@ -12,8 +12,8 @@ export const SideBar: React.FC = () => {
 
     return (
         <>
-            <Button variant="contained" onClick={() => setCollapse(true)} >
-                <AlignHorizontalLeftIcon></AlignHorizontalLeftIcon>
+            <Button variant="text" onClick={() => setCollapse(true)} >
+                <MenuIcon fontSize="large" sx={{color: "blue"}}/>
             </Button>
 
             <Backdrop
