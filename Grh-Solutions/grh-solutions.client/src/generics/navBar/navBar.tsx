@@ -9,9 +9,11 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar, Box } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import SearchBar from "../SearchBar/search";
+import { useParametros } from "../../contexts/useParamether.provider";
 
 export const NavBar: React.FC = () => {
-  const [switchValue, setSwitchValue] = React.useState(false);
+  const { parametros, toggleTheme } = useParametros();
+  const [switchValue, setSwitchValue] = React.useState(parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -76,7 +78,7 @@ export const NavBar: React.FC = () => {
                     <PersonIcon sx={{ marginRight: "20px" }} />
                     <label>Informacion de perfil</label>
                   </MenuItem>
-                  <MenuItem sx={{ display: "flex", alignItems: "center" }} onClick={() => setSwitchValue(!switchValue)}>
+                  <MenuItem sx={{ display: "flex", alignItems: "center" }} onClick={toggleTheme}>
                     <MUIswitch value={switchValue} onChange={() => setSwitchValue(!switchValue)} />
                     <label>modo oscuro</label>
                   </MenuItem>
