@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useRef } from "react";
@@ -19,7 +19,8 @@ export default function Register({  }: RegisterProps) {
   const mailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const confirmPassRef = useRef<HTMLInputElement>(null);
-
+  const theme = useTheme();
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const correo = mailRef.current?.value;
@@ -41,6 +42,8 @@ export default function Register({  }: RegisterProps) {
         gap: "1.5rem",
         margin: "0 auto",
         padding: { xs: "16px", sm: "24px" }, // Padding responsivo
+        fontFamily: theme.typography.fontFamily,
+        color: theme.palette.text.primary
       }}
     >
       <Typography

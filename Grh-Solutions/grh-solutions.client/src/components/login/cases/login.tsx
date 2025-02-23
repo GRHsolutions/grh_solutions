@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useRef } from "react";
@@ -18,6 +18,7 @@ const styles = {
 export default function Login({ onRegister }: LoginProps) {
   const correoRef = useRef<HTMLInputElement>(null);
   const contraseñaRef = useRef<HTMLInputElement>(null);
+  const theme = useTheme();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +39,8 @@ export default function Login({ onRegister }: LoginProps) {
         gap: "1.5rem",
         margin: "0 auto",
         padding: { xs: "16px", sm: "24px" }, // Padding responsivo
+        fontFamily: theme.typography.fontFamily,
+        color: theme.palette.text.primary
       }}
     >
       <Typography

@@ -1,4 +1,4 @@
-import { Box, IconButton, Modal } from "@mui/material";
+import { Box, IconButton, Modal, useTheme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { SideItems } from "./SideItems";
 import React from "react";
@@ -32,6 +32,7 @@ type Tabs = "register" | "login";
 
 export const ModalComp = ({ open, onClose }: ModalCompProps) => {
   const [actual, setActual] = React.useState<Tabs>("login");
+  const theme = useTheme();
 
   const useActual = () => {
     switch (actual) {
@@ -65,7 +66,7 @@ export const ModalComp = ({ open, onClose }: ModalCompProps) => {
             width: { xs: "100%", sm: "30%" }, // Ajuste de ancho responsivo
             height: { xs: "auto", sm: "100%" },
             borderRight: { xs: "none", sm: "1px solid #ddd" },
-            backgroundColor: "#f5f5f5",
+            backgroundColor: theme.palette.background.paper,
             padding: { xs: "16px", sm: "24px" }, // Padding responsivo
           }}
         >
