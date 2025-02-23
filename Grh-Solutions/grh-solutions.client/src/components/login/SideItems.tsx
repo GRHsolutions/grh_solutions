@@ -1,7 +1,7 @@
 import React from "react";
 import RegisterIcon from "@mui/icons-material/HowToReg";
 import LoginIcon from "@mui/icons-material/Login";
-import { Box, SxProps, Typography } from "@mui/material";
+import { Box, SxProps, Typography, useTheme } from "@mui/material";
 
 type Tabs = "register" | "login";
 
@@ -31,10 +31,13 @@ const items: Item[] = [
 
 
 export const SideItems = ({ actual, onSelect }: SideItemsProps) => {
+  const theme = useTheme();
   const styles = {
     aside: {
       position: "relative",
-      padding: "16px",
+      padding: "16px",        
+      fontFamily: theme.typography.fontFamily,
+      color: theme.palette.text.primary
     } as React.CSSProperties,
     title: {
       display: "flex",
@@ -55,12 +58,11 @@ export const SideItems = ({ actual, onSelect }: SideItemsProps) => {
       transition: "background-color 0.3s ease",
       textAlign: "center",
       "&:hover": {
-        backgroundColor: "#e0e0e0", // Efecto hover
+        backgroundColor: "red", // Efecto hover
       },
     } as React.CSSProperties,
     activeItem: {
-      backgroundColor: "#6200ea",
-      color: "#fff",
+      backgroundColor: theme.palette.action.hover,
       fontWeight: "bold",
     } as React.CSSProperties,
     icon: {

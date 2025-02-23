@@ -53,10 +53,6 @@ export const ModalComp = ({ open, onClose }: ModalCompProps) => {
             top: 8,
             right: 8,
             zIndex: 1,
-            backgroundColor: "rgba(255, 255, 255, 0.8)",
-            "&:hover": {
-              backgroundColor: "rgba(255, 255, 255, 1)",
-            },
           }}
         >
           <CloseIcon />
