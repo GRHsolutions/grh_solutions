@@ -1,5 +1,4 @@
 import React from "react";
-import Styles from "./navBar.module.scss";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { SideBar } from "../sidebar/sideBar";
@@ -10,6 +9,7 @@ import { Avatar, Box } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import SearchBar from "../SearchBar/search";
 import { useParametros } from "../../contexts/useParamether.provider";
+import { NavBarStyles } from "./navBar.styles";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
@@ -17,9 +17,11 @@ export const NavBar: React.FC = () => {
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  const handleSearchSubmit=() => {
+  const Styles = NavBarStyles();
+  const handleSearchSubmit = () => {
+    if (search == "") return;
     console.log(search)
+    setSearch("");
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,16 +36,20 @@ export const NavBar: React.FC = () => {
     setSearch(newValue);
   }
 
-  return (   
+  return (
     <>
-      <nav className={Styles.navbar}>
-        <div className={Styles.left} >
+      <nav style={Styles.navBar}>
+        <div style={Styles.left} >
           <SideBar />
           <h2>GRH Solutions</h2>
         </div>
-        <div className={Styles.right}>
-          <div className={Styles.search}>
-            <SearchBar value={search} onChange={handleSearchChange} onSubmit={handleSearchSubmit}/>
+        <div style={Styles.right}>
+          <div style={Styles.search}>
+            <SearchBar
+              value={search}
+              onChange={handleSearchChange}
+              onSubmit={handleSearchSubmit}
+            />
             <div>
               <Box
                 id="demo-positioned-button"
@@ -52,11 +58,18 @@ export const NavBar: React.FC = () => {
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
               >
-                <Avatar sx={{ marginTop:"5px",marginLeft:"10px", bgcolor: deepPurple[500] }}>OP</Avatar>
+                <Avatar
+                  sx={{
+                    marginTop: "5px",
+                    marginLeft: "10px",
+                    bgcolor: deepPurple[500]
+                  }}
+                >
+                  OP
+                </Avatar>
               </Box>
               <Menu
                 id="demo-positioned-menu"
-                aria-labelledby="demo-positioned-button"
                 anchorEl={anchorEl}
                 open={open}
                 onClose={handleClose}
@@ -72,7 +85,7 @@ export const NavBar: React.FC = () => {
                   top: 52
                 }}
               >
-                <div className={Styles.menu}>
+                <div style={Styles.menu}>
                   <label>Opciones</label>
                   <MenuItem sx={{ marginTop: "10px", }}>
                     <PersonIcon sx={{ marginRight: "20px" }} />

@@ -31,7 +31,7 @@ export default function SearchBar({
         inputProps={{ "aria-label": "search google maps" }}
       />
       <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-      <IconButton type="button" sx={{ p: "5px" }} aria-label="search">
+      <IconButton type="button" sx={{ p: "5px" }} aria-label="search" onClick={onSubmit}>
         <SearchIcon />
       </IconButton>
     </Paper>
