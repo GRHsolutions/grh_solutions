@@ -1,14 +1,16 @@
 .navbar {
-    height: 7vh;
+    height: 48px;
     display: flex;
     align-items: center; 
     justify-content: space-between; 
-    background-color: #d1d2d4;
+    background-color: #002761;
     padding: 10px ;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    border-bottom: #ffffff;
+    border: 10px;
 }
 .right{
     display: flex;
