@@ -26,6 +26,7 @@ export const NavBarStyles = () => {
             width: "100%",
             borderBottom: "#ffffff",
             border: "10px",
+            zIndex: 500
         },
         right: {
             display: "flex",

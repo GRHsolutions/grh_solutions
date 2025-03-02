@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const usuarioSchema = new Schema({
-  nombre: {
+  primerNombre: {
     type: String,
     required: true,
   },

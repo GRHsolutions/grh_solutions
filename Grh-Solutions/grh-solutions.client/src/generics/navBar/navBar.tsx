@@ -18,9 +18,9 @@ export const NavBar: React.FC = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const Styles = NavBarStyles();
+  
   const handleSearchSubmit = () => {
     if (search == "") return;
-    console.log(search)
     setSearch("");
   };
 

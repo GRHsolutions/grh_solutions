@@ -55,23 +55,4 @@ export const userController = {
       });
     }
   },
-
-  login: async (req: Request, res: Response) => {
-    try {
-      const { correo, contraseña } = req.body
-
-      if (!correo || !contraseña) {
-        return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-      }
-
-      const { user, token } = await userService.login(correo, contraseña);
-
-      // Respondemos con el usuario y el token
-      return res.status(200).json({ user, token });
-    } catch (error: any) {
-      return res.status(400).json({
-        message: error.message,
-      });
-    }
-  },
 };
