@@ -1,7 +1,6 @@
 import React from "react";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { SideBar } from "../sidebar/sideBar";
 import PersonIcon from '@mui/icons-material/Person';
 import MUIswitch from "../switch/MUIswitch";
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -10,6 +9,8 @@ import { deepPurple } from "@mui/material/colors";
 import SearchBar from "../SearchBar/search";
 import { useParametros } from "../../contexts/useParamether.provider";
 import { NavBarStyles } from "./navBar.styles";
+import { SideBar2 } from "../sidebar2/sideBar";
+import { SideBar } from "../sidebar/sideBar";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
@@ -41,6 +42,7 @@ export const NavBar: React.FC = () => {
       <nav style={Styles.navBar}>
         <div style={Styles.left} >
           <SideBar />
+          <SideBar2 />
           <h2>GRH Solutions</h2>
         </div>
         <div style={Styles.right}>
