@@ -3,13 +3,14 @@ import { darkTheme, lightTheme } from "./theme/theme";
 import { useParametros } from "./contexts/useParamether.provider";
 import { Suspense } from "react";
 import { useRoutes } from "react-router-dom";
-import { AppRoutes } from "./routes/routes";
 import { NavBar } from "./generics/navBar/navBar";
+import { AppRoutes } from "./routes/routes";
 
 function App() {
   const { parametros } = useParametros();
   const theme = parametros.dark;
-  const routes = useRoutes(AppRoutes);
+  const unt = AppRoutes();
+  const routes = useRoutes(unt);
 
   return (
     <ThemeProvider theme={theme ? lightTheme : darkTheme}>

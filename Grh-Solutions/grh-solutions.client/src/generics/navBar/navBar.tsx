@@ -10,7 +10,7 @@ import SearchBar from "../SearchBar/search";
 import { useParametros } from "../../contexts/useParamether.provider";
 import { NavBarStyles } from "./navBar.styles";
 import { SideBar2 } from "../sidebar2/sideBar";
-import { SideBar } from "../sidebar/sideBar";
+//import { SideBar } from "../sidebar/sideBar";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
@@ -41,7 +41,7 @@ export const NavBar: React.FC = () => {
     <>
       <nav style={Styles.navBar}>
         <div style={Styles.left} >
-          <SideBar />
+          {/* <SideBar /> */}
           <SideBar2 />
           <h2>GRH Solutions</h2>
         </div>

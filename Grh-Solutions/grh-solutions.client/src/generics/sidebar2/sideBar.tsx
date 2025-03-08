@@ -40,7 +40,7 @@ export const SideBar2: React.FC = () => {
         onClick={() => setCollapse(false)}
         sx={{ 
           zIndex: 150, 
-          backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo más oscuro
+          backgroundColor: "transparent", // Fondo más oscuro
         }}
       >
         <Box
@@ -53,7 +53,7 @@ export const SideBar2: React.FC = () => {
 
 
           <Box sx={styles.header}>
-            <Typography variant="h6">Modulos</Typography>
+            <Typography variant="h6">Grh Solutions</Typography>
             <IconButton sx={styles.closeButton} onClick={() => setCollapse(false)}>
               <CloseIcon />
             </IconButton>
