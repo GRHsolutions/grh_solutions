@@ -1,14 +1,16 @@
-import { lazy } from 'react';
-import { RouteObject } from 'react-router-dom';
-import useSuspenseLoader from '../hooks/suspenseLoader';
-import { Box } from '@mui/material';
-//proveedor
-const Homepage = lazy(() => import('./../pages/main'));
+import { lazy } from "react";
+import { RouteObject } from "react-router-dom";
+import { CompoRender } from "./CompoRender";
+//componentes usando lazy para la carga mas rapida de la pagina
+const Homepage = lazy(() => import("../pages/home/Home"));
 
 // Rutas de la aplicaci�n
-export const AppRoutes: RouteObject[] = [
+
+export const AppRoutes = (): RouteObject[] => {
+  return [
     {
-        path: "/", 
-        element: <Box mt={'5rem'}>{useSuspenseLoader(Homepage)}</Box>, // box con margin top a 5rem para mostrar bien el componente generado papa yiyi
+      path: "/",
+      element: <>{CompoRender({ element: Homepage })}</>, // box con margin top a 5rem para mostrar bien el componente generado papa yiyi
     },
-];
+  ];
+};
