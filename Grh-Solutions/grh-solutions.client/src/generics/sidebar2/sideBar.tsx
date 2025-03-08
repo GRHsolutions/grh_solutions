@@ -1,119 +1,125 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Backdrop, Button, Container, IconButton } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
+import { Backdrop, Box, Button, IconButton, Typography } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useRenderedItems } from "./renderedItems";
 import MenuIcon from "@mui/icons-material/Menu";
-import { SideBarStyles } from "./sideBar.styles";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { useRenderedItems } from "./renderedItems";
+import { useStyles } from "./sideBar.styles";
 
 export const SideBar2: React.FC = () => {
-  const Styles = SideBarStyles(); // Usamos los estilos desde NavBarStyles
+  const styles = useStyles();
   const [collapse, setCollapse] = React.useState(false);
   const [openSubmenus, setOpenSubmenus] = React.useState<{ [key: string]: boolean }>({});
-  const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
-  const [selectedSubItem, setSelectedSubItem] = React.useState<string | null>(null);
   const { items } = useRenderedItems();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    const activeItem = items.find((item) => item.active);
+    if (activeItem && activeItem.subItems) {
+      setOpenSubmenus((prev) => ({ ...prev, [activeItem.to]: true }));
+    }
+  }, [items, location.pathname]);
 
   const toggleSubmenu = (to: string) => {
     setOpenSubmenus((prev) => ({ ...prev, [to]: !prev[to] }));
   };
 
+  const handleItemClick = () => {
+    setCollapse(false);
+  };
+
   return (
     <>
       <Button variant="text" onClick={() => setCollapse(!collapse)}>
-        <MenuIcon fontSize="large" sx={{ color: "white" }} />
+        <MenuIcon fontSize="large" sx={styles.menuIcon} />
       </Button>
 
       <Backdrop
         open={collapse}
         onClick={() => setCollapse(false)}
-        sx={{ zIndex: 150, backgroundColor: "rgba(0, 0, 0, 0.25)" }}
+        sx={{ 
+          zIndex: 150, 
+          backgroundColor: "rgba(0, 0, 0, 0.5)", // Fondo más oscuro
+        }}
       >
-        <aside
-          style={{ ...Styles.sidebar, left: collapse ? '0' : '-250px' }} // Usamos el estado para aplicar la transición
+        <Box
+          sx={{
+            ...styles.sidebar,
+            left: collapse ? "0" : "-280px",
+          }}
           onClick={(e) => e.stopPropagation()}
         >
-          <IconButton style={Styles.closeButton} onClick={() => setCollapse(false)}>
-            <CloseIcon />
-          </IconButton>
 
-          <div style={Styles.logo}>
-            <h2>GRH Solutions</h2>
-          </div>
 
-          <nav style={Styles.nav}>
-            <ul>
-              {items.map((item) =>
-                item.visible ? (
-                  <li key={item.to}>
-                    {item.subItems && item.subItems.length > 0 ? (
-                      <Container
-                        onClick={() => {
-                          toggleSubmenu(item.to);
-                          setSelectedItem(item.to);
-                        }}
+          <Box sx={styles.header}>
+            <Typography variant="h6">Modulos</Typography>
+            <IconButton sx={styles.closeButton} onClick={() => setCollapse(false)}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+
+          <Box sx={styles.nav}>
+            {items.map((item) =>
+              item.visible ? (
+                <Box key={item.to}>
+                  {item.subItems && item.subItems.length > 0 ? (
+                    <Box
+                      onClick={() => toggleSubmenu(item.to)}
+                      sx={{
+                        ...styles.menuItem,
+                        ...(item.active && styles.active),
+                      }}
+                    >
+                      <Box>{item.icon}</Box>
+                      <Typography>{item.label}</Typography>
+                      <Box
                         sx={{
-                          ...Styles.menuItem,
-                          ...(selectedItem === item.to ? Styles.active : undefined),
+                          ...styles.arrow,
+                          ...(openSubmenus[item.to] && styles.activateArrow),
                         }}
                       >
-                        <div style={Styles.icons}>
-                          {item.icon}
-                          {item.label}
-                          <div
-                            style={{
-                              ...Styles.arrow,
-                              ...(selectedItem === item.to ? Styles.activateArrow : {}),
-                            }}
-                          >
-                            <KeyboardArrowRightIcon />
-                          </div>
-                        </div>
-                      </Container>
-                    ) : (
-                      <Link
-                        to={item.to}
-                        style={{
-                          ...Styles.link,
-                          ...(selectedItem === item.to ? Styles.active : {}),
-                        }}
-                        onClick={() => setSelectedItem(item.to)}
-                      >
-                        <div style={Styles.icons}>
-                          {item.icon}
-                          {item.label}
-                        </div>
-                      </Link>
-                    )}
-                    {item.subItems && openSubmenus[item.to] && (
-                      <ul style={Styles.subMenu}>
-                        {item.subItems.map((subItem) => (
-                          <li key={subItem.to}>
-                            <Link
-                              to={subItem.to}
-                              onClick={() => setSelectedSubItem(subItem.to)}
-                              style={{
-                                ...Styles.linkSubMenu,
-                                ...(selectedSubItem === subItem.to ? Styles.active : {}),
-                              }}
-                            >
-                              {subItem.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ) : null
-              )}
-            </ul>
-          </nav>
+                        <KeyboardArrowRightIcon />
+                      </Box>
+                    </Box>
+                  ) : (
+                    <Box
+                      component={Link}
+                      to={item.to}
+                      sx={{
+                        ...styles.link,
+                        ...(item.active && styles.active),
+                      }}
+                      onClick={handleItemClick}
+                    >
+                      <Box>{item.icon}</Box>
+                      <Typography>{item.label}</Typography>
+                    </Box>
+                  )}
 
-          <div style={Styles.footer}>
-            <p>© 2023 Mi App</p>
-          </div>
-        </aside>
+                  {item.subItems && openSubmenus[item.to] && (
+                    <Box sx={styles.subMenu}>
+                      {item.subItems.map((subItem) => (
+                        <Box
+                          key={subItem.to}
+                          component={Link}
+                          to={subItem.to}
+                          sx={{
+                            ...styles.linkSubMenu,
+                            ...(subItem.active && styles.active),
+                          }}
+                          onClick={handleItemClick}
+                        >
+                          <Typography>{subItem.label}</Typography>
+                        </Box>
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              ) : null
+            )}
+          </Box>
+        </Box>
       </Backdrop>
     </>
   );
