@@ -23,4 +23,4 @@ en .cient y .server, en ambas carpets usar en powershell el comando 'npm i', est
 Investigar comandos git.
 # IMPORTANTE PARA EJECUCIONES RAPIDAS 
 1. Ejecutar el siguiente comando en la terminal de git bash 'bash execute.sh'(en la carpeta principal donde esta la carpeta test.client y test.server), esto ejecutara ambos proyectos al mismo tiempo, abriendo dos terminales de powershell nuevas, <a href="https://git-scm.com/downloads">click</a> si no tiene instalado git bash.
-2. Ejecutar el siguiente comando en la terminal de git bash 'bash install.sh'(en la carpeta principal donde esta la carpeta test.client y test.server), esto ejecutara el comando npm i en ambas carpetas instalando las dependencias para que ambas funcionen correoctamente.
+2. Ejecutar el siguiente comando en la terminal de git bash 'bash install.sh'(en la carpeta principal donde esta la carpeta test.client y test.server), esto ejecutara el comando npm i en ambas carpetas instalando las dependencias para que ambas funcionen correoctamente, <a href="https://git-scm.com/downloads">click</a> si no tiene instalado git bash.
