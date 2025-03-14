@@ -11,8 +11,11 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
   return (
     <Container
       sx={{
-        border: "1px solid black",
         paddingTop: "15px",
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px',
+        overflowY: 'auto'
       }}
     >
       {birthdays.map((birthday: Birthday) => (
@@ -22,14 +25,16 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
           key={birthday.id} 
           spacing={7}
           alignItems={"center"}
+          border={'1px solid black'}
+          padding={'3px'}
         >
           <Grid2 size={3}>
             <Box
               sx={{
                 borderRadius: "50%",
                 overflow: "hidden",
-                width: "50px",
-                height: "50px",
+                width: "42px",
+                height: "42px",
               }}
             >
               <img
