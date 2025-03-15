@@ -29,9 +29,9 @@ export const useRenderedItems = (): Returnable => {
     const allItems: Item[] = [
       {
         visible: true,
-        to: "/",
+        to: "/home",
         disabled: false,
-        active: location.pathname === "/",
+        active: location.pathname === "/home",
         label: "Home",
         icon: <HomeIcon />,
       },
