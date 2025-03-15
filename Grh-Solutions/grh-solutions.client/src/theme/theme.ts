@@ -5,11 +5,13 @@ declare module "@mui/material/styles" {
   interface PaletteColor {
     hover?: string;
     divider?: string;
+    father?: string;
   }
 
   interface SimplePaletteColorOptions {
     hover?: string;
     divider?: string;
+    father?: string;
   }
 
   interface Palette {
@@ -55,6 +57,8 @@ const lightTheme = createTheme({
       contrastText: "#0f0f0f",
       dark: "#0056b3",
       light: "#66B2FF",
+      // colores principales
+      father: "#fff",
       hover: "#0056b3",
       divider: "rgba(0, 0, 0, 0.1)",
     },
@@ -120,7 +124,9 @@ const darkTheme = createTheme({
       dark: "#004C99",
       light: "#3388FF",
       hover: "#282828", // un oscuro que funciona para el hover
-      divider: "rgba(255, 255, 255, 0.2)"
+      divider: "rgba(255, 255, 255, 0.2)",
+      // colores principales
+      father: "#212121"
     },
     secondary: {
       main: "#212121", // Oscuro mas tenue

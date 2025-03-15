@@ -10,24 +10,20 @@ import SearchBar from "../SearchBar/search";
 import { useParametros } from "../../contexts/useParamether.provider";
 import { NavBarStyles } from "./navBar.styles";
 import { SideBar2 } from "../sidebar2/sideBar";
-import { localStorageUtil } from "../../utils/localStorage";
 //import { SideBar } from "../sidebar/sideBar";
 import { useNavigate } from "react-router-dom"
 import { RendererModl } from "../../components/login/RendererModl"
+import { useAuth } from "../../hooks/auth";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
   const [switchValue, setSwitchValue] = React.useState(parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [autenticate, setAutenticate] = React.useState(false);
   const open = Boolean(anchorEl);
   const Styles = NavBarStyles();
-  const navigate = useNavigate()
-  React.useEffect(() => {
-    const IsAuteticate = localStorageUtil.get("usr_items_token")
-    setAutenticate(IsAuteticate ? true : false)
-  }, [])
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   const handleSearchSubmit = () => {
     if (search == "") return;
@@ -53,13 +49,12 @@ export const NavBar: React.FC = () => {
     <>
       <nav style={Styles.navBar}>
         <div style={Styles.left} >
-          {/* <SideBar /> */}
           <SideBar2 />
           <h2>GRH Solutions</h2>
         </div>
         <div style={Styles.right}>
           <div style={Styles.search}>
-            {autenticate
+            {!isLoggedIn
               && <>
                 <SearchBar
                   value={search}
@@ -119,7 +114,7 @@ export const NavBar: React.FC = () => {
                   </Menu>
                 </div></>
             }
-            {!autenticate &&
+            {!isLoggedIn &&
               <div>
                 <Button
                   variant="contained"

@@ -70,6 +70,7 @@ export const SideBar2: React.FC = () => {
                 <Box key={item.to}>
                   <Button
                     onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                       item.subItems ?( toggleSubmenu(item.to, false)) : (navigate(item.to), handleItemClick())
                     }}
                     disabled={item.disabled}

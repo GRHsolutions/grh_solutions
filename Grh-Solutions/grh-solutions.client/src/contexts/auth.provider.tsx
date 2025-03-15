@@ -1,7 +1,6 @@
 import React from "react";
 import { localStorageUtil } from "../utils/localStorage";
 
-// Definición de tipos
 interface Auth {
   token: string | null;
   usrName: string | null;
@@ -13,31 +12,26 @@ interface AuthContextType {
   auth: Auth;
   login: (token: string, usrName: string, photo?: string, correo?: string) => void;
   logout: () => void;
+  isLoggedIn: boolean;
 }
 
-// Creación del contexto
 export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
-// Proveedor del contexto
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [auth, setAuth] = React.useState<Auth>({
     token: localStorageUtil.get("usr_items_token"),
     usrName: localStorageUtil.get("usr_items_usrName"),
-    photo: localStorageUtil.get("usr_items_photo"), // Corregí el nombre aquí
+    photo: localStorageUtil.get("usr_items_photo"),
     correo: localStorageUtil.get("usr_items_correo"),
   });
 
-  React.useEffect(() => {
-    // Sincroniza cambios en localStorage con el estado
-    setAuth({
-      token: localStorageUtil.get("usr_items_token"),
-      usrName: localStorageUtil.get("usr_items_usrName"),
-      photo: localStorageUtil.get("usr_items_photo"),
-      correo: localStorageUtil.get("usr_items_correo"),
-    });
-  }, []);
+  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
 
-  // Función de inicio de sesión
+  React.useEffect(() => {
+    const token = localStorageUtil.get("usr_items_token");
+    setIsLoggedIn(token !== null); 
+  }, []); 
+
   const login = (token: string, usrName: string, photo?: string, correo?: string) => {
     const newAuth = { token, usrName, photo: photo || null, correo: correo || null };
     setAuth(newAuth);
@@ -45,16 +39,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorageUtil.set("usr_items_usrName", usrName);
     if (photo) localStorageUtil.set("usr_items_photo", photo);
     if (correo) localStorageUtil.set("usr_items_correo", correo);
+    setIsLoggedIn(true); 
   };
 
-  // Función de cierre de sesión
   const logout = () => {
     localStorageUtil.clear();
     setAuth({ token: null, usrName: null, photo: null, correo: null });
+    setIsLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
+    <AuthContext.Provider value={{ auth, login, logout, isLoggedIn }}>
       {children}
     </AuthContext.Provider>
   );

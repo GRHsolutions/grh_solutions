@@ -7,6 +7,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DescriptionIcon from '@mui/icons-material/Description';
 import EngineeringIcon from '@mui/icons-material/Engineering';
+import { useAuth } from "../../hooks/auth";
 
 export interface Item {
   visible: boolean;
@@ -24,19 +25,20 @@ export interface Returnable {
 
 export const useRenderedItems = (): Returnable => {
   const location = useLocation();
+  const { isLoggedIn } = useAuth();
 
   const items = useMemo(() => {
     const allItems: Item[] = [
       {
         visible: true,
-        to: "/home",
+        to: "/",
         disabled: false,
-        active: location.pathname === "/home",
+        active: location.pathname === "/",
         label: "Home",
         icon: <HomeIcon />,
       },
       {
-        visible: true,
+        visible: isLoggedIn,
         to: "/comunicados",
         disabled: false,
         active: location.pathname === "/comunicados",
@@ -44,7 +46,7 @@ export const useRenderedItems = (): Returnable => {
         icon: <MailIcon />,
       },
       {
-        visible: true,
+        visible: isLoggedIn,
         to: '/solicitudes',
         disabled: false,
         active: location.pathname === "/solicitudes",
@@ -80,7 +82,7 @@ export const useRenderedItems = (): Returnable => {
       //   icon: <MailIcon />,
       // },
       {
-        visible: true,
+        visible: isLoggedIn,
         to: "/horarios",
         disabled: false,
         active: location.pathname === "/horarios",
@@ -111,7 +113,7 @@ export const useRenderedItems = (): Returnable => {
         ],
       },
       {
-        visible: true,
+        visible: isLoggedIn,
         to: "/vacantes",
         disabled: false,
         active: location.pathname === "/vacantes",
@@ -149,7 +151,7 @@ export const useRenderedItems = (): Returnable => {
         ],
         },
       {
-        visible: true,
+        visible: isLoggedIn,
         to: "/contratos",
         disabled: false,
         active: location.pathname === "/contratos",
@@ -201,7 +203,7 @@ export const useRenderedItems = (): Returnable => {
         ],
       },
       {
-        visible: true,
+        visible: isLoggedIn,
         to: "/empleados",
         disabled: false,
         active: location.pathname === "/empleados",
@@ -227,7 +229,7 @@ export const useRenderedItems = (): Returnable => {
     ];
     
     return allItems;
-  }, [location.pathname]);
+  }, [location.pathname, isLoggedIn]);
 
   return { items };
 };
