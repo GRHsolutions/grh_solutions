@@ -4,10 +4,12 @@ import { createTheme } from "@mui/material/styles";
 declare module "@mui/material/styles" {
   interface PaletteColor {
     hover?: string;
+    divider?: string;
   }
 
   interface SimplePaletteColorOptions {
     hover?: string;
+    divider?: string;
   }
 
   interface Palette {
@@ -45,65 +47,66 @@ declare module "@mui/material/styles" {
   }
 }
 
-// 🎨 Definir temas mejorados con colores más accesibles y contrastados
 const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#0066CC", // Azul más vibrante
-      contrastText: "#FFFFFF",
-      dark: "#004C99",
-      light: "#3388FF",
-      hover: "#004C99",
+      main: "#fff", // Azul más vibrante y accesible
+      contrastText: "#0f0f0f",
+      dark: "#0056b3",
+      light: "#66B2FF",
+      hover: "#0056b3",
+      divider: "rgba(0, 0, 0, 0.1)",
     },
     secondary: {
-      main: "#FF6B6B", // Rojo coral más distintivo
+      main: "rgba(0, 0, 0, 0.25)", // Rojo más llamativo y definido
       contrastText: "#FFFFFF",
-      dark: "#CC5555",
-      light: "#FF8C8C",
-      hover: "#CC5555",
+      dark: "#CC0000",
+      light: "#FF8080",
+      hover: "#CC0000",
+      divider: "rgba(255, 255, 255, 0.3)",
     },
     background: {
-      default: "#F4F5F7", // Suave para mejor lectura
-      paper: "#FFFFFF",
+      default: "#FFFFFF", // Fondo principal blanco
+      paper: "#FAFAFA", // Ligeramente gris para diferenciar secciones
     },
     text: {
-      primary: "#202124", // Negro suave
-      secondary: "#5F6368", // Gris mejor contrastado
-      dark: "#FFFFFF"
+      primary: "#212121", // Negro suave
+      secondary: "#5F6368", // Gris oscuro
+      dark: "#FFFFFF",
     },
     success: {
-      main: "#2DCE89", // Verde más limpio
+      main: "#28A745", // Verde accesible
       contrastText: "#FFFFFF",
-      hover: "#249C6B",
+      hover: "#1E7E34",
     },
     error: {
-      main: "#F56565", // Rojo más llamativo
+      main: "#DC3545", // Rojo definido
       contrastText: "#FFFFFF",
-      hover: "#C53030",
+      hover: "#B02A37",
     },
     warning: {
-      main: "#FF9F43", // Naranja más equilibrado
-      contrastText: "#FFFFFF",
-      hover: "#D67C2C",
+      main: "#FFC107", // Amarillo equilibrado
+      contrastText: "#000000",
+      hover: "#D39E00",
     },
     info: {
       main: "#17A2B8",
       contrastText: "#FFFFFF",
       hover: "#117A8B",
     },
-    divider: "#DADCE0",
+    divider: "#E0E0E0",
     gray: {
-      100: "#F8F9FA",
-      200: "#EDEDED",
-      300: "#DDDDDD",
-      400: "#CCCCCC",
-      500: "#999999",
-      600: "#777777",
-      700: "#555555",
-      800: "#333333",
-      900: "#1A1A1A",
-      1000: '#000000'
+      100: "#F9F9F9",
+      200: "#F2F2F2",
+      300: "#EAEAEA",
+      400: "#DDDDDD",
+      500: "#BDBDBD",
+      600: "#9E9E9E",
+      700: "#757575",
+      800: "#616161",
+      900: "#424242",
+      1000: "#212121",
     },
   },
 });
@@ -112,18 +115,20 @@ const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#64A8E3", // Azul más moderno y vibrante
-      contrastText: "#FFFFFF",
-      dark: "#3F7BB5",
-      light: "#8FC5F7",
-      hover: "#3F7BB5",
+      main: "#0f0f0f", // Oscuro fuerte
+      contrastText: "#f1f1f1", // color del contraste, osea el blanco
+      dark: "#004C99",
+      light: "#3388FF",
+      hover: "#282828", // un oscuro que funciona para el hover
+      divider: "rgba(255, 255, 255, 0.2)"
     },
     secondary: {
-      main: "#FF7E67", // Coral más armonioso
-      contrastText: "#FFFFFF",
-      dark: "#D65D4F",
-      light: "#FFA490",
-      hover: "#D65D4F",
+      main: "#212121", // Oscuro mas tenue
+      contrastText: "#f1f1f1", // color del contraste , osea el blanco
+      dark: "#CC5555",
+      light: "#FF8C8C",
+      hover: "#CC5555",
+      divider: "rgba(255, 255, 255, 0.2)"
     },
     background: {
       default: "#121212",

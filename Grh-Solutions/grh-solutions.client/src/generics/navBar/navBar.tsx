@@ -43,7 +43,7 @@ export const NavBar: React.FC = () => {
         <div style={Styles.left} >
           {/* <SideBar /> */}
           <SideBar2 />
-          <h2>GRH Solutions</h2>
+          <label>GRH Solutions</label>
         </div>
         <div style={Styles.right}>
           <div style={Styles.search}>
