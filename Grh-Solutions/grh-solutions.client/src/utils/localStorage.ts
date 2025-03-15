@@ -33,4 +33,18 @@ export const localStorageUtil = {
         console.error("Error al limpiar localStorage:", error);
       }
     },
+
+    deleteExclude: (sxc: string[]): void => {
+      try {
+        // Recorre todas las claves de localStorage
+        Object.keys(localStorage).forEach((key) => {
+          // Si la clave no está en el arreglo 'sxc', la eliminamos
+          if (!sxc.includes(key)) {
+            localStorage.removeItem(key);
+          }
+        });
+      } catch (error) {
+        console.error("Error al limpiar localStorage:", error);
+      }
+    }
   };

@@ -1,149 +1,85 @@
 .sidebar {
-  background-color: #002761; // Fondo oscuro
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  margin-top: 6vh;
-  height: 100vh;
-  width: 27vh;
-  top: 0;
-  left: -500px; // Inicia fuera de la pantalla
-  transition: left 0.3s ease-in-out;
-  z-index: 200;
+    background-color: #2c3e50; // Fondo oscuro
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    width: 34vh;
+    top: 0;
+    left: -250px; // Inicia fuera de la pantalla
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
+    transition: left 0.3s ease-in-out;
+    z-index: 200;
 
-  &.open {
-    left: 0; // Se desliza hacia adentro
-  }
-
-  &.closed {
-    left: -500px; // Se desliza hacia afuera
-  }
-
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    color: #ecf0f1;
-    z-index: 300;
-  }
-
-  .logo {
-    padding: 20px;
-    text-align: center;
-    background-color: #34495e; // Un tono más oscuro para el logo
-    border-bottom: 1px solid #1abc9c; // Borde inferior con un toque de color
-
-    h2 {
-      margin: 0;
-      color: #1abc9c; // Color llamativo para el texto
-      font-size: 1.5rem;
-      font-weight: bold;
+    &.open {
+        left: 0; // Se desliza hacia adentro
     }
-  }
 
-  .nav {
-    flex: 1;
-    padding: 20px 0;
+    &.closed {
+        left: -250px; // Se desliza hacia afuera
+    }
 
-    ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
+    .closeButton {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        color: #ecf0f1;
+        z-index: 300;
+    }
 
-      li {
-        margin: 10px 0;
+    .logo {
+        padding: 20px;
+        text-align: center;
+        background-color: #34495e; // Un tono más oscuro para el logo
+        border-bottom: 1px solid #1abc9c; // Borde inferior con un toque de color
 
-        .link {
-          display: block;
-          padding: 10px 10px;
-          color: #ecf0f1;
-          text-decoration: none;
-          font-family: Arial;
-          transition: background-color 0.3s ease, color 0.3s ease;
-          border-radius: 5px;
-
-          &:hover {
-            background-color: #01337c;
-            color: #ecf0f1;
-            border-radius: 5px;
-          }
+        h2 {
+            margin: 0;
+            color: #1abc9c; // Color llamativo para el texto
+            font-size: 1.5rem;
+            font-weight: bold;
         }
-      }
     }
-  }
-  .linkSubMenu {
-    display: block;
-    padding: 10px 10px;
-    color: #ecf0f1;
-    text-decoration: none;
-    font-size: 20px;
-    border-radius: 10px;
 
-    &:hover {
-      background-color: #01337c;
-      color: #ecf0f1;
-      border-radius: 5px;
-      font-size: 20px;
+    .nav {
+        flex: 1;
+        padding: 20px 0;
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
+            li {
+                margin: 10px 0;
+
+                a {
+                    display: block;
+                    padding: 10px 20px;
+                    color: #ecf0f1; // Color claro para los enlaces
+                    text-decoration: none;
+                    font-size: 1rem;
+                    transition: background-color 0.3s ease, color 0.3s ease;
+
+                    &:hover {
+                        background-color: #1abc9c; // Fondo verde al pasar el mouse
+                        color: #2c3e50; // Cambia el color del texto al pasar el mouse
+                    }
+                }
+            }
+        }
     }
-  }
 
-  .menuItem {
-    cursor: pointer;
-    padding: 7px;
-    font-family: Arial;
-    transition: all 0.3s ease;
-    padding: 10px, 10px, 10px, 10px;
+    .footer {
+        padding: 10px;
+        text-align: center;
+        background-color: #34495e; // Fondo oscuro para el footer
+        border-top: 1px solid #1abc9c; // Borde superior con un toque de color
 
-    &:hover {
-      background-color: #01337c;
-      color: #ecf0f1;
-      border-radius: 5px;
+        p {
+            margin: 0;
+            color: #ecf0f1; // Color claro para el texto del footer
+            font-size: 0.9rem;
+        }
     }
-  }
-
-  .active {
-    background-color: rgb(255, 255, 255);
-    color: #2c3e50;
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 26px;
-    border-radius: 5px;
-    font-weight: bold;
-  }
-
-  .subMenu {
-    list-style: none;
-    padding-left: 15px;
-    margin-top: 5px;
-    margin-left: 30px;
-    transition: all 0.3s ease-in-out;
-    font-family: Arial;
-  }
-
-  .subMenu li {
-    padding: 5px 10px;
-    font-family: Arial;
-
-    &:hover {
-      background-color: #01337c;
-      color: #ecf0f1;
-      border-radius: 5px;
-    }
-  }
-  .icons {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    width: 100%;
-  }
-
-  .arrow {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-  }
-
-  .activateArrow {
-    transform: rotate(90deg);
-  }
 }

@@ -4,12 +4,12 @@ import MenuItem from '@mui/material/MenuItem';
 import PersonIcon from '@mui/icons-material/Person';
 import MUIswitch from "../switch/MUIswitch";
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Avatar, Box, Button } from "@mui/material";
+import { Avatar, Box, Button, useTheme } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
 import SearchBar from "../SearchBar/search";
 import { useParametros } from "../../contexts/useParamether.provider";
 import { NavBarStyles } from "./navBar.styles";
-import { SideBar2 } from "../sidebar2/sideBar";
+import { SideBar2 } from "../sidebar/sideBar";
 //import { SideBar } from "../sidebar/sideBar";
 import { useNavigate } from "react-router-dom"
 import { RendererModl } from "../../components/login/RendererModl"
@@ -24,6 +24,8 @@ export const NavBar: React.FC = () => {
   const Styles = NavBarStyles();
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
+  const theme = useTheme();
+  const { logout } = useAuth();
 
   const handleSearchSubmit = () => {
     if (search == "") return;
@@ -45,16 +47,38 @@ export const NavBar: React.FC = () => {
   const handlePostulate = () => {
     navigate("/postulate")
   }
+
+  const handleLogOut = () => {
+    setAnchorEl(null);
+    logout();
+    navigate("/")
+  }
+
   return (
     <>
       <nav style={Styles.navBar}>
         <div style={Styles.left} >
           <SideBar2 />
           <h2>GRH Solutions</h2>
+          {!isLoggedIn &&
+              <div>
+                <Button
+                  variant="text"
+                  sx={{
+                    color: theme.palette.primary.link,
+                    textDecoration: 'underline', // Esta propiedad subraya el texto
+                    marginLeft: "15px"
+                  }}
+                  onClick={handlePostulate}
+                >
+                  Trabaja con nosotros
+                </Button>
+              </div>
+            }
         </div>
         <div style={Styles.right}>
           <div style={Styles.search}>
-            {!isLoggedIn
+            {isLoggedIn
               && <>
                 <SearchBar
                   value={search}
@@ -106,8 +130,8 @@ export const NavBar: React.FC = () => {
                         <MUIswitch value={switchValue} onChange={() => setSwitchValue(!switchValue)} />
                         <label>modo oscuro</label>
                       </MenuItem>
-                      <MenuItem sx={{ display: "flex", alignItems: "center" }}>
-                        <LogoutIcon sx={{ marginRight: "20px" }}></LogoutIcon>
+                      <MenuItem sx={{ display: "flex", alignItems: "center" }} onClick={handleLogOut}>
+                        <LogoutIcon sx={{ marginRight: "20px" }} ></LogoutIcon>
                         <label>cerrar sesion</label>
                       </MenuItem>
                     </div>
@@ -116,13 +140,6 @@ export const NavBar: React.FC = () => {
             }
             {!isLoggedIn &&
               <div>
-                <Button
-                  variant="contained"
-                    sx={{ mr: 2, backgroundColor: "#4a148c", color: "white" }}
-                  onClick={handlePostulate}
-                >
-                  Trabaja con nosotros
-                </Button>
                 <RendererModl />
               </div>
             }
