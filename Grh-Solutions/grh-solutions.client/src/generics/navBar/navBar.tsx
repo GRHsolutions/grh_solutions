@@ -53,8 +53,8 @@ export const NavBar: React.FC = () => {
     <>
       <nav style={Styles.navBar}>
         <div style={Styles.left} >
-          {/* validamos si esta logeado */}
-          {autenticate && <SideBar2 />}
+          {/* <SideBar /> */}
+          <SideBar2 />
           <h2>GRH Solutions</h2>
         </div>
         <div style={Styles.right}>

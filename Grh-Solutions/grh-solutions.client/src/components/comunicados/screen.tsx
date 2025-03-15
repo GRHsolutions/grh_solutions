@@ -9,8 +9,9 @@ const Screen: React.FC = ({
   return (
     <Grid2 
       container 
-      spacing={2} 
+      spacing={1.5} 
       width={"100rem"}
+      height={'100%'}
     >
       <Grid2 
         size={10} 
@@ -24,6 +25,8 @@ const Screen: React.FC = ({
         size={2}
         sx={{  
           border: "1px solid black",
+          height: '60vh',
+          marginTop: '25px'
         }}
       >
         <Typography variant="h5" display={"flex"} justifyContent={"center"}>Cumpleaños</Typography>

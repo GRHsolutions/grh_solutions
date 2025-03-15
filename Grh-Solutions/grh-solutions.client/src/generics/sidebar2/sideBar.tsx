@@ -1,6 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Backdrop, Box, Button, IconButton, Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Backdrop, Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
@@ -13,7 +13,9 @@ export const SideBar2: React.FC = () => {
   const [openSubmenus, setOpenSubmenus] = React.useState<{ [key: string]: boolean }>({});
   const { items } = useRenderedItems();
   const location = useLocation();
-
+  const navigate = useNavigate();
+  const theme = useTheme();
+  
   React.useEffect(() => {
     const activeItem = items.find((item) => item.active);
     if (activeItem && activeItem.subItems) {
@@ -21,8 +23,11 @@ export const SideBar2: React.FC = () => {
     }
   }, [items, location.pathname]);
 
-  const toggleSubmenu = (to: string) => {
+  const toggleSubmenu = (to: string, navigates: boolean) => {
     setOpenSubmenus((prev) => ({ ...prev, [to]: !prev[to] }));
+    if(navigates){
+      handleItemClick();
+    }
   };
 
   const handleItemClick = () => {
@@ -31,8 +36,8 @@ export const SideBar2: React.FC = () => {
 
   return (
     <>
-      <Button variant="text" onClick={() => setCollapse(!collapse)}>
-        <MenuIcon fontSize="large" sx={styles.menuIcon} />
+      <Button sx={styles.menuIcon} variant="text" onClick={() => setCollapse(!collapse)}>
+        <MenuIcon fontSize="large"  />
       </Button>
 
       <Backdrop
@@ -50,68 +55,95 @@ export const SideBar2: React.FC = () => {
           }}
           onClick={(e) => e.stopPropagation()}
         >
-
-
           <Box sx={styles.header}>
             <Typography variant="h6">Grh Solutions</Typography>
-            <IconButton sx={styles.closeButton} onClick={() => setCollapse(false)}>
-              <CloseIcon />
-            </IconButton>
+            <Box sx={styles.buttonCloseDiv}>
+              <IconButton sx={styles.closeButton} onClick={() => setCollapse(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
           </Box>
 
-          <Box sx={styles.nav}>
+          <Box sx={styles.render}>
             {items.map((item) =>
               item.visible ? (
                 <Box key={item.to}>
-                  {item.subItems && item.subItems.length > 0 ? (
-                    <Box
-                      onClick={() => toggleSubmenu(item.to)}
-                      sx={{
-                        ...styles.menuItem,
-                        ...(item.active && styles.active),
-                      }}
-                    >
-                      <Box>{item.icon}</Box>
-                      <Typography>{item.label}</Typography>
-                      <Box
-                        sx={{
-                          ...styles.arrow,
-                          ...(openSubmenus[item.to] && styles.activateArrow),
+                  <Button
+                    onClick={() => {
+                      item.subItems ?( toggleSubmenu(item.to, false)) : (navigate(item.to), handleItemClick())
+                    }}
+                    disabled={item.disabled}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: 'center',
+                      width: "100%",
+                      textTransform: "none",
+                      padding: "10px",
+                      backgroundColor: item.active ? "rgba(0, 0, 0, 0.1)" : "transparent",
+                      color: item.disabled ? "gray" : "inherit",
+                      "&:hover":{
+                        backgroundColor:  theme.palette.secondary.main,
+                      }
+                    }}
+                  >
+                    <Box 
+                      sx={{ 
+                          display: "flex", 
+                          alignItems: "center", 
+                          justifyContent: 'start',
+                          gap: '15px' 
                         }}
                       >
-                        <KeyboardArrowRightIcon />
-                      </Box>
-                    </Box>
-                  ) : (
-                    <Box
-                      component={Link}
-                      to={item.to}
-                      sx={{
-                        ...styles.link,
-                        ...(item.active && styles.active),
-                      }}
-                      onClick={handleItemClick}
-                    >
-                      <Box>{item.icon}</Box>
+                      <Box 
+                        position={'relative'} 
+                        top={'4px'}
+                      >{item.icon}</Box>
                       <Typography>{item.label}</Typography>
                     </Box>
-                  )}
-
+                    {item.subItems && (
+                      <KeyboardArrowRightIcon
+                        sx={{
+                          ...styles.arrow,
+                          ...(openSubmenus[item.to] ? styles.activateArrow : {}),
+                        }}
+                      />
+                    )}
+                  </Button>
                   {item.subItems && openSubmenus[item.to] && (
-                    <Box sx={styles.subMenu}>
+                    <Box sx={{ 
+                        paddingLeft: "20px", 
+                        mt: '15px', 
+                        gap: '15px',
+                        display: 'flex',
+                        flexDirection: 'column'  
+                      }}
+                    >
                       {item.subItems.map((subItem) => (
-                        <Box
-                          key={subItem.to}
-                          component={Link}
-                          to={subItem.to}
-                          sx={{
-                            ...styles.linkSubMenu,
-                            ...(subItem.active && styles.active),
-                          }}
-                          onClick={handleItemClick}
-                        >
-                          <Typography>{subItem.label}</Typography>
-                        </Box>
+                        subItem.visible ? (
+                          <Button
+                            key={subItem.to}
+                            onClick={()=>{
+                              navigate(subItem.to);  
+                              handleItemClick();                            
+                            }}
+                            disabled={subItem.disabled}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: 'center',
+                              width: "100%",
+                              textTransform: "none",
+                              padding: "8px",
+                              color: subItem.disabled ? "gray" : "inherit",
+                              "&:hover":{
+                                backgroundColor:  theme.palette.secondary.main,
+                              }
+                            }}
+                          >
+                            <Typography>{subItem.label}</Typography>
+                          </Button>
+                        ) : null
                       ))}
                     </Box>
                   )}
@@ -119,6 +151,7 @@ export const SideBar2: React.FC = () => {
               ) : null
             )}
           </Box>
+
         </Box>
       </Backdrop>
     </>

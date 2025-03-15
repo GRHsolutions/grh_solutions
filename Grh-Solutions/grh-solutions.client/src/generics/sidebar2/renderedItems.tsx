@@ -52,7 +52,7 @@ export const useRenderedItems = (): Returnable => {
         icon: <AssignmentLateIcon />,
         subItems: [{
             visible: true,
-            to: '/',
+            to: '/solicitudes?type=pendientes',
             disabled: false,
             active: location.pathname === "/solicitudes?type=pendientes",
             label: 'Pendientes',

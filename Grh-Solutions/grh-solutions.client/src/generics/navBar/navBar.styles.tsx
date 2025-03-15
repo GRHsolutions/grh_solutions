@@ -19,28 +19,30 @@ export const NavBarStyles = () => {
             alignItems: "center", 
             justifyContent: "space-between", 
             backgroundColor: theme.palette.primary.main, // Using the primary color from the theme
+            borderBottom: `1px solid ${theme.palette.primary.divider}`,
             padding: "10px",
             position: "fixed",
             top: 0,
             left: 0,
             width: "100%",
-            borderBottom: "#ffffff",
-            border: "10px",
-            zIndex: 500
+            zIndex: 500,
+            color: theme.palette.primary.contrastText
         },
         right: {
             display: "flex",
-            marginRight: "30px"
+            marginRight: "30px" ,
+            color: theme.palette.primary.contrastText
         },
         left: {
-            color: "white",
             fontSize: "1.5rem",
             display: "flex",
             alignItems: "center",
             gap: "2px",
+            color: theme.palette.primary.contrastText
         },
         brand: {
-            marginLeft: "1rem"
+            marginLeft: "1rem",
+            color: theme.palette.primary.contrastText
         },
         icon: {
             display: "flex",
