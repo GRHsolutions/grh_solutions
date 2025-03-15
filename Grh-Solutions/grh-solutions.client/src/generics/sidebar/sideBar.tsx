@@ -1,102 +1,160 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Styles from "./sideBar.module.scss";
-import { Button } from "@mui/material";
-import { useRenderedItems } from "./renderedItems";
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Backdrop, Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { useRenderedItems } from "./renderedItems";
+import { useStyles } from "./sideBar.styles";
 
-export const SideBar: React.FC = () => {
-  const [collapse, setCollapse] = useState(false);
-  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-  const [selectedItem, setSelectedItem] = useState<string | null>(null);
-  const [selectedSubItem, setSelectedSubItem] = useState<string | null>(null);
+export const SideBar2: React.FC = () => {
+  const styles = useStyles();
+  const [collapse, setCollapse] = React.useState(false);
+  const [openSubmenus, setOpenSubmenus] = React.useState<{ [key: string]: boolean }>({});
   const { items } = useRenderedItems();
-  const toggleSubmenu = (to: string) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const theme = useTheme();
+  
+  React.useEffect(() => {
+    const activeItem = items.find((item) => item.active);
+    if (activeItem && activeItem.subItems) {
+      setOpenSubmenus((prev) => ({ ...prev, [activeItem.to]: true }));
+    }
+  }, [items, location.pathname]);
+
+  const toggleSubmenu = (to: string, navigates: boolean) => {
     setOpenSubmenus((prev) => ({ ...prev, [to]: !prev[to] }));
+    if(navigates){
+      handleItemClick();
+    }
+  };
+
+  const handleItemClick = () => {
+    setCollapse(false);
   };
 
   return (
     <>
-      <Button variant="text" onClick={() => setCollapse(!collapse)}>
-        <MenuIcon fontSize="large" sx={{ color: "white" }} />
+      <Button sx={styles.menuIcon} variant="text" onClick={() => setCollapse(!collapse)}>
+        <MenuIcon fontSize="large"  />
       </Button>
-      <div
-        className={`${Styles.backdrop} ${
-          collapse ? Styles.open : Styles.closed
-        }`}
+
+      <Backdrop
+        open={collapse}
+        onClick={() => setCollapse(false)}
+        sx={{ 
+          zIndex: 150, 
+          backgroundColor: "transparent", // Fondo más oscuro
+        }}
       >
-        <aside
-          className={`${Styles.sidebar} ${
-            collapse ? Styles.open : Styles.closed
-          }`}
+        <Box
+          sx={{
+            ...styles.sidebar,
+            left: collapse ? "0" : "-280px",
+          }}
           onClick={(e) => e.stopPropagation()}
         >
-          <nav className={Styles.nav}>
-            <ul>
-              {items.map((item) =>
-                item.visible ? (
-                  <li key={item.to}>
-                    {item.subItems && item.subItems.length > 0 ? (
-                      <div
-                        onClick={() => {
-                          toggleSubmenu(item.to);
-                          setSelectedItem(item.to);
+          <Box sx={styles.header}>
+            <Typography variant="h6">Grh Solutions</Typography>
+            <Box sx={styles.buttonCloseDiv}>
+              <IconButton sx={styles.closeButton} onClick={() => setCollapse(false)}>
+                <CloseIcon />
+              </IconButton>
+            </Box>
+          </Box>
+
+          <Box sx={styles.render}>
+            {items.map((item) =>
+              item.visible ? (
+                <Box key={item.to}>
+                  <Button
+                    onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+                      item.subItems ?( toggleSubmenu(item.to, false)) : (navigate(item.to), handleItemClick())
+                    }}
+                    disabled={item.disabled}
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: 'center',
+                      width: "100%",
+                      textTransform: "none",
+                      padding: "10px",
+                      backgroundColor: item.active ? theme.palette.primary.hover : "transparent",
+                      color: item.disabled ? "gray" : "inherit",
+                      "&:hover":{
+                        backgroundColor:  theme.palette.primary.hover,
+                      }
+                    }}
+                  >
+                    <Box 
+                      sx={{ 
+                          display: "flex", 
+                          alignItems: "center", 
+                          justifyContent: 'start',
+                          gap: '15px' 
                         }}
-                        className={`${Styles.menuItem} ${
-                          selectedItem === item.to ? Styles.active : ""
-                        }`}
                       >
-                        <div className={Styles.icons}>
-                          {item.icon}
-                          {item.label}
-                          <div className={`${Styles.arrow} ${selectedItem === item.to ? Styles.activateArrow : ""}`}>
-                            <KeyboardArrowRightIcon />
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <Link
-                        to={item.to}
-                        className={`${Styles.link} ${
-                          selectedItem === item.to ? Styles.active : ""
-                        }`}
-                        onClick={() => setSelectedItem(item.to)}
-                      >
-                        <div className={Styles.icons}>
-                          {item.icon}
-                          {item.label}
-                        </div>
-                      </Link>
+                      <Box 
+                        position={'relative'} 
+                        top={'4px'}
+                      >{item.icon}</Box>
+                      <Typography>{item.label}</Typography>
+                    </Box>
+                    {item.subItems && (
+                      <KeyboardArrowRightIcon
+                        sx={{
+                          ...styles.arrow,
+                          ...(openSubmenus[item.to] ? styles.activateArrow : {}),
+                        }}
+                      />
                     )}
-                    {item.subItems && openSubmenus[item.to] && (
-                      <ul className={Styles.subMenu}>
-                        {item.subItems.map((subItem) => (
-                          <li key={subItem.to}>
-                            <Link
-                              to={subItem.to}
-                              onClick={() => setSelectedSubItem(subItem.to)}
-                              className={`${Styles.linkSubMenu} ${
-                                selectedSubItem === subItem.to
-                                  ? Styles.active
-                                  : Styles.linkSubMenu
-                              }`}
-                            >
-                              {subItem.label}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ) : null
-              )}
-            </ul>
-          </nav>
-        </aside>
-      </div>
+                  </Button>
+                  {item.subItems && openSubmenus[item.to] && (
+                    <Box sx={{ 
+                        paddingLeft: "20px", 
+                        mt: '15px', 
+                        gap: '15px',
+                        display: 'flex',
+                        flexDirection: 'column'  
+                      }}
+                    >
+                      {item.subItems.map((subItem) => (
+                        subItem.visible ? (
+                          <Button
+                            key={subItem.to}
+                            onClick={()=>{
+                              navigate(subItem.to);  
+                              handleItemClick();                            
+                            }}
+                            disabled={subItem.disabled}
+                            sx={{
+                              display: "flex",
+                              justifyContent: "flex-start",
+                              alignItems: 'center',
+                              width: "100%",
+                              textTransform: "none",
+                              padding: "8px",
+                              color: subItem.disabled ? "gray" : "inherit",
+                              "&:hover":{
+                                backgroundColor:  theme.palette.primary.hover,
+                              }
+                            }}
+                          >
+                            <Typography>{subItem.label}</Typography>
+                          </Button>
+                        ) : null
+                      ))}
+                    </Box>
+                  )}
+                </Box>
+              ) : null
+            )}
+          </Box>
+
+        </Box>
+      </Backdrop>
     </>
   );
 };

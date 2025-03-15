@@ -1,7 +1,10 @@
-import { Button, Typography, useTheme } from "@mui/material";
+import {  Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { useRef } from "react";
+import { LoginService } from "../../../domain/services/login/login.service";
+import { useAuth } from "../../../hooks/auth";
+import GrhTextField from "../../../generics/grh-generics/textField";
+import GrhButton from "../../../generics/grh-generics/button";
 
 interface LoginProps {
   onRegister: () => void;
@@ -19,13 +22,20 @@ export default function Login({ onRegister }: LoginProps) {
   const correoRef = useRef<HTMLInputElement>(null);
   const contraseñaRef = useRef<HTMLInputElement>(null);
   const theme = useTheme();
+  const { login } = useAuth();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const correo = correoRef.current?.value;
-    const contraseña = contraseñaRef.current?.value;
-    console.log("Correo:", correo);
-    console.log("Contraseña:", contraseña);
+    console.log("nigga")
+    if(correoRef.current == undefined || contraseñaRef.current == undefined){
+      return;
+    }
+    const correo = correoRef.current.value;
+    const contraseña = contraseñaRef.current.value;
+    LoginService.login(correo, contraseña)
+      .then(e => {
+        login(e.token, e.usrName, e.photo, e.correo);
+      });    
   };
 
   return (
@@ -40,7 +50,9 @@ export default function Login({ onRegister }: LoginProps) {
         margin: "0 auto",
         padding: { xs: "16px", sm: "24px" }, // Padding responsivo
         fontFamily: theme.typography.fontFamily,
-        color: theme.palette.text.primary
+        color: theme.palette.primary.contrastText,
+        justifyContent: "center",
+        alignItems: "center"
       }}
     >
       <Typography
@@ -52,20 +64,19 @@ export default function Login({ onRegister }: LoginProps) {
       >
         Inicio de Sesión
       </Typography>
-      <TextField
+      <GrhTextField
         id="crr"
         label="Correo"
-        variant="outlined" // Cambio a outlined para mejor visibilidad
-        inputRef={correoRef}
+        ref={correoRef}
         fullWidth
+        type="mail"
         autoComplete="off"
       />
-      <TextField
+      <GrhTextField
         id="ctr"
-        label="Contraseña"
-        variant="outlined" // Cambio a outlined para mejor visibilidad
+        label="Contraseña" // Cambio a outlined para mejor visibilidad
         type="password"
-        inputRef={contraseñaRef}
+        ref={contraseñaRef}
         fullWidth
       />
       <Typography
@@ -76,17 +87,11 @@ export default function Login({ onRegister }: LoginProps) {
       >
         ¿Has olvidado tu contraseña? Haz clic <label onClick={onRegister} style={styles.link}>aquí</label>
       </Typography>
-      <Button
+      <GrhButton
         type="submit"
-        variant="contained"
-        sx={{
-          width: { xs: "100%", sm: "50%" },
-          margin: "0 auto",
-          padding: "12px", // Ajuste de padding
-        }}
-      >
-        Ingresar
-      </Button>
+        variant="principal"
+        label="Ingresar"
+      />
     </Box>
   );
 }

@@ -6,12 +6,14 @@ declare module "@mui/material/styles" {
     hover?: string;
     divider?: string;
     father?: string;
+    link?: string;
   }
 
   interface SimplePaletteColorOptions {
     hover?: string;
     divider?: string;
     father?: string;
+    link?: string;
   }
 
   interface Palette {
@@ -53,22 +55,23 @@ const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#fff", // Azul más vibrante y accesible
-      contrastText: "#0f0f0f",
-      dark: "#0056b3",
-      light: "#66B2FF",
-      // colores principales
-      father: "#fff",
-      hover: "#0056b3",
+      main: "#FFFFFF", // Blanco principal
+      contrastText: "#0f0f0f", // Texto oscuro para contraste
+      dark: "#CCCCCC", // Gris oscuro
+      light: "#F5F5F5", // Gris más claro
+      hover: "#E0E0E0", // Gris suave para hover
       divider: "rgba(0, 0, 0, 0.1)",
+      father: "#FFFFFF",
+      link: "#1976d2",
     },
     secondary: {
-      main: "rgba(0, 0, 0, 0.25)", // Rojo más llamativo y definido
-      contrastText: "#FFFFFF",
-      dark: "#CC0000",
-      light: "#FF8080",
-      hover: "#CC0000",
+      main: "#1976d2", // Azul más claro
+      contrastText: "#fff",
+      dark: "#004ba0",  // Azul oscuro
+      light: "#63a4ff", // Azul más claro
+      hover: "#1565c0", // Azul más intenso
       divider: "rgba(255, 255, 255, 0.3)",
+      link: "#1976d2"
     },
     background: {
       default: "#FFFFFF", // Fondo principal blanco
@@ -119,22 +122,23 @@ const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#0f0f0f", // Oscuro fuerte
-      contrastText: "#f1f1f1", // color del contraste, osea el blanco
-      dark: "#004C99",
-      light: "#3388FF",
-      hover: "#282828", // un oscuro que funciona para el hover
+      main: "#0f0f0f", // Negro fuerte
+      contrastText: "#f1f1f1", // Texto blanco para contraste
+      dark: "#000000", // Negro más intenso
+      light: "#333333", // Gris oscuro
+      hover: "#282828", // Gris más suave para hover
       divider: "rgba(255, 255, 255, 0.2)",
-      // colores principales
-      father: "#212121"
+      father: "#212121",
+      link: "#1976d2"
     },
     secondary: {
-      main: "#212121", // Oscuro mas tenue
-      contrastText: "#f1f1f1", // color del contraste , osea el blanco
-      dark: "#CC5555",
-      light: "#FF8C8C",
-      hover: "#CC5555",
-      divider: "rgba(255, 255, 255, 0.2)"
+      main: "#1976d2", // Azul más brillante
+      contrastText: "#f1f1f1", // Color contraste, blanco
+      dark: "#004ba0",  // Azul oscuro
+      light: "#63a4ff", // Azul más suave
+      hover: "#1565c0", // Azul intenso
+      divider: "rgba(255, 255, 255, 0.2)",
+      link: "#1976d2"
     },
     background: {
       default: "#121212",

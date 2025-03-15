@@ -1,4 +1,4 @@
-import { Usuario } from "../../domain/models/Usuario";
+import { Usuario } from "../../domain/models/usuario/user.entities";
 
 export interface IUsuarioRepository {
     register(usuario: Usuario): Promise<Usuario>;

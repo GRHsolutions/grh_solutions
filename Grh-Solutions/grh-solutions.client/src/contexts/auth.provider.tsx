@@ -18,20 +18,18 @@ interface AuthContextType {
 export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [auth, setAuth] = React.useState<Auth>({
+  // Inicializar auth desde localStorage
+  const initialAuthState = {
     token: localStorageUtil.get("usr_items_token"),
     usrName: localStorageUtil.get("usr_items_usrName"),
     photo: localStorageUtil.get("usr_items_photo"),
     correo: localStorageUtil.get("usr_items_correo"),
-  });
+  } as Auth;
 
-  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(false);
+  const [auth, setAuth] = React.useState<Auth>(initialAuthState);
+  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(!!initialAuthState.token);
 
-  React.useEffect(() => {
-    const token = localStorageUtil.get("usr_items_token");
-    setIsLoggedIn(token !== null); 
-  }, []); 
-
+  // Maneja el login
   const login = (token: string, usrName: string, photo?: string, correo?: string) => {
     const newAuth = { token, usrName, photo: photo || null, correo: correo || null };
     setAuth(newAuth);
@@ -39,17 +37,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorageUtil.set("usr_items_usrName", usrName);
     if (photo) localStorageUtil.set("usr_items_photo", photo);
     if (correo) localStorageUtil.set("usr_items_correo", correo);
-    setIsLoggedIn(true); 
+    setIsLoggedIn(true); // Establece isLoggedIn al login exitoso
   };
 
+  // Maneja el logout
   const logout = () => {
-    localStorageUtil.clear();
-    setAuth({ token: null, usrName: null, photo: null, correo: null });
-    setIsLoggedIn(false);
+    console.log("UJGDSJ")
+    localStorageUtil.deleteExclude(["theme"]);
+    setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
   };
+
+  const actualValues = {
+    auth: auth,
+    login: login,
+    logout: logout,
+    isLoggedIn: isLoggedIn
+  } as AuthContextType;
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout, isLoggedIn }}>
+    <AuthContext.Provider value={actualValues}>
       {children}
     </AuthContext.Provider>
   );

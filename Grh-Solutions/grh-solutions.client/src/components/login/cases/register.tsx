@@ -1,7 +1,8 @@
-import { Button, Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import TextField from "@mui/material/TextField";
 import { useRef } from "react";
+import GrhTextField from "../../../generics/grh-generics/textField";
+import GrhButton from "../../../generics/grh-generics/button";
 
 interface RegisterProps {
   onRegister?: () => void;
@@ -15,7 +16,9 @@ interface RegisterProps {
 //   } as React.CSSProperties,
 // };
 
-export default function Register({  }: RegisterProps) {
+export default function Register({ 
+  onRegister
+}: RegisterProps) {
   const mailRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const confirmPassRef = useRef<HTMLInputElement>(null);
@@ -29,6 +32,9 @@ export default function Register({  }: RegisterProps) {
     console.log("Correo:", correo);
     console.log("Contraseña:", contraseña);
     console.log('confirmacion:', confirmacion)
+    if(onRegister){
+      onRegister();
+    }
   };
 
   return (
@@ -55,41 +61,35 @@ export default function Register({  }: RegisterProps) {
       >
         Registrarse
       </Typography>
-      <TextField
+      <GrhTextField
         id="crr"
         label="Correo"
         variant="outlined" // Cambio a outlined para mejor visibilidad
-        inputRef={mailRef}
+        ref={mailRef}
         fullWidth
         autoComplete="off"
       />
-      <TextField
+      <GrhTextField
         id="ctr"
         label="Contraseña"
         variant="outlined" // Cambio a outlined para mejor visibilidad
         type="password"
-        inputRef={passRef}
+        ref={passRef}
         fullWidth
       />
-      <TextField
+      <GrhTextField
         id="ctr"
         label="Confirmar contraseña"
         variant="outlined" // Cambio a outlined para mejor visibilidad
         type="password"
-        inputRef={confirmPassRef}
+        ref={confirmPassRef}
         fullWidth
       />
-      <Button
+      <GrhButton
         type="submit"
-        variant="contained"
-        sx={{
-          width: { xs: "100%", sm: "50%" },
-          margin: "0 auto",
-          padding: "12px", // Ajuste de padding
-        }}
-      >
-        Registrar
-      </Button>
+        variant="tertiary"
+        label="Registrar"
+      />
     </Box>
   );
 }
