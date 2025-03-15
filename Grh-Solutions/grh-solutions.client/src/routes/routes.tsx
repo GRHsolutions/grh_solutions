@@ -1,12 +1,14 @@
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
 import { CompoRender } from "./CompoRender";
+
 //componentes usando lazy para la carga mas rapida de la pagina
 //const Homepage = lazy(() => import("../pages/home/Home"));
 const Comunicados = lazy(() => import("../pages/comunicados/Comunicados"));
 const Index = lazy(() => import("../pages/index"));
 const Postulate = lazy(() => import("../pages/postulate/postulate"));
 const BoundaryRoute = lazy(() => import("../pages/boundaryRoute/BoundaryRoute"));
+const SolicitudesPage = lazy(()=> import("../pages/solicitudes/SolicitudesPages"))
 // Rutas de la aplicaci�n
 
 export const AppRoutes = (): RouteObject[] => {
@@ -32,5 +34,9 @@ export const AppRoutes = (): RouteObject[] => {
       path: "*",
       element: <>{CompoRender({ element: BoundaryRoute, isBoundary: true })}</>,
     },
+    {
+      path: "/solicitudes",
+      element: <>{CompoRender({ element: SolicitudesPage })}</>
+    }
   ];
 };

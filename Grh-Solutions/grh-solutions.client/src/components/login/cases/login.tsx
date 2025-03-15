@@ -26,6 +26,7 @@ export default function Login({ onRegister }: LoginProps) {
     const contraseña = contraseñaRef.current?.value;
     console.log("Correo:", correo);
     console.log("Contraseña:", contraseña);
+    
   };
 
   return (

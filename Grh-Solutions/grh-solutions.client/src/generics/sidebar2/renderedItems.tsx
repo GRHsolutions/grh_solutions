@@ -46,7 +46,7 @@ export const useRenderedItems = (): Returnable => {
         icon: <MailIcon />,
       },
       {
-        visible: isLoggedIn,
+        visible: true,
         to: '/solicitudes',
         disabled: false,
         active: location.pathname === "/solicitudes",
@@ -70,6 +70,13 @@ export const useRenderedItems = (): Returnable => {
             disabled: false,
             active: location.pathname === "/solicitudes?type=asignadas",
             label: 'Asignadas',
+          },
+          {
+            visible: true,
+            to: '/solicitudes',
+            disabled: false,
+            active: location.pathname === "/solicitudes",
+            label: 'Todas',
           }
         ]
       },
