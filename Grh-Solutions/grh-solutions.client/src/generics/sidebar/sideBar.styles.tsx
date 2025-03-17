@@ -5,6 +5,7 @@ export const useStyles = () => {
 
   return {
     menuIcon: {
+      padding:0.2,
       color: theme.palette.primary.contrastText,
       transition: "background-color 0.3s ease",
       "&:hover":{
@@ -40,10 +41,10 @@ export const useStyles = () => {
       },
     },
     buttonCloseDiv: {
-      backgroundColor:  "white",
+      backgroundColor:  theme.palette.primary.main,
       position: 'absolute',
       right: -100,
-      borderRadius: '15px',
+      borderRadius: '50%',
       zIndex: 999,
       "&:hover": {
         //backgroundColor: theme.palette.primary.hover, // Cambio de color más sutil

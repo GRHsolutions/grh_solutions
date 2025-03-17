@@ -1,6 +1,6 @@
 import React from "react";
-import { Birthday } from "../../domain/models/news/news.entities";
-import { useNews } from "../../hooks/news";
+import { Birthday } from "../../../../domain/models/news/news.entities";
+import { useNews } from "../../../../hooks/news";
 import { Box, Container, Grid2, Typography, useTheme } from "@mui/material";
 
 interface RenderBirthsProps {}
@@ -28,7 +28,7 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
           padding={'3px'}
           sx={{
             "&:hover": {
-              border: `1px solid ${theme.palette.primary.hover}`
+              backgroundColor: `${theme.palette.primary.hover}`
             }
           }}
         >

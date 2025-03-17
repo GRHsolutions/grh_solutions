@@ -1,8 +1,8 @@
 import { Grid2, Typography, useTheme } from "@mui/material";
-import RenderBirths from "./renderBirths";
 import React from "react";
-import { useParametros } from "../../contexts/useParamether.provider";
-
+import { useParametros } from "../../../../contexts/useParamether.provider";
+import RenderNews from "./renderNews";
+import RenderBirths from "./renderBirths";
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
   const theme = useTheme();
@@ -22,10 +22,11 @@ const Screen: React.FC = () => {
           sm: 10
         }}
         sx={{ 
-          boxShadow: `${theme.palette.primary.boxShadow}` 
+          boxShadow: `${theme.palette.primary.boxShadow}`,
+          backgroundColor: `${theme.palette.primary.light}`
         }}
       >
-        <>gola</>
+        <RenderNews />
       </Grid2>
 
       {/* Se esconde en móviles */}
@@ -34,8 +35,9 @@ const Screen: React.FC = () => {
           size={{
             sm: 2
           }}
-          sx={{  
-            border: "1px solid black",
+          sx={{ 
+            boxShadow: `${theme.palette.primary.boxShadow}`,
+            backgroundColor: `${theme.palette.primary.light}`,
             height: "60vh",
             marginTop: "25px"
           }}
@@ -44,6 +46,7 @@ const Screen: React.FC = () => {
             variant="h5" 
             display={"flex"} 
             justifyContent={"center"}
+            mt={2}
           >
             Cumpleaños
           </Typography>

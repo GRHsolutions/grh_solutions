@@ -1,7 +1,7 @@
 import React from "react";
 import { NewsProvider } from "../../contexts/news.provider";
 import { Box } from "@mui/material";
-import Screen from "../../components/comunicados/screen";
+import Screen from "./components/list/screen";
 
 interface ComunicadosProps {}
 const Comunicados: React.FC = ({}: ComunicadosProps) => {

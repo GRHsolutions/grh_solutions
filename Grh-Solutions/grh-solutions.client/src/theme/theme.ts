@@ -59,7 +59,7 @@ const lightTheme = createTheme({
     primary: {
       main: "#FFFFFF", // Blanco principal
       contrastText: "#0f0f0f", // Texto oscuro para contraste
-      dark: "#CCCCCC", // Gris oscuro
+      dark: "#CCCCCC", // Gris oscuro : LUEGO HAY QUE PROBAR EL COLOR #efeff1
       light: "#F5F5F5", // Gris más claro
       hover: "#E0E0E0", // Gris suave para hover
       divider: "rgba(0, 0, 0, 0.1)",
@@ -129,7 +129,7 @@ const darkTheme = createTheme({
       main: "#0e0e10", // Negro fuerte
       contrastText: "#f1f1f1", // Texto blanco para contraste
       dark: "#000000", // Negro más intenso
-      light: "#333333", // Gris oscuro
+      light: "#1f1f23", // Un oscuro mas claro
       hover: "#282828", // Gris más suave para hover
       divider: "rgba(255, 255, 255, 0.2)",
       father: "#18181b",
@@ -140,7 +140,7 @@ const darkTheme = createTheme({
       main: "#1976d2", // Azul más brillante
       contrastText: "#f1f1f1", // Color contraste, blanco
       dark: "#004ba0",  // Azul oscuro
-      light: "#63a4ff", // Azul más suave
+      light: "#1f1f23", // Un oscuro mas claro
       hover: "#1565c0", // Azul intenso
       divider: "rgba(255, 255, 255, 0.2)",
       link: "#1976d2",

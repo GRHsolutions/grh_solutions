@@ -9,6 +9,7 @@ export type News = {
     numberLikes: number;
     numberDisLikes: number;
     date: Dayjs;
+    madeBy: string;
 }
 
 export type NewsFilter = {

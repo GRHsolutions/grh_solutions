@@ -5,12 +5,11 @@ import dayjs from "dayjs";
 
 // Definición de tipos
 interface NewsItems {
-  items: News[];
+  news: News[];
   birthdays: Birthday[];
   status: Errors | null;
   reload: () => void;
 }
-
 
 // Creación del contexto
 export const NewsContext = React.createContext<NewsItems | undefined>(undefined);
@@ -19,7 +18,7 @@ export const NewsContext = React.createContext<NewsItems | undefined>(undefined)
 export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [items, setItems] = React.useState<News[]>([]);
+  const [news, setNews] = React.useState<News[]>([]);
   const [status, setStatus] = React.useState<Errors | null>(null);
   const [useReload, setReload] = React.useState(false);
   const [birthdays, setBirthdays] = React.useState<Birthday[]>([]);
@@ -55,16 +54,17 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   React.useEffect(() => {
     const fetchNews = async () => {
       try {
-        setItems([
-            { 
-                id: 1, 
-                title: "Noticia 1", 
-                description: "Descripción 1", 
-                images: [], 
-                status: "Activa", 
-                numberLikes: 0, 
-                numberDisLikes: 0, 
-                date: dayjs()
+        setNews([
+            {
+              id: 1,
+              title: "Noticia 1",
+              description: "Descripción 1",
+              images: [],
+              status: "Activa",
+              numberLikes: 0,
+              numberDisLikes: 0,
+              date: dayjs(),
+              madeBy: "Pedro Sanchez"
             },{
                 id: 2, 
                 title: "Noticia 2", 
@@ -73,7 +73,8 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
                 status: "Activa", 
                 numberLikes: 0, 
                 numberDisLikes: 0, 
-                date: dayjs()
+                date: dayjs(),
+                madeBy: "Pedro Sanchez"
             },{
                 id: 3, 
                 title: "Noticia 3", 
@@ -82,7 +83,8 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
                 status: "Activa", 
                 numberLikes: 0, 
                 numberDisLikes: 0, 
-                date: dayjs()
+                date: dayjs(),
+                madeBy: "Pedro Sanchez"
             }]);
       } catch (error) {
         setStatus({ statusCode: 500, message: "Error al cargar las noticias" });
@@ -97,7 +99,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const value: NewsItems = {
-    items,
+    news,
     status,
     reload: handleReload,
     birthdays: birthdays
