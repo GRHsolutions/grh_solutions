@@ -1,56 +1,52 @@
 .background {
   display: flex;
-  width: 100%;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  background-color: #f8f8f8;
-  padding-top: 0px; 
-  margin-top: 0px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
+
+
 
 .content {
+  position: relative;
   text-align: center;
-  max-width: 100%;
-  
-}
-
-.title {
-  font-size: 50px;
-  font-weight: bold;
-  margin-bottom: 50px;
-}
-
-.main-section {
+  width: 100%;
+  min-height: 69%;
+  background-image: url('../../img/disloin3.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px; 
-  margin: 20px 0;
 }
-
-.side-box,
-.center-box {
-  flex: 1;
-  max-width: 50%;
-}
-
-.center-box {
-  max-width: 35%;
-}
-
-.side-box img,
-.center-box img {
+.content::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 10px;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
 }
+.main-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  z-index: 2;
+  gap: 30px;
+}
+
 
 .carousel-container {
-  width: 80%;
-  max-width: 600px;
-  margin: 20px auto;
+  flex: 1;
+  max-width: 50%;
+  margin-left: 5%;
 }
 
 .carousel-img {
@@ -61,37 +57,40 @@
   transition: transform 0.3s ease-in-out;
 }
 
-
 .carousel-img:hover {
   transform: scale(1.05);
 }
 
+.text-container {
+  flex: 1;
+  text-align: left;
+  color: white;
+  padding: 20px;
+  max-width: 50%;
+}
+
+.title {
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
 
 .description {
   font-size: 18px;
-  color: #333;
-  max-width: 800px;
-  text-align: center;
-  margin: 0 auto;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100px;
+  line-height: 1.5;
 }
 
 .footer {
   width: 100%;
   border: 1px solid rgb(82, 82, 82);
   text-align: center;
+  height: 18vh;
   font-family: Arial, sans-serif;
-  position: fixed;
-  bottom: 0;
-  left: 0;
   border-radius: 5px;
-  background-color: #f8f8f8;
   padding: 20px 0;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 2;
 }
 
 .contact-title {
@@ -99,7 +98,6 @@
   font-size: 20px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: black;
 }
 
 .contact-section {
@@ -136,5 +134,5 @@
 }
 
 .social-icons a:hover {
-  color: #0044cc;
+  color: #ffffff;
 }
