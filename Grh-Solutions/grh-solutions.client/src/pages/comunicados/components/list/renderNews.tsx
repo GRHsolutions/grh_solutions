@@ -1,25 +1,36 @@
 import React from "react";
 import { useNews } from "../../../../hooks/news";
-import { Alert, Container, Typography } from "@mui/material";
+import { Alert, Box, Typography } from "@mui/material";
 import NewItem from "./newItem";
+import { News } from "../../../../domain/models/news/news.entities";
 
 const RenderNews: React.FC = () => {
-  const { news } = useNews();
+  const { news, setCurrent } = useNews();
+
+  const handleSelect = (item: News) => {
+    setCurrent({
+      item: item,
+      action: 'view'
+    })
+  }
 
   return (
-    <Container
+    <Box
       sx={{
         paddingTop: "15px",
         gap: "13px",
+        display: 'flex',
+        flexDirection: 'column',
         overflowY: "auto",
-        overflowX: "hidden"
+        overflowX: "hidden",
+        padding: 3
       }}
     >
       {news.length === 0 ? (
         <Alert
           severity="warning"
           sx={{
-            width: "100%",
+            width: "100%"
           }}
         >
           <Typography>
@@ -27,17 +38,13 @@ const RenderNews: React.FC = () => {
           </Typography>
         </Alert>
       ) : (
-        news.map((item, index) => (
-          <NewItem 
-            item={item}
-            onClick={(item)=>{
-              console.log(item)
-            }}
-            key={`${index}`}
-          />
-        ))
+        <Box>
+          {news.map((item) => (
+            <NewItem key={item.id.toString()} item={item} onClick={handleSelect} />
+          ))}
+        </Box>
       )}
-    </Container>
+    </Box>
   );
 };
 

@@ -13,7 +13,7 @@ const Screen: React.FC = () => {
       container 
       spacing={1.5} 
       width={"80vw"} 
-      height={"90vh"}
+      height={"93vh"}
     >
       {/* Se expande al 100% en móviles, al 10/12 en pantallas grandes */}
       <Grid2 
@@ -23,7 +23,9 @@ const Screen: React.FC = () => {
         }}
         sx={{ 
           boxShadow: `${theme.palette.primary.boxShadow}`,
-          backgroundColor: `${theme.palette.primary.light}`
+          backgroundColor: `${theme.palette.primary.light}`,
+          height: '100%',
+          width: '100%'
         }}
       >
         <RenderNews />
@@ -38,8 +40,10 @@ const Screen: React.FC = () => {
           sx={{ 
             boxShadow: `${theme.palette.primary.boxShadow}`,
             backgroundColor: `${theme.palette.primary.light}`,
-            height: "60vh",
-            marginTop: "25px"
+            height: "100%",
+            maxHeight: '60vh',
+            marginTop: "25px",
+            overflowY: 'auto'
           }}
         >
           <Typography 

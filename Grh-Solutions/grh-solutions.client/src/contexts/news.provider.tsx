@@ -3,12 +3,19 @@ import { Birthday, News } from "../domain/models/news/news.entities";
 import { Errors } from "../domain/models/error/error.entities";
 import dayjs from "dayjs";
 
+interface CurrentProps {
+  item: News | null;
+  action: "create" | "view" | "delete" | "none"
+}
+
 // Definición de tipos
 interface NewsItems {
   news: News[];
   birthdays: Birthday[];
   status: Errors | null;
   reload: () => void;
+  current: CurrentProps
+  setCurrent: (select :CurrentProps) => void
 }
 
 // Creación del contexto
@@ -22,6 +29,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [status, setStatus] = React.useState<Errors | null>(null);
   const [useReload, setReload] = React.useState(false);
   const [birthdays, setBirthdays] = React.useState<Birthday[]>([]);
+  const [current, setCurrent] = React.useState<CurrentProps>({
+    item: null,
+    action: "none"
+  })
 
   React.useEffect(() => {
     const fetchBirthdays = async () => {
@@ -98,11 +109,17 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     setReload(!useReload);
   };
 
+  const SelectItem = (sel: CurrentProps) => {
+    setCurrent(sel);
+  }
+
   const value: NewsItems = {
     news,
     status,
     reload: handleReload,
-    birthdays: birthdays
+    birthdays: birthdays,
+    current: current,
+    setCurrent: SelectItem
   }
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;

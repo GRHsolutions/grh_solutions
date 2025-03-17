@@ -44,7 +44,7 @@ export const SideBar2: React.FC = () => {
         open={collapse}
         onClick={() => setCollapse(false)}
         sx={{ 
-          zIndex: 150, 
+          zIndex: 250, 
           backgroundColor: "transparent", // Fondo más oscuro
         }}
       >
