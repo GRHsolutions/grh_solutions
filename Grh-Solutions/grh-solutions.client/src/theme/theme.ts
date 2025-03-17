@@ -122,13 +122,13 @@ const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#0f0f0f", // Negro fuerte
+      main: "#0e0e10", // Negro fuerte
       contrastText: "#f1f1f1", // Texto blanco para contraste
       dark: "#000000", // Negro más intenso
       light: "#333333", // Gris oscuro
       hover: "#282828", // Gris más suave para hover
       divider: "rgba(255, 255, 255, 0.2)",
-      father: "#212121",
+      father: "#18181b",
       link: "#1976d2"
     },
     secondary: {

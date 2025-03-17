@@ -1,8 +1,10 @@
 import React from "react";
 import { localStorageUtil } from "../utils/localStorage";
+import { useMediaQuery } from "@mui/material";
 // Define el tipo para los parámetros del tema
 interface Parametros {
-  dark: boolean;
+  dark: boolean; // para usar el tema claro o oscuro, segun lo que escoje el usuario
+  usePhoneScreen: boolean; // para manejar el tamano de la pantalla del usuario
 }
 
 // Define el tipo del contexto
@@ -16,12 +18,18 @@ const ParametrosContext = React.createContext<ParametrosContextType | undefined>
 
 // Provider del contexto
 export const ParametrosProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [parametros, setParametros] = React.useState<Parametros>({ dark: false });
+  const [parametros, setParametros] = React.useState<Parametros>({ 
+    dark: false, 
+    usePhoneScreen: useMediaQuery("(max-width: 600px)")
+  });
 
   React.useEffect(() => {
     const storedTheme = localStorageUtil.get("theme");
     if (storedTheme) {
-      setParametros({ dark: storedTheme === "dark" });
+      setParametros({ 
+        ...parametros,
+        dark: storedTheme === "dark" 
+      });
     }
   }, []);
 
@@ -29,7 +37,10 @@ export const ParametrosProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setParametros((prev) => {
       const newTheme = !prev.dark;
       localStorageUtil.set("theme", newTheme ? "dark" : "light");
-      return { dark: newTheme };
+      return { 
+        ...parametros,
+        dark: newTheme 
+      };
     });
   };
 

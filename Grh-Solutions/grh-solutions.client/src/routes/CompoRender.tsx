@@ -17,13 +17,14 @@ export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) =
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.primary.father,
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
         borderBottom: `1px solid ${theme.palette.primary.divider}`,
         marginTop: "4.2rem",
+        p: 1,
         display: "flex",
         height: "100%",
-        overflowY: "auto", // Permite el desplazamiento si el contenido es muy grande
+        overflowY: "hidden", // El desplazamiento debe ser por el componente a renderizar, IMBECIL
       }}
     >
       {useSuspenseLoader(element)}

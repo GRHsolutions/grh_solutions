@@ -25,7 +25,6 @@ export const NavBarStyles = () => {
             top: 0,
             left: 0,
             width: "100%",
-            zIndex: 500,
             color: theme.palette.primary.contrastText
         },
         right: {

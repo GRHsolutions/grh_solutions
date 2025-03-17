@@ -5,6 +5,7 @@ import Screen from "../../components/comunicados/screen";
 
 interface ComunicadosProps {}
 const Comunicados: React.FC = ({}: ComunicadosProps) => {
+  
   return (
     <NewsProvider>
       <Box
@@ -15,7 +16,6 @@ const Comunicados: React.FC = ({}: ComunicadosProps) => {
           height: "100%",
           width: "100%",
           fontSize: "2rem",
-          marginTop: "1rem",
         }}  
       >
         <Screen />

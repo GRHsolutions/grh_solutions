@@ -1,20 +1,20 @@
 import React from "react";
 import { Birthday } from "../../domain/models/news/news.entities";
 import { useNews } from "../../hooks/news";
-import { Box, Container, Grid2, Typography } from "@mui/material";
+import { Box, Container, Grid2, Typography, useTheme } from "@mui/material";
 
 interface RenderBirthsProps {}
 
 const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
   const { birthdays } = useNews();
-
+  const theme = useTheme();
   return (
     <Container
       sx={{
         paddingTop: "15px",
         display: 'flex',
         flexDirection: 'column',
-        gap: '10px',
+        gap: '13px',
         overflowY: 'auto'
       }}
     >
@@ -23,10 +23,14 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
           container 
           display="flex" 
           key={birthday.id} 
-          spacing={7}
+          spacing={2}
           alignItems={"center"}
-          border={'1px solid black'}
           padding={'3px'}
+          sx={{
+            "&:hover": {
+              border: `1px solid ${theme.palette.primary.hover}`
+            }
+          }}
         >
           <Grid2 size={3}>
             <Box

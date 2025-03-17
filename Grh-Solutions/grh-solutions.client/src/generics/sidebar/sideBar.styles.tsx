@@ -40,7 +40,7 @@ export const useStyles = () => {
       },
     },
     buttonCloseDiv: {
-      backgroundColor:  theme.palette.background.default,
+      backgroundColor:  "transparent",
       position: 'absolute',
       right: -100,
       borderRadius: '15px',
@@ -52,6 +52,7 @@ export const useStyles = () => {
     } as SxProps,
     closeButton: {
       color: theme.palette.primary.contrastText,
+      border: `1px solid ${theme.palette.primary.divider}`
     } as SxProps,
     // ------------------------------------------------
     // listados
