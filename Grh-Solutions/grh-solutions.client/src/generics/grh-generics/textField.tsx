@@ -43,12 +43,26 @@ const GrhTextField: React.FC<TextFieldProps> = ({
       value={value} // Asigna el valor que se pasa al componente
       onChange={handleChange} // Pasa la función handleChange
       fullWidth={fullWidth}
-      slotProps={{
-        inputLabel:{
-          color: theme.palette.primary.contrastText
-        }
+      sx={{
+        ...sx,
+        '& .MuiInputLabel-root': {
+          color: theme.palette.primary.contrastText, // Color constante para el label
+        },
+        '& .MuiInputLabel-root.Mui-focused': {
+          color: theme.palette.primary.contrastText, // Color constante para el label cuando está enfocado
+        },
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: theme.palette.primary.divider, // Color constante para el borde en estado normal
+          },
+          '&:hover fieldset': {
+            borderColor: theme.palette.primary.dark, // Color constante para el borde al hacer hover
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: theme.palette.primary.hover, // Color constante para el borde cuando está enfocado
+          },
+        },
       }}
-      sx={sx}
       type={type} // Asumiendo que es un campo de correo electrónico
       autoComplete={autoComplete}
     />
