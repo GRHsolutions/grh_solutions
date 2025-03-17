@@ -21,7 +21,13 @@ export default function SearchBar({
         e.preventDefault();
         onSubmit();
       }}
-      sx={{ p: "1px 2px", display: "flex", alignItems: "center", width: 350 }}
+      sx={{ 
+        p: "1px 2px", 
+        display: "flex", 
+        alignItems: "center",
+        width: 350,
+        height: 35
+      }}
     >
       <InputBase
         value={value}

@@ -1,10 +1,11 @@
-import { Grid2, Typography, useMediaQuery } from "@mui/material";
+import { Grid2, Typography, useTheme } from "@mui/material";
 import RenderBirths from "./renderBirths";
 import React from "react";
 import { useParametros } from "../../contexts/useParamether.provider";
 
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
+  const theme = useTheme();
   const { usePhoneScreen } = parametros; 
 
   return (
@@ -21,7 +22,7 @@ const Screen: React.FC = () => {
           sm: 10
         }}
         sx={{ 
-          border: "1px solid black" 
+          boxShadow: `${theme.palette.primary.boxShadow}` 
         }}
       >
         <>gola</>

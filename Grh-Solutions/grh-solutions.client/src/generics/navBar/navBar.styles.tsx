@@ -14,7 +14,7 @@ export const NavBarStyles = () => {
     const theme = useTheme();
     return ({
         navBar: {
-            height: "48px",
+            height: "30px",
             display: "flex",
             alignItems: "center", 
             justifyContent: "space-between", 
@@ -33,7 +33,7 @@ export const NavBarStyles = () => {
             color: theme.palette.primary.contrastText
         },
         left: {
-            fontSize: "1.5rem",
+            fontSize: "1.1rem",
             display: "flex",
             alignItems: "center",
             gap: "2px",

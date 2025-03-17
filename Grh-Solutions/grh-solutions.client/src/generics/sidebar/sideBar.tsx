@@ -115,7 +115,7 @@ export const SideBar2: React.FC = () => {
                     <Box sx={{ 
                         paddingLeft: "20px", 
                         mt: '15px', 
-                        gap: '15px',
+                        gap: '9px',
                         display: 'flex',
                         flexDirection: 'column'  
                       }}

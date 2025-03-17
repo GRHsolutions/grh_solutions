@@ -7,6 +7,7 @@ declare module "@mui/material/styles" {
     divider?: string;
     father?: string;
     link?: string;
+    boxShadow?: string;
   }
 
   interface SimplePaletteColorOptions {
@@ -14,6 +15,7 @@ declare module "@mui/material/styles" {
     divider?: string;
     father?: string;
     link?: string;
+    boxShadow?: string;
   }
 
   interface Palette {
@@ -63,6 +65,7 @@ const lightTheme = createTheme({
       divider: "rgba(0, 0, 0, 0.1)",
       father: "#FFFFFF",
       link: "#1976d2",
+      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.13), 0 0px 2px rgba(0, 0, 0, 0.13)'
     },
     secondary: {
       main: "#1976d2", // Azul más claro
@@ -71,7 +74,8 @@ const lightTheme = createTheme({
       light: "#63a4ff", // Azul más claro
       hover: "#1565c0", // Azul más intenso
       divider: "rgba(255, 255, 255, 0.3)",
-      link: "#1976d2"
+      link: "#1976d2",
+      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.13), 0 0px 2px rgba(0, 0, 0, 0.13)'
     },
     background: {
       default: "#FFFFFF", // Fondo principal blanco
@@ -129,7 +133,8 @@ const darkTheme = createTheme({
       hover: "#282828", // Gris más suave para hover
       divider: "rgba(255, 255, 255, 0.2)",
       father: "#18181b",
-      link: "#1976d2"
+      link: "#1976d2",
+      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.9), 0 0px 2px rgba(0, 0, 0, 0.9)'
     },
     secondary: {
       main: "#1976d2", // Azul más brillante
@@ -138,7 +143,8 @@ const darkTheme = createTheme({
       light: "#63a4ff", // Azul más suave
       hover: "#1565c0", // Azul intenso
       divider: "rgba(255, 255, 255, 0.2)",
-      link: "#1976d2"
+      link: "#1976d2",
+      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.9), 0 0px 2px rgba(0, 0, 0, 0.9)'
     },
     background: {
       default: "#121212",

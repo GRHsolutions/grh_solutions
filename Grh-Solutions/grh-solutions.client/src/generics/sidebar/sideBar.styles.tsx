@@ -28,7 +28,7 @@ export const useStyles = () => {
     },
     // pertenecientes al header junto al boton de cerrar
     header: {
-      padding: "14px",
+      padding: "7px",
       display: 'flex',
       justifyContent: 'center',
       textAlign: "center",
@@ -40,10 +40,11 @@ export const useStyles = () => {
       },
     },
     buttonCloseDiv: {
-      backgroundColor:  "transparent",
+      backgroundColor:  "white",
       position: 'absolute',
       right: -100,
       borderRadius: '15px',
+      zIndex: 999,
       "&:hover": {
         //backgroundColor: theme.palette.primary.hover, // Cambio de color más sutil
         //transform: "translateX(8px)", // Movimiento más fluido
@@ -52,14 +53,15 @@ export const useStyles = () => {
     } as SxProps,
     closeButton: {
       color: theme.palette.primary.contrastText,
-      border: `1px solid ${theme.palette.primary.divider}`
+      border: `1px solid ${theme.palette.primary.divider}`,
+      zIndex: 999,
     } as SxProps,
     // ------------------------------------------------
     // listados
     render: {
       display: 'flex',
       flexDirection: 'column',
-      gap: '15px',
+      gap: '9px',
       padding: 1,
       borderTop: `2px solid ${theme.palette.primary.divider}`, // Borde más marcado
       overflowY: 'auto',

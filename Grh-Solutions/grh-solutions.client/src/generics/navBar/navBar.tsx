@@ -97,7 +97,9 @@ export const NavBar: React.FC = () => {
                       sx={{
                         marginTop: "5px",
                         marginLeft: "10px",
-                        bgcolor: deepPurple[500]
+                        bgcolor: deepPurple[500],
+                        width: 30, height: 30,
+                        fontSize: '17px'
                       }}
                     >
                       OP
