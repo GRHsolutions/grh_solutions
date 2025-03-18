@@ -6,10 +6,18 @@ export type News = {
     description: string;
     images: string[];
     status: string;
+    type: "simple-publication" | "publication-with-images" | "publication-with-survey"
     numberLikes: number;
     numberDisLikes: number;
     date: Dayjs;
     madeBy: string;
+    comments: Commentary[];
+}
+
+export type Commentary = {
+    id: number,
+    comment: string,
+    madeBy: number,
 }
 
 export type NewsFilter = {

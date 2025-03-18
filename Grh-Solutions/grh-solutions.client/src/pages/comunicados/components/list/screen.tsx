@@ -25,7 +25,8 @@ const Screen: React.FC = () => {
           boxShadow: `${theme.palette.primary.boxShadow}`,
           backgroundColor: `${theme.palette.primary.light}`,
           height: '100%',
-          width: '100%'
+          width: '100%',
+          overflowY: 'auto'
         }}
       >
         <RenderNews />

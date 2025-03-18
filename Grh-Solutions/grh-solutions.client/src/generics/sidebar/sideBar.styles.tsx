@@ -23,7 +23,7 @@ export const useStyles = () => {
       top: 0,
       left: "-280px",
       transition: "left 0.3s ease-in-out",
-      zIndex: 200,
+      zIndex: 250,
       padding: 0.5,
       boxShadow: theme.shadows[6], // Sombra más pronunciada
     },

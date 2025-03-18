@@ -4,14 +4,10 @@
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  position: relative;
-  overflow: hidden;
+  overflow: auto; /* Cambiado de hidden a auto */
 }
 
-
-
 .content {
-  position: relative;
   text-align: center;
   width: 100%;
   min-height: 69%;
@@ -22,7 +18,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* Solo si es necesario */
 }
+
 .content::before {
   content: "";
   position: absolute;
@@ -31,17 +29,17 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  z-index: 1; /* Asegúrate de que este z-index sea menor que el contenido principal */
 }
+
 .main-container {
   display: flex;
   align-items: center;
   width: 100%;
   max-width: 1200px;
-  z-index: 2;
+  z-index: 2; /* Asegúrate de que este z-index sea mayor que el ::before */
   gap: 30px;
 }
-
 
 .carousel-container {
   flex: 1;
@@ -89,8 +87,7 @@
   border-radius: 5px;
   padding: 20px 0;
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-  position: relative;
-  z-index: 2;
+  /* Elimina z-index a menos que sea necesario */
 }
 
 .contact-title {
@@ -116,10 +113,10 @@
 
 .social-icons {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 15px; 
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   max-width: 300px;
   margin: 0 auto;
 }

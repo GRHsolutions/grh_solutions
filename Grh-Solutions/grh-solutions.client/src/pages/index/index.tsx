@@ -1,21 +1,27 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
-import { Instagram, Facebook, LinkedIn, Twitter, YouTube, WhatsApp } from "@mui/icons-material";
+import {
+  Instagram,
+  Facebook,
+  LinkedIn,
+  Twitter,
+  YouTube,
+  WhatsApp,
+} from "@mui/icons-material";
 import { Box, useTheme } from "@mui/material";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "./index.styles.scss";
 
-import disolinImage from '../../img/disolin.jpg';
-import disolinImage2 from '../../img/disolin2.png';
-import disolinImage3 from '../../img/disloin3.jpg';
+import disolinImage from "../../img/disolin.jpg";
+import disolinImage2 from "../../img/disolin2.png";
+import disolinImage3 from "../../img/disloin3.jpg";
 
 export default function Index() {
   const theme = useTheme();
   return (
-
     <div className="background">
       <div className="overlay"></div>
       <div className="content">
@@ -31,13 +37,25 @@ export default function Index() {
               navigation
             >
               <SwiperSlide>
-                <img src={disolinImage} alt="Imagen 1" className="carousel-img" />
+                <img
+                  src={disolinImage}
+                  alt="Imagen 1"
+                  className="carousel-img"
+                />
               </SwiperSlide>
               <SwiperSlide>
-                <img src={disolinImage2} alt="Imagen 2" className="carousel-img" />
+                <img
+                  src={disolinImage2}
+                  alt="Imagen 2"
+                  className="carousel-img"
+                />
               </SwiperSlide>
               <SwiperSlide>
-                <img src={disolinImage3} alt="Imagen 3" className="carousel-img" />
+                <img
+                  src={disolinImage3}
+                  alt="Imagen 3"
+                  className="carousel-img"
+                />
               </SwiperSlide>
             </Swiper>
           </div>
@@ -45,8 +63,9 @@ export default function Index() {
           <div className="text-container">
             <h1 className="title">Disolin</h1>
             <p className="description">
-              Disolin es una empresa dedicada a la distribución y monitoreo de máquinas expendedoras.
-              Actualmente, se encuentra en crecimiento, pero enfrenta desafíos en la gestión de recursos humanos.
+              Disolin es una empresa dedicada a la distribución y monitoreo de
+              máquinas expendedoras. Actualmente, se encuentra en crecimiento,
+              pero enfrenta desafíos en la gestión de recursos humanos.
             </p>
           </div>
         </div>
@@ -61,15 +80,22 @@ export default function Index() {
           fontSize: "2rem",
           fontFamily: theme.typography.fontFamily,
           color: theme.palette.primary.contrastText,
+          position: "relative", // Solo si es necesario
+          zIndex: 1, // Asegúrate de que este z-index sea menor que el contenido principal
         }}
       >
         <footer className="footer">
-          <p className="contact-title"><strong>Contáctanos.</strong></p>
+          <p className="contact-title">
+            <strong>Contáctanos.</strong>
+          </p>
           <div className="contact-section">
             <div className="contact-info">
               <p>
                 <strong>Correo:</strong>
-                <a href="mailto:disolin.asociados@gmail.com"> disolin.asociados@gmail.com</a>
+                <a href="mailto:disolin.asociados@gmail.com">
+                  {" "}
+                  disolin.asociados@gmail.com
+                </a>
               </p>
               <p>
                 <strong>Teléfono:</strong>

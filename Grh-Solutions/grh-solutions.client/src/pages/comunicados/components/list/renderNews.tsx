@@ -23,7 +23,10 @@ const RenderNews: React.FC = () => {
         flexDirection: 'column',
         overflowY: "auto",
         overflowX: "hidden",
-        padding: 3
+        padding: 3,
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
       }}
     >
       {news.length === 0 ? (
@@ -40,7 +43,11 @@ const RenderNews: React.FC = () => {
       ) : (
         <Box>
           {news.map((item) => (
-            <NewItem key={item.id.toString()} item={item} onClick={handleSelect} />
+            <NewItem 
+              key={item.id.toString()} 
+              item={item} 
+              onClick={handleSelect} 
+            />
           ))}
         </Box>
       )}

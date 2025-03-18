@@ -78,7 +78,7 @@ const GrhButton: React.FC<GrhButtonProps> = ({
           padding: p ?? theme.spacing(0.5),
           borderRadius: theme.shape.borderRadius,
           "&:hover": {
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.primary.divider,
           },
         };
       default:
