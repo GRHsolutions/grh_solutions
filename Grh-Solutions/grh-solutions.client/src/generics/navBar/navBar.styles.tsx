@@ -1,4 +1,5 @@
 import { useTheme } from "@mui/material";
+import zIndex from "@mui/material/styles/zIndex";
 
 interface ReturnableCss {
     navBar: React.CSSProperties,
@@ -25,7 +26,8 @@ export const NavBarStyles = () => {
             top: 0,
             left: 0,
             width: "100%",
-            color: theme.palette.primary.contrastText
+            color: theme.palette.primary.contrastText,
+            zIndex: 1100
         },
         right: {
             display: "flex",
