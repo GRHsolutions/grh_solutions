@@ -21,7 +21,7 @@ const RenderNews: React.FC = () => {
         gap: "13px",
         display: 'flex',
         flexDirection: 'column',
-        overflowY: "auto",
+        overflowY: "hidden",
         overflowX: "hidden",
         padding: 3,
         '&::-webkit-scrollbar': {

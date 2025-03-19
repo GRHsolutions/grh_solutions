@@ -26,7 +26,21 @@ const Screen: React.FC = () => {
           backgroundColor: `${theme.palette.primary.light}`,
           height: '100%',
           width: '100%',
-          overflowY: 'auto'
+          overflowY: 'auto',
+          "&::-webkit-scrollbar": {
+            width: "8px", // Ancho de la barra
+          },
+          "&::-webkit-scrollbar-track": {
+            background: `${theme.palette.primary.light}`, // Color de fondo
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#888", // Color del "thumb" (parte desplazable)
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#555", // Color cuando se pasa el mouse
+          },
         }}
       >
         <RenderNews />
@@ -44,7 +58,21 @@ const Screen: React.FC = () => {
             height: "100%",
             maxHeight: '60vh',
             marginTop: "25px",
-            overflowY: 'auto'
+            overflowY: 'auto',
+            "&::-webkit-scrollbar": {
+              width: "8px", // Ancho de la barra
+            },
+            "&::-webkit-scrollbar-track": {
+              background: "#f1f1f1", // Color de fondo
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              background: "#888", // Color del "thumb" (parte desplazable)
+              borderRadius: "4px",
+            },
+            "&::-webkit-scrollbar-thumb:hover": {
+              background: "#555", // Color cuando se pasa el mouse
+            },
           }}
         >
           <Typography 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Birthday } from "../../../../domain/models/news/news.entities";
 import { useNews } from "../../../../hooks/news";
-import { Box, Container, Grid2, Typography, useTheme } from "@mui/material";
+import { Avatar, Box, Container, Grid2, Typography, useTheme } from "@mui/material";
 
 interface RenderBirthsProps {}
 
@@ -14,7 +14,7 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
         paddingTop: "15px",
         display: 'flex',
         flexDirection: 'column',
-        gap: '13px',
+        gap: '7px',
         overflowY: 'auto'
       }}
     >
@@ -23,16 +23,18 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
           container 
           display="flex" 
           key={birthday.id} 
-          spacing={2}
+          spacing={3}
           alignItems={"center"}
-          padding={'3px'}
+          padding={'5px'}
           sx={{
             "&:hover": {
               backgroundColor: `${theme.palette.primary.hover}`
             }
           }}
         >
-          <Grid2 size={3}>
+          <Grid2 
+            size={3}
+          >
             <Box
               sx={{
                 borderRadius: "50%",
@@ -41,20 +43,23 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
                 height: "42px",
               }}
             >
-              <img
+              <Avatar
                 src={birthday.photo}
-                alt={birthday.name}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                }}
+                alt={birthday.name + birthday.id}
               />
             </Box>
           </Grid2>
-          <Grid2 size={9}>
-            <Typography variant="body1">{birthday.name}</Typography>
-            <Typography variant="body1">
+          <Grid2 
+            size={9}
+          >
+            <Typography 
+              variant="body1"
+            >
+              {birthday.name}
+            </Typography>
+            <Typography 
+              variant="body1"
+            >
               {birthday.date.format("DD/MM/YYYY")}
             </Typography>
           </Grid2>

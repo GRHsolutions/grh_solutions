@@ -32,7 +32,10 @@ const NewItem: React.FC<NewItemProps> = ({ item, onClick, key }: NewItemProps) =
         backgroundColor: 'background.paper',
       }}
     >      
-      <Box sx={{ padding: '16px' }}>
+      <Box sx={{ 
+          padding: '16px' 
+        }}
+      >
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
           <Avatar sx={{ marginRight: '8px' }}>
             {item.madeBy[0]}
@@ -55,7 +58,8 @@ const NewItem: React.FC<NewItemProps> = ({ item, onClick, key }: NewItemProps) =
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginTop: '15px'
           }}
         >
         {(item.type === "publication-with-images" && item.images.length > 0)  && (
