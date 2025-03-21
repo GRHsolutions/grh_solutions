@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { userService } from '../services'; // Asegúrate de tener este servicio creado
+import { userService } from '../services/users.service';
 
 export const loginController = {
   register: async (req: Request, res: Response) => {

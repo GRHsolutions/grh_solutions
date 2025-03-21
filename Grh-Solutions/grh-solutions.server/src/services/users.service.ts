@@ -1,6 +1,6 @@
-import { UsuarioModel } from '../models'; // Asegúrate de que la ruta sea correcta
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
+import { UsuarioModel } from '../models/users.model';
 
 export const userService = {
   getAll: async (filter: any) => {

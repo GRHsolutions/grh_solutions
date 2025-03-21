@@ -14,7 +14,11 @@ interface NewItemProps {
   key: string;
 }
 
-const NewItem: React.FC<NewItemProps> = ({ item, onClick, key }: NewItemProps) => {
+const NewItem: React.FC<NewItemProps> = ({ 
+  item, 
+  onClick, 
+  key 
+}: NewItemProps) => {
   return (
     <Box
       key={key}
