@@ -3,12 +3,35 @@ import React from 'react';
 import MUIswitch from '../../generics/switch/MUIswitch';
 import GrhButton from '../../generics/grh-generics/button';
 import GrhTextField from '../../generics/grh-generics/textField';
-import { DragDropInput } from '../../generics/grh-generics/inputFiles/DragNDrop';
+import { DragDropInput } from '../../generics/grh-generics/DragNDrop';
+import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
+import dayjs, { Dayjs } from 'dayjs';
+import MultipleSelect from '../../generics/grh-generics/multipleSelect';
 
 const TryColorsAndGenerics = () => {
   const theme = useTheme();
   const [ useColorShowCase, setUseColorShowCase ] = React.useState(false);
   const [selectedFiles, setSelectedFiles] = React.useState<File[]>([]);
+  const [dat, setDat] = React.useState<Dayjs | null>(dayjs());
+  const [text, setText] = React.useState("");
+  const options = [{
+      id: 1,
+      name: "OBJETO 1"
+    },{
+      id: 2,
+      name: "OBJETO 2"
+    },{
+      id: 3,
+      name: "OBJETO 3"
+    },{
+      id: 4,
+      name: "OBJETO 4"
+    },{
+      id: 5,
+      name: "OBJETO 5"
+    }
+  ]
+  const [mult, setMult] = React.useState<number[]>([]);
 
   const handleFileSelect = (files: File[]) => {
     setSelectedFiles(files);
@@ -49,6 +72,10 @@ const TryColorsAndGenerics = () => {
   const handleSwitchAction = () => {
     setUseColorShowCase(!useColorShowCase);
   }
+
+  const setFieldValue = (_field: string, value: number[]) => {
+    setMult(value);
+  };
 
   return (
     <Box 
@@ -173,13 +200,37 @@ const TryColorsAndGenerics = () => {
           <GrhButton 
             label="BOTON PRINCIPAL"
             variant='principal'
+            sx={{
+              width: '50%'
+            }}
           />
           <GrhButton 
             label="BOTON SECONDARY"
             variant='secondary'
+            sx={{
+              width: '50%'
+            }}
+          />
+          <GrhButton 
+            label="BOTON TERTIARY"
+            variant='tertiary'
+            sx={{
+              width: '50%'
+            }}
+          />
+          <GrhButton 
+            label="BOTON DEFAULT"
+            variant='use-default'
+            sx={{
+              width: '50%'
+            }}
           />
           <GrhTextField 
-            label='cooa'
+            label='label component'
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value || "");
+            }}
           />
           <DragDropInput 
             acceptedMimeTypes={['image/jpeg', 'image/png', 'image/gif']}
@@ -187,6 +238,22 @@ const TryColorsAndGenerics = () => {
             onFileSelect={handleFileSelect}
             selectedFiles={selectedFiles} 
             maxFiles={1}
+          />
+          <GenericDatePicker 
+            value={dat} 
+            label={'Input Date Picker'} 
+            onChange={setDat}         
+          />
+          <label> MultipleSelect BUGGED</label>
+          <MultipleSelect 
+            label={'Input multiple select'} 
+            name={'input'} 
+            options={options} 
+            value={mult} 
+            setFieldValue={setFieldValue}     
+            sx={{
+              width: '55rem'
+            }}     
           />
         </Section>
       }

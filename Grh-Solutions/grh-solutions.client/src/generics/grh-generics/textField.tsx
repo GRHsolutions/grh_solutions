@@ -73,4 +73,4 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
   );
 });
 
-export default GrhTextField;
+export default React.memo(GrhTextField); 
