@@ -1,6 +1,6 @@
 import { Box } from "@mui/material"
 import CreatedSolicitudes from "./componentes/CreatedSolicitudes"
-import TableSolicitudes from "./componentes/tableSolicitudes"
+import TableSolicitudes from "./componentes/TableSolicitudes"
 import "./stiles.scss"
 export default function SolicitudesPage() {
   return (

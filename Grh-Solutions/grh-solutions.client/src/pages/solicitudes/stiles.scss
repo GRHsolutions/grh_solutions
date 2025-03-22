@@ -83,8 +83,8 @@ td {
     margin-top: 3%;
     padding: 6px 12px; 
     border-radius: 12px; 
-    color: white; 
-    font-size: 18px; 
+    color: #ffffff; 
+    font-size: 16px; 
     font-weight: bold; 
     text-align: center; 
     height: 30px; 
@@ -161,30 +161,278 @@ margin-top: 5%;
 .DivInformacion {
     background-color: #ffffff;
     margin-top: 3%;
-    padding: 2% 5%; 
-    border-radius:5px; 
-    color: rgb(0, 0, 0); 
-    font-size: 30px; 
-    font-weight: bold; 
-    height: 25px; 
+    padding: 2% 5%;
+    border-radius: 5px 5px 0 0;
+    color: rgb(0, 0, 0);
+    font-size: 30px;
+    font-weight: bold;
+    height: 30px;
     display: flex;
-    align-items: center; 
-    border: 1px solid rgb(0, 0, 0); 
+    align-items: center;
+    border: 1px solid rgb(0, 0, 0);
+    border-bottom: 1px solid #000000;
+    font-size: 25px;
 }
 
-.divInfo{
+.divInfo {
     background-color: #ffffff;
-    margin-top: -2%;
-    border-top: none;
-    padding: 2% 5%; 
-    border-radius:5px; 
-    color: rgb(0, 0, 0); 
-    font-size: 30px; 
-    font-weight: bold; 
-    height: 25px; 
+    margin-top: 0%;
+    padding: 2% 5%;
+    border-radius: 5px;
+    color: rgb(17, 16, 16);
+    font-size: 25px;
+    font-weight: bold;
+    border-left: 1px solid rgb(0, 0, 0);
+    border-right: 1px solid rgb(0, 0, 0);
+    border-bottom: 1px solid rgb(0, 0, 0);
+    width: 100%;
+    box-sizing: border-box; 
+    min-height: 350px;
+}
+
+.divUsuarioIn {
     display: flex;
-    align-items: center; 
-    border-left: 1px solid rgb(0, 0, 0); 
-    border-right: 1px solid rgb(0, 0, 0); 
-    border-bottom: 1px solid rgb(0, 0, 0); 
+    align-items: center;
+    border: 1px solid #000000;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+.divUsuarioLabel {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.divUsuarioInfo {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+}
+
+
+.menuSolicitudes {
+
+    padding-left: 50px;
+}
+
+.menuContainer {
+    font-size: 20px;
+    position: absolute;
+    right: 0;
+    background: white;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 200px;
+    z-index: 100;
+    top: 110px;
+
+}
+
+.menuContainer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuContainer li {
+    padding: 8px;
+    cursor: pointer;
+    border: 1px solid #000000;
+    margin-bottom: 5px;
+}
+
+.menuContainer li:hover {
+    background: #f0f0f0;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+}
+
+
+.subMenuAsignar {
+    background: white;
+    width: 90%;
+    max-width: 600px;
+    padding: 0px 20px 20px 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.2);
+    border: 2px solid #000000;
+    overflow: hidden;
+}
+
+.labelAsig {
+    display: block;
+    width: calc(100% + 21px);
+    margin: -2px -2px 15px -22px;
+    border: 2px solid #000000;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 20px;
+    background: #ffffff;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn {
+    background: #0056b3;
+    color: white;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+.btn.cancel {
+    background: #585858;
+    color: white;
+}
+
+.btn.cancel:hover {
+    background: #585858;
+}
+
+
+.divAsigUser {
+    font-size: 16px;
+    text-align: left;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+}
+
+.userLabel {
+    display: block;
+    border: 2px solid rgb(0, 0, 0);
+    padding: 8px;
+    width: fit-content;
+}
+.divider {
+    border: none;
+    height: 2px;
+    background: black;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.dividerIcon {
+    position: absolute;
+    right: 52px;
+    top: 56%;
+    transform: translateY(-50%);
+}
+
+.subMenuHistorial {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 58%;
+    height: 100vh;
+    background: white;
+    border-left: 2px solid #000000;
+    box-shadow: -2px 0px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 10px;
+}
+.historialHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 2px solid black;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.historialTitle {
+    margin: 0;
+    font-size: 25px;
+
+}
+
+.closeButton {
+    background:#ffffff;
+    cursor: pointer;
+    border: 2px solid #000000;
+}
+
+.historialContent {
+    display: flex;
+    align-items: center;
+    border: 2px solid #000000;
+    padding: 10px;
+    margin: 20px;
+    border-radius: 10px;
+}
+
+.historialIcon {
+    margin-right: 10px;
+}
+
+.historialText {
+    display: flex;
+    flex-direction: column;
+}
+
+.historialText label {
+    display: block;
+}
+
+.documentolHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 2px solid black;
+    background: #ffffff;
+    border-radius: 10px;
+    border: 2px solid #000000;
+}
+
+.documentoTitle {
+    margin: 0;
+    font-size: 25px;
+
+}
+
+.closeButtonDoc{
+
+    background:#ffffff;
+    cursor: pointer;
+    border: 2px solid #000000;
+}
+.docContent{
+
+    border: 2px solid #000000;
+
 }
