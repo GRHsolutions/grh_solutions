@@ -5,7 +5,7 @@ import NewItem from "./newItem";
 import { News } from "../../../../domain/models/news/news.entities";
 
 const RenderNews: React.FC = () => {
-  const { news, setCurrent } = useNews();
+  const { news, setCurrent, comments } = useNews();
 
   const handleSelect = (item: News) => {
     setCurrent({
@@ -47,6 +47,7 @@ const RenderNews: React.FC = () => {
               key={item.id.toString()} 
               item={item} 
               onClick={handleSelect} 
+              comments={comments}
             />
           ))}
         </Box>

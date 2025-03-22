@@ -3,6 +3,7 @@ import React from "react";
 import { useParametros } from "../../../../contexts/useParamether.provider";
 import RenderNews from "./renderNews";
 import RenderBirths from "./renderBirths";
+import { ViewMail } from "../view/viewMail";
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
   const theme = useTheme();
@@ -86,6 +87,7 @@ const Screen: React.FC = () => {
           <RenderBirths />
         </Grid2>
       )}
+      <ViewMail />
     </Grid2>
   );
 };

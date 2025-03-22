@@ -1,6 +1,6 @@
 import React from "react";
-import { News } from "../../../../domain/models/news/news.entities";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Commentary, News } from "../../../../domain/models/news/news.entities";
+import { Avatar, Box, Typography, useTheme } from "@mui/material";
 import formatearFecha from "../../../../utils/formatearFecha";
 import CommentIcon from "@mui/icons-material/Comment";
 import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
@@ -10,6 +10,7 @@ import ImageGrid from "../../../../components/comunicados/gridImages";
 
 interface NewItemProps {
   item: News;
+  comments: Commentary[];
   onClick: (item: News) => void;
   key: string;
 }
@@ -17,8 +18,32 @@ interface NewItemProps {
 const NewItem: React.FC<NewItemProps> = ({ 
   item, 
   onClick, 
-  key 
+  key,
+  comments
 }: NewItemProps) => {
+  const theme = useTheme();
+  const Description = ({ description }: { description: string | undefined }) => {
+    const maxLength = 100;
+    const truncatedDescription =
+      description && description.length > maxLength
+        ? (
+          <>
+            {description.substring(0, maxLength)} 
+            <Typography 
+              component="span"
+              sx={{ 
+                cursor: 'pointer',
+                color: theme.palette.primary.link
+              }}
+            >
+              …ver más
+            </Typography>
+          </>
+        )
+        : description;
+    return <>{truncatedDescription}</>;
+  };
+
   return (
     <Box
       key={key}
@@ -56,9 +81,9 @@ const NewItem: React.FC<NewItemProps> = ({
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           {item.title}
         </Typography>
-        <Typography variant="body1" color="textSecondary">
-          {item.description}
-        </Typography>
+          <Typography variant="body1" color="textSecondary" gutterBottom>
+            {item && <Description description={item.description} />}
+          </Typography>
         <Box
           sx={{
             display: 'flex',
@@ -93,7 +118,7 @@ const NewItem: React.FC<NewItemProps> = ({
             />
             <GrhButton 
               startIcon={<CommentIcon />}
-              label={item.comments.length.toString()}
+              label={comments.length.toString()}
               id={"comment"}
             />
         </Box>

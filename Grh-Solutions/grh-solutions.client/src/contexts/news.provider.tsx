@@ -1,5 +1,5 @@
 import React from "react";
-import { Birthday, News } from "../domain/models/news/news.entities";
+import { Birthday, Commentary, News } from "../domain/models/news/news.entities";
 import { Errors } from "../domain/models/error/error.entities";
 import dayjs from "dayjs";
 import { IMAGENDEPRUEBAPARACOMUNICADOS } from "../const/variables";
@@ -13,10 +13,12 @@ interface CurrentProps {
 interface NewsItems {
   news: News[];
   birthdays: Birthday[];
+  comments: Commentary[];
   status: Errors | null;
   reload: () => void;
   current: CurrentProps;
   setCurrent: (select: CurrentProps) => void;
+  newComment: (comment: Commentary) => void;
 }
 
 // Creación del contexto
@@ -34,8 +36,9 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [birthdays, setBirthdays] = React.useState<Birthday[]>([]);
   const [current, setCurrent] = React.useState<CurrentProps>({
     item: null,
-    action: "none",
+    action: "none"
   });
+  const [comments, setComments] = React.useState<Commentary[]>([]);	
 
   React.useEffect(() => {
     const fetchBirthdays = async () => {
@@ -75,20 +78,43 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   React.useEffect(() => {
+    if(current.item){
+      setComments([
+        {
+          id: 1,
+          comment: "Comentario 1",
+          madeBy: 1
+        },
+        {
+          id: 2,
+          comment: "Comentario 2",
+          madeBy: 1
+        },
+        {
+          id: 3,
+          comment: "Comentario 3",
+          madeBy: 1
+        }
+      ])
+    } else {
+      setComments([]);
+    }
+  }, [current.item]);
+
+  React.useEffect(() => {
     const fetchNews = async () => {
       try {
         setNews([
           {
             id: 1,
             title: "Noticia 1",
-            description: "Descripción 1",
+            description: "Descripción 1 de la noticia mediante la cual se informa sobre el contenido de la misma, pero tiene adjuntadas varias imagenes importantes para la noticia, no mames wey, que ped",
             images: [IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS],
             status: "Activa",
             numberLikes: 0,
             numberDisLikes: 0,
             date: dayjs(),
             madeBy: "Pedro Sanchez",
-            comments: [],
             type: "publication-with-images"
           },
           {
@@ -101,7 +127,6 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
             numberDisLikes: 0,
             date: dayjs(),
             madeBy: "Pedro Sanchez",
-            comments: [],
             type: "simple-publication"
           },
           {
@@ -114,7 +139,6 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
             numberDisLikes: 0,
             date: dayjs(),
             madeBy: "Pedro Sanchez",
-            comments: [],
             type: "simple-publication"
           },
         ]);
@@ -125,6 +149,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     fetchNews();
   }, [useReload]);
+
+  const newComment = (comment: Commentary) => {
+    console.log("ajusar servicio para subir: ", comment);
+  }
 
   const handleReload = () => {
     setReload(!useReload);
@@ -141,6 +169,8 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     birthdays: birthdays,
     current: current,
     setCurrent: SelectItem,
+    comments: comments,
+    newComment: newComment,
   };
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;

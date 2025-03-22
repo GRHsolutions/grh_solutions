@@ -11,7 +11,6 @@ export type News = {
     numberDisLikes: number;
     date: Dayjs;
     madeBy: string;
-    comments: Commentary[];
 }
 
 export type Commentary = {

@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { TextField as MuiTextField, TextFieldVariants } from '@mui/material';
+import { InputAdornment, TextField as MuiTextField, TextFieldVariants } from '@mui/material';
 import { SxProps, useTheme } from '@mui/material/styles';
 
 interface TextFieldProps {
@@ -16,6 +16,9 @@ interface TextFieldProps {
   variant?: TextFieldVariants;
   sx?: SxProps;
   disabled?: boolean;
+  placeholder?: string;
+  startIcon?: React.ReactNode; // Add startIcon prop
+  endIcon?: React.ReactNode;   // Add endIcon prop
 }
 
 const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
@@ -31,6 +34,9 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
     variant = 'outlined',
     sx = {},
     disabled = false,
+    placeholder,
+    startIcon,
+    endIcon
   },
   ref
 ) => {
@@ -47,6 +53,7 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
       onChange={onChange}
       fullWidth={fullWidth}
       disabled={disabled}
+      placeholder={placeholder}
       sx={{
         ...sx,
         '& .MuiInputLabel-root': {
@@ -69,6 +76,16 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
       }}
       type={type}
       autoComplete={autoComplete}
+      slotProps={{
+        input:{
+          startAdornment: startIcon && (
+            <InputAdornment position="start">{startIcon}</InputAdornment>
+          ),
+          endAdornment: endIcon && (
+            <InputAdornment position="end">{endIcon}</InputAdornment>
+          )
+        }
+      }}
     />
   );
 });
