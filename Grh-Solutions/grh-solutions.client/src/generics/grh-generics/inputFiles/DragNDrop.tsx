@@ -3,36 +3,64 @@ import {
   Paper, 
   Typography, 
   Box,
-  Alert
+  Alert,
+  IconButton,
+  Stack
 } from '@mui/material';
-import { CloudUpload } from '@mui/icons-material';
+import { 
+  CloudUpload,
+  DeleteOutline,
+  InsertDriveFile,
+  PictureAsPdf,
+  Image,
+  Description,
+} from '@mui/icons-material';
 
 interface DragDropInputProps {
   acceptedMimeTypes: string[];
-  maxSizeInMB: number;
-  onFileSelect: (file: File) => void;
+  maxSizeInKB: number;
+  maxFiles: number;
+  onFileSelect: (files: File[]) => void;
+  selectedFiles: File[];
+  inputProps?: InputProps
 }
 
-export function GrhDragDropInput({ 
+interface InputProps {
+    label?: string;
+}
+
+export function DragDropInput({ 
   acceptedMimeTypes, 
-  maxSizeInMB, 
-  onFileSelect 
+  maxSizeInKB, 
+  maxFiles,
+  onFileSelect,
+  selectedFiles,
+  inputProps  
 }: DragDropInputProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string>('');
 
-  const validateFile = (file: File): boolean => {
-    setError('');
+  const getFileIcon = (fileType: string) => {
+    if (fileType.startsWith('image/')) return <Image sx={{ color: 'secondary.main' }} />;
+    if (fileType === 'application/pdf') return <PictureAsPdf sx={{ color: 'red' }} />;
+    if (fileType.includes('msword') || fileType.includes('word')) return <Description sx={{ color: 'blue' }} />;
+    if (fileType.includes('excel') || fileType.includes('spreadsheet')) return <Description sx={{ color: 'green' }} />;
+    return <InsertDriveFile sx={{ color: 'grey.500' }} />;
+  };
 
-    if (!acceptedMimeTypes.includes(file.type)) {
-      setError(`Invalid file type. Accepted types: ${acceptedMimeTypes.join(', ')}`);
+  const validateFiles = (newFiles: File[]): boolean => {
+    setError('');
+    
+    if (selectedFiles.length + newFiles.length > maxFiles) {
+      setError(`Maximum ${maxFiles} files allowed.`);
       return false;
     }
 
-    const sizeInMB = file.size / (1024 * 1024);
-    if (sizeInMB > maxSizeInMB) {
-      setError(`File size must be less than ${maxSizeInMB}MB`);
-      return false;
+    for (const file of newFiles) {
+      if (file.size / 1024 > maxSizeInKB) {
+        setError(`File ${file.name} exceeds ${maxSizeInKB}KB limit`);
+        return false;
+      }
     }
 
     return true;
@@ -41,12 +69,7 @@ export function GrhDragDropInput({
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
-    if (e.type === 'dragenter' || e.type === 'dragover') {
-      setIsDragging(true);
-    } else if (e.type === 'dragleave') {
-      setIsDragging(false);
-    }
+    setIsDragging(e.type === 'dragenter' || e.type === 'dragover');
   }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
@@ -54,21 +77,26 @@ export function GrhDragDropInput({
     e.stopPropagation();
     setIsDragging(false);
 
-    const file = e.dataTransfer.files[0];
-    if (file && validateFile(file)) {
-      onFileSelect(file);
+    const newFiles = Array.from(e.dataTransfer.files);
+    if (newFiles.length > 0 && validateFiles(newFiles)) {
+      onFileSelect([...selectedFiles, ...newFiles]);
     }
-  }, [onFileSelect, validateFile]);
+  }, [onFileSelect, selectedFiles, validateFiles]);
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file && validateFile(file)) {
-      onFileSelect(file);
+    const newFiles = e.target.files ? Array.from(e.target.files) : [];
+    if (newFiles.length > 0 && validateFiles(newFiles)) {
+      onFileSelect([...selectedFiles, ...newFiles]);
     }
-  }, [onFileSelect, validateFile]);
+    e.target.value = '';
+  }, [onFileSelect, selectedFiles, validateFiles]);
+
+  const handleRemoveFile = (indexToRemove: number) => {
+    onFileSelect(selectedFiles.filter((_, index) => index !== indexToRemove));
+  };
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Stack spacing={2} width="100%">
       <Paper
         elevation={isDragging ? 3 : 1}
         onDragEnter={handleDrag}
@@ -78,13 +106,13 @@ export function GrhDragDropInput({
         sx={{
           p: 4,
           border: '2px dashed',
-          borderColor: isDragging ? 'primary.main' : 'grey.300',
-          bgcolor: isDragging ? 'primary.50' : 'background.paper',
+          borderColor: isDragging ? 'secondary.main' : 'grey.300',
+          bgcolor: isDragging ? 'action.hover' : 'background.paper',
           transition: 'all 0.2s ease-in-out',
           cursor: 'pointer',
           '&:hover': {
-            borderColor: 'primary.main',
-            bgcolor: 'primary.50'
+            borderColor: 'secondary.main',
+            bgcolor: 'action.hover'
           }
         }}
       >
@@ -94,34 +122,41 @@ export function GrhDragDropInput({
           accept={acceptedMimeTypes.join(',')}
           style={{ display: 'none' }}
           id="fileInput"
+          multiple
         />
         <label htmlFor="fileInput" style={{ cursor: 'pointer', width: '100%', height: '100%' }}>
           <Box sx={{ textAlign: 'center' }}>
-            <CloudUpload 
-              sx={{ 
-                fontSize: 64, 
-                mb: 2,
-                color: isDragging ? 'primary.main' : 'grey.500'
-              }} 
-            />
-            <Typography variant="h6" component="div" gutterBottom color="textPrimary">
-              Drop your file here or click to select
+            <CloudUpload sx={{ fontSize: 64, mb: 2, color: isDragging ? 'secondary.main' : 'grey.500' }} />
+            <Typography variant="h6" component="div" gutterBottom>
+              {inputProps?.label || "Drop your files here or click to select"}
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Maximum file size: {maxSizeInMB}MB
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Accepted types: {acceptedMimeTypes.join(', ')}
+              Max file size: {maxSizeInKB}KB per file, Max files: {maxFiles}
             </Typography>
           </Box>
         </label>
       </Paper>
       
-      {error && (
-        <Alert severity="error" sx={{ mt: 2 }}>
-          {error}
-        </Alert>
+      {error && <Alert severity="error" onClose={() => setError('')}>{error}</Alert>}
+
+      {selectedFiles.length > 0 && (
+        <Stack spacing={1} width="100%">
+          {selectedFiles.map((file, index) => (
+            <Paper key={index} sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+              {getFileIcon(file.type)}
+              <Box sx={{ flexGrow: 1 }}>
+                <Typography variant="body1" noWrap>{file.name}</Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {(file.size / 1024).toFixed(2)} KB
+                </Typography>
+              </Box>
+              <IconButton onClick={() => handleRemoveFile(index)} color="error" size="small">
+                <DeleteOutline />
+              </IconButton>
+            </Paper>
+          ))}
+        </Stack>
       )}
-    </Box>
+    </Stack>
   );
 }

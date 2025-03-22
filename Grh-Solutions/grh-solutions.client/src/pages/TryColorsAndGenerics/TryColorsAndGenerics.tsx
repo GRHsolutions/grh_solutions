@@ -1,12 +1,18 @@
-import { Box, Typography, Paper, Grid2, useTheme } from '@mui/material';
+import { Box, Typography, Paper, Grid2, useTheme, SxProps } from '@mui/material';
 import React from 'react';
 import MUIswitch from '../../generics/switch/MUIswitch';
 import GrhButton from '../../generics/grh-generics/button';
 import GrhTextField from '../../generics/grh-generics/textField';
+import { DragDropInput } from '../../generics/grh-generics/inputFiles/DragNDrop';
 
 const TryColorsAndGenerics = () => {
   const theme = useTheme();
   const [ useColorShowCase, setUseColorShowCase ] = React.useState(false);
+  const [selectedFiles, setSelectedFiles] = React.useState<File[]>([]);
+
+  const handleFileSelect = (files: File[]) => {
+    setSelectedFiles(files);
+  };
 
   const ColorSwatch = ({ color, name, textColor = '#000' }: { color: string; name: string; textColor?: string }) => (
     <Paper elevation={2} sx={{ mb: 2, overflow: 'hidden' }}>
@@ -29,12 +35,12 @@ const TryColorsAndGenerics = () => {
     </Paper>
   );
 
-  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <Box sx={{ mb: 4 }}>
+  const Section = ({ title, children, sx }: { title: string; children: React.ReactNode, sx?: SxProps }) => (
+    <Box sx={{ mb: 4}}>
       <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
         {title}
       </Typography>
-      <Grid2 container spacing={2}>
+      <Grid2 container spacing={5} sx={{...sx}}>
         {children}
       </Grid2>
     </Box>
@@ -68,64 +74,67 @@ const TryColorsAndGenerics = () => {
       }}
     >
       <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
-        Theme Color Palette <MUIswitch value={useColorShowCase} onChange={handleSwitchAction} />
+        Theme Color Palette
+      </Typography>
+      <Typography variant='h5' sx={{ mb: 4, textAlign: 'center' }}>
+        cambiar vista <MUIswitch value={useColorShowCase} onChange={handleSwitchAction} />
       </Typography>
       {useColorShowCase ? 
         <>
           <Section title="Primary Colors">
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.primary.main} name="Primary Main" />
+              <ColorSwatch color={theme.palette.primary.main} name="Primary Main" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.primary.dark} name="Primary Dark" />
+              <ColorSwatch color={theme.palette.primary.dark} name="Primary Dark" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.primary.light} name="Primary Light" />
+              <ColorSwatch color={theme.palette.primary.light} name="Primary Light" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.primary.hover as string} name="Primary Hover" />
+              <ColorSwatch color={theme.palette.primary.hover as string} name="Primary Hover" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.primary.father as string} name="Primary Father" />
+              <ColorSwatch color={theme.palette.primary.father as string} name="Primary Father" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.primary.link as string} name="Primary Link" />
+              <ColorSwatch color={theme.palette.primary.link as string} name="Primary Link" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
           </Section>
 
           <Section title="Secondary Colors">
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.secondary.main} name="Secondary Main" textColor="#fff" />
+              <ColorSwatch color={theme.palette.secondary.main} name="Secondary Main" textColor={theme.palette.primary.contrastText} />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.secondary.dark} name="Secondary Dark" textColor="#fff" />
+              <ColorSwatch color={theme.palette.secondary.dark} name="Secondary Dark" textColor={theme.palette.primary.contrastText} />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.secondary.light} name="Secondary Light" />
+              <ColorSwatch color={theme.palette.secondary.light} name="Secondary Light" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.secondary.hover as string} name="Secondary Hover" textColor="#fff" />
+              <ColorSwatch color={theme.palette.secondary.hover as string} name="Secondary Hover" textColor={theme.palette.primary.contrastText} />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.secondary.link as string} name="Secondary Link" textColor="#fff" />
+              <ColorSwatch color={theme.palette.secondary.link as string} name="Secondary Link" textColor={theme.palette.primary.contrastText} />
             </Grid2>
           </Section>
 
           <Section title="Background Colors">
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.background.default} name="Background Default" />
+              <ColorSwatch color={theme.palette.background.default} name="Background Default" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.background.paper} name="Background Paper" />
+              <ColorSwatch color={theme.palette.background.paper} name="Background Paper" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
           </Section>
 
           <Section title="Text Colors">
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.text.primary} name="Text Primary" textColor="#fff" />
+              <ColorSwatch color={theme.palette.text.primary} name="Text Primary" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.text.secondary} name="Text Secondary" textColor="#fff" />
+              <ColorSwatch color={theme.palette.text.secondary} name="Text Secondary" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
               <ColorSwatch color={theme.palette.text.dark} name="Text Dark" />
@@ -134,16 +143,16 @@ const TryColorsAndGenerics = () => {
 
           <Section title="Status Colors">
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.success.main} name="Success Main" textColor="#fff" />
+              <ColorSwatch color={theme.palette.success.main} name="Success Main" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.error.main} name="Error Main" textColor="#fff" />
+              <ColorSwatch color={theme.palette.error.main} name="Error Main" textColor={theme.palette.primary.contrastText} />
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.warning.main} name="Warning Main" />
+              <ColorSwatch color={theme.palette.warning.main} name="Warning Main" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
             <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
-              <ColorSwatch color={theme.palette.info.main} name="Info Main" textColor="#fff" />
+              <ColorSwatch color={theme.palette.info.main} name="Info Main" textColor={theme.palette.primary.contrastText}/>
             </Grid2>
           </Section>
 
@@ -153,14 +162,14 @@ const TryColorsAndGenerics = () => {
                 <ColorSwatch 
                   color={value} 
                   name={`Gray ${key}`} 
-                  textColor={parseInt(key) > 500 ? '#fff' : '#000'} 
+                  textColor={parseInt(key) > 500 ? theme.palette.primary.contrastText : theme.palette.primary.contrastText} 
                 />
               </Grid2>
             ))}
           </Section>
         </>
       : 
-        <Section title='Componentes propios de grh utiles'> 
+        <Section title='Componentes propios de grh utiles' sx={{ display: 'flex', flexDirection: 'column'}}> 
           <GrhButton 
             label="BOTON PRINCIPAL"
             variant='principal'
@@ -171,6 +180,13 @@ const TryColorsAndGenerics = () => {
           />
           <GrhTextField 
             label='cooa'
+          />
+          <DragDropInput 
+            acceptedMimeTypes={['image/jpeg', 'image/png', 'image/gif']}
+            maxSizeInKB={15}
+            onFileSelect={handleFileSelect}
+            selectedFiles={selectedFiles} 
+            maxFiles={1}
           />
         </Section>
       }

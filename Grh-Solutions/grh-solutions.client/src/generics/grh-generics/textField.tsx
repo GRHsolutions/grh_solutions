@@ -1,37 +1,40 @@
-import React from 'react';
-import { TextField as MuiTextField, TextFieldVariants } from '@mui/material'; // Importa el TextField de MUI correctamente
-import { SxProps, useTheme } from '@mui/material/styles'; // Para acceder al tema
+import React, { forwardRef } from 'react';
+import { TextField as MuiTextField, TextFieldVariants } from '@mui/material';
+import { SxProps, useTheme } from '@mui/material/styles';
 
 interface TextFieldProps {
   id?: string;
   name?: string;
-  ref?: React.RefObject<HTMLInputElement | null>;
   value?: string | number;
   label?: string;
-  handleChange?: (
+  onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   fullWidth?: boolean;
-  type?: React.HTMLInputTypeAttribute | undefined;
+  type?: React.HTMLInputTypeAttribute;
   autoComplete?: string;
   variant?: TextFieldVariants;
   sx?: SxProps;
+  disabled?: boolean;
 }
 
-const GrhTextField: React.FC<TextFieldProps> = ({
-  id,
-  name,
-  ref,
-  value,
-  label,
-  handleChange,
-  fullWidth = false,
-  type,
-  autoComplete,
-  variant,
-  sx
-}) => {
-  const theme = useTheme(); // Accede al tema para usarlo en el componente
+const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
+  {
+    id,
+    name,
+    value,
+    label,
+    onChange,
+    fullWidth = false,
+    type = 'text',
+    autoComplete,
+    variant = 'outlined',
+    sx = {},
+    disabled = false,
+  },
+  ref
+) => {
+  const theme = useTheme();
 
   return (
     <MuiTextField
@@ -39,10 +42,11 @@ const GrhTextField: React.FC<TextFieldProps> = ({
       name={name}
       label={label}
       variant={variant}
-      inputRef={ref} // Utiliza el ref que se pasa como prop
-      value={value} // Asigna el valor que se pasa al componente
-      onChange={handleChange} // Pasa la función handleChange
+      inputRef={ref}
+      value={value}
+      onChange={onChange}
       fullWidth={fullWidth}
+      disabled={disabled}
       sx={{
         ...sx,
         '& .MuiInputLabel-root': {
@@ -63,10 +67,10 @@ const GrhTextField: React.FC<TextFieldProps> = ({
           },
         },
       }}
-      type={type} // Asumiendo que es un campo de correo electrónico
+      type={type}
       autoComplete={autoComplete}
     />
   );
-};
+});
 
 export default GrhTextField;

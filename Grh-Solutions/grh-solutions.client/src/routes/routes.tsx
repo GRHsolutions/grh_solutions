@@ -41,7 +41,7 @@ export const AppRoutes = (): RouteObject[] => {
       element: <>{CompoRender({ element: SolicitudesPage })}</>
     },
     {
-      path: "/see-various-grh-variables-and-generics",
+      path: "/demo-items",
       element: <>{CompoRender({ element: TryColorsAndGenerics })}</>
     },
     {
