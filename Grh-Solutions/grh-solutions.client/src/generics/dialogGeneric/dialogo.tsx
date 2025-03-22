@@ -20,7 +20,11 @@ export interface SimpleDialogProps {
 
 
 export default function SimpleDialog(props: SimpleDialogProps) {
-    const { onClose, open, title = "Eliminar el comunicado", subTitle = "si desea proceder con esta accion es irreversible",
+    const { 
+        onClose, 
+        open, 
+        title = "Eliminar el comunicado", 
+        subTitle = "si desea proceder con esta accion es irreversible",
         text = "estas seguro de eliminar el comunicado,esto se actualizara para todos los usuarios, y se les notificara al usuario responsable de este",
         onConfirm
     } = props;
@@ -40,7 +44,7 @@ export default function SimpleDialog(props: SimpleDialogProps) {
                     <label style={{fontSize:"15px", marginTop:"-10px"}}>{subTitle}</label>
                 </Box>
                 <IconButton onClick={handleClose} sx={{ position:"relative", top: -20, left: 160}}>
-                <CloseIcon/>
+                    <CloseIcon/>
                 </IconButton>       
             </DialogTitle>
             <Divider />

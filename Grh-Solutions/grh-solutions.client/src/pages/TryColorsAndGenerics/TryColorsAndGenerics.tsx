@@ -1,0 +1,182 @@
+import { Box, Typography, Paper, Grid2, useTheme } from '@mui/material';
+import React from 'react';
+import MUIswitch from '../../generics/switch/MUIswitch';
+import GrhButton from '../../generics/grh-generics/button';
+import GrhTextField from '../../generics/grh-generics/textField';
+
+const TryColorsAndGenerics = () => {
+  const theme = useTheme();
+  const [ useColorShowCase, setUseColorShowCase ] = React.useState(false);
+
+  const ColorSwatch = ({ color, name, textColor = '#000' }: { color: string; name: string; textColor?: string }) => (
+    <Paper elevation={2} sx={{ mb: 2, overflow: 'hidden' }}>
+      <Box
+        sx={{
+          backgroundColor: color,
+          p: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 1,
+        }}
+      >
+        <Typography variant="subtitle1" sx={{ color: textColor, fontWeight: 'bold' }}>
+          {name}
+        </Typography>
+        <Typography variant="body2" sx={{ color: textColor }}>
+          {color}
+        </Typography>
+      </Box>
+    </Paper>
+  );
+
+  const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <Box sx={{ mb: 4 }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+        {title}
+      </Typography>
+      <Grid2 container spacing={2}>
+        {children}
+      </Grid2>
+    </Box>
+  );
+
+  const handleSwitchAction = () => {
+    setUseColorShowCase(!useColorShowCase);
+  }
+
+  return (
+    <Box 
+      sx={{ 
+        p: 4, 
+        maxWidth: '{ sx: 12, sm: 6, md: 4 }00px', 
+        margin: '0 auto',
+        overflow: 'auto',
+        "&::-webkit-scrollbar": {
+          width: "8px", // Ancho de la barra
+        },
+        "&::-webkit-scrollbar-track": {
+          background: `${theme.palette.primary.light}`, // Color de fondo
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: "#888", // Color del "thumb" (parte desplazable)
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          background: "#555", // Color cuando se pasa el mouse
+        },
+      }}
+    >
+      <Typography variant="h4" sx={{ mb: 4, textAlign: 'center' }}>
+        Theme Color Palette <MUIswitch value={useColorShowCase} onChange={handleSwitchAction} />
+      </Typography>
+      {useColorShowCase ? 
+        <>
+          <Section title="Primary Colors">
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.primary.main} name="Primary Main" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.primary.dark} name="Primary Dark" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.primary.light} name="Primary Light" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.primary.hover as string} name="Primary Hover" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.primary.father as string} name="Primary Father" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.primary.link as string} name="Primary Link" />
+            </Grid2>
+          </Section>
+
+          <Section title="Secondary Colors">
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.secondary.main} name="Secondary Main" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.secondary.dark} name="Secondary Dark" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.secondary.light} name="Secondary Light" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.secondary.hover as string} name="Secondary Hover" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.secondary.link as string} name="Secondary Link" textColor="#fff" />
+            </Grid2>
+          </Section>
+
+          <Section title="Background Colors">
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.background.default} name="Background Default" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.background.paper} name="Background Paper" />
+            </Grid2>
+          </Section>
+
+          <Section title="Text Colors">
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.text.primary} name="Text Primary" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.text.secondary} name="Text Secondary" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.text.dark} name="Text Dark" />
+            </Grid2>
+          </Section>
+
+          <Section title="Status Colors">
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.success.main} name="Success Main" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.error.main} name="Error Main" textColor="#fff" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.warning.main} name="Warning Main" />
+            </Grid2>
+            <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+              <ColorSwatch color={theme.palette.info.main} name="Info Main" textColor="#fff" />
+            </Grid2>
+          </Section>
+
+          <Section title="Gray Scale">
+            {Object.entries(theme.palette.gray).map(([key, value]) => (
+              <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={key}>
+                <ColorSwatch 
+                  color={value} 
+                  name={`Gray ${key}`} 
+                  textColor={parseInt(key) > 500 ? '#fff' : '#000'} 
+                />
+              </Grid2>
+            ))}
+          </Section>
+        </>
+      : 
+        <Section title='Componentes propios de grh utiles'> 
+          <GrhButton 
+            label="BOTON PRINCIPAL"
+            variant='principal'
+          />
+          <GrhButton 
+            label="BOTON SECONDARY"
+            variant='secondary'
+          />
+          <GrhTextField 
+            label='cooa'
+          />
+        </Section>
+      }
+      
+    </Box>
+  );
+}
+
+export default TryColorsAndGenerics;
