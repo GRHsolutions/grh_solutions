@@ -9,6 +9,7 @@ const Index = lazy(() => import("../pages/index"));
 const Postulate = lazy(() => import("../pages/postulate/postulate"));
 const BoundaryRoute = lazy(() => import("../pages/boundaryRoute/BoundaryRoute"));
 const SolicitudesPage = lazy(()=> import("../pages/solicitudes/SolicitudesPages"))
+const UserPage = lazy(() => import("../pages/user/UserPage"));
 // Rutas de la aplicaci�n
 
 export const AppRoutes = (): RouteObject[] => {
@@ -37,6 +38,10 @@ export const AppRoutes = (): RouteObject[] => {
     {
       path: "/solicitudes",
       element: <>{CompoRender({ element: SolicitudesPage })}</>
+    },
+    {
+      path: "/user",
+      element: <>{CompoRender({ element: UserPage })}</>
     }
   ];
 };
