@@ -17,6 +17,7 @@ interface GrhButtonProps {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   p?: string | number;
+  disabled?: boolean;
 }
 
 const GrhButton: React.FC<GrhButtonProps> = ({
@@ -30,59 +31,69 @@ const GrhButton: React.FC<GrhButtonProps> = ({
   startIcon,
   endIcon,
   variant = "use-default",
-  p
+  p,
+  disabled
 }) => {
   const theme = useTheme(); // Accede al tema para usarlo en el componente
 
   const useVariant = (): SxProps => {
+    const baseStyles: SxProps = {
+      ...sx,
+      padding: p ?? theme.spacing(0.5),
+      borderRadius: theme.shape.borderRadius,
+      "&:hover": {
+        backgroundColor: theme.palette.primary.divider,
+      },
+    };
+
+    if (disabled) {
+      return {
+        ...baseStyles,
+        backgroundColor: theme.palette.action.disabledBackground,
+        color: theme.palette.action.disabled,
+        "&:hover": {
+          backgroundColor: theme.palette.action.disabledBackground,
+        },
+      };
+    }
+
     switch (variant) {
       case "principal":
         return {
-          ...sx,
+          ...baseStyles,
           backgroundColor: theme.palette.secondary.main,
           color: theme.palette.secondary.contrastText,
-          padding: p ?? theme.spacing(1),
-          borderRadius: theme.shape.borderRadius,
           "&:hover": {
             backgroundColor: theme.palette.secondary.hover,
           },
         };
       case "secondary":
         return {
-          ...sx,
+          ...baseStyles,
           backgroundColor: "transparent",
           color: theme.palette.secondary.main,
           textDecoration: "outlined",
-          padding: p ?? theme.spacing(0.5),
-          borderRadius: theme.shape.borderRadius,
           "&:hover": {
             backgroundColor: theme.palette.primary.hover,
           },
         };
       case "tertiary":
         return {
-          ...sx,
+          ...baseStyles,
           border: '2px solid' + theme.palette.secondary.main,
           color: theme.palette.text.primary,
-          padding: p ?? theme.spacing(0.5),
-          borderRadius: theme.shape.borderRadius,
           "&:hover": {
             backgroundColor: theme.palette.primary.hover,
           },
         };
       case "use-default":
         return {
-          ...sx,
+          ...baseStyles,
           backgroundColor: theme.palette.background.paper,
           color: theme.palette.text.primary,
-          padding: p ?? theme.spacing(0.5),
-          borderRadius: theme.shape.borderRadius,
-          "&:hover": {
-            backgroundColor: theme.palette.primary.divider,
-          },
         };
       default:
-        return {...sx};
+        return baseStyles;
     }
   };
 
@@ -98,6 +109,7 @@ const GrhButton: React.FC<GrhButtonProps> = ({
       ref={ref}
       startIcon={startIcon}
       endIcon={endIcon}
+      disabled={disabled}
     >
       {label}
     </Button>

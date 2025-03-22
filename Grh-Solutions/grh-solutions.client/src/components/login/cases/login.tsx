@@ -1,10 +1,12 @@
-import {  Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { useRef } from "react";
 import { LoginService } from "../../../domain/services/login/login.service";
 import { useAuth } from "../../../hooks/auth";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
+import React from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
 interface LoginProps {
   onRegister: () => void;
@@ -12,86 +14,117 @@ interface LoginProps {
 
 const styles = {
   link: {
-    cursor: 'pointer',
-    color: 'blue',
-    textDecoration: 'underline', // Subrayado para enlaces
+    cursor: "pointer",
+    color: "blue",
+    textDecoration: "underline", // Subrayado para enlaces
   } as React.CSSProperties,
 };
 
 export default function Login({ onRegister }: LoginProps) {
-  const correoRef = useRef<HTMLInputElement>(null);
-  const contraseñaRef = useRef<HTMLInputElement>(null);
+  const initialValues = {
+    correo: "",
+    contraseña: "",
+  };
   const theme = useTheme();
   const { login } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("nigga")
-    if(correoRef.current == undefined || contraseñaRef.current == undefined){
-      return;
-    }
-    const correo = correoRef.current.value;
-    const contraseña = contraseñaRef.current.value;
-    LoginService.login(correo, contraseña)
-      .then(e => {
-        login(e.token, e.usrName, e.photo, e.correo);
-      });    
+  const handleSubmit = (values: { correo: string; contraseña: string }) => {
+    LoginService.login(values.correo, values.contraseña).then((e) => {
+      login(e.token, e.usrName, e.photo, e.correo);
+    });
   };
 
+  // Validación de Yup
+  const validationSchema = Yup.object({
+    correo: Yup.string()
+      .email("Correo electrónico no válido")
+      .required("El correo electrónico es obligatorio"),
+    contraseña: Yup.string()
+      .min(8, "La contraseña debe tener al menos 8 caracteres")
+      .matches(/[0-9]/, "La contraseña debe contener al menos un número")
+      .matches(
+        /[a-z]/,
+        "La contraseña debe contener al menos una letra minúscula"
+      )
+      .matches(
+        /[A-Z]/,
+        "La contraseña debe contener al menos una letra mayúscula"
+      )
+      .matches(
+        /[\W_]/,
+        "La contraseña debe contener al menos un carácter especial"
+      ) // \W cubre todos los signos especiales
+      .required("La contraseña es obligatoria"),
+  });
+
   return (
-    <Box
-      component="form"
+    <Formik
+      initialValues={initialValues}
       onSubmit={handleSubmit}
-      autoComplete="off"
-      sx={{
-        display: "grid",
-        width: { xs: "90%", sm: "70%", md: "50%" }, // Ajuste de ancho responsivo
-        gap: "1.5rem",
-        margin: "0 auto",
-        padding: { xs: "16px", sm: "24px" }, // Padding responsivo
-        fontFamily: theme.typography.fontFamily,
-        color: theme.palette.primary.contrastText,
-        justifyContent: "center",
-        alignItems: "center"
-      }}
+      validationSchema={validationSchema}
+      style={undefined}
     >
-      <Typography
-        sx={{
-          fontWeight: "bold",
-          fontSize: { xs: "1.5rem", sm: "2rem" },
-          textAlign: "center",
-        }}
-      >
-        Inicio de Sesión
-      </Typography>
-      <GrhTextField
-        id="crr"
-        label="Correo"
-        ref={correoRef}
-        fullWidth
-        type="mail"
-        autoComplete="off"
-      />
-      <GrhTextField
-        id="ctr"
-        label="Contraseña" // Cambio a outlined para mejor visibilidad
-        type="password"
-        ref={contraseñaRef}
-        fullWidth
-      />
-      <Typography
-        sx={{
-          fontSize: { xs: "0.8rem", sm: "1rem" },
-          textAlign: "center",
-        }}
-      >
-        ¿Has olvidado tu contraseña? Haz clic <label onClick={onRegister} style={styles.link}>aquí</label>
-      </Typography>
-      <GrhButton
-        type="submit"
-        variant="principal"
-        label="Ingresar"
-      />
-    </Box>
+      {({ values, handleChange, isValid }) => {
+        return (
+          <Form>
+            <Box
+              sx={{
+                display: "grid",
+                width: { xs: "100%", sm: "100%", md: "100%" }, // Ajuste de ancho responsivo
+                gap: "1.5rem",
+                fontFamily: theme.typography.fontFamily,
+                color: theme.palette.primary.contrastText,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: { xs: "1.5rem", sm: "2rem" },
+                  textAlign: "center",
+                }}
+              >
+                Inicio de Sesión
+              </Typography>
+              <GrhTextField
+                name="correo"
+                label="Correo electrónico"
+                placeholder="example@example.com"
+                value={values.correo}
+                onChange={handleChange}
+                autoComplete="off"
+              />
+              <GrhTextField
+                name="contraseña"
+                label="Contraseña"
+                placeholder="Super123*"
+                value={values.contraseña}
+                onChange={handleChange}
+                autoComplete="off"
+                type="password"
+              />
+              <Typography
+                sx={{
+                  fontSize: { xs: "0.8rem", sm: "1rem" },
+                  textAlign: "center",
+                }}
+              >
+                ¿Has olvidado tu contraseña? Haz clic{" "}
+                <label onClick={onRegister} style={styles.link}>
+                  aquí
+                </label>
+              </Typography>
+              <GrhButton
+                type="submit"
+                variant="principal"
+                label="Ingresar"
+                disabled={!isValid || !values.correo || !values.contraseña}
+              />
+            </Box>
+          </Form>
+        );
+      }}
+    </Formik>
   );
 }

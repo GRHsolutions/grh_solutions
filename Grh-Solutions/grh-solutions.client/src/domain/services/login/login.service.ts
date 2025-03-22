@@ -10,5 +10,9 @@ export const LoginService = {
             photo: KaiCenat,
             correo: correo
         }
-    }   
+    },
+    async register(nombre: string, correo: string, pass: string) {
+        console.log(nombre, correo, pass);
+        return true;
+    }
   };

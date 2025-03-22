@@ -19,6 +19,8 @@ interface TextFieldProps {
   placeholder?: string;
   startIcon?: React.ReactNode; // Add startIcon prop
   endIcon?: React.ReactNode;   // Add endIcon prop
+  error?: boolean; // Prop para indicar si hay error
+  helperText?: string; // Prop para mostrar el mensaje de error
 }
 
 const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
@@ -36,7 +38,9 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
     disabled = false,
     placeholder,
     startIcon,
-    endIcon
+    endIcon,
+    error = false, // Recibimos el estado de error
+    helperText, // Recibimos el mensaje de error
   },
   ref
 ) => {
@@ -73,6 +77,9 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
             borderColor: theme.palette.primary.hover, // Color constante para el borde cuando está enfocado
           },
         },
+        // '& .MuiInputBase-input::placeholder': {
+        //   color: 'black', // Color del placeholder
+        // },
       }}
       type={type}
       autoComplete={autoComplete}
@@ -86,8 +93,10 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
           )
         }
       }}
+      error={error} // Activamos el error si la prop `error` es true
+      helperText={helperText} // Mostramos el mensaje de error si existe
     />
   );
 });
 
-export default React.memo(GrhTextField); 
+export default React.memo(GrhTextField);

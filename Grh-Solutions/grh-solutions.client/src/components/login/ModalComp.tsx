@@ -39,7 +39,7 @@ export const ModalComp = ({ open, onClose }: ModalCompProps) => {
       case "login":
         return <Login onRegister={() => setActual('register')} />;
       case "register":
-        return <Register onRegister={() => setActual('login')} />;
+        return <Register onLogin={() => setActual('login')} />;
     }
   };
 
