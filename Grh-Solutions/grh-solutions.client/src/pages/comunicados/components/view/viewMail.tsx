@@ -186,6 +186,13 @@ export const ViewMail = ({}: ViewMailProps) => {
                 sx={{
                   width: "100%",
                 }}
+                clickableAdornment={{
+                  end: () => {
+                    if(newCommentRef.current?.value != null && newCommentRef.current?.value != "") {
+                      console.log("enviando jajaj", newCommentRef.current?.value);
+                    }
+                  }
+                }}
                 endIcon={<SendIcon />}
               />
             </Box>            

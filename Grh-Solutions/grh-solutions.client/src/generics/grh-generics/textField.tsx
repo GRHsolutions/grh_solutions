@@ -21,6 +21,10 @@ interface TextFieldProps {
   endIcon?: React.ReactNode;   // Add endIcon prop
   error?: boolean; // Prop para indicar si hay error
   helperText?: string; // Prop para mostrar el mensaje de error
+  clickableAdornment?: {
+    start?: () => void;
+    end?: () => void;
+  }; // Prop para indicar si el adornment es clickable
 }
 
 const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
@@ -41,10 +45,24 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
     endIcon,
     error = false, // Recibimos el estado de error
     helperText, // Recibimos el mensaje de error
+    clickableAdornment, // Recibimos la prop para adornos clickeables
   },
   ref
 ) => {
   const theme = useTheme();
+
+  // Función para manejar el clic en los adornos, asegurándonos de que no se ejecute inmediatamente.
+  const handleStartAdornmentClick = () => {
+    if (clickableAdornment?.start) {
+      clickableAdornment.start();
+    }
+  };
+
+  const handleEndAdornmentClick = () => {
+    if (clickableAdornment?.end) {
+      clickableAdornment.end();
+    }
+  };
 
   return (
     <MuiTextField
@@ -77,21 +95,30 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
             borderColor: theme.palette.primary.hover, // Color constante para el borde cuando está enfocado
           },
         },
-        // '& .MuiInputBase-input::placeholder': {
-        //   color: 'black', // Color del placeholder
-        // },
       }}
       type={type}
       autoComplete={autoComplete}
       slotProps={{
-        input:{
+        input: {
           startAdornment: startIcon && (
-            <InputAdornment position="start">{startIcon}</InputAdornment>
+            <InputAdornment
+              onClick={handleStartAdornmentClick}
+              position="start"
+              style={{ cursor: clickableAdornment?.start ? 'pointer' : 'default' }} // Cambiar cursor si es clickable
+            >
+              {startIcon}
+            </InputAdornment>
           ),
           endAdornment: endIcon && (
-            <InputAdornment position="end">{endIcon}</InputAdornment>
-          )
-        }
+            <InputAdornment
+              onClick={handleEndAdornmentClick}
+              position="end"
+              style={{ cursor: clickableAdornment?.end ? 'pointer' : 'default' }} // Cambiar cursor si es clickable
+            >
+              {endIcon}
+            </InputAdornment>
+          ),
+        },
       }}
       error={error} // Activamos el error si la prop `error` es true
       helperText={helperText} // Mostramos el mensaje de error si existe

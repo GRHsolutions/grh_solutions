@@ -1,7 +1,9 @@
 export type Usuario = {
-    id: string, // nose 
+    id: number, // nose 
     primerNombre: string,
     segundoNombre: string,
     primerApellido: string,
-    segundoApellido: string
+    segundoApellido: string,
+    correo: string,
+    photo: string | null
 }

@@ -1,0 +1,125 @@
+import React from "react";
+import { Errors } from "../domain/models/error/error.entities";
+import dayjs from "dayjs";
+import { Horarios } from "../domain/models/horarios/Horarios-entities";
+import { PageParams, UseQueryParams } from "../hooks/queryParams";
+
+interface CurrentProps {
+  item: Horarios | null;
+  action: "create" | "view" | "delete" | "none";
+}
+
+// Definición de tipos
+interface HorariosItems {
+  horarios: Horarios[];
+  status: Errors | null;
+  reload: () => void;
+  current: CurrentProps;
+  setCurrent: (select: CurrentProps) => void;
+  params: PageParams
+}
+
+// Creación del contexto
+export const HorariosContext = React.createContext<HorariosItems | undefined>(
+  undefined
+);
+
+// Proveedor del contexto
+export const HorariosProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [Horarios, setHorarios] = React.useState<Horarios[]>([]);
+  const [status, setStatus] = React.useState<Errors | null>(null);
+  const [useReload, setReload] = React.useState(false);
+  const [current, setCurrent] = React.useState<CurrentProps>({
+    item: null,
+    action: "none"
+  });
+  const [param, setParam] = React.useState<PageParams>({
+    type: undefined,
+    action: undefined,
+    id: undefined
+  });
+
+  const { queryParams } = UseQueryParams();
+
+  React.useEffect(() => {
+    setParam({
+      type: queryParams["type"],
+      action: queryParams["action"],
+      id: queryParams["id"] ? parseInt(queryParams["id"]) : undefined
+    });
+  }, [queryParams]);
+
+  React.useEffect(() => {
+    console.log(param);
+  }, [param]);
+
+  React.useEffect(() => {
+    const fetchHorarios = async () => {
+      try {
+        setHorarios([
+          {
+            id: 1,
+            tipoHorario: {
+              id: 1,
+              nombre: "Horario de trabajo",
+              descripcion: "Horario de trabajo",
+              horaInicial: "08:00",
+              horaFinal: "17:00",
+            },
+            fechaInicio: dayjs("2021-03-20"),
+            fechaFin: dayjs("2021-03-28"),
+            creadoPor: {
+              id: 1,
+              primerNombre: "Pedro",
+              segundoNombre: "Pedro",
+              primerApellido: "",
+              segundoApellido: "",
+              correo: "pedro.sanchez@gmail.com",
+              photo: null
+            },
+            grupo: {
+              id: 1,
+              nombre: "Turno diurno",
+              usuarios: [
+                {
+                  id: 1,
+                  primerNombre: "Pedro",
+                  segundoNombre: "Pedro",
+                  primerApellido: "",
+                  segundoApellido: "",
+                  correo: "",
+                  photo: null
+                }
+              ]
+            }
+          }
+        ]);
+      } catch (error) {
+        setStatus({ statusCode: 500, message: "Error al cargar las noticias" });
+      }
+    };
+
+    fetchHorarios();
+  }, [useReload]);
+
+  const handleReload = () => {
+    setReload(!useReload);
+  };
+
+  const SelectItem = (sel: CurrentProps) => {
+    setCurrent(sel);
+  };
+
+  const value: HorariosItems = {
+    horarios: Horarios,
+    status,
+    reload: handleReload,
+    current: current,
+    setCurrent: SelectItem,
+    params: param
+  };
+
+  return <HorariosContext.Provider value={value}>{children}</HorariosContext.Provider>;
+};

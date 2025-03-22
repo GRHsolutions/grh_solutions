@@ -100,14 +100,14 @@ export const NavBar: React.FC = () => {
                   >
                     <Avatar
                       sx={{
-                        marginTop: "5px",
-                        marginLeft: "10px",
-                        bgcolor: deepPurple[500],
-                        width: 30, height: 30,
-                        fontSize: '17px'
+                      marginTop: "5px",
+                      marginLeft: "10px",
+                      bgcolor: deepPurple[500],
+                      width: 30, height: 30,
+                      fontSize: '17px'
                       }}
+                      src={`data:image/jpeg;base64,${localStorage.getItem("usr_items_photo") || ""}`}
                     >
-                      OP
                     </Avatar>
                   </Box>
                   <Menu
