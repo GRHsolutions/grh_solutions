@@ -251,18 +251,6 @@ margin-top: 5%;
     background: #f0f0f0;
 }
 
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-}
 
 
 .subMenuAsignar {
@@ -343,13 +331,6 @@ margin-top: 5%;
     margin-top: 10px;
 }
 
-.dividerIcon {
-    position: absolute;
-    right: 52px;
-    top: 56%;
-    transform: translateY(-50%);
-}
-
 .subMenuHistorial {
     position: fixed;
     top: 0;
@@ -412,7 +393,6 @@ margin-top: 5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
     border-bottom: 2px solid black;
     background: #ffffff;
     border-radius: 10px;
@@ -420,9 +400,9 @@ margin-top: 5%;
 }
 
 .documentoTitle {
-    margin: 0;
+    margin: 3px;
     font-size: 25px;
-
+    text-align: center;
 }
 
 .closeButtonDoc{
@@ -431,8 +411,105 @@ margin-top: 5%;
     cursor: pointer;
     border: 2px solid #000000;
 }
-.docContent{
-
+.docContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .pdfPreview {
+    flex-basis: 60%;
+    border: 1px solid #000000;
+    padding: 10px;
+    height: 800px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .pdfSimulated {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #f0f0f0;
     border: 2px solid #000000;
+    border-radius: 8px;
+  }
+  
+  .pdfHeader {
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+  }
+  
+  .pdfPage {
+    background-color: #e0e0e0;
+    height: 700px;
+    width: 100%;
+    margin: 20px 0;
+    border: 1px dashed #000000;
+  }
+  
+  .pdfFooter {
+    text-align: center;
+    padding: 5px;
+    font-size: 12px;
+    background-color: #d0d0d0;
+    border-top: 1px solid #000000;
+  }
+  
+  .docInfo {
+    flex-basis: 35%; /* Ajustar este valor según el espacio que quieras para la info */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .docText {
+    display: flex;
+    flex-direction: column;
+    border: none;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 20px;
+  }
+  
+  .docInfoRow {
+    display: flex;
+    align-items: center;
+    border: 1px solid #000000;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 20px;
+  }
+  
+  .docNameType {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+  }
+  
+  .docText label {
+    margin: 0;
+  }
+  
+  
+  .subMenuFinal{
+    background-color: #ffffff;
+    border: 1px solid #000000;
+    padding:0%;
+  }
 
-}
+  .FinalTitle{
+    background-color: #c3c3c3;
+    margin-top: 0%;
+    padding: 0%;
+    border: 1px solid #000000;
+    font-size:25px;
+    margin-left: 0;
+  }

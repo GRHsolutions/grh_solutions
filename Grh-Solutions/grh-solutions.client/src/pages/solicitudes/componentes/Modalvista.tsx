@@ -8,7 +8,7 @@ import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuSolicitudes from "./MenuSolicitudes";
 import { useState } from "react";
-import react from '@vitejs/plugin-react-swc';
+
 
 
 const style = {
@@ -31,20 +31,28 @@ interface BasicModalProps {
   name: any
 }
 export default function BasicModal({ open, handleClose, name }: BasicModalProps) {
-  const [informacion, setInformacion] = React.useState(true)
-  const [involucadros, setInvolucadros] = React.useState(false)
-  const [seguimientos, setSeguimientos] = React.useState(false)
+  const [informacion, setInformacion] = React.useState(true);
+  const [involucadros, setInvolucadros] = React.useState(false);
+  const [seguimientos, setSeguimientos] = React.useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const onSubmit = (informacion: boolean, involucadros: boolean, seguimientos: boolean) => {
-    setInformacion(informacion)
-    setInvolucadros(involucadros)
-    setSeguimientos(seguimientos)
+
+
+  const handleCloseModal = () => {
+    handleClose();
+    setMenuOpen(false);
   };
+
+  const onSubmit = (informacion: boolean, involucadros: boolean, seguimientos: boolean) => {
+    setInformacion(informacion);
+    setInvolucadros(involucadros);
+    setSeguimientos(seguimientos);
+  };
+
   return (
     <div>
       <Modal
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -56,11 +64,10 @@ export default function BasicModal({ open, handleClose, name }: BasicModalProps)
               <h1>Ver solicitud {name.radicado}</h1>
               <label className="LabelInfo">Vea la información actual de su solicitud</label>
             </div>
-          <div className='menuSolicitudes'>
-          <MenuIcon sx={{ fontSize: 40, paddingTop: 2 }} onClick={() => setMenuOpen(!menuOpen)}/>
-          {menuOpen && <MenuSolicitudes onClose={() => setMenuOpen(false)} />}
-        </div>
-
+            <div className='menuSolicitudes'>
+              <MenuIcon sx={{ fontSize: 40, paddingTop: 2 }} onClick={() => setMenuOpen(!menuOpen)} />
+              {menuOpen && <MenuSolicitudes onClose={() => setMenuOpen(false)} />}
+            </div>
           </div>
 
           <div className='contentButtons'>
@@ -86,94 +93,97 @@ export default function BasicModal({ open, handleClose, name }: BasicModalProps)
               seguimientos
             </button>
           </div>
+
           <div>
-            {informacion &&
+            {informacion && (
               <>
                 <div className='DivInformacion'>
                   <label>Informacion basica</label>
                 </div>
                 <div className='divInfo'>
-                <Typography variant="body1">{name.titulo}</Typography>
-                <Typography variant="body1">Tipo: {name.tipo}</Typography>
-                <Typography variant="body2">Texto de la peticion, si quiere inventese algo aqui Juan</Typography>
+                  <Typography variant="body1">{name.titulo}</Typography>
+                  <Typography variant="body1">Tipo: {name.tipo}</Typography>
+                  <Typography variant="body2">Texto de la peticion, si quiere inventese algo aqui Juan</Typography>
                 </div>
               </>
+            )}
 
-            }
-            {involucadros && 
+            {involucadros && (
               <>
                 <div className='DivInformacion'>
                   <label>Usuarios involucrados a la solicitud</label>
                 </div>
                 <div className='divInfo'>
-              <div className='divUsuarioIn'>
-                <label className="divUsuarioLabel">
-                  <input type="checkbox" id="User1" name="User1" />
-                  <AccountCircleIcon sx={{ fontSize: 40 }} />
-                </label>
-                <div className='divUsuarioInfo'>
-                  <label>Pedro Gomez</label>
-                  <Typography variant="body1">Creador de la solicitud</Typography>
-                </div>
-              </div>
+                  <div className='divUsuarioIn'>
+                    <label className="divUsuarioLabel">
+                      <input type="checkbox" id="User1" name="User1" />
+                      <AccountCircleIcon sx={{ fontSize: 40 }} />
+                    </label>
+                    <div className='divUsuarioInfo'>
+                      <label>Pedro Gomez</label>
+                      <Typography variant="body1">Creador de la solicitud</Typography>
+                    </div>
+                  </div>
 
-              <div className='divUsuarioIn'>
-                <label className="divUsuarioLabel">
-                  <input type="checkbox" id="User2" name="User2" />
-                  <AccountCircleIcon sx={{ fontSize: 40 }} />
-                </label>
-                <div className='divUsuarioInfo'>
-                <label>Mario Mendosa</label>
-                  <Typography variant="body1">Interesado</Typography>
-                </div>
-              </div>
+                  <div className='divUsuarioIn'>
+                    <label className="divUsuarioLabel">
+                      <input type="checkbox" id="User2" name="User2" />
+                      <AccountCircleIcon sx={{ fontSize: 40 }} />
+                    </label>
+                    <div className='divUsuarioInfo'>
+                      <label>Mario Mendosa</label>
+                      <Typography variant="body1">Interesado</Typography>
+                    </div>
+                  </div>
 
-              <div className='divUsuarioIn'>
-                <label className="divUsuarioLabel">
-                  <input type="checkbox" id="User3" name="User3" />
-                  <AccountCircleIcon sx={{ fontSize: 40 }} />
-                </label>
-                <div className='divUsuarioInfo'>
-                <label>Luisa Aldana</label>
-                  <Typography variant="body1">Interesada</Typography>
-                </div>
-              </div>
+                  <div className='divUsuarioIn'>
+                    <label className="divUsuarioLabel">
+                      <input type="checkbox" id="User3" name="User3" />
+                      <AccountCircleIcon sx={{ fontSize: 40 }} />
+                    </label>
+                    <div className='divUsuarioInfo'>
+                      <label>Luisa Aldana</label>
+                      <Typography variant="body1">Interesada</Typography>
+                    </div>
+                  </div>
                 </div>
               </>
-            }
-            {seguimientos && 
-            <>
-            <div className='DivInformacion'>
-            <label>Seguimientos creados por un asignado a la solicitud</label>
-            </div>
-            <div className='divInfo'>
-              <div className='divUsuarioIn'>
-                <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                <div className='divUsuarioInfo'>
-                <label>Se ha vuelto a pendiente</label>
-                <Typography variant="body1">Por: Carlos Mario</Typography>
-              </div>
-            </div>
+            )}
 
-            <div className='divUsuarioIn'>
-                <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                <div className='divUsuarioInfo'>
-                <label>Se ha asignado a Carlos Mario</label>
-                <Typography variant="body1">Por: Mario Juda</Typography>
+            {seguimientos && (
+              <>
+                <div className='DivInformacion'>
+                  <label>Seguimientos creados por un asignado a la solicitud</label>
                 </div>
-              </div>
+                <div className='divInfo'>
+                  {/* Seguimientos */}
+                  <div className='divUsuarioIn'>
+                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+                    <div className='divUsuarioInfo'>
+                      <label>Se ha vuelto a pendiente</label>
+                      <Typography variant="body1">Por: Carlos Mario</Typography>
+                    </div>
+                  </div>
 
-            <div className='divUsuarioIn'>
-                <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                <div className='divUsuarioInfo'>
-                <label>Ha asignado a Mario Juda, es el primer asignado</label>
-                <Typography variant="body1">Por: Mario Castañeda</Typography>
+                  <div className='divUsuarioIn'>
+                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+                    <div className='divUsuarioInfo'>
+                      <label>Se ha asignado a Carlos Mario</label>
+                      <Typography variant="body1">Por: Mario Juda</Typography>
+                    </div>
+                  </div>
+
+                  <div className='divUsuarioIn'>
+                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+                    <div className='divUsuarioInfo'>
+                      <label>Ha asignado a Mario Juda, es el primer asignado</label>
+                      <Typography variant="body1">Por: Mario Castañeda</Typography>
+                    </div>
+                  </div>
                 </div>
-            </div>
-            </div>
-            </>
-            }
-            </div>
+              </>
+            )}
+          </div>
         </Box>
       </Modal>
       {menuOpen && <MenuSolicitudes onClose={() => setMenuOpen(false)} />} 
