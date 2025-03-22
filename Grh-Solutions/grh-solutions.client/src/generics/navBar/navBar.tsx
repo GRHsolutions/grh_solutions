@@ -17,7 +17,7 @@ import { useAuth } from "../../hooks/auth";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
-  const [switchValue, setSwitchValue] = React.useState(parametros.dark);
+  const [switchValue, setSwitchValue] = React.useState(!parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -52,6 +52,11 @@ export const NavBar: React.FC = () => {
     setAnchorEl(null);
     logout();
     navigate("/")
+  }
+
+  const handleNavigate = (path: string) => {
+    navigate(path)
+    setAnchorEl(null);
   }
 
   return (
@@ -124,7 +129,7 @@ export const NavBar: React.FC = () => {
                   >
                     <div style={Styles.menu}>
                       <label>Opciones</label>
-                      <MenuItem sx={{ marginTop: "10px", }}>
+                      <MenuItem sx={{ marginTop: "10px", }} onClick={() => handleNavigate("/user")}>
                         <PersonIcon sx={{ marginRight: "20px" }} />
                         <label>Informacion de perfil</label>
                       </MenuItem>

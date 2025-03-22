@@ -1,15 +1,17 @@
-import { Avatar, Backdrop, Box, Divider, Grid2, Typography, useTheme } from "@mui/material";
+import { Avatar, Backdrop, Box, Divider, Grid2, Typography, useTheme, IconButton } from "@mui/material";
 import { useNews } from "../../../../hooks/news";
 import formatearFecha from "../../../../utils/formatearFecha";
 import TextField from "../../../../generics/grh-generics/textField";
-import React from "react";
+import React, { useEffect } from "react";
+import SendIcon from '@mui/icons-material/Send';
+import CloseIcon from '@mui/icons-material/Close';
 
 interface ViewMailProps {}
 
 export const ViewMail = ({}: ViewMailProps) => {
   const { current, setCurrent, newComment } = useNews();
   const theme = useTheme();
-  const newCommentRef = React.useRef<HTMLInputElement | null>(null) 
+  const newCommentRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleClose = () => {
     setCurrent({
@@ -17,6 +19,19 @@ export const ViewMail = ({}: ViewMailProps) => {
       action: "none",
     });
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        handleClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   const Description = ({ description }: { description: string | undefined }) => {
     const maxLength = 230;
@@ -58,6 +73,7 @@ export const ViewMail = ({}: ViewMailProps) => {
             padding: 2,
             borderRight: `1px solid ${theme.palette.divider}`, // Añadimos un borde para separar los dos grids
           }}
+          onClick={(e) => e.stopPropagation()} // Stop click event propagation
         >
           {/* Aquí irán las imágenes */}
           <Box
@@ -83,13 +99,15 @@ export const ViewMail = ({}: ViewMailProps) => {
             padding: 2,
             overflowY: "auto", // Permite el desplazamiento si el contenido es largo
           }}
+          onClick={(e) => e.stopPropagation()} // Stop click event propagation
         >
+          <Box position={"absolute"} right={0} top={0} p={1}>
+            <IconButton onClick={handleClose} sx={{ color: theme.palette.primary.contrastText }}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
           {/* Aquí va la información del mail */}
-          <Box
-            display={"flex"}
-            gap={1.3}
-            mb={2}
-          >
+          <Box display={"flex"} gap={1.3} mb={2}>
             <Avatar>PS</Avatar>
             <Box>
               <Typography>{current.item?.madeBy}</Typography>
@@ -120,7 +138,7 @@ export const ViewMail = ({}: ViewMailProps) => {
             <Typography 
               variant="body1"
             >
-              {current.item && <Description description={current.item.description} />}
+              {current.item && current.item.description}
             </Typography>
           </Box>
           <Divider 
@@ -159,15 +177,16 @@ export const ViewMail = ({}: ViewMailProps) => {
                 }
                 // Add your submit logic here
               }}
+              p={1}
             >
               <TextField 
                 label={"Asunto"}
                 ref={newCommentRef}
-                disabled
                 placeholder="Nuevo comentario"
                 sx={{
                   width: "100%",
                 }}
+                endIcon={<SendIcon />}
               />
             </Box>            
           </Box>

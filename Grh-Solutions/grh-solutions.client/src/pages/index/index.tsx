@@ -17,7 +17,6 @@ import "./index.styles.scss";
 
 import disolinImage from "../../img/disolin.jpg";
 import disolinImage2 from "../../img/disolin2.png";
-import disolinImage3 from "../../img/disloin3.jpg";
 
 export default function Index() {
   const theme = useTheme();
@@ -47,13 +46,6 @@ export default function Index() {
                 <img
                   src={disolinImage2}
                   alt="Imagen 2"
-                  className="carousel-img"
-                />
-              </SwiperSlide>
-              <SwiperSlide>
-                <img
-                  src={disolinImage3}
-                  alt="Imagen 3"
                   className="carousel-img"
                 />
               </SwiperSlide>

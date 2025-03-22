@@ -3,7 +3,7 @@ import { Box } from "@mui/material"
 const BoundaryRoute = () => {
     return (
         <Box>
-            imbecil
+            NOT FOUND
         </Box>
     )
 }

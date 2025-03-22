@@ -108,7 +108,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
           {
             id: 1,
             title: "Noticia 1",
-            description: "Descripción 1 de la noticia mediante la cual se informa sobre el contenido de la misma, pero tiene adjuntadas varias imagenes importantes para la noticia, no mames wey, que ped",
+            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             images: [IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS, IMAGENDEPRUEBAPARACOMUNICADOS],
             status: "Activa",
             numberLikes: 0,
