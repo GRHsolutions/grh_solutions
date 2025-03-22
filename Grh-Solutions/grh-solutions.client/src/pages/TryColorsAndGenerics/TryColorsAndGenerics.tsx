@@ -7,6 +7,7 @@ import { DragDropInput } from '../../generics/grh-generics/DragNDrop';
 import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import MultipleSelect from '../../generics/grh-generics/multipleSelect';
+import GrhBasicMenu from '../../generics/grh-generics/menu';
 
 const TryColorsAndGenerics = () => {
   const theme = useTheme();
@@ -197,6 +198,32 @@ const TryColorsAndGenerics = () => {
         </>
       : 
         <Section title='Componentes propios de grh utiles' sx={{ display: 'flex', flexDirection: 'column'}}> 
+          <GrhBasicMenu 
+            optionsPosition={{
+              top: '2px',
+              left: '10px'
+            }}
+            items={[
+              {
+                label: "Opcion del menu 1",
+                onClick: () => {console.log("pressed")},
+                visible: true,
+                disabled: false
+              },
+              {
+                label: "Opcion del menu 2",
+                onClick: () => {console.log("pressed")},
+                visible: true,
+                disabled: false
+              },
+              {
+                label: "Opcion del menu 3",
+                onClick: () => {console.log("pressed")},
+                visible: true,
+                disabled: false
+              }
+            ]}          
+          />
           <GrhButton 
             label="BOTON PRINCIPAL"
             variant='principal'
@@ -255,6 +282,7 @@ const TryColorsAndGenerics = () => {
               width: '55rem'
             }}     
           />
+          
         </Section>
       }
       

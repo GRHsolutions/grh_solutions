@@ -72,6 +72,7 @@ const GenericDatePicker = memo(
             maxDate={maxDate}
             sx={{
               ...sx,
+              width: "100%",
               "& .MuiInputLabel-root": {
                 color: theme.palette.primary.contrastText, // Color constante para el label
               },
