@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 interface ViewMailProps {}
 
 export const ViewMail = ({}: ViewMailProps) => {
-  const { current, setCurrent, newComment } = useNews();
+  const { current, setCurrent /*, newComment */ } = useNews();
   const theme = useTheme();
   const newCommentRef = React.useRef<HTMLInputElement | null>(null);
 
@@ -33,14 +33,14 @@ export const ViewMail = ({}: ViewMailProps) => {
     };
   }, []);
 
-  const Description = ({ description }: { description: string | undefined }) => {
-    const maxLength = 230;
-    const truncatedDescription =
-      description && description.length > maxLength
-        ? description.substring(0, maxLength) + "…ver más"
-        : description;
-    return <>{truncatedDescription}</>;
-  };
+  // const Description = ({ description }: { description: string | undefined }) => {
+  //   const maxLength = 230;
+  //   const truncatedDescription =
+  //     description && description.length > maxLength
+  //       ? description.substring(0, maxLength) + "…ver más"
+  //       : description;
+  //   return <>{truncatedDescription}</>;
+  // };
 
   return (
     <Backdrop

@@ -44,6 +44,14 @@ export const useRenderedItems = (): Returnable => {
         active: location.pathname === "/comunicados",
         label: "Comunicados",
         icon: <MailIcon />,
+      },      
+      {
+        visible: isLoggedIn,
+        to: "/horarios?type=horarios",
+        disabled: false,
+        active: location.pathname === "/horarios?type=horarios",
+        label: "Horarios",
+        icon: <CalendarMonthIcon />
       },
       {
         visible: isLoggedIn,
@@ -81,14 +89,7 @@ export const useRenderedItems = (): Returnable => {
       //   label: "Peticiones",
       //   icon: <MailIcon />,
       // },
-      {
-        visible: isLoggedIn,
-        to: "/horarios?type=horarios",
-        disabled: false,
-        active: location.pathname === "/horarios?type=horarios",
-        label: "Horarios",
-        icon: <CalendarMonthIcon />
-      },
+
       {
         visible: isLoggedIn,
         to: "/vacantes",

@@ -1,9 +1,8 @@
 import React from "react";
 import { Errors } from "../domain/models/error/error.entities";
 import dayjs from "dayjs";
-import { Horarios, HorariosFilter } from "../domain/models/horarios/Horarios-entities";
+import { Horarios } from "../domain/models/horarios/Horarios-entities";
 import { PageParams, UseQueryParams } from "../hooks/queryParams";
-import { Pagination } from "../domain/models/pagination/pagination";
 import { GrhPagination } from "../generics/grh-generics/tableWrapper2";
 
 interface CurrentProps {

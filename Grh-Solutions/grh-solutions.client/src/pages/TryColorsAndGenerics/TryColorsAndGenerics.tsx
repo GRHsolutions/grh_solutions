@@ -8,7 +8,6 @@ import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import MultipleSelect from '../../generics/grh-generics/multipleSelect';
 import GrhBasicMenu from '../../generics/grh-generics/menu';
-import GrhGenericTable from '../../generics/grh-generics/tableWrapper2';
 import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
 
 interface TableDemo {
@@ -22,7 +21,9 @@ interface TableDemo {
 }
 
 interface Cualqueira {
-  name: string
+  name: string,
+  fecha: Dayjs;
+
 }
 
 function createData(
@@ -31,7 +32,8 @@ function createData(
   fat: number,
   carbs: number,
   protein: number,
-  cualquiera: string
+  cualquiera: string,
+  fecha: Dayjs
 ): TableDemo{
   return { 
     name: name, 
@@ -40,7 +42,8 @@ function createData(
     carbs:carbs,
     protein, 
     cualquiera: { 
-      name: cualquiera
+      name: cualquiera,
+      fecha: fecha
     }
   };
 }
@@ -72,11 +75,16 @@ const TryColorsAndGenerics = () => {
   const [mult, setMult] = React.useState<number[]>([]);
 
   const rows : TableDemo[] = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, "sigma"),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, "sigma"),
-    createData('Eclair', 262, 16.0, 24, 6.0, "sigma"),
-    createData('Cupcake', 305, 3.7, 67, 4.3, "sigma"),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma"),
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, "sigma", dayjs()),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, "sigma", dayjs()),
+    createData('Eclair', 262, 16.0, 24, 6.0, "sigma", dayjs()),
+    createData('Cupcake', 305, 3.7, 67, 4.3, "sigma", dayjs()),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
   ];
 
   const handleFileSelect = (files: File[]) => {
@@ -243,39 +251,39 @@ const TryColorsAndGenerics = () => {
         </>
       : 
         <Section title='Componentes propios de grh utiles' sx={{ display: 'flex', flexDirection: 'column'}}> 
-          <GrhBasicMenu 
-            optionsPosition={{
-              top: '2px',
-              left: '10px'
-            }}
-            items={[
-              {
-                label: "Opcion del menu 1",
-                onClick: () => {console.log("pressed")},
-                visible: true,
-                disabled: false
-              },
-              {
-                label: "Opcion del menu 2",
-                onClick: () => {console.log("pressed")},
-                visible: true,
-                disabled: false
-              },
-              {
-                label: "Opcion del menu 3",
-                onClick: () => {console.log("pressed")},
-                visible: true,
-                disabled: false
-              }
-            ]}          
-          />
-          <GrhButton 
-            label="BOTON PRINCIPAL"
-            variant='principal'
-            sx={{
-              width: '50%'
-            }}
-          />
+            <GrhBasicMenu 
+              optionsPosition={{
+                top: '2px',
+                left: '10px'
+              }}
+              items={[
+                {
+                  label: "Opcion del menu 1",
+                  onClick: () => {console.log("pressed")},
+                  visible: true,
+                  disabled: false
+                },
+                {
+                  label: "Opcion del menu 2",
+                  onClick: () => {console.log("pressed")},
+                  visible: true,
+                  disabled: false
+                },
+                {
+                  label: "Opcion del menu 3",
+                  onClick: () => {console.log("pressed")},
+                  visible: true,
+                  disabled: false
+                }
+              ]}          
+            />
+            <GrhButton 
+              label="BOTON PRINCIPAL"
+              variant='principal'
+              sx={{
+                width: '50%'
+              }}
+            />
           <GrhButton 
             label="BOTON SECONDARY"
             variant='secondary'
@@ -328,29 +336,40 @@ const TryColorsAndGenerics = () => {
             }}     
           />
           <GrhGenericTable2 
+            maxHeight={"20rem"}
             columns={[{
               key: "name",
               label: "Alimento",
               onRowClick: (value)=>{
                 console.log(value)
-              }
+              },
+              type: "string"
             },{
               key: "calories",
               label: "Calorias",
-              onRowClick: undefined
+              onRowClick: undefined,
+              type: "string"
             },
             {
               key: "fat",
               label: "Fatura?",
-              onRowClick: undefined
+              onRowClick: undefined,
+              type: "string"
             },{
               key: "carbs",
               label: "Carbohidratos",
-              onRowClick: undefined
+              onRowClick: undefined,
+              type: "string"
             },{
               key: "cualquiera.name",
               label: "Cualquiera",
-              onRowClick: undefined
+              onRowClick: undefined,
+              type: "string"
+            },{
+              key: "cualquiera.fecha",
+              label: "Fecha",
+              onRowClick: undefined,
+              type: "date"
             }
           ]} 
             data={rows} 

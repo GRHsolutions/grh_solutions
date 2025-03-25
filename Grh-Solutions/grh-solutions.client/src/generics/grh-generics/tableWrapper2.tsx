@@ -1,10 +1,12 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination } from "@mui/material";
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, useTheme, Box } from "@mui/material";
+import formatearFecha from "../../utils/formatearFecha";
 
 export interface GrhItemColumn {
   key: string;
   label: string;
   onRowClick?: (row: any) => void;
+  type: "string" | "date"
 }
 
 export interface GrhPagination {
@@ -19,25 +21,55 @@ interface GrhGenericTableProps {
   data: any[];
   pagination: GrhPagination;
   onPageChange: (page: number) => void;
+  maxHeight?: string | number;
 }
 
 const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({ 
     columns, 
     data, 
     pagination, 
-    onPageChange 
+    onPageChange,
+    maxHeight
 }) => {
-    const getNestedValue = (obj: any, path: string) => {
-        return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-      };
+  const theme = useTheme();
+  const getNestedValue = (obj: any, path: string) => {
+      return path.split('.').reduce((acc, part) => acc && acc[part], obj);
+    };
   return (
-    <div>
-      <TableContainer>
+    <Box>
+      <TableContainer
+        sx={{
+          maxHeight: maxHeight,
+          width: '100%',
+          overflowY: 'auto',
+          "&::-webkit-scrollbar": {
+            width: "8px", 
+          },
+          "&::-webkit-scrollbar-track": {
+            background: `${theme.palette.primary.light}`, 
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            background: "#888", 
+            borderRadius: "4px",
+          },
+          "&::-webkit-scrollbar-thumb:hover": {
+            background: "#555"
+          },
+        }}
+      >
         <Table>
           <TableHead>
             <TableRow>
               {columns.map((col) => (
-                <TableCell key={col.key}>{col.label}</TableCell>
+                <TableCell 
+                  sx={{
+                    fontWeight: 'bold'
+                  }}
+                  key={col.key}
+                >
+                  {col.label}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
@@ -54,7 +86,7 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
                       {getNestedValue(row, col.key)}
                     </span>
                   ) : (
-                    getNestedValue(row, col.key)
+                    col.type == "date" ? formatearFecha(getNestedValue(row, col.key)) : getNestedValue(row, col.key)
                   )}
                 </TableCell>
                 ))}
@@ -73,7 +105,7 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
         onPageChange={(_, newPage) => onPageChange(newPage)}
         rowsPerPageOptions={[pagination.pageSize]}
       />
-    </div>
+    </Box>
   );
 };
 

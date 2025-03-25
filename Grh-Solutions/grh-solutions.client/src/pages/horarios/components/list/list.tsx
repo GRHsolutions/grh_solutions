@@ -20,14 +20,25 @@ export const ListHorario = () => {
           label: "Al grupo",
           onRowClick: (obj: any)=>{
             console.log(obj)
-          }
+          },
+          type: 'string'
         },{
           key: 'creadoPor.area.nombre',
           label: "Del area",
+          type: 'string'
+        },{
+          key: 'fechaInicio',
+          label: "fecha de inicio",
+          type: 'date'
+        },{
+          key: 'fechaFin',
+          label: "fecha de finalizacion",
+          type: 'date'
         }]} 
         data={horarios} 
         pagination={pagination} 
-        onPageChange={ChangeCurrentPage}        
+        onPageChange={ChangeCurrentPage}   
+        maxHeight={'40rem'}
       />
     </Box>
   );
