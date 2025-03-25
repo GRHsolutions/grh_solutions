@@ -5,5 +5,11 @@ export type Usuario = {
     primerApellido: string,
     segundoApellido: string,
     correo: string,
-    photo: string | null
+    photo: string | null,
+    area: Area | null
+}
+
+export type Area = {
+    id: number,
+    nombre: string
 }

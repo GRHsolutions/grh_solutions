@@ -1,6 +1,7 @@
-import React, { use } from "react";
+import React from "react";
 import { Box } from "@mui/material";
 import { HorariosProvider } from "../../contexts/horarios.provider";
+import { ListHorario } from "./components/list/list";
 
 interface HorarioProps {}
 
@@ -18,7 +19,7 @@ const Horarios: React.FC = ({}: HorarioProps) => {
           fontSize: "2rem",
         }}
       >
-        
+        <ListHorario />
       </Box>
     </HorariosProvider>
   );

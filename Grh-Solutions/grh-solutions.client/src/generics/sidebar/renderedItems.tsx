@@ -83,34 +83,11 @@ export const useRenderedItems = (): Returnable => {
       // },
       {
         visible: isLoggedIn,
-        to: "/horarios",
+        to: "/horarios?type=horarios",
         disabled: false,
-        active: location.pathname === "/horarios",
+        active: location.pathname === "/horarios?type=horarios",
         label: "Horarios",
-        icon: <CalendarMonthIcon />,
-        subItems: [
-          {
-            visible: true,
-            to: "/horarios?type=mis-horarios",
-            disabled: false,
-            active: location.pathname === "/horarios?type=mis-horarios",
-            label: "Mis Horarios",
-          },
-          {
-            visible: true,
-            to: "/horarios?type=grupos",
-            disabled: false,
-            active: location.pathname === "/horarios?type=grupos",
-            label: "Grupos",
-          },
-          {
-            visible: true,
-            to: "/horarios?type=mi-horario",
-            disabled: false,
-            active: location.pathname === "/horarios?type=mi-horario",
-            label: "Mi Horario",
-          },
-        ],
+        icon: <CalendarMonthIcon />
       },
       {
         visible: isLoggedIn,

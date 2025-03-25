@@ -8,6 +8,43 @@ import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
 import dayjs, { Dayjs } from 'dayjs';
 import MultipleSelect from '../../generics/grh-generics/multipleSelect';
 import GrhBasicMenu from '../../generics/grh-generics/menu';
+import GrhGenericTable from '../../generics/grh-generics/tableWrapper2';
+import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
+
+interface TableDemo {
+  name: string,
+  calories: number, 
+  fat: number, 
+  carbs: number, 
+  protein : number,
+  cualquiera: Cualqueira,
+  [key: string] : any
+}
+
+interface Cualqueira {
+  name: string
+}
+
+function createData(
+  name: string,
+  calories: number,
+  fat: number,
+  carbs: number,
+  protein: number,
+  cualquiera: string
+): TableDemo{
+  return { 
+    name: name, 
+    calories:calories, 
+    fat:fat, 
+    carbs:carbs,
+    protein, 
+    cualquiera: { 
+      name: cualquiera
+    }
+  };
+}
+
 
 const TryColorsAndGenerics = () => {
   const theme = useTheme();
@@ -33,6 +70,14 @@ const TryColorsAndGenerics = () => {
     }
   ]
   const [mult, setMult] = React.useState<number[]>([]);
+
+  const rows : TableDemo[] = [
+    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, "sigma"),
+    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, "sigma"),
+    createData('Eclair', 262, 16.0, 24, 6.0, "sigma"),
+    createData('Cupcake', 305, 3.7, 67, 4.3, "sigma"),
+    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma"),
+  ];
 
   const handleFileSelect = (files: File[]) => {
     setSelectedFiles(files);
@@ -282,7 +327,43 @@ const TryColorsAndGenerics = () => {
               width: '55rem'
             }}     
           />
-          
+          <GrhGenericTable2 
+            columns={[{
+              key: "name",
+              label: "Alimento",
+              onRowClick: (value)=>{
+                console.log(value)
+              }
+            },{
+              key: "calories",
+              label: "Calorias",
+              onRowClick: undefined
+            },
+            {
+              key: "fat",
+              label: "Fatura?",
+              onRowClick: undefined
+            },{
+              key: "carbs",
+              label: "Carbohidratos",
+              onRowClick: undefined
+            },{
+              key: "cualquiera.name",
+              label: "Cualquiera",
+              onRowClick: undefined
+            }
+          ]} 
+            data={rows} 
+            pagination={{
+              pageSize: 5,
+              totalPages: 10,
+              currentPage: 1,
+              totalRows: 510
+            }} 
+            onPageChange={(value)=>{
+              console.log(value);
+            }}                    
+          />
         </Section>
       }
       
