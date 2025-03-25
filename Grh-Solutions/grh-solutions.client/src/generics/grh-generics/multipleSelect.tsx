@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 import {
   Select,
   MenuItem,
@@ -10,15 +10,20 @@ import {
   FormHelperText,
   SxProps,
   Theme,
-  TextField,
-} from "@mui/material";
+  Typography,
+} from '@mui/material';
+
+interface Option {
+  id: number;
+  nombre: string;
+}
 
 interface SelectMultipleInputProps {
   label: string;
   name: string;
-  options: Array<{ id: number; name: string }>;
+  options: Option[];
   value: number[];
-  setFieldValue: (field: string, value: number[]) => void;
+  setFieldValue: (field: string, value: any, shouldValidate?: boolean) => void;
   error?: string;
   touched?: boolean;
   sx?: SxProps<Theme>;
@@ -26,6 +31,8 @@ interface SelectMultipleInputProps {
   maxSelections?: number;
   maxHeight?: string;
   fullWidth?: boolean;
+  helperText?: string;
+  disabled?: boolean;
 }
 
 const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
@@ -37,25 +44,25 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
   error,
   touched,
   sx,
-  fullWidth,
+  fullWidth = true,
   multiline = false,
   maxSelections,
-  maxHeight,
+  maxHeight = '100px',
+  helperText,
+  disabled = false,
 }) => {
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState("");
-  
-  const filteredOptions = options.filter(option =>
-    option.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const [selectedCount, setSelectedCount] = useState(0);
+
+  useEffect(() => {
+    setSelectedCount(value.length);
+  }, [value]);
 
   const handleChange = (event: any) => {
     const {
       target: { value: selectedValues },
     } = event;
-    const selectIds = Array.isArray(selectedValues)
-      ? selectedValues.map(Number)
-      : [];
+    const selectIds = Array.isArray(selectedValues) ? selectedValues.map(Number) : [];
 
     if (!maxSelections || selectIds.length <= maxSelections) {
       setFieldValue(name, selectIds);
@@ -67,76 +74,101 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
     setFieldValue(name, newValue);
   };
 
-  useEffect(() => {
-    if (value) {
-      setFieldValue(name, value);
+  const handleSelectClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!disabled) {
+      const isChipClick = (event.target as HTMLElement).closest('.MuiChip-root');
+      if (!isChipClick) {
+        setOpen(!open);
+      }
     }
-  }, [value, name, setFieldValue]);
+  };
 
   return (
-    <Box sx={{ ...sx, position: "relative", width: "100%" }}>
-      <FormControl sx={{ width: "100%" }} error={!!error && touched}>
-        <InputLabel id={`${name}-label`}>{label}</InputLabel>
-        <Select
-          labelId={`${name}-label`}
-          id={name}
-          multiple
-          value={value}
-          open={open}
-          onOpen={() => setOpen(true)}
-          onClose={() => setOpen(false)}
-          input={<OutlinedInput label={label} />}
-          onChange={handleChange}
-          fullWidth={fullWidth}
-          renderValue={(selected) => (
-            <Box
-              sx={{
-                display: "flex",
-                flexWrap: multiline ? "wrap" : "nowrap",
-                gap: 0.5,
-                whiteSpace: multiline ? "normal" : "nowrap",
-                maxHeight: multiline ? maxHeight || "100px" : "auto",
-                overflow: multiline ? "auto" : "visible",
-              }}
-            >
-              {selected.map((selectedValue) => {
-                const option = options.find((opt) => opt.id === selectedValue);
-                return (
-                  <Chip
-                    key={selectedValue}
-                    label={option ? option.name : selectedValue}
-                    onDelete={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      handleDelete(selectedValue)
-                    }}
-                  />
-                );
-              })}
-            </Box>
-          )}
-        >
-          <Box sx={{ padding: "8px" }}>
-            <TextField
-              fullWidth
-              variant="outlined"
-              placeholder="Buscar..."
-              size="small"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </Box>
-          {filteredOptions.map((option) => (
-            <MenuItem
-              key={option.id}
-              value={option.id}
-              disabled={maxSelections ? value.length >= maxSelections : false}
-            >
-              {option.name}
-            </MenuItem>
-          ))}
-        </Select>
-        {error && touched && <FormHelperText>{error}</FormHelperText>}
+    <Box sx={{ width: fullWidth ? '100% !important' : 'auto', ...sx }}>
+      <FormControl 
+        error={!!error && touched} 
+        fullWidth={fullWidth}
+        disabled={disabled}
+      >
+        <InputLabel id={`${name}-label`}>
+          {label} {maxSelections && `(${selectedCount}/${maxSelections})`}
+        </InputLabel>
+        <Box onClick={handleSelectClick}>
+          <Select
+            labelId={`${name}-label`}
+            id={name}
+            multiple
+            value={value}
+            open={open}
+            onClose={() => setOpen(false)}
+            input={<OutlinedInput label={`${label} ${maxSelections ? `(${selectedCount}/${maxSelections})` : ''}`} />}
+            onChange={handleChange}
+            renderValue={(selected) => (
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: multiline ? 'wrap' : 'nowrap',
+                  gap: 0.5,
+                  whiteSpace: multiline ? 'normal' : 'nowrap',
+                  maxHeight: multiline ? maxHeight : 'auto',
+                  overflow: multiline ? 'auto' : 'hidden',
+                }}
+              >
+                {selected.map((selectedValue) => {
+                  const option = options.find((opt) => opt.id === selectedValue);
+                  return option ? (
+                    <Chip
+                      key={selectedValue}
+                      label={option.nombre}
+                      onDelete={() => handleDelete(selectedValue)}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      className="MuiChip-root"
+                      sx={{
+                        backgroundColor: 'secondary.main',
+                        color: 'white',
+                        '& .MuiChip-deleteIcon': {
+                          color: 'white',
+                          '&:hover': {
+                            color: 'error.light',
+                          },
+                        },
+                      }}
+                    />
+                  ) : null;
+                })}
+              </Box>
+            )}
+          >
+            {options.length === 0 ? (
+              <Box sx={{ p: 2, textAlign: 'center' }}>
+                <Typography color="text.secondary">No options available</Typography>
+              </Box>
+            ) : (
+              options.map((option) => (
+                <MenuItem
+                  key={option.id}
+                  value={option.id}
+                  disabled={maxSelections ? value.length >= maxSelections && !value.includes(option.id) : false}
+                  sx={{
+                    '&.Mui-selected': {
+                      backgroundColor: 'secondary.light',
+                    },
+                    '&.Mui-selected:hover': {
+                      backgroundColor: 'secondary.main',
+                    },
+                  }}
+                >
+                  {option.nombre}
+                </MenuItem>
+              ))
+            )}
+          </Select>
+        </Box>
+        {(error && touched) || helperText ? (
+          <FormHelperText error={!!error && touched}>
+            {(error && touched) ? error : helperText}
+          </FormHelperText>
+        ) : null}
       </FormControl>
     </Box>
   );
