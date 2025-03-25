@@ -17,7 +17,7 @@ import { useAuth } from "../../hooks/auth";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
-  const [switchValue, setSwitchValue] = React.useState(!parametros.dark);
+  const [switchValue, setSwitchValue] = React.useState(parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
