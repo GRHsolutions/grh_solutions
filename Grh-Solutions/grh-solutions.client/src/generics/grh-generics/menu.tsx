@@ -78,7 +78,11 @@ const BasicMenu = ({ items, optionsPosition }: BasicMenuProps) => {
               }}
               disabled={item.disabled} // Deshabilita el ítem si es necesario
             >
-              {item.icon && <span style={{ marginRight: 8 }}>{item.icon}</span>} {/* Muestra el ícono si existe */}
+              <div
+                style={{
+                  marginTop: 5
+                }}
+              >{item.icon && <span style={{ marginRight: 8 }}>{item.icon}</span>} {/* Muestra el ícono si existe */}</div>
               {item.label}
             </MenuItem>
           ))}

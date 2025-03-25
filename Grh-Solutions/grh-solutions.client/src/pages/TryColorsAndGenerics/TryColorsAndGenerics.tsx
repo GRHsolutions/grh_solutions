@@ -9,6 +9,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import MultipleSelect from '../../generics/grh-generics/multipleSelect';
 import GrhBasicMenu from '../../generics/grh-generics/menu';
 import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
 
 interface TableDemo {
   name: string,
@@ -258,18 +259,21 @@ const TryColorsAndGenerics = () => {
               }}
               items={[
                 {
+                  icon: <AcUnitIcon />,
                   label: "Opcion del menu 1",
                   onClick: () => {console.log("pressed")},
                   visible: true,
                   disabled: false
                 },
                 {
+                  icon: <AcUnitIcon />,
                   label: "Opcion del menu 2",
                   onClick: () => {console.log("pressed")},
                   visible: true,
                   disabled: false
                 },
                 {
+                  icon: <AcUnitIcon />,
                   label: "Opcion del menu 3",
                   onClick: () => {console.log("pressed")},
                   visible: true,
