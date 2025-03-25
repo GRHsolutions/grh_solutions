@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Grid2, useTheme, SxProps } from '@mui/material';
+import { Box, Typography, Paper, Grid2, useTheme, SxProps, SelectChangeEvent } from '@mui/material';
 import React from 'react';
 import MUIswitch from '../../generics/switch/MUIswitch';
 import GrhButton from '../../generics/grh-generics/button';
@@ -10,6 +10,7 @@ import MultipleSelect from '../../generics/grh-generics/multipleSelect';
 import GrhBasicMenu from '../../generics/grh-generics/menu';
 import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
+import GrhCustomSelect from '../../generics/grh-generics/inputSelect';
 
 interface TableDemo {
   name: string,
@@ -56,6 +57,7 @@ const TryColorsAndGenerics = () => {
   const [selectedFiles, setSelectedFiles] = React.useState<File[]>([]);
   const [dat, setDat] = React.useState<Dayjs | null>(dayjs());
   const [text, setText] = React.useState("");
+  const [currentInputSelected, setCurrentInputSelected] = React.useState(0);
   const options = [{
       id: 1,
       name: "OBJETO 1"
@@ -386,6 +388,17 @@ const TryColorsAndGenerics = () => {
             onPageChange={(value)=>{
               console.log(value);
             }}                    
+          />
+          <GrhCustomSelect 
+            label={"Demo input grh select"} 
+            options={options.map(item => ({
+              value: item.id, 
+              name: item.name
+            }))} 
+            value={currentInputSelected} 
+            onChange={(e) => {
+              setCurrentInputSelected(e.target.value as number);
+            }}
           />
         </Section>
       }
