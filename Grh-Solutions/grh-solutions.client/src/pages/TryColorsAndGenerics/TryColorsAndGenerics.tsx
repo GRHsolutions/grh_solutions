@@ -334,11 +334,14 @@ const TryColorsAndGenerics = () => {
           <MultipleSelect 
             label={'Input multiple select'} 
             name={'input'} 
-            options={options} 
+            options={options.map(item => ({
+              id: item.id, 
+              nombre: item.name
+            }))} 
             value={mult} 
             setFieldValue={setFieldValue}     
             sx={{
-              width: '55rem'
+              width: '200px'
             }}     
           />
           <GrhGenericTable2 
@@ -402,7 +405,6 @@ const TryColorsAndGenerics = () => {
           />
         </Section>
       }
-      
     </Box>
   );
 }
