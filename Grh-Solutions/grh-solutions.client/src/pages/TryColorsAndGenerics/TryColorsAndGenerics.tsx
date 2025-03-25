@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Grid2, useTheme, SxProps, SelectChangeEvent } from '@mui/material';
+import { Box, Typography, Paper, Grid2, useTheme, SxProps } from '@mui/material';
 import React from 'react';
 import MUIswitch from '../../generics/switch/MUIswitch';
 import GrhButton from '../../generics/grh-generics/button';
