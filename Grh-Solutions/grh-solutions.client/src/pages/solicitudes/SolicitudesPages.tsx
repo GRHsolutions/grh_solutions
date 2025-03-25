@@ -19,8 +19,6 @@ export default function SolicitudesPage() {
       <div className="divButton">
         <CreatedSolicitudes />
       </div>
-
-
       <TableSolicitudes />
     </div>
     </Box>

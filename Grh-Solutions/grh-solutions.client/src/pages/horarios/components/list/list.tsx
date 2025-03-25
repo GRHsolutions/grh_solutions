@@ -11,8 +11,7 @@ export const ListHorario = () => {
       currentPage: page
     })
   }
-
-  return (
+  return(
     <Box width={'70%'}>
       <GrhGenericTable2 
         columns={[{

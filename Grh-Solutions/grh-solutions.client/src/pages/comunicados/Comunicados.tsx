@@ -18,7 +18,7 @@ const Comunicados: React.FC = ({}: ComunicadosProps) => {
           fontSize: "2rem",
         }}  
       >
-        <Screen />
+        <Screen/>
       </Box>
     </NewsProvider>
   );
