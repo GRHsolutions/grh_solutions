@@ -340,10 +340,7 @@ const TryColorsAndGenerics = () => {
               nombre: item.name
             }))} 
             value={mult} 
-            setFieldValue={setFieldValue}     
-            sx={{
-              width: '200px'
-            }}     
+            setFieldValue={setFieldValue}
           />
           <GrhGenericTable2 
             maxHeight={"20rem"}

@@ -7,6 +7,7 @@ import {
     SelectChangeEvent,
     styled,
     Box,
+    useTheme,
   } from "@mui/material";
   import { Key } from "react";
   
@@ -58,21 +59,51 @@ import {
     const handleChange = (event: SelectChangeEvent<T>) => {
       onChange(event);
     };
-  
+    const theme = useTheme();
     return (
-      <Box sx={{ paddingTop: "10px", position: "relative", ...sx }}>
+      <Box 
+        sx={{ 
+            paddingTop: "10px",
+            position: "relative", 
+            width: '100%', 
+            display: 'block',
+            '& .MuiOutlinedInput-root': {
+              '&.Mui-focused': {
+                backgroundColor: "transparent",
+                color: theme.palette.primary.contrastText,
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: theme.palette.primary.light,
+                  color: theme.palette.primary.contrastText,
+                  borderWidth: 2,
+                },
+              },
+              '&:hover': {
+                backgroundColor: "transparent",
+                '& .MuiOutlinedInput-notchedOutline': {
+                  borderColor: theme.palette.primary.light,
+                  color: theme.palette.primary.contrastText,
+  
+                },
+              },
+            },
+            '& .MuiInputLabel-root': {
+              color: theme.palette.primary.contrastText,
+              '&.Mui-focused': {
+                color: theme.palette.primary.contrastText,
+              },
+            },
+            ...sx 
+          }}
+        >
         <FormControl fullWidth error={error} required={required}>
-          {variant != null ? (
-            <InputLabel>{label}</InputLabel>
-          ) : (
-            <StyledInputLabel>{label}</StyledInputLabel>
-          )}
+          <InputLabel>{label}</InputLabel>
   
           <Select
             value={value === null ? "" : value}
             onChange={handleChange}
             displayEmpty
             id={id}
+            label={label}
             name={name}
             disabled={options.length === 0 || disabled}
             variant={variant != null ? variant : "outlined"}

@@ -11,6 +11,7 @@ import {
   SxProps,
   Theme,
   Typography,
+  useTheme,
 } from '@mui/material';
 
 interface Option {
@@ -30,7 +31,6 @@ interface SelectMultipleInputProps {
   multiline?: boolean;
   maxSelections?: number;
   maxHeight?: string;
-  fullWidth?: boolean;
   helperText?: string;
   disabled?: boolean;
 }
@@ -44,7 +44,6 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
   error,
   touched,
   sx,
-  fullWidth = true,
   multiline = false,
   maxSelections,
   maxHeight = '100px',
@@ -53,6 +52,7 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [selectedCount, setSelectedCount] = useState(0);
+  const theme = useTheme();
 
   useEffect(() => {
     setSelectedCount(value.length);
@@ -84,16 +84,45 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
   };
 
   return (
-    <Box sx={{ width: fullWidth ? '100% !important' : 'auto', ...sx }}>
+    <Box sx={{ width: '100%', display: 'block', ...sx }}>
       <FormControl 
         error={!!error && touched} 
-        fullWidth={fullWidth}
+        fullWidth
         disabled={disabled}
+        sx={{ 
+          width: '100%', 
+          display: 'block',
+          '& .MuiOutlinedInput-root': {
+            '&.Mui-focused': {
+              backgroundColor: "transparent",
+              color: theme.palette.primary.contrastText,
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: theme.palette.primary.light,
+                color: theme.palette.primary.contrastText,
+                borderWidth: 2,
+              },
+            },
+            '&:hover': {
+              backgroundColor: "transparent",
+              '& .MuiOutlinedInput-notchedOutline': {
+                borderColor: theme.palette.primary.light,
+                color: theme.palette.primary.contrastText,
+
+              },
+            },
+          },
+          '& .MuiInputLabel-root': {
+            color: theme.palette.primary.contrastText,
+            '&.Mui-focused': {
+              color: theme.palette.primary.contrastText,
+            },
+          },
+        }}
       >
         <InputLabel id={`${name}-label`}>
           {label} {maxSelections && `(${selectedCount}/${maxSelections})`}
         </InputLabel>
-        <Box onClick={handleSelectClick}>
+        <Box onClick={handleSelectClick} sx={{ width: '100%' }}>
           <Select
             labelId={`${name}-label`}
             id={name}
@@ -103,6 +132,7 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
             onClose={() => setOpen(false)}
             input={<OutlinedInput label={`${label} ${maxSelections ? `(${selectedCount}/${maxSelections})` : ''}`} />}
             onChange={handleChange}
+            sx={{ width: '100%', display: 'block' }}
             renderValue={(selected) => (
               <Box
                 sx={{
@@ -112,6 +142,43 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
                   whiteSpace: multiline ? 'normal' : 'nowrap',
                   maxHeight: multiline ? maxHeight : 'auto',
                   overflow: multiline ? 'auto' : 'hidden',
+                  width: '100%',
+                  '& .MuiInputLabel-root': {
+                    color: theme.palette.primary.contrastText, // Color constante para el label
+                  },
+                  '& .MuiInputLabel-root.Mui-focused': {
+                    color: theme.palette.primary.contrastText, // Color constante para el label cuando está enfocado
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': {
+                      borderColor: theme.palette.primary.divider, // Color constante para el borde en estado normal
+                    },
+                    '&:hover fieldset': {
+                      borderColor: theme.palette.primary.dark, // Color constante para el borde al hacer hover
+                    },
+                    '&.Mui-focused fieldset': {
+                      borderColor: theme.palette.primary.hover, // Color constante para el borde cuando está enfocado
+                    },
+                  },
+                  '& .MuiInputBase-input': {
+                    '&::-webkit-scrollbar': {
+                      width: '8px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      background: theme.palette.primary.light,
+                      borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      background: '#888',
+                      borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      background: '#555',
+                    },
+                  },
+                  '& .MuiInputBase-inputMultiline': {
+                    overflowY: 'auto', // Hace visible la barra de desplazamiento
+                  },
                 }}
               >
                 {selected.map((selectedValue) => {
@@ -124,12 +191,12 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
                       onMouseDown={(e) => e.stopPropagation()}
                       className="MuiChip-root"
                       sx={{
-                        backgroundColor: 'secondary.main',
-                        color: 'white',
+                        backgroundColor: theme.palette.primary.dark,
+                        color: theme.palette.primary.contrastText,
                         '& .MuiChip-deleteIcon': {
-                          color: 'white',
+                          color: theme.palette.primary.hover,
                           '&:hover': {
-                            color: 'error.light',
+                            color: theme.palette.primary.father,
                           },
                         },
                       }}
@@ -138,9 +205,17 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
                 })}
               </Box>
             )}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  //width: '100%',
+                  //maxWidth: 'none'
+                }
+              }
+            }}
           >
             {options.length === 0 ? (
-              <Box sx={{ p: 2, textAlign: 'center' }}>
+              <Box sx={{ p: 2, textAlign: 'center', width: '100%' }}>
                 <Typography color="text.secondary">No options available</Typography>
               </Box>
             ) : (
@@ -150,11 +225,12 @@ const MultipleSelect: React.FC<SelectMultipleInputProps> = ({
                   value={option.id}
                   disabled={maxSelections ? value.length >= maxSelections && !value.includes(option.id) : false}
                   sx={{
+                    width: '100%',
                     '&.Mui-selected': {
-                      backgroundColor: 'secondary.light',
+                      backgroundColor:  theme.palette.primary.divider,
                     },
                     '&.Mui-selected:hover': {
-                      backgroundColor: 'secondary.main',
+                      backgroundColor: theme.palette.primary.hover,
                     },
                   }}
                 >
