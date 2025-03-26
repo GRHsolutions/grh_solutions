@@ -12,7 +12,7 @@ export const ListHorario = () => {
     })
   }
   return(
-    <Box width={'70%'}>
+    <Box width={'100%'}>
       <GrhGenericTable2 
         columns={[{
           key: 'grupo.nombre',

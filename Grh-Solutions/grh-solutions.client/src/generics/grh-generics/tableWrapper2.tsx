@@ -59,7 +59,12 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
         }}
       >
         <Table>
-          <TableHead>
+          <TableHead
+            sx={{
+              backgroundColor: theme.palette.primary.light,
+              color: theme.palette.primary.contrastText
+            }}
+          >
             <TableRow>
               {columns.map((col) => (
                 <TableCell 

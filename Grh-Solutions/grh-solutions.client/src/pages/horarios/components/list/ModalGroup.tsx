@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import { Box } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 export default function PositionedMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -26,6 +26,7 @@ export default function PositionedMenu() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
         color="primary"
+        startIcon={<AddIcon />}
       >
         Crear
       </Button>
@@ -35,6 +36,10 @@ export default function PositionedMenu() {
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
+        sx={{
+          top: 35,
+          right: 20
+        }}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'left',
@@ -44,10 +49,6 @@ export default function PositionedMenu() {
           horizontal: 'left',
         }}
       >
-        <Box
-        sx={{textAlign:"center"}}>
-        Opciones
-        </Box>
         <MenuItem onClick={handleClose}>Grupo</MenuItem>
         <MenuItem onClick={handleClose}>Horario</MenuItem>
       </Menu>

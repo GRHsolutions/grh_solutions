@@ -21,6 +21,8 @@ interface TextFieldProps {
   endIcon?: React.ReactNode;   // Add endIcon prop
   error?: boolean; // Prop para indicar si hay error
   helperText?: string; // Prop para mostrar el mensaje de error
+  multirows?: boolean;
+  rows?: number;
   clickableAdornment?: {
     start?: () => void;
     end?: () => void;
@@ -46,6 +48,8 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
     error = false, // Recibimos el estado de error
     helperText, // Recibimos el mensaje de error
     clickableAdornment, // Recibimos la prop para adornos clickeables
+    multirows,
+    rows
   },
   ref
 ) => {
@@ -76,6 +80,8 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
       fullWidth={fullWidth}
       disabled={disabled}
       placeholder={placeholder}
+      multiline={multirows}
+      rows={rows}
       sx={{
         ...sx,
         '& .MuiInputLabel-root': {
@@ -94,6 +100,25 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
           '&.Mui-focused fieldset': {
             borderColor: theme.palette.primary.hover, // Color constante para el borde cuando está enfocado
           },
+        },
+        '& .MuiInputBase-input': {
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            background: theme.palette.primary.light,
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#888',
+            borderRadius: '4px',
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            background: '#555',
+          },
+        },
+        '& .MuiInputBase-inputMultiline': {
+          overflowY: 'auto', // Hace visible la barra de desplazamiento
         },
       }}
       type={type}

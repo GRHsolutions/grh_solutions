@@ -124,7 +124,7 @@ export const NavBar: React.FC = () => {
                       horizontal: 'left',
                     }}
                     sx={{
-                      top: 52
+                      top: 29
                     }}
                   >
                     <div style={Styles.menu}>
