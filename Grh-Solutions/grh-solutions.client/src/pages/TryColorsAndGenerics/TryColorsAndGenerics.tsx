@@ -339,6 +339,7 @@ const TryColorsAndGenerics = () => {
               id: item.id, 
               nombre: item.name
             }))} 
+            maxSelections={3}
             value={mult} 
             setFieldValue={setFieldValue}
           />

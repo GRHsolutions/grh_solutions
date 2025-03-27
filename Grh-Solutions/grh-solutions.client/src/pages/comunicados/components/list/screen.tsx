@@ -4,10 +4,22 @@ import { useParametros } from "../../../../contexts/useParamether.provider";
 import RenderNews from "./renderNews";
 import RenderBirths from "./renderBirths";
 import { ViewMail } from "../view/viewMail";
+import { UseQueryParams } from "../../../../hooks/queryParams";
+import { useNews } from "../../../../hooks/news";
+
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
   const theme = useTheme();
   const { usePhoneScreen } = parametros; 
+  const { queryParams } = UseQueryParams();
+  const {} = useNews();
+
+  React.useEffect(()=>{
+    const id = parseInt(queryParams["id"]) || undefined;
+    const type = queryParams["type"];
+    const action = queryParams["action"];
+    console.log(id, type, action);
+  }, [queryParams])
 
   return (
     <Grid2 
@@ -20,7 +32,7 @@ const Screen: React.FC = () => {
       <Grid2 
         size={{
           xs: 12,
-          sm: 10
+          sm: 9
         }}
         sx={{ 
           boxShadow: `${theme.palette.primary.boxShadow}`,
@@ -51,7 +63,7 @@ const Screen: React.FC = () => {
       {!usePhoneScreen && (
         <Grid2 
           size={{
-            sm: 2
+            sm: 3
           }}
           sx={{ 
             boxShadow: `${theme.palette.primary.boxShadow}`,

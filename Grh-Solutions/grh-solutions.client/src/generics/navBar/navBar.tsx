@@ -11,9 +11,10 @@ import { useParametros } from "../../contexts/useParamether.provider";
 import { NavBarStyles } from "./navBar.styles";
 import { SideBar2 } from "../sidebar/sideBar";
 //import { SideBar } from "../sidebar/sideBar";
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { RendererModl } from "../../components/login/RendererModl"
 import { useAuth } from "../../hooks/auth";
+import GrhButton from "../grh-generics/button";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
