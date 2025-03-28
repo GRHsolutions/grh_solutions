@@ -2,6 +2,8 @@ import { Box, IconButton, Modal, Stack, Typography, useTheme } from "@mui/materi
 import { useNews } from "../../../../hooks/news"
 import OutboxIcon from '@mui/icons-material/Outbox';
 import CloseIcon from '@mui/icons-material/Close';
+import React from "react";
+import { News } from "../../../../domain/models/news/news.entities";
 
 const modalStyle = {
     position: 'absolute',
@@ -22,14 +24,22 @@ const modalStyle = {
 export const CreateEditNew = () => {
     const { current, noCurrnt } = useNews();
     const theme = useTheme();
-    
+    const [initial, setInitial] = React.useState<News | null>(null);
+    const isEditting = current.action == 'edit';
+
     const handleClose = () => {
         noCurrnt();
     }
 
+    React.useEffect(() => {
+        if(current.action === "create" || current.action === "edit"){
+            setInitial(current.item);
+        };
+    }, [current.item])
+
     return(
         <Modal
-            open={current.action === "create"}
+            open={current.action === "create" || current.action === "edit"}
             onClose={handleClose}
         >
             <Box
@@ -69,10 +79,8 @@ export const CreateEditNew = () => {
                         <CloseIcon />
                     </IconButton>
                 </Box>
-                <Box
-
-                >
-
+                <Box>
+                    
                 </Box>
             </Box>
         </Modal>

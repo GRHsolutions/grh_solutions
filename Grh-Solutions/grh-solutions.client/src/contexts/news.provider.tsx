@@ -19,7 +19,7 @@ interface NewsItems {
   reload: () => void;
   current: CurrentProps;
   selectItem: (select: number) => void;
-  noCurrnt: () => void;
+  noCurrnt: (change?: string) => void;
   newComment: (comment: Commentary) => void;
 }
 
@@ -36,15 +36,23 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({ children
     id: undefined
   });
   const [comments, setComments] = React.useState<Commentary[]>([]);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [_searchParams, setSearchParams] = useSearchParams();
 
   // Sincronizar current con los parámetros de búsqueda
   React.useEffect(() => {
-    if (current.id) {
-      setSearchParams({ id: current.id.toString(), action: current.action });
-    } else {
-      setSearchParams({});
+    const params = new URLSearchParams();
+    
+    // Only add id if it exists and is positive
+    if (typeof current.id === 'number' && current.id > 0) {
+      params.set('id', current.id.toString());
     }
+    
+    // Only add action if it exists and isn't empty
+    if (current.action?.trim()) {
+      params.set('action', current.action.trim());
+    }
+    
+    setSearchParams(params);
   }, [current, setSearchParams]);
 
   React.useEffect(() => {
@@ -185,9 +193,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const noCurrnt = () => {
+  const noCurrnt = (lash?: string) => {
+    console.log(lash)
     setCurrent({
-      action: 'none',
+      action: lash != undefined ? lash : 'none',
       id: undefined,
       item: null
     })
