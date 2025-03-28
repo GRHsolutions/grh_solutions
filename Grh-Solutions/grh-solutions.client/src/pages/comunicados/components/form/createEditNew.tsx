@@ -4,6 +4,7 @@ import OutboxIcon from '@mui/icons-material/Outbox';
 import CloseIcon from '@mui/icons-material/Close';
 import React from "react";
 import { News } from "../../../../domain/models/news/news.entities";
+import { TabConfig, TabsCompo } from "../../../../generics/tabs/tabs";
 
 const modalStyle = {
     position: 'absolute',
@@ -26,6 +27,23 @@ export const CreateEditNew = () => {
     const theme = useTheme();
     const [initial, setInitial] = React.useState<News | null>(null);
     const isEditting = current.action == 'edit';
+    const tabs : TabConfig[] = [
+        {
+            value: "1",
+            label: "Inicializacion",
+            content: <>primera parte</>
+        },
+        {
+            value: "2",
+            label: "Contenido Adicional",
+            content: <>Contenido Adicional</>
+        },
+        {
+            value: "3",
+            label: "any",
+            content: <>any</>
+        }
+    ]
 
     const handleClose = () => {
         noCurrnt();
@@ -79,9 +97,7 @@ export const CreateEditNew = () => {
                         <CloseIcon />
                     </IconButton>
                 </Box>
-                <Box>
-                    
-                </Box>
+                <TabsCompo tabs={tabs}/>
             </Box>
         </Modal>
     )

@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs, useTheme } from "@mui/material";
+import { Box, SxProps, Tab, Tabs, useTheme } from "@mui/material";
 import React from "react";
 
 export interface TabConfig {
@@ -7,14 +7,24 @@ export interface TabConfig {
     content: React.ReactNode;
 };
 
+export interface StyleTabProps {
+    tabs: {
+        container: SxProps,
+        tab: SxProps,
+        renderer: SxProps
+    }
+}
+
 export interface TabsCompoProps {
     tabs: TabConfig[];
     initialTab?: string; // Valor inicial opcional
+    tabProps?:StyleTabProps;
 }
 
 export const TabsCompo = ({
     tabs,
-    initialTab = '1' // Valor por defecto
+    initialTab = '1', // Valor por defecto
+    tabProps
 }: TabsCompoProps) => {
     const theme = useTheme();
     const [value, setValue] = React.useState(initialTab);
@@ -24,7 +34,11 @@ export const TabsCompo = ({
     };
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box 
+            sx={{
+                ...tabProps?.tabs.container,
+                width: '100%' 
+            }}>
             <Box sx={{ 
                 borderBottom: 1, 
                 borderColor: 'divider',
@@ -47,6 +61,7 @@ export const TabsCompo = ({
                             label={tab.label} 
                             value={tab.value} 
                             sx={{
+                                ...tabProps?.tabs.tab,
                                 fontWeight: value === tab.value ? 'bold' : 'normal',
                                 color: theme.palette.text.primary,
                                 textTransform: 'none',
@@ -78,12 +93,13 @@ export const TabsCompo = ({
                         key={tab.value} 
                         role="tabpanel"
                         sx={{ 
+                            ...tabProps?.tabs.renderer,
                             p: 3,
                             animation: 'fadeIn 0.3s ease',
                             '@keyframes fadeIn': {
                                 from: { opacity: 0.5 },
                                 to: { opacity: 1 }
-                            }
+                            },
                         }}
                     >
                         {tab.content}
