@@ -20,7 +20,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
-  overflowY: 'auto' // Agrega scrollbar si el contenido es muy largo
+  border: '2px solid #000',
 };
 
 interface IModalOptionsProps {
