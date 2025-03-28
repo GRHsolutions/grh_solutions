@@ -11,13 +11,14 @@ import { useParametros } from "../../contexts/useParamether.provider";
 import { NavBarStyles } from "./navBar.styles";
 import { SideBar2 } from "../sidebar/sideBar";
 //import { SideBar } from "../sidebar/sideBar";
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { RendererModl } from "../../components/login/RendererModl"
 import { useAuth } from "../../hooks/auth";
+import GrhButton from "../grh-generics/button";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
-  const [switchValue, setSwitchValue] = React.useState(!parametros.dark);
+  const [switchValue, setSwitchValue] = React.useState(parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -124,7 +125,7 @@ export const NavBar: React.FC = () => {
                       horizontal: 'left',
                     }}
                     sx={{
-                      top: 52
+                      top: 29
                     }}
                   >
                     <div style={Styles.menu}>

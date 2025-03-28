@@ -2,33 +2,101 @@ import { Box } from "@mui/material";
 
 interface ImageGridProps {
   images: string[];
+  maxVisibleImages?: number;
+  height?: number | string;
+  width?: number | string;
 }
 
 const ImageGrid = ({ 
-  images 
+  images,
+  maxVisibleImages = 4,
+  height = "50rem",
+  width = "50rem"
 }: ImageGridProps) => {
-  const maxVisibleImages = 4;
   const imagesToShow = images.slice(0, maxVisibleImages);
-  const remainingImages = images.length - maxVisibleImages;
+  const remainingImages = Math.max(0, images.length - maxVisibleImages);
+  const imageCount = imagesToShow.length;
 
-  const gridStyles = [
-    [{ gridColumn: "span 2" }, { gridColumn: "span 2" }], // 2 images
-    [{}, {}, { gridColumn: "span 2" }], // 3 images
-    [{}, {}, {}, {}], // 4 images
-  ];
+  // Layout configurations for different image counts
+  const getGridLayout = () => {
+    switch (imageCount) {
+      case 1:
+        return {
+          container: { 
+            gridTemplateColumns: "1fr", 
+            gridTemplateRows: "1fr",
+            aspectRatio: "1/1" 
+          },
+          items: [{ gridColumn: "1", gridRow: "1" }]
+        };
+      case 2:
+        return {
+          container: { 
+            gridTemplateColumns: "1fr 1fr", 
+            gridTemplateRows: "1fr",
+            aspectRatio: "2/1" 
+          },
+          items: [
+            { gridColumn: "1", gridRow: "1" },
+            { gridColumn: "2", gridRow: "1" }
+          ]
+        };
+      case 3:
+        return {
+          container: { 
+            gridTemplateColumns: "1fr 1fr", 
+            gridTemplateRows: "1fr 1fr",
+            aspectRatio: "1/1" 
+          },
+          items: [
+            { gridColumn: "1", gridRow: "1 / span 2" },
+            { gridColumn: "2", gridRow: "1" },
+            { gridColumn: "2", gridRow: "2" }
+          ]
+        };
+      case 4:
+        return {
+          container: { 
+            gridTemplateColumns: "1fr 1fr", 
+            gridTemplateRows: "1fr 1fr",
+            aspectRatio: "1/1" 
+          },
+          items: [
+            { gridColumn: "1", gridRow: "1" },
+            { gridColumn: "2", gridRow: "1" },
+            { gridColumn: "1", gridRow: "2" },
+            { gridColumn: "2", gridRow: "2" }
+          ]
+        };
+      default:
+        return {
+          container: { 
+            gridTemplateColumns: "1fr", 
+            gridTemplateRows: "1fr",
+            aspectRatio: "1/1" 
+          },
+          items: []
+        };
+    }
+  };
+
+  const { container, items } = getGridLayout();
 
   return (
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)",
-        gridTemplateRows: "repeat(2, 1fr)",
         gap: 1,
-        width: '80%',
-        height: '80%',
+        width: width,
+        height: height,
         position: "relative",
         overflow: "hidden",
         borderRadius: 2,
+        ...container,
+        // Responsive fallback
+        "@media (max-width: 600px)": {
+          aspectRatio: "1/1"
+        }
       }}
     >
       {imagesToShow.map((img, index) => (
@@ -36,13 +104,13 @@ const ImageGrid = ({
           key={index}
           component="img"
           src={img}
-          alt={`Imagen ${index + 1}`}
+          alt={`Image ${index + 1}`}
           sx={{
             width: "100%",
             height: "100%",
             objectFit: "cover",
             borderRadius: 1,
-            ...gridStyles[imagesToShow.length - 2][index],
+            ...items[index],
           }}
         />
       ))}
@@ -50,18 +118,20 @@ const ImageGrid = ({
         <Box
           sx={{
             position: "absolute",
-            bottom: 0,
-            right: 0,
-            bgcolor: "#757575",
+            bottom: 8,
+            right: 8,
+            bgcolor: "rgba(0, 0, 0, 0.7)",
             color: "white",
-            px: 2,
+            px: 1.5,
             py: 0.5,
-            borderRadius: "16px",
-            fontSize: "0.875rem",
+            borderRadius: 1,
+            fontSize: "0.75rem",
             fontWeight: "bold",
+            backdropFilter: "blur(2px)",
+            zIndex: 1
           }}
         >
-          +{remainingImages} imágenes
+          +{remainingImages}
         </Box>
       )}
     </Box>

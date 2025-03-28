@@ -3,10 +3,11 @@ import { Errors } from "../domain/models/error/error.entities";
 import dayjs from "dayjs";
 import { Horarios } from "../domain/models/horarios/Horarios-entities";
 import { PageParams, UseQueryParams } from "../hooks/queryParams";
+import { GrhPagination } from "../generics/grh-generics/tableWrapper2";
 
 interface CurrentProps {
   item: Horarios | null;
-  action: "create" | "view" | "delete" | "none";
+  action: "create" | "view" | "delete" | "none" | string;
 }
 
 // Definición de tipos
@@ -16,7 +17,9 @@ interface HorariosItems {
   reload: () => void;
   current: CurrentProps;
   setCurrent: (select: CurrentProps) => void;
-  params: PageParams
+  params: PageParams;
+  pagination: GrhPagination;
+  setPagination: (pag: GrhPagination) => void;
 }
 
 // Creación del contexto
@@ -40,6 +43,12 @@ export const HorariosProvider: React.FC<{ children: React.ReactNode }> = ({
     action: undefined,
     id: undefined
   });
+  const [pagination, setPagination] = React.useState<GrhPagination>({
+    currentPage: 0,
+    totalPages: 10,
+    totalRows: 100,
+    pageSize: 2
+  });
 
   const { queryParams } = UseQueryParams();
 
@@ -52,55 +61,69 @@ export const HorariosProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [queryParams]);
 
   React.useEffect(() => {
-    console.log(param);
+    if(param.id && param.action){
+      //BUSCAR POR EL ID
+      setCurrent({
+        item: null,
+        action: param.action || "none"
+      })
+    }
+    
   }, [param]);
 
   React.useEffect(() => {
-    const fetchHorarios = async () => {
-      try {
-        setHorarios([
-          {
-            id: 1,
-            tipoHorario: {
+      const fetchHorarios = async () => {
+        try {
+          setHorarios([
+            {
               id: 1,
-              nombre: "Horario de trabajo",
-              descripcion: "Horario de trabajo",
-              horaInicial: "08:00",
-              horaFinal: "17:00",
-            },
-            fechaInicio: dayjs("2021-03-20"),
-            fechaFin: dayjs("2021-03-28"),
-            creadoPor: {
-              id: 1,
-              primerNombre: "Pedro",
-              segundoNombre: "Pedro",
-              primerApellido: "",
-              segundoApellido: "",
-              correo: "pedro.sanchez@gmail.com",
-              photo: null
-            },
-            grupo: {
-              id: 1,
-              nombre: "Turno diurno",
-              usuarios: [
-                {
-                  id: 1,
-                  primerNombre: "Pedro",
-                  segundoNombre: "Pedro",
-                  primerApellido: "",
-                  segundoApellido: "",
-                  correo: "",
-                  photo: null
+              tipoHorario: {
+                id: 1,
+                nombre: "Horario de trabajo",
+                descripcion: "Horario de trabajo",
+                horaInicial: "08:00",
+                horaFinal: "17:00",
+              },
+              fechaInicio: dayjs("2021-03-20"),
+              fechaFin: dayjs("2021-03-28"),
+              creadoPor: {
+                id: 1,
+                primerNombre: "Pedro",
+                segundoNombre: "Pedro",
+                primerApellido: "",
+                segundoApellido: "",
+                correo: "pedro.sanchez@gmail.com",
+                photo: null,
+                area: {
+                  id: 41,
+                  nombre: "Contabilidad"
                 }
-              ]
+              },
+              grupo: {
+                id: 1,
+                nombre: "Turno diurno",
+                usuarios: [
+                  {
+                    id: 1,
+                    primerNombre: "Pedro",
+                    segundoNombre: "Pedro",
+                    primerApellido: "",
+                    segundoApellido: "",
+                    correo: "",
+                    photo: null,
+                    area: {
+                      id: 41,
+                      nombre: "Contabilidad"
+                    }
+                  }
+                ]
+              }
             }
-          }
-        ]);
-      } catch (error) {
-        setStatus({ statusCode: 500, message: "Error al cargar las noticias" });
-      }
-    };
-
+          ]);
+        } catch (error) {
+          setStatus({ statusCode: 500, message: "Error al cargar las noticias" });
+        }
+      };
     fetchHorarios();
   }, [useReload]);
 
@@ -118,7 +141,9 @@ export const HorariosProvider: React.FC<{ children: React.ReactNode }> = ({
     reload: handleReload,
     current: current,
     setCurrent: SelectItem,
-    params: param
+    params: param,
+    pagination: pagination,
+    setPagination: setPagination
   };
 
   return <HorariosContext.Provider value={value}>{children}</HorariosContext.Provider>;

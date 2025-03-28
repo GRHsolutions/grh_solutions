@@ -3,9 +3,9 @@ import { NewsProvider } from "../../contexts/news.provider";
 import { Box } from "@mui/material";
 import Screen from "./components/list/screen";
 
+
 interface ComunicadosProps {}
 const Comunicados: React.FC = ({}: ComunicadosProps) => {
-  
   return (
     <NewsProvider>
       <Box
@@ -18,7 +18,7 @@ const Comunicados: React.FC = ({}: ComunicadosProps) => {
           fontSize: "2rem",
         }}  
       >
-        <Screen />
+        <Screen/>
       </Box>
     </NewsProvider>
   );

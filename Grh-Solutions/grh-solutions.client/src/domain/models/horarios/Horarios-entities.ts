@@ -25,9 +25,10 @@ export type TipoHorario = {
 }
 
 export interface HorariosFilter {
-    esMio: boolean;
-    tipoHorario: string;
-    fechaInicio: Dayjs;
-    fechaFin: Dayjs;
-    creadoPor: Usuario;
+    esMio?: boolean;
+    tipoHorario?: string;
+    fechaInicio?: Dayjs;
+    fechaFin?: Dayjs;
+    creadoPor?: Usuario;
+    totalRow?: number;
 }

@@ -5,19 +5,17 @@ import TextField from "../../../../generics/grh-generics/textField";
 import React, { useEffect } from "react";
 import SendIcon from '@mui/icons-material/Send';
 import CloseIcon from '@mui/icons-material/Close';
+import { ImageCarousel } from "../../../../generics/grh-generics/imageCarousel";
 
 interface ViewMailProps {}
 
 export const ViewMail = ({}: ViewMailProps) => {
-  const { current, setCurrent, newComment } = useNews();
+  const { current, noCurrnt /*, newComment */ } = useNews();
   const theme = useTheme();
   const newCommentRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleClose = () => {
-    setCurrent({
-      item: null,
-      action: "none",
-    });
+    noCurrnt();
   };
 
   useEffect(() => {
@@ -33,14 +31,14 @@ export const ViewMail = ({}: ViewMailProps) => {
     };
   }, []);
 
-  const Description = ({ description }: { description: string | undefined }) => {
-    const maxLength = 230;
-    const truncatedDescription =
-      description && description.length > maxLength
-        ? description.substring(0, maxLength) + "…ver más"
-        : description;
-    return <>{truncatedDescription}</>;
-  };
+  // const Description = ({ description }: { description: string | undefined }) => {
+  //   const maxLength = 230;
+  //   const truncatedDescription =
+  //     description && description.length > maxLength
+  //       ? description.substring(0, maxLength) + "…ver más"
+  //       : description;
+  //   return <>{truncatedDescription}</>;
+  // };
 
   return (
     <Backdrop
@@ -68,24 +66,21 @@ export const ViewMail = ({}: ViewMailProps) => {
             height: "100%", // Asegura que ocupe todo el alto disponible
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
-            boxShadow: theme.palette.primary.boxShadow,
+            //boxShadow: theme.palette.primary.boxShadow,
             overflow: "hidden", // Oculta el contenido que se salga del grid
-            padding: 2,
+            //padding: 2,
             borderRight: `1px solid ${theme.palette.divider}`, // Añadimos un borde para separar los dos grids
           }}
           onClick={(e) => e.stopPropagation()} // Stop click event propagation
         >
           {/* Aquí irán las imágenes */}
-          <Box
-            component="img"
-            src="https://via.placeholder.com/300" // Imagen de ejemplo
-            alt="Imagen del mail"
-            sx={{
-              maxWidth: "100%",
-              maxHeight: "100%",
-              objectFit: "contain",
-            }}
-          />
+          {current.item && 
+            <ImageCarousel 
+              height={'100%'}
+              images={current.item.images}
+            />
+          }
+          
         </Grid2>
 
         {/* Grid de la derecha para mostrar la información del mail */}
@@ -116,7 +111,7 @@ export const ViewMail = ({}: ViewMailProps) => {
           </Box>
           <Box
             height={"100%"}
-            maxHeight={"13rem"}
+            maxHeight={"11rem"}
             sx={{
               overflowY: "auto",
               "&::-webkit-scrollbar": {
@@ -173,16 +168,16 @@ export const ViewMail = ({}: ViewMailProps) => {
               onSubmit={(e) => {
                 e.preventDefault();
                 if(newCommentRef.current?.value != null && newCommentRef.current?.value != "") {
-                  // Add your submit logic here
+                  console.log("valor: ", newCommentRef.current.value)
                 }
-                // Add your submit logic here
               }}
               p={1}
             >
               <TextField 
-                label={"Asunto"}
+                label={"Nuevo comentario"}
                 ref={newCommentRef}
-                placeholder="Nuevo comentario"
+                multirows
+                rows={3}
                 sx={{
                   width: "100%",
                 }}

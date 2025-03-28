@@ -20,7 +20,7 @@ export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) =
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
         borderBottom: `1px solid ${theme.palette.primary.divider}`,
-        marginTop: "3rem",
+        marginTop: '3rem',
         p: 1,
         display: "flex",
         height: "100%",
