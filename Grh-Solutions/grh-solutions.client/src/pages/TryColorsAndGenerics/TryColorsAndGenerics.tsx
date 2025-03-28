@@ -14,6 +14,7 @@ import GrhCustomSelect from '../../generics/grh-generics/inputSelect';
 import { ImageCarousel } from '../../generics/grh-generics/imageCarousel';
 import { TabConfig, TabsCompo } from '../../generics/tabs/tabs';
 
+
 interface TableDemo {
   name: string,
   calories: number, 

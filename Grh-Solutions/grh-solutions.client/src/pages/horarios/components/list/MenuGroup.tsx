@@ -6,7 +6,7 @@ import { Box } from "@mui/material";
 import ModalGroup from "./ModalGroup";
 import ModalHorario from "./ModalHorario";
 import Groups3Icon from "@mui/icons-material/Groups3";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 export default function PositionedMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -59,19 +59,19 @@ export default function PositionedMenu() {
         }}
       >
         <Box sx={{ textAlign: "center" }}>Opciones</Box>
-          <MenuItem 
-            onClick={() => handleOpenModal("Group")}
-            sx={{
-              gap: 1,
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              margin: "4px",
-              paddingX: "6px",
-            }}
-          >
-            <Groups3Icon></Groups3Icon>
-            Grupo
-          </MenuItem>
+        <MenuItem
+          onClick={() => handleOpenModal("Group")}
+          sx={{           
+            gap: 1,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            margin: "4px",
+            paddingX: "30px",
+          }}
+        >
+          <Groups3Icon></Groups3Icon>
+          Grupo
+        </MenuItem>
         <MenuItem
           onClick={() => handleOpenModal("Horario")}
           sx={{
@@ -79,7 +79,7 @@ export default function PositionedMenu() {
             border: "1px solid #ccc",
             borderRadius: "4px",
             margin: "4px",
-            paddingX: "6px",
+            paddingX: "30px",
           }}
         >
           <CalendarMonthIcon></CalendarMonthIcon>

@@ -1,4 +1,4 @@
-import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button, useTheme } from '@mui/material';
+import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -20,7 +20,7 @@ const style = {
   display: 'flex',
   flexDirection: 'column',
   gap: 2,
-  border: '2px solid #000',
+  overflowY: 'auto' // Agrega scrollbar si el contenido es muy largo
 };
 
 interface IModalOptionsProps {
@@ -29,25 +29,24 @@ interface IModalOptionsProps {
 }
 
 export default function ModalEdit({ open, handleClose }: IModalOptionsProps) {
-    const theme = useTheme();
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
       <Box sx={style}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <PersonIcon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
+            <PersonIcon sx={{ fontSize: 40 }} />
             <Box>
-              <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
+              <Typography variant="h6" fontWeight="bold">
                 Solicitud de editar información personal.
               </Typography>
-              <Typography variant="body2" color={theme.palette.text.primary}>Gerente - Activo</Typography>
+              <Typography variant="body2">Gerente - Activo</Typography>
             </Box>
           </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
+        <Typography variant="h6" fontWeight="bold">
           Campos para editar tus datos
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -65,12 +64,12 @@ export default function ModalEdit({ open, handleClose }: IModalOptionsProps) {
         >
           Agregar Campo
         </Button>
-        <Typography variant="body2" sx={{ fontStyle: 'italic', color: theme.palette.text.primary }}>
+        <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
           Justificación (Esto aparecerá en el correo de notificación)
         </Typography>
         <GrhTextField fullWidth  />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-          <Button variant="outlined" startIcon={<CancelIcon />} sx={{ color: theme.palette.text.primary }} onClick={handleClose}>
+          <Button variant="outlined" startIcon={<CancelIcon />} onClick={handleClose}>
             Cancelar
           </Button>
           <Button

@@ -6,6 +6,8 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import GrhTextField from '../../../../generics/grh-generics/textField';
+import GrhButton from "../../../../generics/grh-generics/button";
+import LogoutIcon from '@mui/icons-material/Logout';
 import {
   IconButton,
   MenuItem,
@@ -102,7 +104,7 @@ export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
             </IconButton>
           </Box>
           <Box sx={{  mt:2, display: "flex", gap: 2, alignItems: "center" }}>
-          <GrhTextField sx={{mt:1.4}}
+          <GrhTextField sx={{mt:1.3}}
             label='Nombre'
             value={text}
             onChange={(e) => {
@@ -133,6 +135,18 @@ export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
               setFieldValue={setFieldValue}
             />
           </Box>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "64vh", p: 2 }}>
+          <GrhButton
+            onClick={handleClose}
+            startIcon={<LogoutIcon  />}
+            label={"Enviar solicitud"}
+            variant='principal'
+            sx={{
+            width: '30%'
+            }}
+            id={"solicitud"}
+          />
+        </Box>
         </Box>
       </Modal>
     </div>
