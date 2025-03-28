@@ -4,10 +4,28 @@ import { useParametros } from "../../../../contexts/useParamether.provider";
 import RenderNews from "./renderNews";
 import RenderBirths from "./renderBirths";
 import { ViewMail } from "../view/viewMail";
+import { UseQueryParams } from "../../../../hooks/queryParams";
+import { useNews } from "../../../../hooks/news";
+import { FloatingButton } from "../../../../generics/floatingButton/floatingButton";
+import AddIcon from '@mui/icons-material/Add';
+import { CreateEditNew } from "../form/createEditNew";
+
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
   const theme = useTheme();
   const { usePhoneScreen } = parametros; 
+  const { queryParams } = UseQueryParams();
+  const { selectItem } = useNews();
+
+  React.useEffect(()=>{
+    const id = parseInt(queryParams["id"]) || undefined;
+    //const type = queryParams["type"];
+    if(id == undefined || id <= 0){
+      console.error("ID LLEGO COMO INDEFINIDO")
+      return;
+    }
+    selectItem(id)
+  }, [queryParams])
 
   return (
     <Grid2 
@@ -20,7 +38,7 @@ const Screen: React.FC = () => {
       <Grid2 
         size={{
           xs: 12,
-          sm: 10
+          sm: 9
         }}
         sx={{ 
           boxShadow: `${theme.palette.primary.boxShadow}`,
@@ -51,7 +69,7 @@ const Screen: React.FC = () => {
       {!usePhoneScreen && (
         <Grid2 
           size={{
-            sm: 2
+            sm: 3
           }}
           sx={{ 
             boxShadow: `${theme.palette.primary.boxShadow}`,
@@ -88,6 +106,24 @@ const Screen: React.FC = () => {
         </Grid2>
       )}
       <ViewMail />
+      <FloatingButton 
+        icon={<AddIcon />} 
+        onClick={()=> {
+          setCurrent({
+            item: null,
+            action: 'create',
+            id: undefined
+          })
+        }}
+        label="Crear correo"
+        bgColor={theme.palette.secondary.main}
+        positions={{
+          bottom: '2.2rem',
+          left: '2rem'
+        }}
+        borderColor={theme.palette.secondary.hover}
+      />
+      <CreateEditNew />
     </Grid2>
   );
 };

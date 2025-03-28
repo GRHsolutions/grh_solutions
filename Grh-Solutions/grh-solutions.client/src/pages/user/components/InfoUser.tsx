@@ -5,15 +5,16 @@ import {
   Menu,
   MenuItem,
   ListItemIcon,
+  IconButton,
 } from "@mui/material";
-import TuneIcon from "@mui/icons-material/Tune";
 import React, { useState } from "react";
 import ModalEdit from "./ModalEdit";
-import ModalCertificate from "./ModalCertificate";
 import ModalContratos from "./ModalContratos";
 import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
 import AssignmentIcon from "@mui/icons-material/Assignment";
+import ModalCertificate from "./ModalCertificate";
+import TuneIcon from '@mui/icons-material/Tune';
 const userInfo = [
   {
     title: "Info personal",
@@ -97,10 +98,11 @@ export default function InfoUser() {
             <Typography variant="h5" sx={{ marginTop: 1 }}>
               Información del Usuario
             </Typography>
+            <IconButton onClick={handleClick}>
             <TuneIcon
               sx={{ marginLeft: 2, fontSize: 40, cursor: "pointer" }}
-              onClick={handleClick}
-            />
+            /> 
+            </IconButton>
           </Box>
 
           <Menu

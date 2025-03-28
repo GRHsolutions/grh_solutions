@@ -9,8 +9,7 @@ export default function ResumeUser() {
         alignItems: "center",
         height: "100%",
         width: "100%",
-        bgcolor: "#f5f5f5",
-        borderLeft: "3px solid black",
+        borderLeft: "2px solid black",
       }}
     >
       <Box
@@ -18,10 +17,9 @@ export default function ResumeUser() {
           width: "78%",
           maxWidth: "900px",
           height: "100%",
-          bgcolor: "white",
           p: 4,
           borderRadius: "10px",
-          borderRight: "3px solid black",
+          borderRight: "2px solid black",
           borderLeft: "none",
           display: "flex",
           flexDirection: "column",

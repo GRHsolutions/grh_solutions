@@ -1,4 +1,4 @@
-import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button } from '@mui/material';
+import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PersonIcon from '@mui/icons-material/Person';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -29,24 +29,25 @@ interface IModalOptionsProps {
 }
 
 export default function ModalEdit({ open, handleClose }: IModalOptionsProps) {
+    const theme = useTheme();
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
       <Box sx={style}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <PersonIcon sx={{ fontSize: 40 }} />
+            <PersonIcon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
             <Box>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
                 Solicitud de editar información personal.
               </Typography>
-              <Typography variant="body2">Gerente - Activo</Typography>
+              <Typography variant="body2" color={theme.palette.text.primary}>Gerente - Activo</Typography>
             </Box>
           </Box>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <Typography variant="h6" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
           Campos para editar tus datos
         </Typography>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
@@ -64,12 +65,12 @@ export default function ModalEdit({ open, handleClose }: IModalOptionsProps) {
         >
           Agregar Campo
         </Button>
-        <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+        <Typography variant="body2" sx={{ fontStyle: 'italic', color: theme.palette.text.primary }}>
           Justificación (Esto aparecerá en el correo de notificación)
         </Typography>
         <GrhTextField fullWidth  />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-          <Button variant="outlined" startIcon={<CancelIcon />} onClick={handleClose}>
+          <Button variant="outlined" startIcon={<CancelIcon />} sx={{ color: theme.palette.text.primary }} onClick={handleClose}>
             Cancelar
           </Button>
           <Button

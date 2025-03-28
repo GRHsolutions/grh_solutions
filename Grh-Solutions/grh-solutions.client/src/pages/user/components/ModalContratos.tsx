@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-  Box, Typography, Modal, IconButton, TextField, Select, MenuItem, InputLabel, FormControl, Button, Grid
+  Box, Typography, Modal, IconButton, TextField, Select, MenuItem, InputLabel, FormControl, Button, Grid, useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -27,6 +27,7 @@ interface IModalOptionsProps {
 }
 
 export default function ModalContratos({ open, handleClose }: IModalOptionsProps) {
+  const theme = useTheme();
   const [tipoContrato, setTipoContrato] = useState('');
   const [busqueda, setBusqueda] = useState('');
 
@@ -60,12 +61,12 @@ export default function ModalContratos({ open, handleClose }: IModalOptionsProps
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
       <Box sx={style}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6" fontWeight="bold">Lista de contratos donde usted está vinculado.</Typography>
+          <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>Lista de contratos donde usted está vinculado.</Typography>
           <IconButton onClick={handleClose}>
-            <CloseIcon />
+            <CloseIcon sx={{ color: theme.palette.text.primary }} />
           </IconButton>
         </Box>
-        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>Roberto - Gerente</Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'bold', color: theme.palette.text.primary }}>Roberto - Gerente</Typography>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
           <FormControl fullWidth sx={{ flex: 1 }}>
             <InputLabel>Tipo de contrato</InputLabel>
@@ -80,22 +81,22 @@ export default function ModalContratos({ open, handleClose }: IModalOptionsProps
           <TextField fullWidth sx={{ flex: 1 }} label="Fecha de Finalización del contrato" type="date" InputLabelProps={{ shrink: true }} />
         </Box>
         {contratos.map((contrato, index) => (
-          <Box key={index} sx={{ p: 2, border: '1px solid #ccc', borderRadius: '10px', mb: 2 }}>
-            <Typography variant="h6">{contrato.titulo}</Typography>
-            <Typography variant="body2">Fecha de Firma: {contrato.firma} | Fecha de Finalización: {contrato.finalizacion}</Typography>
+          <Box key={index} sx={{ p: 2, border: `1px solid ${theme.palette.text.primary}`, borderRadius: '10px', mb: 2 }}>
+            <Typography variant="h6" color={theme.palette.text.primary}>{contrato.titulo}</Typography>
+            <Typography variant="body2" color={theme.palette.text.primary}>Fecha de Firma: {contrato.firma} | Fecha de Finalización: {contrato.finalizacion}</Typography>
             {contrato.categoria && (
-              <Typography variant="body2">Categoría: {contrato.categoria} | Tipo: {contrato.tipo}</Typography>
+              <Typography variant="body2" color={theme.palette.text.primary}>Categoría: {contrato.categoria} | Tipo: {contrato.tipo}</Typography>
             )}
             {contrato.involucrados && (
-              <Box sx={{ mt: 1, p: 1, bgcolor: "#f5f5f5", borderRadius: '5px' }}>
-                <Typography variant="body2" fontWeight="bold">Involucrados:</Typography>
+              <Box sx={{ mt: 1, p: 1, bgcolor: theme.palette.background.default, borderRadius: '5px' }}>
+                <Typography variant="body2" fontWeight="bold" color={theme.palette.text.primary}>Involucrados:</Typography>
                 {contrato.involucrados.map((persona, i) => (
-                  <Typography key={i} variant="body2">{persona}</Typography>
+                  <Typography key={i} variant="body2" color={theme.palette.text.primary}>{persona}</Typography>
                 ))}
               </Box>
             )}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-              <Button sx={{ color: 'blue' }}>Descargar Contrato</Button>
+              <Button sx={{ color: theme.palette.primary.main }}>Descargar Contrato</Button>
             </Box>
           </Box>
         ))}

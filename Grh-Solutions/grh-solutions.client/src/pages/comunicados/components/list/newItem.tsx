@@ -11,7 +11,7 @@ import ImageGrid from "../../../../components/comunicados/gridImages";
 interface NewItemProps {
   item: News;
   comments: Commentary[];
-  onClick: (item: News) => void;
+  onClick: (item: number) => void;
   key: string;
 }
 
@@ -47,7 +47,7 @@ const NewItem: React.FC<NewItemProps> = ({
   return (
     <Box
       key={key}
-      onClick={() => onClick(item)}
+      onClick={() => onClick(item.id)}
       sx={{
         width: '100%',
         marginBottom: '16px',
