@@ -57,7 +57,7 @@ export default function InfoUser() {
   return (
     <>
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "start", height: "100%", width: "100%", fontSize: "2rem", marginRight: "20px", }}>
-        <Box sx={{ width: "68%", height: "100%", borderRight: "3px solid black", borderLeft: "3px solid black", padding: "25px" }}>
+        <Box sx={{ width: "68%", height: "100%", borderRight: "2px solid black", borderLeft: "2px solid black", padding: "25px" }}>
           <Box sx={{ textAlign: "center", marginBottom: 2, display: "flex", marginLeft: 12 }}>
             <Typography variant="h5" sx={{ marginTop: 1 }}>Información del Usuario</Typography>
             <TuneIcon sx={{ marginLeft: 2, fontSize: 40, cursor: "pointer" }} onClick={handleClick} />
