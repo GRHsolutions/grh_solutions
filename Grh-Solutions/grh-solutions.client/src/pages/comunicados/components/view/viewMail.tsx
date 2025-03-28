@@ -10,15 +10,12 @@ import { ImageCarousel } from "../../../../generics/grh-generics/imageCarousel";
 interface ViewMailProps {}
 
 export const ViewMail = ({}: ViewMailProps) => {
-  const { current, setCurrent /*, newComment */ } = useNews();
+  const { current, noCurrnt /*, newComment */ } = useNews();
   const theme = useTheme();
   const newCommentRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleClose = () => {
-    setCurrent({
-      item: null,
-      action: "none",
-    });
+    noCurrnt();
   };
 
   useEffect(() => {

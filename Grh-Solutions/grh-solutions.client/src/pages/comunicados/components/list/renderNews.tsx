@@ -5,13 +5,10 @@ import NewItem from "./newItem";
 import { News } from "../../../../domain/models/news/news.entities";
 
 const RenderNews: React.FC = () => {
-  const { news, setCurrent, comments } = useNews();
+  const { news, selectItem, comments } = useNews();
 
-  const handleSelect = (item: News) => {
-    setCurrent({
-      item: item,
-      action: 'view'
-    })
+  const handleSelect = (id: number) => {
+    selectItem(id);
   }
 
   return (

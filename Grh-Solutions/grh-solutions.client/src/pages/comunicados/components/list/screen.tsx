@@ -6,19 +6,25 @@ import RenderBirths from "./renderBirths";
 import { ViewMail } from "../view/viewMail";
 import { UseQueryParams } from "../../../../hooks/queryParams";
 import { useNews } from "../../../../hooks/news";
+import { FloatingButton } from "../../../../generics/floatingButton/floatingButton";
+import AddIcon from '@mui/icons-material/Add';
+import { CreateEditNew } from "../form/createEditNew";
 
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
   const theme = useTheme();
   const { usePhoneScreen } = parametros; 
   const { queryParams } = UseQueryParams();
-  const {} = useNews();
+  const { selectItem } = useNews();
 
   React.useEffect(()=>{
     const id = parseInt(queryParams["id"]) || undefined;
-    const type = queryParams["type"];
-    const action = queryParams["action"];
-    console.log(id, type, action);
+    //const type = queryParams["type"];
+    if(id == undefined || id <= 0){
+      console.error("ID LLEGO COMO INDEFINIDO")
+      return;
+    }
+    selectItem(id)
   }, [queryParams])
 
   return (
@@ -100,6 +106,24 @@ const Screen: React.FC = () => {
         </Grid2>
       )}
       <ViewMail />
+      <FloatingButton 
+        icon={<AddIcon />} 
+        onClick={()=> {
+          setCurrent({
+            item: null,
+            action: 'create',
+            id: undefined
+          })
+        }}
+        label="Crear correo"
+        bgColor={theme.palette.secondary.main}
+        positions={{
+          bottom: '2.2rem',
+          left: '2rem'
+        }}
+        borderColor={theme.palette.secondary.hover}
+      />
+      <CreateEditNew />
     </Grid2>
   );
 };
