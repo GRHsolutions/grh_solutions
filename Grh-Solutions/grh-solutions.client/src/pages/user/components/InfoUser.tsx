@@ -1,37 +1,47 @@
-import { Avatar, Box, Typography, Menu, MenuItem, ListItemIcon } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Typography,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+} from "@mui/material";
 import TuneIcon from "@mui/icons-material/Tune";
 import React, { useState } from "react";
 import ModalEdit from "./ModalEdit";
-import ModalCertificate from "./modalCertificate";
+import ModalCertificate from "./ModalCertificate";
 import ModalContratos from "./ModalContratos";
 import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 const userInfo = [
   {
-    title: "Info personal", data: [
+    title: "Info personal",
+    data: [
       { label: "Nombre", value: "Roberto" },
       { label: "Apellido", value: "Gomez Bolanos" },
       { label: "Fecha de nacimiento", value: "12/12/2000 / 18 años" },
       { label: "País/Ciudad", value: "Colombia/Bogotá" },
-    ]
+    ],
   },
   {
-    title: "Contacto", data: [
+    title: "Contacto",
+    data: [
       { label: "Teléfono", value: "12345678" },
       { label: "Correo", value: "rGKt2@example.com" },
       { label: "Dirección", value: "Calle 12 # 12-12" },
-    ]
+    ],
   },
   {
-    title: "Datos laborales", data: [
+    title: "Datos laborales",
+    data: [
       { label: "Fecha de contrato", value: "12/12/2000" },
       { label: "Fecha final de contrato", value: "12/12/2000" },
       { label: "Cargo", value: "Desarrollador" },
       { label: "Estado", value: "Activo" },
-    ]
+    ],
   },
-]
+];
 export default function InfoUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalType, setModalType] = useState<string | null>(null);
@@ -56,11 +66,41 @@ export default function InfoUser() {
 
   return (
     <>
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "start", height: "100%", width: "100%", fontSize: "2rem", marginRight: "20px", }}>
-        <Box sx={{ width: "68%", height: "100%", borderRight: "3px solid black", borderLeft: "3px solid black", padding: "25px" }}>
-          <Box sx={{ textAlign: "center", marginBottom: 2, display: "flex", marginLeft: 12 }}>
-            <Typography variant="h5" sx={{ marginTop: 1 }}>Información del Usuario</Typography>
-            <TuneIcon sx={{ marginLeft: 2, fontSize: 40, cursor: "pointer" }} onClick={handleClick} />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "start",
+          height: "100%",
+          width: "100%",
+          fontSize: "2rem",
+          marginRight: "20px",
+        }}
+      >
+        <Box
+          sx={{
+            width: "68%",
+            height: "100%",
+            borderRight: "3px solid black",
+            borderLeft: "3px solid black",
+            padding: "25px",
+          }}
+        >
+          <Box
+            sx={{
+              textAlign: "center",
+              marginBottom: 2,
+              display: "flex",
+              marginLeft: 12,
+            }}
+          >
+            <Typography variant="h5" sx={{ marginTop: 1 }}>
+              Información del Usuario
+            </Typography>
+            <TuneIcon
+              sx={{ marginLeft: 2, fontSize: 40, cursor: "pointer" }}
+              onClick={handleClick}
+            />
           </Box>
 
           <Menu
@@ -72,7 +112,12 @@ export default function InfoUser() {
           >
             <MenuItem
               onClick={() => handleOpenModal("edit")}
-              sx={{ border: "1px solid #ccc", borderRadius: "4px", margin: "4px", paddingX: "6px" }}
+              sx={{
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                margin: "4px",
+                paddingX: "6px",
+              }}
             >
               <ListItemIcon>
                 <EditIcon fontSize="small" />
@@ -82,7 +127,12 @@ export default function InfoUser() {
 
             <MenuItem
               onClick={() => handleOpenModal("certificate")}
-              sx={{ border: "1px solid #ccc", borderRadius: "4px", margin: "4px", paddingX: "6px" }}
+              sx={{
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                margin: "4px",
+                paddingX: "6px",
+              }}
             >
               <ListItemIcon>
                 <DownloadIcon fontSize="small" />
@@ -92,7 +142,12 @@ export default function InfoUser() {
 
             <MenuItem
               onClick={() => handleOpenModal("contratos")}
-              sx={{ border: "1px solid #ccc", borderRadius: "4px", margin: "4px", paddingX: "6px" }}
+              sx={{
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                margin: "4px",
+                paddingX: "6px",
+              }}
             >
               <ListItemIcon>
                 <AssignmentIcon fontSize="small" />
@@ -101,11 +156,27 @@ export default function InfoUser() {
             </MenuItem>
           </Menu>
 
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200, marginBottom: 6, marginTop: 6, marginLeft: "auto", marginRight: "auto" }} />
+          <Avatar
+            alt="Remy Sharp"
+            src="/static/images/avatar/1.jpg"
+            sx={{
+              width: 200,
+              height: 200,
+              marginBottom: 6,
+              marginTop: 6,
+              marginLeft: "auto",
+              marginRight: "auto",
+            }}
+          />
 
           {userInfo.map((section) => (
             <Box key={section.title} sx={{ marginLeft: 8, marginBottom: 2 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>{section.title}</Typography>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: "bold", marginBottom: 1 }}
+              >
+                {section.title}
+              </Typography>
               {section.data.map((item) => (
                 <Typography key={item.label} sx={{ marginBottom: 1 }}>
                   {item.label}: {item.value}
@@ -116,9 +187,15 @@ export default function InfoUser() {
         </Box>
       </Box>
 
-      {modalType === "edit" && <ModalEdit open={true} handleClose={handleCloseModal} />}
-      {modalType === "certificate" && <ModalCertificate open={true} handleClose={handleCloseModal} />}
-      {modalType === "contratos" && <ModalContratos open={true} handleClose={handleCloseModal} />}
+      {modalType === "edit" && (
+        <ModalEdit open={true} handleClose={handleCloseModal} />
+      )}
+      {modalType === "certificate" && (
+        <ModalCertificate open={true} handleClose={handleCloseModal} />
+      )}
+      {modalType === "contratos" && (
+        <ModalContratos open={true} handleClose={handleCloseModal} />
+      )}
     </>
   );
 }
