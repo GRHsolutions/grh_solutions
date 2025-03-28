@@ -3,6 +3,7 @@ import {
   Box, Typography, Modal, IconButton, TextField, Select, MenuItem, InputLabel, FormControl, Button, Grid, useTheme
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import GrhButton from '../../../generics/grh-generics/button';
 
 const style = {
   position: 'absolute',
@@ -97,7 +98,14 @@ export default function ModalContratos({ open, handleClose }: IModalOptionsProps
               </Box>
             )}
             <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-              <Button sx={{ color: theme.palette.primary.main }}>Descargar Contrato</Button>
+              <GrhButton
+                label={"Descargar Contrato"}
+                variant='principal'
+                sx={{
+                  width: '15%'
+                }}
+                id={"btnDescargarContrato"}
+              />
             </Box>
           </Box>
         ))}

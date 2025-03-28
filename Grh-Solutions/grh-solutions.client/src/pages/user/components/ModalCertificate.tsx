@@ -1,6 +1,7 @@
 import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import GrhButton from '../../../generics/grh-generics/button';
 
 const style = {
   position: 'absolute',
@@ -77,9 +78,16 @@ export default function ModalCertificate({ open, handleClose }: IModalOptionsPro
             (Previsualización del documento)
           </Typography>
         </Box>
-        <Button variant="contained" sx={{ alignSelf: 'flex-end', mt: 2 }} startIcon={<PictureAsPdfIcon />}>
-          Descargar PDF
-        </Button>
+        <GrhButton
+          label={"Descargar PDF"}
+          variant='tertiary'
+          sx={{
+            width: '15%',
+            alignSelf: 'flex-end',
+             mt: 2
+          }}
+          id={"descargar-pdf"}
+        />
       </Box>
     </Modal>
   );

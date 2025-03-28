@@ -100,7 +100,7 @@ export const useRenderedItems = (): Returnable => {
         subItems: [
           {
             visible: true,
-            to: "/vacantes?type=vacante",
+            to: "/postulate",
             disabled: false,
             active: location.pathname === "/vacantes?type=vacante",
             label: "Vacante",
