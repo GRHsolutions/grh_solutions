@@ -1,4 +1,4 @@
-import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button } from '@mui/material';
+import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button, useTheme } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
@@ -25,33 +25,35 @@ interface IModalOptionsProps {
 }
 
 export default function ModalCertificate({ open, handleClose }: IModalOptionsProps) {
+  const theme = useTheme();
+
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
       <Box sx={style}>
-        <IconButton onClick={handleClose} sx={{ position: 'absolute', top: 10, right: 10 }}>
+        <IconButton onClick={handleClose} sx={{ position: 'absolute', top: 10, right: 10, color: theme.palette.text.primary }}>
           <CloseIcon />
         </IconButton>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <PictureAsPdfIcon sx={{ fontSize: 40 }} />
+          <PictureAsPdfIcon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
           <Box>
-            <Typography variant="h5" fontWeight="bold">
+            <Typography variant="h5" fontWeight="bold" color={theme.palette.text.primary}>
               Descargar Certificados
             </Typography>
-            <Typography variant="body1">Roberto - Gerente</Typography>
+            <Typography variant="body1" color={theme.palette.text.primary}>Roberto - Gerente</Typography>
           </Box>
         </Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
           <Box sx={{ flex: 1, mr: 2 }}>
-            <Typography variant="body2">Tipo de documento:</Typography>
-            <Select fullWidth defaultValue="">
+            <Typography variant="body2" color={theme.palette.text.primary}>Tipo de documento:</Typography>
+            <Select fullWidth defaultValue="" sx={{ color: theme.palette.text.primary }}>
               <MenuItem value="">Seleccione el tipo de documento</MenuItem>
               <MenuItem value="certificado1">Certificado 1</MenuItem>
               <MenuItem value="certificado2">Certificado 2</MenuItem>
             </Select>
           </Box>
           <Box sx={{ flex: 1 }}>
-            <Typography variant="body2">Búsqueda:</Typography>
-            <TextField fullWidth placeholder="Buscar..." />
+            <Typography variant="body2" color={theme.palette.text.primary}>Búsqueda:</Typography>
+            <TextField fullWidth placeholder="Buscar..." sx={{ input: { color: theme.palette.text.primary } }} />
           </Box>
         </Box>
         <Box
@@ -64,13 +66,14 @@ export default function ModalCertificate({ open, handleClose }: IModalOptionsPro
             justifyContent: 'center',
             textAlign: 'center',
             mt: 2,
-            p: 2
+            p: 2,
+            color: theme.palette.text.primary
           }}
         >
-          <Typography variant="h4" fontWeight="bold">
+          <Typography variant="h4" fontWeight="bold" color={theme.palette.text.primary}>
             DOCUMENTO PDF
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }}>
+          <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }} color={theme.palette.text.primary}>
             (Previsualización del documento)
           </Typography>
         </Box>

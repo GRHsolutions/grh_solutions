@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { HorariosProvider } from "../../contexts/horarios.provider";
 import { ListHorario } from "./components/list/list";
-import PositionedMenu from "./components/list/ModalGroup";
+import PositionedMenu from "./components/list/MenuGroup";
 
 interface HorarioProps {}
 
