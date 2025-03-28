@@ -10,6 +10,7 @@ export default function ResumeUser() {
         height: "100%",
         width: "100%",
         borderLeft: "2px solid black",
+        overflowY: "auto",
       }}
     >
       <Box
@@ -18,11 +19,11 @@ export default function ResumeUser() {
           maxWidth: "900px",
           height: "100%",
           p: 4,
-          borderRadius: "10px",
           borderRight: "2px solid black",
           borderLeft: "none",
           display: "flex",
           flexDirection: "column",
+          overflowY: "auto",
         }}
       >
         <Typography variant="h4" align="center" mt={2}>
@@ -72,7 +73,7 @@ export default function ResumeUser() {
         </Box>
 
         <Divider sx={{ my: 2 }} />
-        <Box sx={{ mt: 3, mb: 8 }}>
+        <Box sx={{ mt: 3, mb: 4 }}>
           <Typography variant="h6" fontWeight="bold">Habilidades</Typography>
           <Typography variant="body2">✅ Liderazgo y gestión de equipos</Typography>
           <Typography variant="body2">✅ Estrategia empresarial</Typography>

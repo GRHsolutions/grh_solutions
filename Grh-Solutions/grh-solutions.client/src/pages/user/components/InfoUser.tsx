@@ -1,12 +1,4 @@
-import {
-  Avatar,
-  Box,
-  Typography,
-  Menu,
-  MenuItem,
-  ListItemIcon,
-  IconButton,
-} from "@mui/material";
+import { Avatar, Box, Typography, Menu, MenuItem, ListItemIcon, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import ModalEdit from "./ModalEdit";
 import ModalContratos from "./ModalContratos";
@@ -14,7 +6,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import DownloadIcon from "@mui/icons-material/Download";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ModalCertificate from "./ModalCertificate";
-import TuneIcon from '@mui/icons-material/Tune';
+import TuneIcon from "@mui/icons-material/Tune";
+import ModalRole from "./ModalRole";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import ModalChangePassword from "./ModalChangePassword";
+
 const userInfo = [
   {
     title: "Info personal",
@@ -43,6 +40,7 @@ const userInfo = [
     ],
   },
 ];
+
 export default function InfoUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalType, setModalType] = useState<string | null>(null);
@@ -81,27 +79,17 @@ export default function InfoUser() {
         <Box
           sx={{
             width: "68%",
-            height: "100%",
-            borderRight: "3px solid black",
-            borderLeft: "3px solid black",
+            height: "90%",
+            borderRight: "2px solid black",
+            borderLeft: "2px solid black",
             padding: "25px",
+            overflowY: "auto",
           }}
         >
-          <Box
-            sx={{
-              textAlign: "center",
-              marginBottom: 2,
-              display: "flex",
-              marginLeft: 12,
-            }}
-          >
-            <Typography variant="h5" sx={{ marginTop: 1 }}>
-              Información del Usuario
-            </Typography>
-            <IconButton onClick={handleClick}>
-            <TuneIcon
-              sx={{ marginLeft: 2, fontSize: 40, cursor: "pointer" }}
-            /> 
+          <Box sx={{ textAlign: "center", marginBottom: 2, display: "flex", marginLeft: 12 }}>
+            <Typography variant="h5" sx={{ marginTop: 1 }}>Información del Usuario</Typography>
+            <IconButton onClick={handleClick} sx={{ marginLeft: 2 }}>
+              <TuneIcon sx={{ fontSize: 40, cursor: "pointer" }} />
             </IconButton>
           </Box>
 
@@ -112,73 +100,43 @@ export default function InfoUser() {
             anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
             transformOrigin={{ vertical: "top", horizontal: "left" }}
           >
-            <MenuItem
-              onClick={() => handleOpenModal("edit")}
-              sx={{
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                margin: "4px",
-                paddingX: "6px",
-              }}
-            >
+            <MenuItem onClick={() => handleOpenModal("edit")}>
               <ListItemIcon>
                 <EditIcon fontSize="small" />
               </ListItemIcon>
               Editar información
             </MenuItem>
-
-            <MenuItem
-              onClick={() => handleOpenModal("certificate")}
-              sx={{
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                margin: "4px",
-                paddingX: "6px",
-              }}
-            >
+            <MenuItem onClick={() => handleOpenModal("certificate")}>
               <ListItemIcon>
                 <DownloadIcon fontSize="small" />
               </ListItemIcon>
               Descargar certificados
             </MenuItem>
-
-            <MenuItem
-              onClick={() => handleOpenModal("contratos")}
-              sx={{
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-                margin: "4px",
-                paddingX: "6px",
-              }}
-            >
+            <MenuItem onClick={() => handleOpenModal("contratos")}>
               <ListItemIcon>
                 <AssignmentIcon fontSize="small" />
               </ListItemIcon>
               Verificar contratos
             </MenuItem>
+            <MenuItem onClick={() => handleOpenModal("roles")}>
+              <ListItemIcon>
+                <AdminPanelSettingsIcon fontSize="small" />
+              </ListItemIcon>
+              Administrar roles
+            </MenuItem>
+            <MenuItem onClick={() => handleOpenModal("password")}>
+              <ListItemIcon>
+                <VpnKeyIcon fontSize="small" />
+              </ListItemIcon>
+              Cambiar contraseña
+            </MenuItem>
           </Menu>
 
-          <Avatar
-            alt="Remy Sharp"
-            src="/static/images/avatar/1.jpg"
-            sx={{
-              width: 200,
-              height: 200,
-              marginBottom: 6,
-              marginTop: 6,
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          />
+          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200, margin: "auto", marginBottom: 6 }} />
 
           {userInfo.map((section) => (
             <Box key={section.title} sx={{ marginLeft: 8, marginBottom: 2 }}>
-              <Typography
-                variant="h5"
-                sx={{ fontWeight: "bold", marginBottom: 1 }}
-              >
-                {section.title}
-              </Typography>
+              <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>{section.title}</Typography>
               {section.data.map((item) => (
                 <Typography key={item.label} sx={{ marginBottom: 1 }}>
                   {item.label}: {item.value}
@@ -189,15 +147,11 @@ export default function InfoUser() {
         </Box>
       </Box>
 
-      {modalType === "edit" && (
-        <ModalEdit open={true} handleClose={handleCloseModal} />
-      )}
-      {modalType === "certificate" && (
-        <ModalCertificate open={true} handleClose={handleCloseModal} />
-      )}
-      {modalType === "contratos" && (
-        <ModalContratos open={true} handleClose={handleCloseModal} />
-      )}
+      {modalType === "edit" && <ModalEdit open={true} handleClose={handleCloseModal} />}
+      {modalType === "certificate" && <ModalCertificate open={true} handleClose={handleCloseModal} />}
+      {modalType === "contratos" && <ModalContratos open={true} handleClose={handleCloseModal} />}
+      {modalType === "roles" && <ModalRole open={true} handleClose={handleCloseModal} />}
+      {modalType === "password" && <ModalChangePassword open={true} handleClose={handleCloseModal} />}
     </>
   );
 }

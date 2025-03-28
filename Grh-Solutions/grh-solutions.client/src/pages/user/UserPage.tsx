@@ -1,4 +1,4 @@
-import { Box, Grid2, Typography, useTheme } from "@mui/material";
+import { Box, Grid2,  useTheme } from "@mui/material";
 import { useParametros } from "../../contexts/useParamether.provider";
 import InfoUser from "./components/InfoUser";
 import ResumeUser from "./components/ResumeUser";
