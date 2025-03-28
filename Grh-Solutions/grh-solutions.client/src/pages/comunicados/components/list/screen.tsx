@@ -15,16 +15,16 @@ const Screen: React.FC = () => {
   const theme = useTheme();
   const { usePhoneScreen } = parametros; 
   const { queryParams } = UseQueryParams();
-  const { selectItem } = useNews();
+  const { selectItem, noCurrnt } = useNews();
 
   React.useEffect(()=>{
     const id = parseInt(queryParams["id"]) || undefined;
     //const type = queryParams["type"];
     if(id == undefined || id <= 0){
-      console.error("ID LLEGO COMO INDEFINIDO")
+      //console.error("ID LLEGO COMO INDEFINIDO")
       return;
     }
-    selectItem(id)
+    selectItem(id);
   }, [queryParams])
 
   return (
@@ -109,11 +109,7 @@ const Screen: React.FC = () => {
       <FloatingButton 
         icon={<AddIcon />} 
         onClick={()=> {
-          setCurrent({
-            item: null,
-            action: 'create',
-            id: undefined
-          })
+          noCurrnt('create');
         }}
         label="Crear correo"
         bgColor={theme.palette.secondary.main}

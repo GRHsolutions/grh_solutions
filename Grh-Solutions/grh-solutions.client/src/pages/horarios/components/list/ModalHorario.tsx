@@ -22,9 +22,9 @@ interface IModalOptionsProps {
   open: boolean;
   handleClose: () => void;
 }
-export default function ModalGroup({ 
-    open, 
-    handleClose, 
+export default function ModalHorario({
+    open,
+    handleClose,
 }: IModalOptionsProps) {
   return (
     <div>
