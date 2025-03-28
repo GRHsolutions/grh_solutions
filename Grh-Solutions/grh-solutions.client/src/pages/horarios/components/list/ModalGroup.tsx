@@ -1,31 +1,69 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import Groups3Icon from "@mui/icons-material/Groups3";
+import GrhTextField from '../../../../generics/grh-generics/textField';
+import {
+  IconButton,
+  MenuItem,
+  Select,
+  TextField,
+  useTheme,
+} from "@mui/material";
+import MultipleSelect from "../../../../generics/grh-generics/multipleSelect";
+import GrhCustomSelect from "../../../../generics/grh-generics/inputSelect";
 
 const style = {
-  position: 'absolute',
+  position: "absolute",
   top: 0,
   right: 0,
-  width: '45%',
-  height: '100%',
-  bgcolor: 'background.paper',
+  width: "45%",
+  height: "100%",
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
-  overflowY: 'auto',
-  '&:focus': {
-      outline: 'none'
-    }
+  overflowY: "auto",
+  "&:focus": {
+    outline: "none",
+  },
 };
 interface IModalOptionsProps {
   open: boolean;
   handleClose: () => void;
 }
-export default function ModalGroup({ 
-    open, 
-    handleClose, 
-}: IModalOptionsProps) {
+export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
+  const theme = useTheme();
+  const [text, setText] = React.useState("");
+  const [currentInputSelected, setCurrentInputSelected] = React.useState(0);
+  const options = [
+    {
+      id: 1,
+      name: "Martin Rodriguez",
+    },
+    {
+      id: 2,
+      name: "Rosalba Salazar",
+    },
+    {
+      id: 3,
+      name: "Gemita Mendez",
+    },
+    {
+      id: 4,
+      name: "Miguel Ballesteros",
+    },
+    {
+      id: 5,
+      name: "Juan Diaz",
+    },
+  ];
+  const setFieldValue = (_field: string, value: number[]) => {
+    setMult(value);
+  };
+  const [mult, setMult] = React.useState<number[]>([]);
   return (
     <div>
       <Modal
@@ -35,12 +73,66 @@ export default function ModalGroup({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Groups3Icon
+                sx={{ fontSize: 40, color: theme.palette.text.primary }}
+              />
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  color={theme.palette.text.primary}
+                >
+                  Crea un nuevo grupo
+                </Typography>
+                <Typography variant="body2" color={theme.palette.text.primary}>
+                  para facilitar la opcion de horarios
+                </Typography>
+              </Box>
+            </Box>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Box sx={{  mt:2, display: "flex", gap: 2, alignItems: "center" }}>
+          <GrhTextField sx={{mt:1.4}}
+            label='Nombre'
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value || "");
+            }}
+          />
+          <GrhCustomSelect 
+            label={"Del Area"} 
+            options={options.map(item => ({
+              value: item.id, 
+              name: item.name
+            }))} 
+            value={currentInputSelected} 
+            onChange={(e) => {
+              setCurrentInputSelected(e.target.value as number);
+            }}
+          />
+          </Box>
+          <Box sx={{mt: 1}}>
+            <MultipleSelect sx={{mt: 4}}
+              label={"listado de usuarios"}
+              name={"input"}
+              options={options.map((item) => ({
+                id: item.id,
+                nombre: item.name,
+              }))}
+              value={mult}
+              setFieldValue={setFieldValue}
+            />
+          </Box>
         </Box>
       </Modal>
     </div>
