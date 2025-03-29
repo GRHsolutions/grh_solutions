@@ -1,104 +1,199 @@
-import "../stiles.scss";
-import BasicModal from "./Modalvista";
 import React from "react";
+import GrhGenericTable2 from "../../../generics/grh-generics/tableWrapper2";
+import BasicModal from "./Modalvista";
+import { Box } from "@mui/material";
+import { Solicitud } from "../../../domain/models/solicitudes/solicitudes.entities";
+import dayjs from "dayjs";
 
 export default function TableSolicitudes() {
-  const [open, setOpen] = React.useState(false);
-  const [name, setName] = React.useState("");
+  const [current, setCurrent] = React.useState<Solicitud | null>(null);
 
-  const handleClose = () => setOpen(false);
+  const handleClose = () => setCurrent(null);
 
-  const solicitudes = [
+  const solicitudes: Solicitud[]= [
     {
       radicado: "SOL-20250313",
       titulo: "Necesito por favor..",
       estado: "pendiente",
       tipo: "prestamo",
-      desde: "10/09/2024",
-      hasta: "20/09/2024",
+      desde: dayjs("10/09/2024"),
+      hasta: dayjs("2/09/2024"),
+      creadoPor: {
+        id: 1,
+        primerNombre: "Pedro",
+        segundoNombre: "Pedro",
+        primerApellido: "",
+        segundoApellido: "",
+        correo: "pedro.sanchez@gmail.com",
+        photo: null,
+        area: {
+          id: 41,
+          nombre: "Contabilidad"
+        }
+      },
     },
     {
       radicado: "SOL-20250314",
       titulo: "Solicitud urgente..",
       estado: "en proceso",
       tipo: "credito",
-      desde: "12/09/2024",
-      hasta: "22/09/2024",
+      desde: dayjs("10/09/2024"),
+      hasta: dayjs("2/09/2024"),
+      creadoPor: {
+        id: 1,
+        primerNombre: "Pedro",
+        segundoNombre: "Pedro",
+        primerApellido: "",
+        segundoApellido: "",
+        correo: "pedro.sanchez@gmail.com",
+        photo: null,
+        area: {
+          id: 41,
+          nombre: "Contabilidad"
+        }
+      },
     },
     {
       radicado: "SOL-20250315",
       titulo: "Requiere aprobación..",
       estado: "aprobado",
       tipo: "inversion",
-      desde: "14/09/2024",
-      hasta: "24/09/2024",
+      desde: dayjs("10/09/2024"),
+      hasta: dayjs("2/09/2024"),
+      creadoPor: {
+        id: 1,
+        primerNombre: "Pedro",
+        segundoNombre: "Pedro",
+        primerApellido: "",
+        segundoApellido: "",
+        correo: "pedro.sanchez@gmail.com",
+        photo: null,
+        area: {
+          id: 41,
+          nombre: "Contabilidad"
+        }
+      },
     },
     {
       radicado: "SOL-20250316",
       titulo: "Revisión final..",
       estado: "pendiente",
       tipo: "prestamo",
-      desde: "16/09/2024",
-      hasta: "26/09/2024",
+      desde: dayjs("10/09/2024"),
+      hasta: dayjs("2/09/2024"),
+      creadoPor: {
+        id: 1,
+        primerNombre: "Pedro",
+        segundoNombre: "Pedro",
+        primerApellido: "",
+        segundoApellido: "",
+        correo: "pedro.sanchez@gmail.com",
+        photo: null,
+        area: {
+          id: 41,
+          nombre: "Contabilidad"
+        }
+      },
     },
     {
       radicado: "SOL-20250317",
       titulo: "Documentos completos..",
       estado: "en proceso",
       tipo: "credito",
-      desde: "18/09/2024",
-      hasta: "28/09/2024",
+      desde: dayjs("10/09/2024"),
+      hasta: dayjs("2/09/2024"),
+      creadoPor: {
+        id: 1,
+        primerNombre: "Pedro",
+        segundoNombre: "Pedro",
+        primerApellido: "",
+        segundoApellido: "",
+        correo: "pedro.sanchez@gmail.com",
+        photo: null,
+        area: {
+          id: 41,
+          nombre: "Contabilidad"
+        }
+      },
     },
     {
       radicado: "SOL-20250318",
       titulo: "Consulta adicional..",
       estado: "pendiente",
       tipo: "prestamo",
-      desde: "20/09/2024",
-      hasta: "30/09/2024",
+      desde: dayjs("10/09/2024"),
+      hasta: dayjs("2/09/2024"),
+      creadoPor: {
+        id: 1,
+        primerNombre: "Pedro",
+        segundoNombre: "Pedro",
+        primerApellido: "",
+        segundoApellido: "",
+        correo: "pedro.sanchez@gmail.com",
+        photo: null,
+        area: {
+          id: 41,
+          nombre: "Contabilidad"
+        }
+      },
     },
   ]
 
   const onSubmit = (radicado: any) => {
-    setName(radicado)
-    setOpen(true)
+    setCurrent(radicado)
   };
 
   return (
-    <>
-      <table>
-        <thead>
-          <tr className="tr">
-            <th>Radicado</th>
-            <th>Titulo</th>
-            <th>Estado</th>
-            <th>Tipo</th>
-            <th>Desde la fecha</th>
-            <th>Hasta la fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          {solicitudes.map((solicitud, index) => (
-            <tr key={index}>
-              <td>
-                <button
-                  className="button2"
-                  type="button"
-                  onClick={() => onSubmit(solicitud)}
-                >
-                  {solicitud.radicado}
-                </button>
-              </td>
-              <td>{solicitud.titulo}</td>
-              <td>{solicitud.estado}</td>
-              <td>{solicitud.tipo}</td>
-              <td>{solicitud.desde}</td>
-              <td>{solicitud.hasta}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <BasicModal open={open} handleClose={handleClose} name={name} />
-    </>
+    <Box sx={{width: "100%" }}>
+      <GrhGenericTable2 
+            maxHeight={"20rem"}
+            columns={[{
+              key: "radicado",
+              label: "Radicado",
+              onRowClick: (value)=>{
+                onSubmit(value)
+              },
+              type: "string"
+            },{
+              key: "titulo",
+              label: "Titulo",
+              onRowClick: undefined,
+              type: "string"
+            },
+            {
+              key: "estado",
+              label: "Estado",
+              onRowClick: undefined,
+              type: "string"
+            },{
+              key: "tipo",
+              label: "Tipo",
+              onRowClick: undefined,
+              type: "string"
+            },{
+              key: "desde",
+              label: "Desde",
+              onRowClick: undefined,
+              type: "date"
+            },{
+              key: "hasta",
+              label: "Hasta",
+              onRowClick: undefined,
+              type: "date"
+            }
+          ]} 
+            data={solicitudes} 
+            pagination={{
+              pageSize: 5,
+              totalPages: 10,
+              currentPage: 1,
+              totalRows: 510
+            }} 
+            onPageChange={(value)=>{
+              console.log(value);
+            }}                    
+          />
+      <BasicModal current={current} handleClose={handleClose} />
+    </Box>
   );
 }

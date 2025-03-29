@@ -1,12 +1,4 @@
-.TableContent {
-    margin-left: 3%;
-    margin-right: 3%;
-    width: 100%;
-    min-height: 100vh;
-    border-left: 1px solid rgb(82, 82, 82);
-    border-right: 1px solid rgb(82, 82, 82);
-    display: block;
-}
+
 
 .Title {
     margin-left: 3%;
@@ -29,35 +21,7 @@
 
 }
 
-table {
-    margin-left: 3%;
-    margin-right: 3%;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    padding: 7px;
-    border: 2px solid rgb(0, 0, 0);
-    width: 94%;
-    border-collapse: collapse;
-}
 
-thead {
-    height: 6vh;
-    font-size: 18px;
-}
-
-th {
-    padding: 10px;
-    text-align: center;
-    border: 2px solid rgb(0, 0, 0);
-    background-color: #f4f4f4;
-    font-weight: bold;
-}
-
-td {
-    padding: 8px;
-    text-align: center;
-    border-bottom: 1px solid rgb(0, 0, 0);
-    background-color: #f4f4f4;
-}
 
 .button2 {
     color: blue;
@@ -334,8 +298,8 @@ margin-top: 5%;
     position: fixed;
     top: 0;
     right: 0;
-    width: 58%;
-    height: 100vh;
+    width: 25%;
+    height: 100%;
     background: white;
     border-left: 2px solid #000000;
     box-shadow: -2px 0px 15px rgba(0, 0, 0, 0.2);
@@ -352,18 +316,13 @@ margin-top: 5%;
     border-bottom: 2px solid black;
     background: #ffffff;
     border-radius: 10px;
+    background: white;
 }
 
 .historialTitle {
     margin: 0;
     font-size: 25px;
 
-}
-
-.closeButton {
-    background:#ffffff;
-    cursor: pointer;
-    border: 2px solid #000000;
 }
 
 .historialContent {
@@ -388,28 +347,7 @@ margin-top: 5%;
     display: block;
 }
 
-.documentolHeader {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid black;
-    background: #ffffff;
-    border-radius: 10px;
-    border: 2px solid #000000;
-}
 
-.documentoTitle {
-    margin: 3px;
-    font-size: 25px;
-    text-align: center;
-}
-
-.closeButtonDoc{
-
-    background:#ffffff;
-    cursor: pointer;
-    border: 2px solid #000000;
-}
 .docContent {
     display: flex;
     justify-content: space-between;
@@ -421,7 +359,7 @@ margin-top: 5%;
     flex-basis: 60%;
     border: 1px solid #000000;
     padding: 10px;
-    height: 800px;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -446,7 +384,7 @@ margin-top: 5%;
   
   .pdfPage {
     background-color: #e0e0e0;
-    height: 700px;
+    height: 500px;
     width: 100%;
     margin: 20px 0;
     border: 1px dashed #000000;
@@ -461,7 +399,7 @@ margin-top: 5%;
   }
   
   .docInfo {
-    flex-basis: 35%; /* Ajustar este valor según el espacio que quieras para la info */
+    flex-basis: 35%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -497,18 +435,3 @@ margin-top: 5%;
     margin: 0;
   }
   
-  
-  .subMenuFinal{
-    background-color: #ffffff;
-    border: 1px solid #000000;
-    padding:0%;
-  }
-
-  .FinalTitle{
-    background-color: #c3c3c3;
-    margin-top: 0%;
-    padding: 0%;
-    border: 1px solid #000000;
-    font-size:25px;
-    margin-left: 0;
-  }

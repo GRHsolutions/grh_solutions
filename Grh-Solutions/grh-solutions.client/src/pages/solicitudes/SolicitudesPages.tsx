@@ -1,26 +1,27 @@
-import { Box } from "@mui/material"
-import CreatedSolicitudes from "./componentes/CreatedSolicitudes"
-import TableSolicitudes from "./componentes/TableSolicitudes"
-import "./stiles.scss"
+import { Box, Typography } from "@mui/material";
+import CreatedSolicitudes from "./componentes/CreatedSolicitudes";
+import TableSolicitudes from "./componentes/TableSolicitudes";
+
 export default function SolicitudesPage() {
   return (
     <Box
-    sx={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "start",
-      height: "100%",
-      width: "100%",
-      fontSize: "2rem",
-    }}
-  >
-    <div className="TableContent">
-      <h1 className="Title">Bienvenido al portal de Solicitudes y peticiones.</h1>
-      <div className="divButton">
-        <CreatedSolicitudes />
-      </div>
+      sx={{
+        flexDirection: "column",
+        gap: "30px",
+        display: "flex",
+        padding: 3,
+        justifyContent: "start",
+        alignItems: "start",
+        height: "100%",
+        width: "100%",
+        fontSize: "2rem",
+      }}
+    >
+      <Typography variant={"h6"}>
+        Bienvenido al portal de Solicitudes y peticiones.
+      </Typography>
+      <CreatedSolicitudes />  
       <TableSolicitudes />
-    </div>
     </Box>
-  )
+  );
 }

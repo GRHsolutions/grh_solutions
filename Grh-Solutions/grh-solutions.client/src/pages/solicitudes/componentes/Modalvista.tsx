@@ -1,192 +1,251 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import NoteAltIcon from '@mui/icons-material/NoteAlt';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import MenuIcon from '@mui/icons-material/Menu';
-import MenuSolicitudes from "./MenuSolicitudes";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
+import NoteAltIcon from "@mui/icons-material/NoteAlt";
+import PersonIcon from "@mui/icons-material/Person";
+import { Stack, useTheme } from "@mui/material";
+import Box from "@mui/material/Box";
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
 import { useState } from "react";
-
-
+import { Solicitud } from "../../../domain/models/solicitudes/solicitudes.entities";
+import GrhBasicMenu from "../../../generics/grh-generics/menu";
+import { TabConfig, TabsCompo } from "../../../generics/tabs/tabs";
+import { AsignarUsuario } from "./modales/asignarUsuario";
+import { DocumentosSolicitudes } from "./modales/documentosSolicitudes";
+import { HistorialSolicitudes } from "./modales/historialSolicitudes";
+import HistoryIcon from "@mui/icons-material/History";
+import { FinalizarSolicitud } from "./modales/finalizarSolicitud";
+import StopCircleIcon from "@mui/icons-material/StopCircle";
+import { AprobarSolicitud } from "./modales/aprobarSolicitud";
+import GppGoodIcon from "@mui/icons-material/GppGood";
+import { RechazarSolicitud } from "./modales/rechazarSolicitud";
+import GppBadIcon from '@mui/icons-material/GppBad';
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '78%',
-  transform: 'translate(-50%, -50%)',
-  width: '40%',
-  height: '92%',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  position: "absolute",
+  top: 0,
+  right: 0,
+  width: "45%",
+  height: "100%",
+  bgcolor: "background.paper",
   boxShadow: 24,
-  p: 4,
-  borderRadius: '15px'
+  p: 2,
+  overflowY: "auto",
+  "&:focus": {
+    outline: "none",
+  },
 };
 
 interface BasicModalProps {
-  open: boolean
-  handleClose: () => void
-  name: any
+  current: Solicitud | null;
+  handleClose: () => void;
 }
-export default function BasicModal({ open, handleClose, name }: BasicModalProps) {
-  const [informacion, setInformacion] = React.useState(true);
-  const [involucadros, setInvolucadros] = React.useState(false);
-  const [seguimientos, setSeguimientos] = React.useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+export default function BasicModal({ current, handleClose }: BasicModalProps) {
+  const theme = useTheme();
+  const [mdo, setMdo] = useState("");
 
+  const tabs: TabConfig[] = [
+    {
+      value: "1",
+      label: "informacion",
+      content: (
+        <Box>
+          <div className="DivInformacion">
+            <label>Informacion basica</label>
+          </div>
+          <div className="divInfo">
+            <Typography variant="body1">{current?.titulo}</Typography>
+            <Typography variant="body1">Tipo: {current?.tipo}</Typography>
+            <Typography variant="body2">
+              Texto de la peticion, si quiere inventese algo aqui Juan
+            </Typography>
+          </div>
+        </Box>
+      ),
+    },
+    {
+      value: "2",
+      label: "involucadros",
+      content: (
+        <Box>
+          <div className="DivInformacion">
+            <label>Usuarios involucrados a la solicitud</label>
+          </div>
+          <div className="divInfo">
+            <div className="divUsuarioIn">
+              <label className="divUsuarioLabel">
+                <input type="checkbox" id="User1" name="User1" />
+                <AccountCircleIcon sx={{ fontSize: 40 }} />
+              </label>
+              <div className="divUsuarioInfo">
+                <label>Pedro Gomez</label>
+                <Typography variant="body1">Creador de la solicitud</Typography>
+              </div>
+            </div>
+
+            <div className="divUsuarioIn">
+              <label className="divUsuarioLabel">
+                <input type="checkbox" id="User2" name="User2" />
+                <AccountCircleIcon sx={{ fontSize: 40 }} />
+              </label>
+              <div className="divUsuarioInfo">
+                <label>Mario Mendosa</label>
+                <Typography variant="body1">Interesado</Typography>
+              </div>
+            </div>
+
+            <div className="divUsuarioIn">
+              <label className="divUsuarioLabel">
+                <input type="checkbox" id="User3" name="User3" />
+                <AccountCircleIcon sx={{ fontSize: 40 }} />
+              </label>
+              <div className="divUsuarioInfo">
+                <label>Luisa Aldana</label>
+                <Typography variant="body1">Interesada</Typography>
+              </div>
+            </div>
+          </div>
+        </Box>
+      ),
+    },
+    {
+      value: "3",
+      label: "seguimientos",
+      content: (
+        <Box>
+          <div className="DivInformacion">
+            <label>Seguimientos creados por un asignado a la solicitud</label>
+          </div>
+          <div className="divInfo">
+            <div className="divUsuarioIn">
+              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+              <div className="divUsuarioInfo">
+                <label>Se ha vuelto a pendiente</label>
+                <Typography variant="body1">Por: Carlos Mario</Typography>
+              </div>
+            </div>
+
+            <div className="divUsuarioIn">
+              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+              <div className="divUsuarioInfo">
+                <label>Se ha asignado a Carlos Mario</label>
+                <Typography variant="body1">Por: Mario Juda</Typography>
+              </div>
+            </div>
+
+            <div className="divUsuarioIn">
+              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+              <div className="divUsuarioInfo">
+                <label>Ha asignado a Mario Juda, es el primer asignado</label>
+                <Typography variant="body1">Por: Mario Castañeda</Typography>
+              </div>
+            </div>
+          </div>
+        </Box>
+      ),
+    },
+  ];
 
   const handleCloseModal = () => {
     handleClose();
-    setMenuOpen(false);
   };
 
-  const onSubmit = (informacion: boolean, involucadros: boolean, seguimientos: boolean) => {
-    setInformacion(informacion);
-    setInvolucadros(involucadros);
-    setSeguimientos(seguimientos);
+  const handleCls = () => {
+    setMdo("");
+  };
+
+  const handleHistoy = () => {
+    setMdo("");
   };
 
   return (
     <div>
-      <Modal
-        open={open}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={current != null} onClose={handleCloseModal}>
         <Box sx={style}>
-          <div className="divIcon">
-            <NoteAltIcon sx={{ fontSize: 55, paddingTop: 2 }} />
-            <label className="LabelEstado">{name.estado}</label>
-            <div className='jiji'>
-              <h1>Ver solicitud {name.radicado}</h1>
-              <label className="LabelInfo">Vea la información actual de su solicitud</label>
-            </div>
-            <div className='menuSolicitudes'>
-              <MenuIcon sx={{ fontSize: 40, paddingTop: 2 }} onClick={() => setMenuOpen(!menuOpen)} />
-              {menuOpen && <MenuSolicitudes onClose={() => setMenuOpen(false)} />}
-            </div>
-          </div>
-
-          <div className='contentButtons'>
-            <button
-              className="button3"
-              type="button"
-              onClick={() => onSubmit(true, false, false)}
-            >
-              informacion
-            </button>
-            <button
-              className="button3"
-              type="button"
-              onClick={() => onSubmit(false, true, false)}
-            >
-              involucadros
-            </button>
-            <button
-              className="button4"
-              type="button"
-              onClick={() => onSubmit(false, false, true)}
-            >
-              seguimientos
-            </button>
-          </div>
-
-          <div>
-            {informacion && (
-              <>
-                <div className='DivInformacion'>
-                  <label>Informacion basica</label>
-                </div>
-                <div className='divInfo'>
-                  <Typography variant="body1">{name.titulo}</Typography>
-                  <Typography variant="body1">Tipo: {name.tipo}</Typography>
-                  <Typography variant="body2">Texto de la peticion, si quiere inventese algo aqui Juan</Typography>
-                </div>
-              </>
-            )}
-
-            {involucadros && (
-              <>
-                <div className='DivInformacion'>
-                  <label>Usuarios involucrados a la solicitud</label>
-                </div>
-                <div className='divInfo'>
-                  <div className='divUsuarioIn'>
-                    <label className="divUsuarioLabel">
-                      <input type="checkbox" id="User1" name="User1" />
-                      <AccountCircleIcon sx={{ fontSize: 40 }} />
-                    </label>
-                    <div className='divUsuarioInfo'>
-                      <label>Pedro Gomez</label>
-                      <Typography variant="body1">Creador de la solicitud</Typography>
-                    </div>
-                  </div>
-
-                  <div className='divUsuarioIn'>
-                    <label className="divUsuarioLabel">
-                      <input type="checkbox" id="User2" name="User2" />
-                      <AccountCircleIcon sx={{ fontSize: 40 }} />
-                    </label>
-                    <div className='divUsuarioInfo'>
-                      <label>Mario Mendosa</label>
-                      <Typography variant="body1">Interesado</Typography>
-                    </div>
-                  </div>
-
-                  <div className='divUsuarioIn'>
-                    <label className="divUsuarioLabel">
-                      <input type="checkbox" id="User3" name="User3" />
-                      <AccountCircleIcon sx={{ fontSize: 40 }} />
-                    </label>
-                    <div className='divUsuarioInfo'>
-                      <label>Luisa Aldana</label>
-                      <Typography variant="body1">Interesada</Typography>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-
-            {seguimientos && (
-              <>
-                <div className='DivInformacion'>
-                  <label>Seguimientos creados por un asignado a la solicitud</label>
-                </div>
-                <div className='divInfo'>
-                  {/* Seguimientos */}
-                  <div className='divUsuarioIn'>
-                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                    <div className='divUsuarioInfo'>
-                      <label>Se ha vuelto a pendiente</label>
-                      <Typography variant="body1">Por: Carlos Mario</Typography>
-                    </div>
-                  </div>
-
-                  <div className='divUsuarioIn'>
-                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                    <div className='divUsuarioInfo'>
-                      <label>Se ha asignado a Carlos Mario</label>
-                      <Typography variant="body1">Por: Mario Juda</Typography>
-                    </div>
-                  </div>
-
-                  <div className='divUsuarioIn'>
-                    <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-                    <div className='divUsuarioInfo'>
-                      <label>Ha asignado a Mario Juda, es el primer asignado</label>
-                      <Typography variant="body1">Por: Mario Castañeda</Typography>
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottom: `1px solid ${(theme.palette.primary.hover, 0.1)}`,
+            }}
+          >
+            <Stack direction="row" spacing={1} alignItems="center">
+              <NoteAltIcon
+                fontSize="large"
+                sx={{
+                  color: theme.palette.primary.contrastText,
+                }}
+              />
+              <Box display={"flex"} flexDirection={"column"}>
+                <Typography variant="h6" fontWeight={"bold"} mt={"3"}>
+                  Ver solicitud {current?.radicado}
+                </Typography>
+                <Typography variant="body1" mt={"-6"}>
+                  Vea la información actual de su solicitud
+                </Typography>
+              </Box>
+            </Stack>
+            <GrhBasicMenu
+              optionsPosition={{
+                top: "2px",
+                left: "10px",
+              }}
+              items={[
+                {
+                  icon: <PersonIcon />,
+                  label: "Asignar usuario",
+                  onClick: () => setMdo("asigna-usuario"),
+                },
+                {
+                  icon: <HistoryIcon />,
+                  label: "Historial usuario",
+                  onClick: () => setMdo("history-solicitudes"),
+                },
+                {
+                  icon: <InsertDriveFileIcon />,
+                  label: "Documentos usuario",
+                  onClick: () => setMdo("documentos-solicitudes"),
+                },
+                {
+                  icon: <StopCircleIcon />,
+                  label: "Finalizar solicitud",
+                  onClick: () => setMdo("Finalizar-solicitudes"),
+                },
+                {
+                  icon: <GppGoodIcon />,
+                  label: "Aprobar solicitud",
+                  onClick: () => setMdo("Aprobar-solicitudes"),
+                },
+                {
+                  icon: <GppBadIcon />,
+                  label: "Rechazar solicitud",
+                  onClick: () => setMdo("Rechazar-solicitudes"),
+                },
+              ]}
+            />
+          </Box>
+          <TabsCompo tabs={tabs} />
         </Box>
       </Modal>
-      {menuOpen && <MenuSolicitudes onClose={() => setMenuOpen(false)} />} 
+      {mdo == "asigna-usuario" && <AsignarUsuario handleClose={handleCls} />}
+
+      {mdo == "history-solicitudes" && (
+        <HistorialSolicitudes handleClose={handleHistoy} />
+      )}
+      {mdo == "documentos-solicitudes" && (
+        <DocumentosSolicitudes handleClose={handleHistoy} />
+      )}
+
+      {mdo == "Finalizar-solicitudes" && (
+        <FinalizarSolicitud handleClose={handleHistoy} />
+      )}
+      {mdo == "Aprobar-solicitudes" && (
+        <AprobarSolicitud handleClose={handleHistoy} />
+      )}
+      {mdo == "Rechazar-solicitudes" && (
+        <RechazarSolicitud handleClose={handleHistoy} />
+      )}
     </div>
   );
 }

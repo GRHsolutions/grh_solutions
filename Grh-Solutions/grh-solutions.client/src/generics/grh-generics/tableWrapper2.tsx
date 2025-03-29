@@ -22,6 +22,7 @@ interface GrhGenericTableProps {
   pagination: GrhPagination;
   onPageChange: (page: number) => void;
   maxHeight?: string | number;
+  maxWidth?: string | number;
 }
 
 const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({ 
@@ -29,7 +30,8 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
     data, 
     pagination, 
     onPageChange,
-    maxHeight
+    maxHeight,
+    maxWidth
 }) => {
   const theme = useTheme();
   const getNestedValue = (obj: any, path: string) => {
@@ -40,6 +42,7 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
       <TableContainer
         sx={{
           maxHeight: maxHeight,
+          maxWidth:maxWidth,
           width: '100%',
           overflowY: 'auto',
           "&::-webkit-scrollbar": {
