@@ -12,6 +12,7 @@ const SolicitudesPage = lazy(()=> import("../pages/solicitudes/SolicitudesPages"
 const TryColorsAndGenerics = lazy(() => import("./../pages/TryColorsAndGenerics/TryColorsAndGenerics"))
 const UserPage = lazy(() => import("../pages/user/UserPage"));
 const Horarios = lazy(() => import("../pages/horarios/horarios"));
+const HojaVidaPage = lazy(() => import("../pages/hojaVida/HojaVidaPage"));
 // Rutas de la aplicaci�n
 
 export const AppRoutes = (): RouteObject[] => {
@@ -52,6 +53,10 @@ export const AppRoutes = (): RouteObject[] => {
     {
       path: "/horarios",
       element: <>{CompoRender({ element: Horarios })}</>
+    },
+    {
+      path: "/hv-user",
+      element: <>{CompoRender({ element: HojaVidaPage })}</>
     }
   ];
 };
