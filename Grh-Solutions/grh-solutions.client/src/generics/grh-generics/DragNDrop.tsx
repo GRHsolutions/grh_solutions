@@ -16,13 +16,20 @@ import {
   Description,
 } from '@mui/icons-material';
 
-interface DragDropInputProps {
+export type DragNDropVariables = {
+  name: string,
+  type: string, 
+  size: number,
+  base64: string
+}
+
+export interface DragDropInputProps {
   acceptedMimeTypes: string[];
   maxSizeInKB: number;
   maxFiles: number;
-  onFileSelect: (files: File[]) => void;
-  selectedFiles: File[];
-  inputProps?: InputProps
+  onFileSelect: (files: DragNDropVariables[]) => void;
+  selectedFiles: DragNDropVariables[];
+  inputProps?: InputProps;
 }
 
 interface InputProps {
@@ -66,30 +73,41 @@ export function DragDropInput({
     return true;
   };
 
-  const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(e.type === 'dragenter' || e.type === 'dragover');
-  }, []);
+  const convertToBase64 = (file: File): Promise<DragNDropVariables> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve({
+          name: file.name,
+          type: file.type,
+          size: file.size,
+          base64: reader.result as string,
+        });
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleFiles = async (newFiles: File[]) => {
+    if (!validateFiles(newFiles)) return;
+    const base64Files = await Promise.all(newFiles.map(convertToBase64));
+    onFileSelect([...selectedFiles, ...base64Files]);
+  };
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-
     const newFiles = Array.from(e.dataTransfer.files);
-    if (newFiles.length > 0 && validateFiles(newFiles)) {
-      onFileSelect([...selectedFiles, ...newFiles]);
-    }
-  }, [onFileSelect, selectedFiles, validateFiles]);
+    handleFiles(newFiles);
+  }, [selectedFiles]);
 
   const handleFileInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newFiles = e.target.files ? Array.from(e.target.files) : [];
-    if (newFiles.length > 0 && validateFiles(newFiles)) {
-      onFileSelect([...selectedFiles, ...newFiles]);
-    }
+    handleFiles(newFiles);
     e.target.value = '';
-  }, [onFileSelect, selectedFiles, validateFiles]);
+  }, [selectedFiles]);
 
   const handleRemoveFile = (indexToRemove: number) => {
     onFileSelect(selectedFiles.filter((_, index) => index !== indexToRemove));
@@ -99,9 +117,9 @@ export function DragDropInput({
     <Stack spacing={2} width="100%">
       <Paper
         elevation={isDragging ? 3 : 1}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
+        onDragOver={(e) => e.preventDefault()}
+        onDragEnter={() => setIsDragging(true)}
+        onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
         sx={{
           p: 4,

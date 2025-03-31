@@ -1,10 +1,11 @@
 import { Dayjs } from "dayjs";
+import { DragNDropVariables } from "../../../generics/grh-generics/DragNDrop";
 
 export type News = {
     id: number;
     title: string;
     description: string;
-    images: string[];
+    images: DragNDropVariables[];
     status: string;
     type: "simple-publication" | "publication-with-images" | "publication-with-survey"
     numberLikes: number;

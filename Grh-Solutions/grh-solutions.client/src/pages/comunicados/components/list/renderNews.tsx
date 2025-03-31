@@ -2,7 +2,6 @@ import React from "react";
 import { useNews } from "../../../../hooks/news";
 import { Alert, Box, Typography } from "@mui/material";
 import NewItem from "./newItem";
-import { News } from "../../../../domain/models/news/news.entities";
 
 const RenderNews: React.FC = () => {
   const { news, selectItem, comments } = useNews();

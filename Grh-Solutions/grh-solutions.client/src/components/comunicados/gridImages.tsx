@@ -1,7 +1,8 @@
 import { Box } from "@mui/material";
+import { DragNDropVariables } from "../../generics/grh-generics/DragNDrop";
 
 interface ImageGridProps {
-  images: string[];
+  images: DragNDropVariables[];
   maxVisibleImages?: number;
   height?: number | string;
   width?: number | string;
@@ -103,7 +104,7 @@ const ImageGrid = ({
         <Box
           key={index}
           component="img"
-          src={img}
+          src={img.base64}
           alt={`Image ${index + 1}`}
           sx={{
             width: "100%",

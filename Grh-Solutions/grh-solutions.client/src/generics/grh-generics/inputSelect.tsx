@@ -5,19 +5,18 @@ import {
     Select,
     FormHelperText,
     SelectChangeEvent,
-    styled,
     Box,
     useTheme,
   } from "@mui/material";
   import { Key } from "react";
   
-  const StyledInputLabel = styled(InputLabel)({
-    position: "relative",
-    transform: "none",
-    marginBottom: "-2px",
-    marginLeft: "14px",
-    fontSize: "12px",
-  });
+  // const StyledInputLabel = styled(InputLabel)({
+  //   position: "relative",
+  //   transform: "none",
+  //   marginBottom: "-2px",
+  //   marginLeft: "14px",
+  //   fontSize: "12px",
+  // });
   
   interface Option<T = string> {
     value: T;

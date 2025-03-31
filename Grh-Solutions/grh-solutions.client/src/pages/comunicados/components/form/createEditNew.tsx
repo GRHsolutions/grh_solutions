@@ -28,7 +28,6 @@ export const CreateEditNew = () => {
     const [initial, setInitial] = React.useState<News | null>(null);
     const editting = current.action == 'edit';
 
-
     const handleClose = () => {
         noCurrnt();
     }

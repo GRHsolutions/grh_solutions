@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Box, IconButton, Paper, useTheme } from '@mui/material';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material';
+import { DragNDropVariables } from './DragNDrop';
 
 interface ImageCarouselProps {
-  images: string[];
+  images: DragNDropVariables[];
   width?: string | number;
   height?: string | number;
   showArrows?: boolean;
@@ -79,9 +80,9 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
           bgcolor: theme.palette.primary.main
         }}
       >
-        {isPDF(images[currentIndex]) ? (
+        {isPDF(images[currentIndex].base64) ? (
           <iframe
-            src={images[currentIndex]}
+            src={images[currentIndex].base64}
             style={{
               width: '100%',
               height: '100%',
@@ -92,7 +93,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
         ) : (
           <Box
             component="img"
-            src={images[currentIndex]}
+            src={images[currentIndex].base64}
             alt={`Image ${currentIndex + 1}`}
             sx={{
               maxWidth: '100%',
