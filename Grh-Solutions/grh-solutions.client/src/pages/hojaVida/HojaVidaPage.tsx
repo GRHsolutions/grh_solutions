@@ -28,7 +28,7 @@ export default function HojaVidaPage() {
           display: "flex",
           width: "80vw",
           height: "100%",
-          border: "3px solid black",
+          border: "3px solid " + theme.palette.primary.boxShadow,
         }}
       >
         {/* Formulario */}
