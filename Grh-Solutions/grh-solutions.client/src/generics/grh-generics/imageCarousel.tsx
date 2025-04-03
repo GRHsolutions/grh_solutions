@@ -17,12 +17,17 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = ({
   showArrows = true,
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-    const theme = useTheme();
+  const theme = useTheme();
+
   const handlePrevious = () => {
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
   };
+
+  React.useEffect(() => {
+  console.log("imagenes", images)
+  }, []);
 
   const handleNext = () => {
     setCurrentIndex((prevIndex) => 

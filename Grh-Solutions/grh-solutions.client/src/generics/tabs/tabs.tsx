@@ -5,6 +5,9 @@ export interface TabConfig {
     value: string;
     label: string;
     content: React.ReactNode;
+    disabled?: boolean; // Propiedad opcional para deshabilitar el tab
+    visible?: boolean; // Propiedad opcional para ocultar el tab
+    useOnChange?: () => void;
 };
 
 export interface StyleTabProps {
@@ -55,34 +58,37 @@ export const TabsCompo = ({
                         }
                     }}
                 >
-                    {tabs.map((tab) => (
-                        <Tab 
-                            key={tab.value} 
-                            label={tab.label} 
-                            value={tab.value} 
-                            sx={{
-                                ...tabProps?.tabs.tab,
-                                fontWeight: value === tab.value ? 'bold' : 'normal',
-                                color: theme.palette.text.primary,
-                                textTransform: 'none',
-                                transition: 'all 0.3s ease',
-                                position: 'relative',
-                                '&::after': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    height: value === tab.value ? 3 : 0,
-                                    backgroundColor: theme.palette.secondary.main,
+                    {tabs
+                        .filter((tab) => tab.visible !== false) // Filtrar tabs no visibles
+                        .map((tab) => (
+                            <Tab 
+                                key={tab.value} 
+                                label={tab.label} 
+                                value={tab.value} 
+                                sx={{
+                                    ...tabProps?.tabs.tab,
+                                    fontWeight: value === tab.value ? 'bold' : 'normal',
+                                    color: theme.palette.text.primary,
+                                    textTransform: 'none',
                                     transition: 'all 0.3s ease',
-                                },
-                                '&.Mui-selected': {
-                                    color: theme.palette.primary.contrastText,
-                                }
-                            }}
-                        />
-                    ))}
+                                    position: 'relative',
+                                    '&::after': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        height: value === tab.value ? 3 : 0,
+                                        backgroundColor: theme.palette.secondary.main,
+                                        transition: 'all 0.3s ease',
+                                    },
+                                    '&.Mui-selected': {
+                                        color: theme.palette.primary.contrastText,
+                                    }
+                                }}
+                                disabled={tab.disabled} // Deshabilitar el tab si la propiedad está presente
+                            />
+                        ))}
                 </Tabs>
             </Box>
             

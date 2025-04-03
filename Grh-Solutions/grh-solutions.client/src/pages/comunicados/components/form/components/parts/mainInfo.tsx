@@ -1,4 +1,4 @@
-import { Grid2 } from "@mui/material";
+import { Grid2, Typography, useTheme } from "@mui/material";
 import { News } from "../../../../../../domain/models/news/news.entities";
 import GrhTextField from "../../../../../../generics/grh-generics/textField";
 import GrhCustomSelect from "../../../../../../generics/grh-generics/inputSelect";
@@ -28,13 +28,27 @@ export const MainInfo = ({
   },{
     value:  "publication-with-survey",
     name: "Publicacion de una encuesta"
-  }]
+  }];
+  const theme = useTheme();
 
   return(
     <Grid2
       container
       spacing={2}
     >
+      <Grid2
+        size={12}
+      >
+        <Typography
+          variant="h5"
+          fontWeight={"bold"}
+          sx={{
+            color: theme.palette.secondary.main,
+          }}
+        >
+          Informacion basica
+        </Typography>
+      </Grid2>
       <Grid2
         size={12}
       >

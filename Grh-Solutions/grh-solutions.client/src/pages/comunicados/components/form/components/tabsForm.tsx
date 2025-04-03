@@ -6,6 +6,9 @@ import { MainInfo } from "./parts/mainInfo";
 import GrhButton from "../../../../../generics/grh-generics/button";
 import AddIcon from '@mui/icons-material/Add';
 import * as Yup from 'yup';
+import { JustImages } from "./parts/justImages";
+import { DragNDropVariables } from "../../../../../generics/grh-generics/DragNDrop";
+import { Survey } from "./parts/survey";
 
 interface TabsFormProps {
   initialValue: News | null;
@@ -18,22 +21,20 @@ const validationSchema = Yup.object({
     .required("El tipo de publicación es obligatorio"),
   title: Yup.string()
     .required("El título es obligatorio")
-    .min(40, "El título debe tener al menos 40 caracteres")
-    .max(250, "El título no puede exceder los 250 caracteres"),
+    .max(100, "El título no puede exceder los 250 caracteres"),
   description: Yup.string()
     .required("La descripción es obligatoria")
-    .min(250, "La descripción debe tener al menos 250 caracteres")
-    .max(1000, "La descripción no puede exceder los 1000 caracteres"),
+    .max(500, "La descripción no puede exceder los 1000 caracteres"),
 
   images: Yup.array()
   .of(
     Yup.object().shape({
       name: Yup.string().required("El nombre es obligatorio"),
       type: Yup.string()
-        .matches(/^image\/(jpeg|png|gif|webp)$/, "Formato de imagen no válido")
+        //.matches(/^image\/(jpeg|png|gif|webp)$/, "Formato de imagen no válido")
         .required("El tipo de imagen es obligatorio"),
       size: Yup.number()
-        .max(5 * 1024 * 1024, "El tamaño de la imagen no debe superar los 5MB")
+        //.max(5 * 1024 * 1024, "El tamaño de la imagen no debe superar los 5MB")
         .required("El tamaño es obligatorio"),
       base64: Yup.string().required("La imagen en base64 es obligatoria"),
     })
@@ -61,13 +62,14 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
         initialValues={{
           type: initialValue?.type ?? "simple-publication",
           title: initialValue?.title ?? "",
-          description: initialValue?.description ?? ""
+          description: initialValue?.description ?? "",
+          images: initialValue?.images ?? [],
         } as News}
         validationSchema={validationSchema}
         onSubmit={CreateNew}
       >
         {({ values, handleChange, isValid, setFieldValue }) => {
-          const changeImages = (name: string, image: string[]) => {
+          const changeImages = (name: string, image: DragNDropVariables[]) => {
             setFieldValue(name, image)
           }
 
@@ -75,17 +77,20 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
             {
               value: "1",
               label: "Inicializacion",
-              content: <MainInfo value={values} handleChange={handleChange}/>,
+              content: <MainInfo value={values} handleChange={handleChange} />,
+              disabled: false,
             },
             {
               value: "2",
               label: "Carusel de imagenes",
-              content: <>Contenido Adicional</>,
+              content: <JustImages values={values} changeImages={changeImages}/>,
+              disabled: values.type !== "publication-with-images",
             },
             {
               value: "3",
               label: "Encuesta",
-              content: <>any</>,
+              content: <Survey />,
+              disabled: values.type !== "publication-with-survey",
             },
           ];
 
