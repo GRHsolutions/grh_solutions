@@ -7,7 +7,6 @@ import dayjs from "dayjs";
 
 export default function TableSolicitudes() {
   const [current, setCurrent] = React.useState<Solicitud | null>(null);
-
   const handleClose = () => setCurrent(null);
 
   const solicitudes: Solicitud[]= [
