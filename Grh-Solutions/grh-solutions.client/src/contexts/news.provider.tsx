@@ -121,7 +121,12 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: 1,
             title: "Noticia 1",
             description: "Lorem ipsum dolor sit amet...",
-            images: [IMAGENDEPRUEBAPARACOMUNICADOS, ],
+            images: [{
+              name: "Lorem ipsum",
+              type: "png", 
+              size: 20,
+              base64: IMAGENDEPRUEBAPARACOMUNICADOS
+            }],
             status: "Activa",
             numberLikes: 0,
             numberDisLikes: 0,
