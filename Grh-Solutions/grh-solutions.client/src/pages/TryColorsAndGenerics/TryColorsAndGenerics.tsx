@@ -1,19 +1,19 @@
-import { Box, Typography, Paper, Grid2, useTheme, SxProps } from '@mui/material';
-import React from 'react';
-import MUIswitch from '../../generics/switch/MUIswitch';
-import GrhButton from '../../generics/grh-generics/button';
-import GrhTextField from '../../generics/grh-generics/textField';
-import { DragDropInput, DragNDropVariables } from '../../generics/grh-generics/DragNDrop';
-import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
-import dayjs, { Dayjs } from 'dayjs';
-import MultipleSelect from '../../generics/grh-generics/multipleSelect';
-import GrhBasicMenu from '../../generics/grh-generics/menu';
-import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
 import AcUnitIcon from '@mui/icons-material/AcUnit';
-import GrhCustomSelect from '../../generics/grh-generics/inputSelect';
-import { ImageCarousel } from '../../generics/grh-generics/imageCarousel';
-import { TabConfig, TabsCompo } from '../../generics/tabs/tabs';
+import { Box, Grid2, Paper, SxProps, Typography, useTheme } from '@mui/material';
+import dayjs, { Dayjs } from 'dayjs';
+import React from 'react';
 import { VarIma } from '../../const/variables';
+import GrhButton from '../../generics/grh-generics/button';
+import { DragDropInput, DragNDropVariables } from '../../generics/grh-generics/DragNDrop';
+import { ImageCarousel } from '../../generics/grh-generics/imageCarousel';
+import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
+import GrhCustomSelect from '../../generics/grh-generics/inputSelect';
+import GrhBasicMenu from '../../generics/grh-generics/menu';
+import MultipleSelect from '../../generics/grh-generics/multipleSelect';
+import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
+import GrhTextField from '../../generics/grh-generics/textField';
+import MUIswitch from '../../generics/switch/MUIswitch';
+import { TabConfig, TabsCompo } from '../../generics/tabs/tabs';
 
 
 interface TableDemo {
@@ -363,6 +363,7 @@ const TryColorsAndGenerics = () => {
             maxFiles={1}
           />
           <GenericDatePicker 
+            name={''}
             value={dat} 
             label={'Input Date Picker'} 
             onChange={setDat}         
