@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, useTheme } from "@mui/material";
 import { useParametros } from "../../contexts/useParamether.provider";
 import ResumeAccordion from "./Components/FormHv";
@@ -11,6 +11,11 @@ export default function HojaVidaPage() {
 
   // Estado para almacenar los datos del formulario
   const [formData, setFormData] = useState<Record<string, string>>({});
+
+  // Efecto para asegurar que la vista previa se actualice de inmediato
+  useEffect(() => {
+    setFormData((prevData) => ({ ...prevData }));
+  }, [formData]);
 
   return (
     <Box

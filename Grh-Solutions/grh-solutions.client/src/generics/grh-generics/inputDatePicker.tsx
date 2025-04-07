@@ -6,6 +6,7 @@ import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/es";
 
 interface GenericDatePickerProps {
+  name: string;
   value: Dayjs | null;
   onChange?: (date: Dayjs | null) => void;
   label: string;
