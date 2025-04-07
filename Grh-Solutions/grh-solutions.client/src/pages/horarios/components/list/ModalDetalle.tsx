@@ -10,6 +10,9 @@ import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
 import formatearFecha from "../../../../utils/formatearFecha";
 import { TabConfig, TabsCompo } from "../../../../generics/tabs/tabs";
 import GrhButton from "../../../../generics/grh-generics/button";
+import { useState } from "react";
+import { EditarDetalle } from "../Modales/ModalEditar";
+import { InasistenciaDetalle } from "../Modales/ModalInasistencia";
 
 const style = {
   position: "absolute",
@@ -31,7 +34,16 @@ interface BasicModalProps {
 }
 export default function BasicModal({ current, handleClose }: BasicModalProps) {
   const theme = useTheme();
+  const [mdo, setMdo] = useState("");
 
+  const handleCls = () => {
+    setMdo("");
+  };
+
+  const handleCls2 = () => {
+    setMdo("");
+  };
+  
   const tabs: TabConfig[] = [
     {
       value: "1",
@@ -55,28 +67,22 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
               items={[
                 {
                   icon: <AcUnitIcon />,
-                  label: "Opcion del menu 1",
-                  onClick: () => {
-                    console.log("pressed");
-                  },
+                  label: "Editar",
+                  onClick: () => setMdo("Editar"),
                   visible: true,
                   disabled: false,
                 },
                 {
                   icon: <AcUnitIcon />,
-                  label: "Opcion del menu 2",
-                  onClick: () => {
-                    console.log("pressed");
-                  },
+                  label: "Inasistencia",
+                  onClick: () => setMdo("Inasistencia"),
                   visible: true,
                   disabled: false,
                 },
                 {
                   icon: <AcUnitIcon />,
-                  label: "Opcion del menu 3",
-                  onClick: () => {
-                    console.log("pressed");
-                  },
+                  label: "Peticiones",
+                  onClick: () => setMdo("Peticiones"),
                   visible: true,
                   disabled: false,
                 },
@@ -161,6 +167,7 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
       ),
     },
   ];
+
   return (
     <div>
       <Modal open={current != null} onClose={handleClose}>
@@ -199,6 +206,8 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
           <TabsCompo tabs={tabs} />
         </Box>
       </Modal>
+      {mdo == "Editar" && <EditarDetalle handleClose={handleCls}/>}
+      {mdo == "Inasistencia" && <InasistenciaDetalle handleClose={handleCls2}/>}
     </div>
   );
 }

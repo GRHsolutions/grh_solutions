@@ -229,14 +229,12 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
         </Box>
       </Modal>
       {mdo == "asigna-usuario" && <AsignarUsuario handleClose={handleCls} />}
-
       {mdo == "history-solicitudes" && (
         <HistorialSolicitudes handleClose={handleHistoy} />
       )}
       {mdo == "documentos-solicitudes" && (
         <DocumentosSolicitudes handleClose={handleHistoy} />
       )}
-
       {mdo == "Finalizar-solicitudes" && (
         <FinalizarSolicitud handleClose={handleHistoy} />
       )}
