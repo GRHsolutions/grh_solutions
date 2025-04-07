@@ -142,13 +142,11 @@ export default function ModalHorario({
             <GenericDatePicker
               value={dat}
               label={"fecha incial"}
-              onChange={setDat}
-            />
+              onChange={setDat} name={""}            />
             <GenericDatePicker
               value={dat2}
               label={"fecha final"}
-              onChange={setDat2}
-            />
+              onChange={setDat2} name={""}            />
           </Box>
           <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "64vh", p: 2 }}>
           <GrhButton

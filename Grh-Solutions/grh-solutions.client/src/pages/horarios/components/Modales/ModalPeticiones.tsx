@@ -1,23 +1,22 @@
-import PersonOffIcon from "@mui/icons-material/PersonOff";
+import { useTheme } from "@emotion/react";
 import {
   Box,
   Button,
   IconButton,
   Modal,
-  Stack,
+  Pagination,
   Typography,
-  useTheme,
 } from "@mui/material";
-import * as React from "react";
-import Pagination from "@mui/material/Pagination";
-import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
+import MenuBookIcon from "@mui/icons-material/MenuBook";
 import formatearFecha from "../../../../utils/formatearFecha";
+import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
 import CloseIcon from "@mui/icons-material/Close";
 
-interface InasistenciaDetalle {
+interface PeticionesDetalle {
   handleClose: () => void;
   current: Horarios | null;
 }
+
 const style = {
   position: "absolute",
   top: 0,
@@ -33,19 +32,19 @@ const style = {
   },
 };
 
-export const InasistenciaDetalle = ({
+export const PeticionesDetalle = ({
   current,
   handleClose,
-}: InasistenciaDetalle) => {
+}: PeticionesDetalle) => {
   const theme = useTheme();
   return (
     <Modal open={true} onClose={handleClose}>
       <Box sx={style}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <PersonOffIcon></PersonOffIcon>
+          <MenuBookIcon></MenuBookIcon>
           <Box>
             <Typography variant="h6" fontWeight={"bold"} mt={"3"}>
-              Listado de inasistencia
+              Listado de Peticiones
             </Typography>
             <Typography variant="body1" mt={"-6"}>
               Listado de reportes
@@ -70,9 +69,7 @@ export const InasistenciaDetalle = ({
             }}
           >
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography sx={{ m: 0.5 }}>
-                Se ha generado una inasistencia
-              </Typography>
+              <Typography sx={{ m: 0.5 }}>Listado de Peticiones</Typography>
               <Typography sx={{ m: 0.5 }}>
                 creado el {formatearFecha(current?.fechaInicio, true, true)}
               </Typography>

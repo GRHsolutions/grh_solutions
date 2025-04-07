@@ -1,4 +1,4 @@
-import { Box, Modal, Typography } from "@mui/material";
+import { Box, IconButton, Modal, Typography } from "@mui/material";
 import React from "react";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import GrhCustomSelect from "../../../../generics/grh-generics/inputSelect";
@@ -6,7 +6,9 @@ import dayjs, { Dayjs } from "dayjs";
 import GenericDatePicker from "../../../../generics/grh-generics/inputDatePicker";
 import GrhTextField from "../../../../generics/grh-generics/textField";
 import GrhButton from "../../../../generics/grh-generics/button";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import CloseIcon from "@mui/icons-material/Close";
 
 const style = {
   position: "absolute",
@@ -81,7 +83,11 @@ export const EditarDetalle = ({ handleClose }: EditarDetalle) => {
               empleados
             </Typography>
           </Box>
+          <IconButton onClick={handleClose}>
+          <CloseIcon />
+        </IconButton>
         </Box>
+
         <Box sx={{ mt: 2, display: "flex", gap: 2, alignItems: "center" }}>
           <GrhCustomSelect
             label={"Del Area"}
@@ -114,6 +120,7 @@ export const EditarDetalle = ({ handleClose }: EditarDetalle) => {
             value={dat}
             label={"fecha incial"}
             onChange={setDat}
+            name={""}
           />
           <GenericDatePicker
             sx={{
@@ -122,6 +129,7 @@ export const EditarDetalle = ({ handleClose }: EditarDetalle) => {
             value={dat2}
             label={"fecha final"}
             onChange={setDat2}
+            name={""}
           />
         </Box>
         <Box sx={{ mt: 2, display: "flex", gap: 2, alignItems: "center" }}>
@@ -146,14 +154,32 @@ export const EditarDetalle = ({ handleClose }: EditarDetalle) => {
             }}
           />
         </Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "58vh", p: 2 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "flex-end",
+            height: "58vh",
+            p: 2,
+            gap: 2,
+          }}
+        >
           <GrhButton
             onClick={handleClose}
-            startIcon={<LogoutIcon  />}
-            label={"Editar Horario"}
-            variant='principal'
+            startIcon={<ExitToAppIcon />}
+            label="cancelar"
+            variant="use-default"
             sx={{
-            width: '30%'
+              width: "30%",
+            }}
+          />
+          <GrhButton
+            onClick={handleClose}
+            startIcon={<LogoutIcon />}
+            label={"Editar Horario"}
+            variant="principal"
+            sx={{
+              width: "30%",
             }}
             id={"horario"}
           />
