@@ -5,7 +5,7 @@ import Modal from "@mui/material/Modal";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import GrhBasicMenu from "../../../../generics/grh-generics/menu";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
-import { IconButton, useTheme } from "@mui/material";
+import { IconButton, Tooltip, useTheme } from "@mui/material";
 import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
 import formatearFecha from "../../../../utils/formatearFecha";
 import { TabConfig, TabsCompo } from "../../../../generics/tabs/tabs";
@@ -45,11 +45,16 @@ interface IconButtonSmallProps extends ButtonProps {
 interface PersonaItemProps {
   nombre: string;
   documento: string;
-  onClick1?:() => void;
-  onClick2?:() => void;
+  onClick1?: () => void;
+  onClick2?: () => void;
 }
 
-export function PersonaItem({ nombre, documento,onClick1,onClick2 }: PersonaItemProps) {
+export function PersonaItem({
+  nombre,
+  documento,
+  onClick1,
+  onClick2,
+}: PersonaItemProps) {
   return (
     <Box
       sx={{
@@ -65,8 +70,22 @@ export function PersonaItem({ nombre, documento,onClick1,onClick2 }: PersonaItem
         {nombre} - {documento}
       </Typography>
       <Box sx={{ display: "flex", gap: 1 }}>
-        <IconButtonSmall icon={<CloseIcon />} color="error" onClick={onClick1}/>
-        <IconButtonSmall icon={<ArrowDownwardIcon />} color="error" onClick={onClick2}/>
+        <Tooltip 
+        title="Gnerar una inasistencia"> 
+        <IconButtonSmall
+          icon={<CloseIcon />}
+          color="error"
+          onClick={onClick1}
+        />
+        </Tooltip>
+        <Tooltip 
+        title="desvincular">
+        <IconButtonSmall
+          icon={<ArrowDownwardIcon />}
+          color="error"
+          onClick={onClick2}
+        />
+        </Tooltip>
       </Box>
     </Box>
   );
@@ -210,12 +229,31 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
             </Box>
           </Box>
           <Box sx={{ border: "2px solid black", padding: 1, borderRadius: 2 }}>
-            <PersonaItem nombre="juan rodriguez" documento="21314324"
-            onClick1={ handleOpen} />
-            <PersonaItem nombre="pedro gomez" documento="134557"  onClick1={ handleOpen}/>
-            <PersonaItem nombre="pedro pinilla" documento="131455"  onClick1={ handleOpen}/>
-            <PersonaItem nombre="danna camargo" documento="32536467"  onClick1={ handleOpen}/>
-            <PersonaItem nombre="camilo diaz" documento="21325356"  onClick1={ handleOpen}/>
+            <PersonaItem
+              nombre="juan rodriguez"
+              documento="21314324"
+              onClick1={handleOpen}
+            />
+            <PersonaItem
+              nombre="pedro gomez"
+              documento="134557"
+              onClick1={handleOpen}
+            />
+            <PersonaItem
+              nombre="pedro pinilla"
+              documento="131455"
+              onClick1={handleOpen}
+            />
+            <PersonaItem
+              nombre="danna camargo"
+              documento="32536467"
+              onClick1={handleOpen}
+            />
+            <PersonaItem
+              nombre="camilo diaz"
+              documento="21325356"
+              onClick1={handleOpen}
+            />
           </Box>
           <ModalUsuarios open={open} handleClose={handleClose2} />
         </Box>
