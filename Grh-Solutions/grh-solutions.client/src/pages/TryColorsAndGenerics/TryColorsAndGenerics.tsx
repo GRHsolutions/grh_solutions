@@ -463,6 +463,11 @@ const TryColorsAndGenerics = () => {
             dialog demo
           </Button>
           <SimpleDialog
+            header={{
+              title: 'Esto es un dialog de prueba',
+              subTitle: 'Tiene como objetivo hacer una demostracion de como funcionaria esta shit',
+              icon: <AcUnitIcon />
+            }}
             open={dialog}
             onClose={()=> {
               setDialog(false)

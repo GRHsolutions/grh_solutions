@@ -9,29 +9,39 @@ import {
     IconButton,
     useTheme,
   } from "@mui/material";
-  import DeleteIcon from "@mui/icons-material/Delete";
   import CloseIcon from "@mui/icons-material/Close";
   import CancelIcon from "@mui/icons-material/Cancel";
   import CheckIcon from "@mui/icons-material/Check";
   import GrhButton from "../grh-generics/button";
+  import React from "react";
+  
+  export interface SimpleDialogHeaderProps {
+    icon: React.ReactNode;
+    title?: string;
+    subTitle?: string;
+  }
   
   export interface SimpleDialogProps {
     open: boolean;
     onClose: () => void;
-    title?: string;
-    subTitle?: string;
+    header?: SimpleDialogHeaderProps;
     text?: string;
     onConfirm: () => void;
   }
   
-  export default function SimpleDialog({
-    open,
-    onClose,
-    title = "Eliminar el comunicado",
-    subTitle = "si desea proceder con esta acción es irreversible",
-    text = "¿Estás seguro de eliminar el comunicado? Esto se actualizará para todos los usuarios, y se notificará al usuario responsable.",
-    onConfirm,
-  }: SimpleDialogProps) {
+  export default function SimpleDialog(props: SimpleDialogProps) {
+    const {
+      open,
+      onClose,
+      onConfirm,
+      header = {
+        icon: null,
+        title: "Eliminar el comunicado",
+        subTitle: "si desea proceder con esta acción es irreversible",
+      },
+      text = "¿Estás seguro de eliminar el comunicado? Esto se actualizará para todos los usuarios, y se notificará al usuario responsable.",
+    } = props;
+  
     const theme = useTheme();
   
     return (
@@ -40,27 +50,25 @@ import {
           sx={{
             display: "flex",
             alignItems: "center",
+            justifyContent: "space-between",
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
             p: 2,
-            position: "relative",
           }}
         >
-          <DeleteIcon sx={{ fontSize: 32, mr: 2 }} />
-  
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="h6">{title}</Typography>
-            <Typography variant="body2" sx={{ mt: -0.5 }}>
-              {subTitle}
-            </Typography>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ fontSize: 32, mr: 2 }}>{header.icon}</Box>
+            <Box>
+              <Typography variant="h6">{header.title}</Typography>
+              <Typography variant="body2" sx={{ mt: -0.5 }}>
+                {header.subTitle}
+              </Typography>
+            </Box>
           </Box>
   
           <IconButton
             onClick={onClose}
             sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
               color: theme.palette.primary.contrastText,
             }}
           >
