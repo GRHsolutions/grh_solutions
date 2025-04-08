@@ -1,60 +1,96 @@
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DeleteIcon from '@mui/icons-material/Delete';
-import Button from '@mui/material/Button';
-import { Box, DialogActions, Divider, IconButton } from '@mui/material';
-import CancelIcon from '@mui/icons-material/Cancel';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-
-export interface SimpleDialogProps {
+import {
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    Divider,
+    Box,
+    Typography,
+    IconButton,
+    useTheme,
+  } from "@mui/material";
+  import DeleteIcon from "@mui/icons-material/Delete";
+  import CloseIcon from "@mui/icons-material/Close";
+  import CancelIcon from "@mui/icons-material/Cancel";
+  import CheckIcon from "@mui/icons-material/Check";
+  import GrhButton from "../grh-generics/button";
+  
+  export interface SimpleDialogProps {
     open: boolean;
     onClose: () => void;
     title?: string;
     subTitle?: string;
     text?: string;
-    onConfirm: () => void
-}
-
-
-
-export default function SimpleDialog(props: SimpleDialogProps) {
-    const { 
-        onClose, 
-        open, 
-        title = "Eliminar el comunicado", 
-        subTitle = "si desea proceder con esta accion es irreversible",
-        text = "estas seguro de eliminar el comunicado,esto se actualizara para todos los usuarios, y se les notificara al usuario responsable de este",
-        onConfirm
-    } = props;
-
-    const handleClose = () => {
-        onClose();
-    };
-
+    onConfirm: () => void;
+  }
+  
+  export default function SimpleDialog({
+    open,
+    onClose,
+    title = "Eliminar el comunicado",
+    subTitle = "si desea proceder con esta acción es irreversible",
+    text = "¿Estás seguro de eliminar el comunicado? Esto se actualizará para todos los usuarios, y se notificará al usuario responsable.",
+    onConfirm,
+  }: SimpleDialogProps) {
+    const theme = useTheme();
+  
     return (
-        <Dialog onClose={handleClose} open={open}>
-            <DialogTitle sx={{display:"flex", alignItems: "center",backgroundColor:"#efefef"}}>
-                <Box>
-                    <DeleteIcon fontSize='large' sx={{marginRight:"5px" ,marginTop:"5px"}}/>
-                </Box>
-                <Box sx={{display:"flex", flexDirection:"column"}}>
-                    <label>{title}</label>
-                    <label style={{fontSize:"15px", marginTop:"-10px"}}>{subTitle}</label>
-                </Box>
-                <IconButton onClick={handleClose} sx={{ position:"relative", top: -20, left: 160}}>
-                    <CloseIcon/>
-                </IconButton>       
-            </DialogTitle>
-            <Divider />
-            <DialogContent sx={{fontSize:"17px"}}>
-                {text}
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} startIcon={<CancelIcon/>} > cancelar</Button>
-                <Button onClick={onConfirm} startIcon={<CheckIcon/>} variant="contained"> confirmar</Button>
-            </DialogActions>
-        </Dialog>
+      <Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">
+        <DialogTitle
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            p: 2,
+            position: "relative",
+          }}
+        >
+          <DeleteIcon sx={{ fontSize: 32, mr: 2 }} />
+  
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="h6">{title}</Typography>
+            <Typography variant="body2" sx={{ mt: -0.5 }}>
+              {subTitle}
+            </Typography>
+          </Box>
+  
+          <IconButton
+            onClick={onClose}
+            sx={{
+              position: "absolute",
+              top: 8,
+              right: 8,
+              color: theme.palette.primary.contrastText,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+  
+        <Divider />
+  
+        <DialogContent sx={{ fontSize: "17px", py: 3 }}>
+          <Typography>{text}</Typography>
+        </DialogContent>
+  
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <GrhButton
+            onClick={onClose}
+            startIcon={<CancelIcon />}
+            label="Cancelar"
+            variant="secondary"
+            p="2.4"
+          />
+          <GrhButton
+            onClick={onConfirm}
+            startIcon={<CheckIcon />}
+            label="Confirmar"
+            variant="principal"
+            p="2.4"
+          />
+        </DialogActions>
+      </Dialog>
     );
-}
+  }
+  

@@ -1,5 +1,5 @@
 import AcUnitIcon from '@mui/icons-material/AcUnit';
-import { Box, Grid2, Paper, SxProps, Typography, useTheme } from '@mui/material';
+import { Box, Button, Grid2, Paper, SxProps, Typography, useTheme } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
 import { VarIma } from '../../const/variables';
@@ -14,6 +14,7 @@ import GrhGenericTable2 from '../../generics/grh-generics/tableWrapper2';
 import GrhTextField from '../../generics/grh-generics/textField';
 import MUIswitch from '../../generics/switch/MUIswitch';
 import { TabConfig, TabsCompo } from '../../generics/tabs/tabs';
+import SimpleDialog from '../../generics/dialogGeneric/dialogo';
 
 
 interface TableDemo {
@@ -61,6 +62,7 @@ const TryColorsAndGenerics = () => {
   const [selectedFiles, setSelectedFiles] = React.useState<DragNDropVariables[]>([]);
   const [dat, setDat] = React.useState<Dayjs | null>(dayjs());
   const [text, setText] = React.useState("");
+  const [dialog, setDialog] = React.useState(false);
   const [currentInputSelected, setCurrentInputSelected] = React.useState(0);
   const options = [{
       id: 1,
@@ -451,6 +453,23 @@ const TryColorsAndGenerics = () => {
           />
           <TabsCompo 
             tabs={tabs}
+          />
+          <Button 
+            onClick={()=> {
+              setDialog(true)
+            }}
+            variant='contained'
+          >
+            dialog demo
+          </Button>
+          <SimpleDialog
+            open={dialog}
+            onClose={()=> {
+              setDialog(false)
+            }}
+            onConfirm={()=> {
+              setDialog(false)
+            }}
           />
         </Section>
       }
