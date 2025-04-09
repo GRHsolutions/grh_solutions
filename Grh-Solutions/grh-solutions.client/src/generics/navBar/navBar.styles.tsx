@@ -1,5 +1,4 @@
 import { useTheme } from "@mui/material";
-import zIndex from "@mui/material/styles/zIndex";
 
 interface ReturnableCss {
     navBar: React.CSSProperties,
