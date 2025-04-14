@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { Box, Typography, Card, CardContent, Divider, Snackbar, Alert } from "@mui/material";
+import { Box, Typography, Card, CardContent, Divider, Snackbar, Alert, IconButton } from "@mui/material";
 import { VacanteData } from "../../../domain/models/vacantes/vacantes.entities";
 import GrhButton from "../../../generics/grh-generics/button";
+import { Note, Visibility } from "@mui/icons-material";
+import ViewSlectVacante from "./viewSlectVacante";
 
 interface SelectVacationProps {
   selectedVacante: VacanteData | null;
@@ -9,9 +11,18 @@ interface SelectVacationProps {
 
 export default function SelectVacation({ selectedVacante }: SelectVacationProps) {
   const [openAlert, setOpenAlert] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
 
   const handleApply = () => {
     setOpenAlert(true);
+  }
+
+  const handleview = () => {
+    setOpenModal(true)
+  }
+
+  const handleClose = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -61,13 +72,22 @@ export default function SelectVacation({ selectedVacante }: SelectVacationProps)
           }}
         >
           <CardContent sx={{ flexGrow: 1 }}>
-            <Typography variant="h4" fontWeight="bold" textAlign="center">
-              {selectedVacante.titulo}
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Note sx={{ mr: 1 }} />
+              </Box>
+              <Box sx={{ flexGrow: 1, textAlign: "center" }}>
+                <Typography variant="h4" fontWeight="bold">
+                  {selectedVacante.titulo}
+                </Typography>
+              </Box>
+              <IconButton onClick={handleview}>
+                <Visibility />
+              </IconButton>
+            </Box>
             <Typography variant="body1" textAlign="center" sx={{ mb: 3 }}>
               Ver información de la vacante y aplicar postulación.
             </Typography>
-
             <Typography variant="h6" fontWeight="bold">Descripción del puesto:</Typography>
             <Typography variant="body1" sx={{ mt: 1, mb: 3 }}>
               Buscamos un profesional altamente capacitado para desempeñar este rol dentro de nuestra organización.
@@ -127,6 +147,10 @@ export default function SelectVacation({ selectedVacante }: SelectVacationProps)
           En su perfil podrá ver el estado de su aplicación. Atento a su correo.
         </Alert>
       </Snackbar>
+      <ViewSlectVacante
+        open={openModal}
+        handleClose={handleClose}
+      />
     </Box>
-  );
+  )
 }
