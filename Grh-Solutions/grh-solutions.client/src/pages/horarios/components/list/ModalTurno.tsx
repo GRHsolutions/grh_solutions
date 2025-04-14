@@ -18,7 +18,10 @@ import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Button, { ButtonProps } from "@mui/material/Button";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-import { ModalUsuarios } from "../Modales/ModalUsuario";
+import ModalUsuarios from "../Modales/ModalUsuario";
+import ModalDesvincular from "../Modales/ModalDesvincular";
+import Vincular from "../Modales/ModalVincular";
+
 const style = {
   position: "absolute",
   top: 0,
@@ -70,21 +73,19 @@ export function PersonaItem({
         {nombre} - {documento}
       </Typography>
       <Box sx={{ display: "flex", gap: 1 }}>
-        <Tooltip 
-        title="Gnerar una inasistencia"> 
-        <IconButtonSmall
-          icon={<CloseIcon />}
-          color="error"
-          onClick={onClick1}
-        />
+        <Tooltip title="Gnerar una inasistencia">
+          <IconButtonSmall
+            icon={<CloseIcon />}
+            color="error"
+            onClick={onClick1}
+          />
         </Tooltip>
-        <Tooltip 
-        title="desvincular">
-        <IconButtonSmall
-          icon={<ArrowDownwardIcon />}
-          color="error"
-          onClick={onClick2}
-        />
+        <Tooltip title="desvincular">
+          <IconButtonSmall
+            icon={<ArrowDownwardIcon />}
+            color="error"
+            onClick={onClick2}
+          />
         </Tooltip>
       </Box>
     </Box>
@@ -111,21 +112,19 @@ export function IconButtonSmall({
   );
 }
 export default function BasicModal({ current, handleClose }: BasicModalProps) {
+  const [dialog, setDialog] = React.useState(false);
+  const [dialog2, setDialog2] = React.useState(false);
   const theme = useTheme();
   const [mdo, setMdo] = useState("");
-
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose2 = () => setOpen(false);
-
   const handleCls = () => {
     setMdo("");
   };
-
   const handleCls2 = () => {
     setMdo("");
   };
-
+  const [open, setOpen] = React.useState(false);
+  const handleOpenVincular = () => setOpen(true);
+  const handleCloseVincular = () => setOpen(false);
   const tabs: TabConfig[] = [
     {
       value: "1",
@@ -222,40 +221,90 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
                 startIcon={<AcUnitIcon />}
                 label="vincular usuario"
                 variant="principal"
-                sx={{
-                  width: "200px",
-                }}
+                onClick={handleOpenVincular}
+                sx={{ width: "200px" }}
               />
+              <Vincular handleClose={handleCloseVincular} open={open} />
             </Box>
           </Box>
           <Box sx={{ border: "2px solid black", padding: 1, borderRadius: 2 }}>
             <PersonaItem
               nombre="juan rodriguez"
               documento="21314324"
-              onClick1={handleOpen}
+              onClick1={() => {
+                setDialog(true);
+              }}
+              onClick2={() => {
+                setDialog2(true);
+              }}
             />
             <PersonaItem
               nombre="pedro gomez"
               documento="134557"
-              onClick1={handleOpen}
+              onClick1={() => {
+                setDialog(true);
+              }}
+              onClick2={() => {
+                setDialog2(true);
+              }}
             />
             <PersonaItem
               nombre="pedro pinilla"
               documento="131455"
-              onClick1={handleOpen}
+              onClick1={() => {
+                setDialog(true);
+              }}
+              onClick2={() => {
+                setDialog2(true);
+              }}
             />
             <PersonaItem
               nombre="danna camargo"
               documento="32536467"
-              onClick1={handleOpen}
+              onClick1={() => {
+                setDialog(true);
+              }}
+              onClick2={() => {
+                setDialog2(true);
+              }}
             />
             <PersonaItem
               nombre="camilo diaz"
               documento="21325356"
-              onClick1={handleOpen}
+              onClick1={() => {
+                setDialog(true);
+              }}
+              onClick2={() => {
+                setDialog2(true);
+              }}
             />
           </Box>
-          <ModalUsuarios open={open} handleClose={handleClose2} />
+          <ModalDesvincular
+            header={{
+              title: "Desea desvincular al usuario?",
+              icon: <AcUnitIcon />,
+            }}
+            open={dialog2}
+            onClose={() => {
+              setDialog2(false);
+            }}
+            onConfirm={() => {
+              setDialog2(false);
+            }}
+          />
+          <ModalUsuarios
+            header={{
+              title: "Desea generar una inasistencia al usuario?",
+              icon: <AcUnitIcon />,
+            }}
+            open={dialog}
+            onClose={() => {
+              setDialog(false);
+            }}
+            onConfirm={() => {
+              setDialog(false);
+            }}
+          />
         </Box>
       ),
     },

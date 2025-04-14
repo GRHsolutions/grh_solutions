@@ -3,7 +3,7 @@ import { useHorarios } from "../../../../hooks/horarios";
 import GrhGenericTable2 from "../../../../generics/grh-generics/tableWrapper2";
 import React from "react";
 import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
-import BasicModal from "./ModalDetalle";
+import BasicModal from "./ModalTurno";
 
 export const ListHorario = () => {
   const { horarios, pagination, setPagination } = useHorarios();

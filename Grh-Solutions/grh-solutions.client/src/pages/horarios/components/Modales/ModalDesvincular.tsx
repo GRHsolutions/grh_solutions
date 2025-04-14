@@ -34,7 +34,7 @@ const style = {
     subTitle?: string;
   }
   
-  export interface ModalUsuariosProps {
+  export interface ModalDesvincularProps {
     open: boolean;
     onClose: () => void;
     header?: SimpleDialogHeaderProps;
@@ -42,16 +42,16 @@ const style = {
     onConfirm: () => void;
   }
   
-export default function ModalUsuarios (props:ModalUsuariosProps ) {
+export default function ModalDesvincular (props:ModalDesvincularProps ) {
   const {
     open,
     onClose,
     onConfirm,
     header = {
       icon: null,
-      title: "Desea generar una inasistencia al usuario?",
+      title: "Desea desvincular al usuario?",
     },
-    text = "Si por error usted genero una inasistencia erroneamente, puede modificarla o cancelarla en el modulo peticiones",
+    text = "Si lo desvincula por error en la información del grupo en este Horario.",
   } = props;
 
   const theme = useTheme();
