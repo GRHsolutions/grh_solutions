@@ -11,6 +11,7 @@ import ModalRole from "./ModalRole";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import ModalChangePassword from "./ModalChangePassword";
+import { useNavigate } from "react-router-dom";
 
 const userInfo = [
   {
@@ -45,7 +46,7 @@ export default function InfoUser() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalType, setModalType] = useState<string | null>(null);
   const open = Boolean(anchorEl);
-
+ const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -62,6 +63,11 @@ export default function InfoUser() {
   const handleCloseModal = () => {
     setModalType(null);
   };
+
+  const sendHvc = () => {
+    navigate("/hv-user")
+  }
+
 
   return (
     <>
@@ -129,6 +135,12 @@ export default function InfoUser() {
                 <VpnKeyIcon fontSize="small" />
               </ListItemIcon>
               Cambiar contraseña
+            </MenuItem>
+            <MenuItem onClick={sendHvc}>
+              <ListItemIcon>
+                <DownloadIcon fontSize="small" />
+              </ListItemIcon>
+              Hoja de vida
             </MenuItem>
           </Menu>
 

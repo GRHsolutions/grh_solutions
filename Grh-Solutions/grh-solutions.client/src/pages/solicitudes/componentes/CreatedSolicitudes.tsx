@@ -5,8 +5,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import GrhTextField from '../../../generics/grh-generics/textField';
 import GrhCustomSelect from '../../../generics/grh-generics/inputSelect';
 import MultipleSelect from '../../../generics/grh-generics/multipleSelect';
+import GrhButton from '../../../generics/grh-generics/button';
 import { DragDropInput, DragNDropVariables } from '../../../generics/grh-generics/DragNDrop';
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import "../stiles.scss";
 import React from 'react';
 
@@ -38,11 +38,14 @@ export default function CreatedSolicitudes() {
 
   return (
     <div>
-      <button onClick={handleOpen} className="button">
-        Crear
-      </button>
-      <CreatedSolicitudesModal handleClose={handleClose} open={open} />
-    </div>
+    <GrhButton 
+      label="Crear"
+      variant="principal"
+      onClick={handleOpen}
+      sx={{ width: '50%' }}
+    />
+    <CreatedSolicitudesModal handleClose={handleClose} open={open} />
+  </div>
   );
 }
 
@@ -228,53 +231,17 @@ const options = [{
           <Typography variant="h5">Descripcion</Typography>
           <Typography variant="body1" mt={1}>Descripcion mamalona</Typography>
         </div>
-        <div>
           <div className="filescreated">
             <Box>
               <DragDropInput
                 acceptedMimeTypes={['image/jpeg', 'image/png', 'image/gif']}
-                maxSizeInKB={15}
+                maxSizeInKB={100}
                 onFileSelect={handleFileSelect}
                 selectedFiles={selectedFiles}
                 maxFiles={1}
               />
             </Box>
           </div>
-          <div className="docreated">
-            <div className="divUsuarioIn">
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div className="divUsuarioInfo">
-                <label>Salida al parque</label>
-                <Typography variant="body1">25 kb</Typography>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '280%'  }}>
-                  <input type="checkbox" id="User3" name="User3" />
-                </div>
-              </div>
-            </div>
-
-            <div className="divUsuarioIn">
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div className="divUsuarioInfo">
-                <label>Salida al parque</label>
-                <Typography variant="body1">25 kb</Typography>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '280%'  }}>
-                  <input type="checkbox" id="User3" name="User3" />
-                </div>
-              </div>
-            </div>
-
-            <div className="divUsuarioIn">
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div className="divUsuarioInfo">
-                <label>Salida al parque</label>
-                <Typography variant="body1">25 kb</Typography>
-                <div style={{ display: 'flex', justifyContent: 'flex-end', width: '280%'  }}>
-                  <input type="checkbox" id="User3" name="User3" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="buttonContainerc">
           <button className="btn cancelc" onClick={handleClose}>
             <SaveAltIcon sx={{ fontSize: 15 }} /> Volver

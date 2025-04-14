@@ -26,6 +26,7 @@ const options = [{ id: 1, name: "Mario" },
     
 export const AsignarUsuario = ({handleClose}: AsignarUsuarioProps)=>{
       const [mult, setMult] = React.useState<number[]>([]);
+      
       const setFieldValue = (_field: string, value: number[]) => {
         setMult(value);
       };
