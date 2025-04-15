@@ -42,7 +42,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   // Maneja el logout
   const logout = () => {
-    console.log("UJGDSJ")
     localStorageUtil.deleteExclude(["theme"]);
     setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
   };
