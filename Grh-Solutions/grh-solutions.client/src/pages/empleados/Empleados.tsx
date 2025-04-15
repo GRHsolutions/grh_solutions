@@ -4,33 +4,35 @@ import GrhGenericTable2 from "../../generics/grh-generics/tableWrapper2";
 import dayjs, { Dayjs } from "dayjs";
 interface EmpleadosProps {}
 
-interface TableDemo {
+interface EmpleadoDemo {
   name: string,
-  calories: number, 
-  fat: number, 
-  carbs: number, 
-  protein : number,
-  cualquiera: Cualqueira,
+  state : "contratado"|"por-renobar"
+  cedula: string
+  telefono:string
+  fechaContratacion:Dayjs
   [key: string] : any
 }
 
-interface Cualqueira {
-  name: string,
-  fecha: Dayjs;
+const createData =(name:string,state : "contratado"|"por-renobar",  cedula: string,  telefono:string,  fechaContratacion:Dayjs)=>{
+  return {
+    name:name,
+    state:state,
+    cedula: cedula,
+    telefono:telefono,
+    fechaContratacion:fechaContratacion
+  }
 
 }
 const Empleados: React.FC = ({}: EmpleadosProps) => {
-  const rows : TableDemo[] = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0, "sigma", dayjs()),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3, "sigma", dayjs()),
-    createData('Eclair', 262, 16.0, 24, 6.0, "sigma", dayjs()),
-    createData('Cupcake', 305, 3.7, 67, 4.3, "sigma", dayjs()),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
-    createData('Gingerbread', 356, 16.0, 49, 3.9, "sigma", dayjs()),
+  const rows : EmpleadoDemo[] = [
+    createData("juan","contratado","1231242","42413536", dayjs()),
+    createData("miguel","por-renobar","53242","42423536", dayjs()),
+    createData("arturo","contratado","14324242","4246536", dayjs()),
+    createData("andres","por-renobar","1342","4243354536", dayjs()),
+    createData("santiago","contratado","1131242","43456536", dayjs()),
+    createData("deiby","por-renobar","12312342","42433536", dayjs()),
+    createData("sebastian","contratado","126456242","426466", dayjs()),
+
   ];  
   return (
     <Box
@@ -46,40 +48,36 @@ const Empleados: React.FC = ({}: EmpleadosProps) => {
       fontSize: "2rem",
     }}
   >
-    <Typography variant={"h6"}>Bienvenidos al portal de horarios</Typography>
+    <Typography variant={"h6"}>Bienvenidos al portal de Empleados</Typography>
+        <Box width={'100%'}>
     <GrhGenericTable2 
             maxHeight={"20rem"}
             columns={[{
               key: "name",
-              label: "Alimento",
+              label: "nombre",
               onRowClick: (value)=>{
                 console.log(value)
               },
               type: "string"
             },{
-              key: "calories",
-              label: "Calorias",
+              key: "state",
+              label: "estado",
               onRowClick: undefined,
               type: "string"
             },
             {
-              key: "fat",
-              label: "Fatura?",
+              key: "cedula",
+              label: "cedula?",
               onRowClick: undefined,
               type: "string"
             },{
-              key: "carbs",
-              label: "Carbohidratos",
+              key: "telefono",
+              label: "telefono",
               onRowClick: undefined,
               type: "string"
             },{
-              key: "cualquiera.name",
-              label: "Cualquiera",
-              onRowClick: undefined,
-              type: "string"
-            },{
-              key: "cualquiera.fecha",
-              label: "Fecha",
+              key: "fechaContratacion",
+              label: "fecha de contratacion",
               onRowClick: undefined,
               type: "date"
             }
@@ -95,12 +93,10 @@ const Empleados: React.FC = ({}: EmpleadosProps) => {
               console.log(value);
             }}                    
           />
+          </Box>
   </Box>
   );
 };
 
 export default Empleados;
 
-function createData(arg0: string, arg1: number, arg2: number, arg3: number, arg4: number, arg5: string, arg6: any): TableDemo {
-  throw new Error("Function not implemented.");
-}
