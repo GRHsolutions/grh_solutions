@@ -1,13 +1,17 @@
 
-import { Box, Grid2,  useTheme } from "@mui/material";
+import { Box, Grid2, useTheme } from "@mui/material";
 import { useParametros } from "../../contexts/useParamether.provider";
 import VistaVacantes from "./components/VistaVacantes";
 import SelectVacation from "./components/SelectVacation";
 import { useState } from "react";
 import { VacanteData } from "../../domain/models/vacantes/vacantes.entities";
+import { FloatingButton } from "../../generics/floatingButton/floatingButton";
+import AddIcon from '@mui/icons-material/Add';
+import ModalCreateVacant from "./components/ModalCreateVacant";
 
 export default function Postulate() {
   const [selectOption, setSelectOption] = useState<VacanteData | null>(null);
+  const [openModal, setOpenModal] = useState(false);
   const { parametros } = useParametros();
   const theme = useTheme();
   const { usePhoneScreen } = parametros;
@@ -55,6 +59,20 @@ export default function Postulate() {
           </Grid2>
         )}
       </Grid2>
+      <FloatingButton
+        icon={<AddIcon />}
+        onClick={() => {
+          setOpenModal(!openModal);
+        }}
+        label="Crear vacante"
+        bgColor={theme.palette.secondary.main}
+        positions={{
+          bottom: '2.2rem',
+          left: '2rem'
+        }}
+        borderColor={theme.palette.secondary.hover}
+      />
+      <ModalCreateVacant open={openModal} handleClose={() => setOpenModal(false)} />
     </Box>
   );
 }
