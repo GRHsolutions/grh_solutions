@@ -61,7 +61,8 @@ const NewItem: React.FC<NewItemProps> = ({
         backgroundColor: 'background.paper',
       }}
     >      
-      <Box sx={{ 
+      <Box 
+        sx={{ 
           padding: '16px' 
         }}
       >

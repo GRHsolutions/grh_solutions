@@ -6,12 +6,23 @@ export type News = {
     title: string;
     description: string;
     images: DragNDropVariables[];
+    formulary: Formulary;
     status: string;
     type: "simple-publication" | "publication-with-images" | "publication-with-survey"
     numberLikes: number;
     numberDisLikes: number;
     date: Dayjs;
     madeBy: string;
+}
+
+export type Formulary = {
+    id: number;
+    form: RawFormulary[]
+};
+
+export type RawFormulary = {
+    description: string,
+    marked: boolean
 }
 
 export type Commentary = {

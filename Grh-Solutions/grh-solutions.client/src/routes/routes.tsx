@@ -13,7 +13,8 @@ const TryColorsAndGenerics = lazy(() => import("./../pages/TryColorsAndGenerics/
 const UserPage = lazy(() => import("../pages/user/UserPage"));
 const Horarios = lazy(() => import("../pages/horarios/horarios"));
 const HojaVidaPage = lazy(() => import("../pages/hojaVida/HojaVidaPage"));
-const Empleados = lazy(() => import ("../pages/empleados/Empleados"))
+const Empleados = lazy(() => import ("../pages/empleados/Empleados"));
+const Contratos = lazy(() => import ("../pages/contratos/Contratos"));
 // Rutas de la aplicaci�n
 
 export const AppRoutes = (): RouteObject[] => {
@@ -63,5 +64,9 @@ export const AppRoutes = (): RouteObject[] => {
       path: "/empleados",
       element: <>{CompoRender({ element: Empleados })}</>
     },
+    {
+      path: '/contratos',
+      element: <>{CompoRender({ element: Contratos})}</>
+    }
   ];
 };
