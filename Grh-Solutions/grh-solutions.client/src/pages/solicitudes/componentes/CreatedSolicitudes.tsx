@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Box, Modal, Stack, Typography, useTheme } from "@mui/material";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import SaveAltIcon from "@mui/icons-material/SaveAlt";
+import CancelIcon from '@mui/icons-material/Cancel';
 import CloseIcon from "@mui/icons-material/Close";
 import GrhTextField from '../../../generics/grh-generics/textField';
 import GrhCustomSelect from '../../../generics/grh-generics/inputSelect';
@@ -38,14 +40,15 @@ export default function CreatedSolicitudes() {
 
   return (
     <div>
-    <GrhButton 
-      label="Crear"
-      variant="principal"
-      onClick={handleOpen}
-      sx={{ width: '50%' }}
-    />
-    <CreatedSolicitudesModal handleClose={handleClose} open={open} />
-  </div>
+      <GrhButton
+        label="Crear"
+        variant="principal"
+        startIcon={<AddCircleOutlineIcon />}
+        onClick={handleOpen}
+        sx={{ width: '100%' }}
+      />
+      <CreatedSolicitudesModal handleClose={handleClose} open={open} />
+    </div>
   );
 }
 
@@ -57,7 +60,7 @@ const CreatedSolicitudesModal = ({ handleClose, open }: CreatedSolicitudesModalP
   const theme = useTheme();
   const [text, setText] = useState('');
   const [currentInputSelected, setCurrentInputSelected] = React.useState(0);
-   
+
   const optionstype = [{
     id: 1,
     name: "credito"
@@ -68,25 +71,25 @@ const CreatedSolicitudesModal = ({ handleClose, open }: CreatedSolicitudesModalP
     id: 3,
     name: "prestamo"
   }
-];
+  ];
 
-const options = [{
-  id: 1,
-  name: "Carlos"
-}, {
-  id: 2,
-  name: "Mariana"
-}, {
-  id: 3,
-  name: "Alex"
-}, {
-  id: 4,
-  name: "Jose"
-}, {
-  id: 5,
-  name: "Juan"
-}
-];
+  const options = [{
+    id: 1,
+    name: "Carlos"
+  }, {
+    id: 2,
+    name: "Mariana"
+  }, {
+    id: 3,
+    name: "Alex"
+  }, {
+    id: 4,
+    name: "Jose"
+  }, {
+    id: 5,
+    name: "Juan"
+  }
+  ];
   const [selectedFiles, setSelectedFiles] = React.useState<DragNDropVariables[]>([]);
   const [mult, setMult] = React.useState<number[]>([]);
   const setFieldValue = (_field: string, value: number[]) => {
@@ -94,163 +97,83 @@ const options = [{
   };
   const [newInputSelected, setNewInputSelected] = React.useState(0);
   const [newText, setNewText] = React.useState('');
+  const [DesText,setdesText] = React.useState('');
   const handleFileSelect = (files: DragNDropVariables[]) => {
     setSelectedFiles(files);
   };
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box display={"flex"} justifyContent={"center"} sx={{ ...style }}>
-        <Stack
-          direction="row"
-          display="flex"
-          spacing={1}
-          alignItems="center"
-          margin={1}
-        >
-
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            alignItems="center"
-            position="absolute"
-            top={0}
-            left={0}
-            p={2}
-          >
-            <SaveAltIcon
-              fontSize="large"
-              sx={{
-                color: theme.palette.primary.contrastText,
-                marginRight: 1,
-              }}
-            />
-            <div>
-              <Typography variant="h6" fontWeight={"bold"} mt={0}>
-                Crear Solicitud
-              </Typography>
-              <Typography variant="body1" mt={-1}>
-                Crea una Solicitud
-              </Typography>
-            </div>
-          </Box>
-          <Box
-            display={"flex"}
-            flexDirection={"row"}
-            alignItems="center"
-            position="absolute"
-            top={0}
-            right={0}
-            p={2}
-          >
-            <CloseIcon
-              fontSize="large"
-              sx={{ color: "gray", cursor: "pointer" }}
-              onClick={handleClose}
-            />
-          </Box>
-        </Stack>
-        <Box
-          marginTop={5}
-          sx={{ paddingLeft: 2 }}
-          display={"flex"}
-          flexDirection={"row"}
-          alignItems="center"
-          position="absolute"
-          left={0}
-          right={0}
-          p={2}
-        >
-          <GrhTextField
-            label="Titulo"
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value || "");
-            }}
-            fullWidth
-          />
+  <Box sx={{ ...style }}>
+    <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+      <Box display="flex" alignItems="center">
+        <SaveAltIcon sx={{ color: theme.palette.text.primary, mr: 1 }} />
+        <Box>
+          <Typography variant="h6" fontWeight="bold" sx={{ color: theme.palette.text.primary, mr: 1 }}>
+            Crear Solicitud
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Crea una Solicitud
+          </Typography>
         </Box>
-        <div className="box1">
-          <Box>
-            <GrhCustomSelect
-              label={"Tipo de solicitud"}
-              options={optionstype.map(item => ({
-                value: item.id,
-                name: item.name
-              }))}
-              value={currentInputSelected}
-              onChange={(e) => {
-                setCurrentInputSelected(e.target.value as number);
-              }}
-            />
-          </Box>
-        </div>
-        <div className="box2">
-          <Box>
-            <MultipleSelect
-              label={'Interesados'}
-              name={'input'}
-              options={options.map(item => ({
-                id: item.id,
-                nombre: item.name
-              }))}
-              maxSelections={3}
-              value={mult}
-              setFieldValue={setFieldValue}
-            />
-          </Box>
-        </div>
-        <div className="box3">
-          <Box>
-            <GrhCustomSelect
-              label={"Enviar a..."}
-              options={options.map(item => ({
-                value: item.id,
-                name: item.name
-              }))}
-              value={newInputSelected}
-              onChange={(e) => {
-                setNewInputSelected(e.target.value as number);
-              }}
-            />
-          </Box>
-        </div>
-        <div className="box4">
-          <Box>
-            <GrhTextField
-              label="Correo de seguimiento"
-              value={newText}
-              onChange={(e) => {
-                setNewText(e.target.value || "");
-              }}
-              fullWidth
-            />
-          </Box>
-        </div>
-        <div className="descriptioncreated">
-          <Typography variant="h5">Descripcion</Typography>
-          <Typography variant="body1" mt={1}>Descripcion mamalona</Typography>
-        </div>
-          <div className="filescreated">
-            <Box>
-              <DragDropInput
-                acceptedMimeTypes={['image/jpeg', 'image/png', 'image/gif']}
-                maxSizeInKB={100}
-                onFileSelect={handleFileSelect}
-                selectedFiles={selectedFiles}
-                maxFiles={1}
-              />
-            </Box>
-          </div>
-        <div className="buttonContainerc">
-          <button className="btn cancelc" onClick={handleClose}>
-            <SaveAltIcon sx={{ fontSize: 15 }} /> Volver
-          </button>
-          <button className="btnc" onClick={handleClose}>
-            <SaveAltIcon sx={{ fontSize: 15 }} /> Guardar
-          </button>
-        </div>
       </Box>
-    </Modal>
+      <CloseIcon sx={{ cursor: "pointer", color: "gray" }} onClick={handleClose} />
+    </Box>
+    <Stack spacing={2}>
+      <GrhTextField label="Titulo" value={text} onChange={(e) => setText(e.target.value || "")} fullWidth />
+
+      <GrhCustomSelect
+        label="Tipo de solicitud"
+        options={optionstype.map(item => ({ value: item.id, name: item.name }))}
+        value={currentInputSelected}
+        onChange={(e) => setCurrentInputSelected(e.target.value as number)}
+      />
+
+      <MultipleSelect
+        label="Interesados"
+        name="input"
+        options={options.map(item => ({ id: item.id, nombre: item.name }))}
+        maxSelections={3}
+        value={mult}
+        setFieldValue={setFieldValue}
+      />
+
+      <GrhCustomSelect
+        label="Enviar a..."
+        options={options.map(item => ({ value: item.id, name: item.name }))}
+        value={newInputSelected}
+        onChange={(e) => setNewInputSelected(e.target.value as number)}
+      />
+
+      <GrhTextField
+        label="Correo de seguimiento"
+        value={newText}
+        onChange={(e) => setNewText(e.target.value || "")}
+        fullWidth
+      />
+
+      <GrhTextField
+        label="Descripcion"
+        value={DesText}
+        onChange={(e) => setdesText(e.target.value || "")}
+        fullWidth
+      />
+
+      <DragDropInput
+        acceptedMimeTypes={['image/jpeg', 'image/png', 'image/gif']}
+        maxSizeInKB={100}
+        onFileSelect={handleFileSelect}
+        selectedFiles={selectedFiles}
+        maxFiles={1}
+      />
+
+      <Stack direction="row" spacing={2} justifyContent="flex-end" mt={3}>
+        <GrhButton label="Cancelar" variant="secondary" startIcon={<CancelIcon />} onClick={handleClose} />
+        <GrhButton label="Guardar" variant="principal" startIcon={<SaveAltIcon />} onClick={handleClose} />
+      </Stack>
+    </Stack>
+  </Box>
+</Modal>
+
   );
 };

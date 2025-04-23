@@ -49,99 +49,171 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
       value: "1",
       label: "informacion",
       content: (
-        <Box>
-          <div className="DivInformacion">
-            <label>Informacion basica</label>
-          </div>
-          <div className="divInfo">
+        <Box sx={{ width: "100%", color: theme.palette.text.primary }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              p: "2% 5%",
+              mt: "3%",
+              borderRadius: "5px 5px 0 0",
+              backgroundColor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderBottom: "none",
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Información básica
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              p: "2% 5%",
+              borderRadius: "0 0 5px 5px",
+              backgroundColor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              width: "100%",
+              boxSizing: "border-box",
+              minHeight: 350,
+            }}
+          >
             <Typography variant="body1">{current?.titulo}</Typography>
             <Typography variant="body1">Tipo: {current?.tipo}</Typography>
             <Typography variant="body2">
-              Texto de la peticion, si quiere inventese algo aqui Juan
+              Texto de la petición, si quiere invéntese algo aquí Juan
             </Typography>
-          </div>
+          </Box>
         </Box>
+
       ),
     },
     {
       value: "2",
       label: "involucadros",
       content: (
+        <Box sx={{ color: theme.palette.text.primary, width: "100%" }}>
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
+      p: 2,
+      mt: 3,
+      borderRadius: "5px 5px 0 0",
+      bgcolor: theme.palette.background.paper,
+      border: `2px solid ${theme.palette.primary.contrastText}`,
+      borderBottom: "none",
+    }}
+  >
+    <Typography variant="h6" fontWeight="bold">
+      Usuarios involucrados a la solicitud
+    </Typography>
+  </Box>
+
+  <Box
+    sx={{
+      p: 2,
+      bgcolor: theme.palette.background.paper,
+      border: `2px solid ${theme.palette.primary.contrastText}`,
+      borderRadius: "0 0 5px 5px",
+    }}
+  >
+    {[
+      ["User1", "Pedro Gomez", "Creador de la solicitud"],
+      ["User2", "Mario Mendosa", "Interesado"],
+      ["User3", "Luisa Aldana", "Interesada"],
+    ].map(([id, nombre, rol], index, array) => (
+      <Box
+        key={id}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mb: index !== array.length - 1 ? 2 : 0, // margen solo entre usuarios
+          p: 2,
+          border: `1px solid ${theme.palette.primary.contrastText}`,
+          borderRadius: 2,
+          gap: 2,
+        }}
+      >
+        <label
+          htmlFor={id}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+        >
+          <input
+            type="checkbox"
+            id={id}
+            name={id}
+            style={{ marginRight: 8, cursor: "pointer" }}
+          />
+          <AccountCircleIcon sx={{ fontSize: 40 }} />
+        </label>
         <Box>
-          <div className="DivInformacion">
-            <label>Usuarios involucrados a la solicitud</label>
-          </div>
-          <div className="divInfo">
-            <div className="divUsuarioIn">
-              <label className="divUsuarioLabel">
-                <input type="checkbox" id="User1" name="User1" />
-                <AccountCircleIcon sx={{ fontSize: 40 }} />
-              </label>
-              <div className="divUsuarioInfo">
-                <label>Pedro Gomez</label>
-                <Typography variant="body1">Creador de la solicitud</Typography>
-              </div>
-            </div>
-
-            <div className="divUsuarioIn">
-              <label className="divUsuarioLabel">
-                <input type="checkbox" id="User2" name="User2" />
-                <AccountCircleIcon sx={{ fontSize: 40 }} />
-              </label>
-              <div className="divUsuarioInfo">
-                <label>Mario Mendosa</label>
-                <Typography variant="body1">Interesado</Typography>
-              </div>
-            </div>
-
-            <div className="divUsuarioIn">
-              <label className="divUsuarioLabel">
-                <input type="checkbox" id="User3" name="User3" />
-                <AccountCircleIcon sx={{ fontSize: 40 }} />
-              </label>
-              <div className="divUsuarioInfo">
-                <label>Luisa Aldana</label>
-                <Typography variant="body1">Interesada</Typography>
-              </div>
-            </div>
-          </div>
+          <Typography variant="subtitle1">{nombre}</Typography>
+          <Typography variant="body1">{rol}</Typography>
         </Box>
+      </Box>
+    ))}
+  </Box>
+</Box>
+
+
       ),
     },
     {
       value: "3",
       label: "seguimientos",
       content: (
-        <Box>
-          <div className="DivInformacion">
-            <label>Seguimientos creados por un asignado a la solicitud</label>
-          </div>
-          <div className="divInfo">
-            <div className="divUsuarioIn">
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div className="divUsuarioInfo">
-                <label>Se ha vuelto a pendiente</label>
-                <Typography variant="body1">Por: Carlos Mario</Typography>
-              </div>
-            </div>
-
-            <div className="divUsuarioIn">
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div className="divUsuarioInfo">
-                <label>Se ha asignado a Carlos Mario</label>
-                <Typography variant="body1">Por: Mario Juda</Typography>
-              </div>
-            </div>
-
-            <div className="divUsuarioIn">
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div className="divUsuarioInfo">
-                <label>Ha asignado a Mario Juda, es el primer asignado</label>
-                <Typography variant="body1">Por: Mario Castañeda</Typography>
-              </div>
-            </div>
-          </div>
+        <Box sx={{ color: theme.palette.text.primary, width: "100%" }}>
+        <Box
+          sx={{
+            p: 2,
+            mt: 3,
+            borderRadius: "5px 5px 0 0",
+            bgcolor: theme.palette.background.paper,
+            border: `2px solid ${theme.palette.primary.contrastText}`,
+            borderBottom: "none",
+          }}
+        >
+          <Typography variant="h6" fontWeight="bold">
+            Seguimientos creados por un asignado a la solicitud
+          </Typography>
         </Box>
+      
+        <Box
+          sx={{
+            p: 2,
+            bgcolor: theme.palette.background.paper,
+            border: `2px solid ${theme.palette.primary.contrastText}`,
+            borderRadius: "0 0 5px 5px",
+          }}
+        >
+          {[
+            ["Se ha vuelto a pendiente", "Carlos Mario"],
+            ["Se ha asignado a Carlos Mario", "Mario Juda"],
+            ["Ha asignado a Mario Juda, es el primer asignado", "Mario Castañeda"],
+          ].map(([accion, autor], idx) => (
+            <Box
+              key={idx}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 2,
+                p: 2,
+                mb: 2,
+                border: `1px solid ${theme.palette.primary.contrastText}`,
+                borderRadius: 2,
+              }}
+            >
+              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+              <div>
+                <Typography variant="subtitle1">{accion}</Typography>
+                <Typography variant="body1">Por: {autor}</Typography>
+              </div>
+            </Box>
+          ))}
+        </Box>
+      </Box>
+      
       ),
     },
   ];
@@ -168,6 +240,7 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
               alignItems: "center",
               justifyContent: "space-between",
               borderBottom: `1px solid ${(theme.palette.primary.hover, 0.1)}`,
+              color: theme.palette.text.primary
             }}
           >
             <Stack direction="row" spacing={1} alignItems="center">
