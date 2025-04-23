@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import React from "react";
 import GrhGenericTable2 from "../../generics/grh-generics/tableWrapper2";
 import dayjs, { Dayjs } from "dayjs";
+import { useNavigate } from "react-router-dom";
 interface EmpleadosProps {}
 
 interface EmpleadoDemo {
@@ -34,6 +35,10 @@ const Empleados: React.FC = ({}: EmpleadosProps) => {
     createData("sebastian","contratado","126456242","426466", dayjs()),
 
   ];  
+  const navigate= useNavigate()
+  const handleClick =(value : any)=>{
+    navigate("/user")
+  } 
   return (
     <Box
     sx={{
@@ -56,7 +61,7 @@ const Empleados: React.FC = ({}: EmpleadosProps) => {
               key: "name",
               label: "nombre",
               onRowClick: (value)=>{
-                console.log(value)
+                handleClick (value)
               },
               type: "string"
             },{
