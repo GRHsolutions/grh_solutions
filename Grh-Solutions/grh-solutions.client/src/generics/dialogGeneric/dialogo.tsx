@@ -36,10 +36,10 @@ import {
       onConfirm,
       header = {
         icon: null,
-        title: "Eliminar el comunicado",
-        subTitle: "si desea proceder con esta acción es irreversible",
+        title: "Confimar la seleccion",
+        subTitle: "Si desea confimar la seleccion",
       },
-      text = "¿Estás seguro de eliminar el comunicado? Esto se actualizará para todos los usuarios, y se notificará al usuario responsable.",
+      text = "¿Estás seguro de hacer esta accion?",
     } = props;
   
     const theme = useTheme();

@@ -116,12 +116,12 @@ export const CreateEditContract = ({
                   </Grid2>
                   <Grid2 size={12}>
                     <GrhCustomSelect
-                      label="Titulo del contrato"
+                      name="contractType"
+                      label="Tipo del contrato"
                       onChange={handleChange}
-                      value={values.title}
-                      variant="standard" 
-                      name
-                      options={types}                    
+                      value={values.contractType}
+                      variant="standard"
+                      options={types}
                     />
                   </Grid2>
                   <Grid2

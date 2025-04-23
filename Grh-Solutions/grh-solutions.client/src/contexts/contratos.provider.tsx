@@ -76,7 +76,7 @@ export const ContratosProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           setContratos([
             {
-              id: "",
+              id: "1",
               title: "Contrato laboral para un egresado del sena",
               contractType: "laboral",
               createdAt: dayjs('02-02-2010'),

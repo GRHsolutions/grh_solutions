@@ -106,7 +106,6 @@ import {
             name={name}
             disabled={options.length === 0 || disabled}
             variant={variant != null ? variant : "outlined"}
-            ref
           >
             {placeholder == "" ? null :          
               <MenuItem value={0}>

@@ -21,9 +21,10 @@ interface BasicMenuProps {
     left?: number | string;
     right?: number | string;
   };
+  icon?: React.ReactNode;
 }
 
-const BasicMenu = ({ items, optionsPosition }: BasicMenuProps) => {
+const BasicMenu = ({ items, optionsPosition, icon }: BasicMenuProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const theme = useTheme();
@@ -45,11 +46,11 @@ const BasicMenu = ({ items, optionsPosition }: BasicMenuProps) => {
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
         sx={{
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: 'transparent', //theme.palette.primary.main,
           color: theme.palette.primary.contrastText,
-        }}
+        }}        
       >
-        <MenuIcon /> {/* Aquí se pasa el ícono directamente */}
+        {icon ? icon : <MenuIcon />} {/* Aquí se pasa el ícono directamente */}
       </IconButton>
       <Menu
         id="basic-menu"

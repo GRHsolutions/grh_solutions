@@ -1,12 +1,23 @@
 import React from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, useTheme, Box } from "@mui/material";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TablePagination,
+  useTheme,
+  Box,
+} from "@mui/material";
 import formatearFecha from "../../utils/formatearFecha";
 
-export interface GrhItemColumn {
+// Modificamos las props para usar el tipo genérico T
+export interface GrhItemColumn<T> {
   key: string;
   label: string;
-  onRowClick?: (row: any) => void;
-  type: "string" | "date"
+  onRowClick?: (row: T) => void;
+  type: "string" | "date";
 }
 
 export interface GrhPagination {
@@ -16,53 +27,56 @@ export interface GrhPagination {
   pageSize: number;
 }
 
-interface GrhGenericTableProps {
-  columns: GrhItemColumn[];
-  data: any[];
+interface GrhGenericTableProps<T> {
+  columns: GrhItemColumn<T>[];
+  data: T[];
   pagination: GrhPagination;
   onPageChange: (page: number) => void;
   maxHeight?: string | number;
   maxWidth?: string | number;
   onShowingDate?: {
-    showDate: boolean,
-    showTime: boolean
-  }
+    showDate: boolean;
+    showTime: boolean;
+  };
 }
 
-const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({ 
-    columns, 
-    data, 
-    pagination, 
-    onPageChange,
-    maxHeight,
-    maxWidth,
-    onShowingDate
-}) => {
+// Componente genérico
+const GrhGenericTable2 = <T,>({
+  columns,
+  data,
+  pagination,
+  onPageChange,
+  maxHeight,
+  maxWidth,
+  onShowingDate,
+}: GrhGenericTableProps<T>): React.ReactElement => {
   const theme = useTheme();
+
   const getNestedValue = (obj: any, path: string) => {
-      return path.split('.').reduce((acc, part) => acc && acc[part], obj);
-    };
+    return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+  };
+
   return (
     <Box>
       <TableContainer
         sx={{
-          maxHeight: maxHeight,
-          maxWidth:maxWidth,
-          width: '100%',
-          overflowY: 'auto',
+          maxHeight,
+          maxWidth,
+          width: "100%",
+          overflowY: "auto",
           "&::-webkit-scrollbar": {
-            width: "8px", 
+            width: "8px",
           },
           "&::-webkit-scrollbar-track": {
-            background: `${theme.palette.primary.light}`, 
+            background: `${theme.palette.primary.light}`,
             borderRadius: "4px",
           },
           "&::-webkit-scrollbar-thumb": {
-            background: "#888", 
+            background: "#888",
             borderRadius: "4px",
           },
           "&::-webkit-scrollbar-thumb:hover": {
-            background: "#555"
+            background: "#555",
           },
         }}
       >
@@ -70,17 +84,12 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
           <TableHead
             sx={{
               backgroundColor: theme.palette.primary.light,
-              color: theme.palette.primary.contrastText
+              color: theme.palette.primary.contrastText,
             }}
           >
             <TableRow>
               {columns.map((col) => (
-                <TableCell 
-                  sx={{
-                    fontWeight: 'bold'
-                  }}
-                  key={col.key}
-                >
+                <TableCell key={col.key} sx={{ fontWeight: "bold" }}>
                   {col.label}
                 </TableCell>
               ))}
@@ -91,17 +100,27 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
               <TableRow key={rowIndex} hover>
                 {columns.map((col) => (
                   <TableCell key={col.key}>
-                  {col.onRowClick != undefined ? (
-                    <span
-                      style={{ color: "blue", textDecoration: "underline", cursor: "pointer" }}
-                      onClick={() => col.onRowClick?.(row)}
-                    >
-                      {getNestedValue(row, col.key)}
-                    </span>
-                  ) : (
-                    col.type == "date" ? formatearFecha(getNestedValue(row, col.key), onShowingDate?.showDate, onShowingDate?.showTime) : getNestedValue(row, col.key)
-                  )}
-                </TableCell>
+                    {col.onRowClick ? (
+                      <span
+                        style={{
+                          color: "blue",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => col.onRowClick?.(row)}
+                      >
+                        {getNestedValue(row, col.key)}
+                      </span>
+                    ) : col.type === "date" ? (
+                      formatearFecha(
+                        getNestedValue(row, col.key),
+                        onShowingDate?.showDate,
+                        onShowingDate?.showTime
+                      )
+                    ) : (
+                      getNestedValue(row, col.key)
+                    )}
+                  </TableCell>
                 ))}
               </TableRow>
             ))}
@@ -109,7 +128,6 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
         </Table>
       </TableContainer>
 
-      {/* Paginación */}
       <TablePagination
         component="div"
         count={pagination.totalRows}

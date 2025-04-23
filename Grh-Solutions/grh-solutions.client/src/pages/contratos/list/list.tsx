@@ -1,14 +1,22 @@
 import { Box } from "@mui/material";
-import React from "react";
 import { Contracts } from "../../../domain/models/contratos/contratos.entities";
 import { useContratos } from "../../../hooks/contratos";
 import GrhGenericTable2 from "../../../generics/grh-generics/tableWrapper2";
-import GrhButton from "../../../generics/grh-generics/button";
+import { ViewContrato } from "../view/viewContrato";
 
 export const ListContrato = () => {
-  const { Contratos, pagination, setPagination } = useContratos();
-  const [current, setCurrent] = React.useState<Contracts | null>(null);
-  const handleClose = () => setCurrent(null);
+  const { 
+    Contratos,
+    pagination,
+    setPagination, 
+    setCurrent,
+    current
+  } = useContratos();
+
+  const handleClose = () => setCurrent({
+    item: null,
+    action: 'none'
+  });
   
   const ChangeCurrentPage = (page: number) => {
     setPagination({
@@ -17,12 +25,16 @@ export const ListContrato = () => {
     })
   }
 
-  const onSubmit = (radicado: any) => {
-    setCurrent(radicado)
+  const onSubmit = (radicado: Contracts) => {
+    setCurrent({
+      item: radicado, 
+      action: 'view'
+    })
   };
+  
   return(
     <Box width={'100%'}>
-      <GrhGenericTable2 
+      <GrhGenericTable2<Contracts> 
         columns={[{
           key: 'title',
           label: "Titulo del contrato",
@@ -48,6 +60,12 @@ export const ListContrato = () => {
           showTime: false
         }}
       />
+
+      {(current.action === 'view' && current.item != null) && (
+        <ViewContrato 
+          handleClose={handleClose}
+        />
+      )}
     </Box>
   );
 };

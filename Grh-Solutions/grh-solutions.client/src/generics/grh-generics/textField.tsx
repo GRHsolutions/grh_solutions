@@ -95,7 +95,7 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
             borderColor: theme.palette.primary.contrastText, // Color constante para el borde en estado normal
           },
           '&:hover fieldset': {
-            borderColor: theme.palette.primary.dark, // Color constante para el borde al hacer hover
+            borderColor: theme.palette.primary.contrastText, // Color constante para el borde al hacer hover
           },
           '&.Mui-focused fieldset': {
             borderColor: theme.palette.primary.contrastText, // Color constante para el borde cuando está enfocado
@@ -154,7 +154,7 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
           ),
           sx: {
             '& .MuiInputBase-input': {
-              borderBottom: `1px solid ${variant === 'standard' ? theme.palette.primary.dark : 'transparent'}`,
+              borderBottom: `1px solid ${variant === 'standard' ? theme.palette.primary.contrastText : 'transparent'}`,
 
               '&:focus': {
                 '&': {
