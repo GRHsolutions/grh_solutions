@@ -1,6 +1,6 @@
 import React, { forwardRef } from 'react';
-import { InputAdornment, TextField as MuiTextField, TextFieldVariants } from '@mui/material';
-import { SxProps, useTheme } from '@mui/material/styles';
+import { InputAdornment, inputLabelClasses, TextField as MuiTextField, outlinedInputClasses, TextFieldVariants } from '@mui/material';
+import { alpha, SxProps, useTheme } from '@mui/material/styles';
 
 interface TextFieldProps {
   id?: string;
@@ -92,13 +92,13 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
         },
         '& .MuiOutlinedInput-root': {
           '& fieldset': {
-            borderColor: theme.palette.primary.divider, // Color constante para el borde en estado normal
+            borderColor: theme.palette.primary.contrastText, // Color constante para el borde en estado normal
           },
           '&:hover fieldset': {
             borderColor: theme.palette.primary.dark, // Color constante para el borde al hacer hover
           },
           '&.Mui-focused fieldset': {
-            borderColor: theme.palette.primary.hover, // Color constante para el borde cuando está enfocado
+            borderColor: theme.palette.primary.contrastText, // Color constante para el borde cuando está enfocado
           },
         },
         '& .MuiInputBase-input': {
@@ -124,7 +124,16 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
       type={type}
       autoComplete={autoComplete}
       slotProps={{
+        inputLabel: {
+          sx: {
+            color: theme.palette.primary.contrastText,
+            '&.Mui-focused': {
+              color: theme.palette.primary.contrastText,
+            },
+          }
+        },
         input: {
+          disableUnderline: true,
           startAdornment: startIcon && (
             <InputAdornment
               onClick={handleStartAdornmentClick}
@@ -143,7 +152,20 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
               {endIcon}
             </InputAdornment>
           ),
+          sx: {
+            '& .MuiInputBase-input': {
+              borderBottom: `1px solid ${variant === 'standard' ? theme.palette.primary.dark : 'transparent'}`,
+
+              '&:focus': {
+                '&': {
+                  borderBottom: `1px solid ${variant === 'standard' ? theme.palette.primary.contrastText: 'transparent'}`
+                },
+              },
+            }
+          },
+
         },
+        
       }}
       error={error} // Activamos el error si la prop `error` es true
       helperText={helperText} // Mostramos el mensaje de error si existe

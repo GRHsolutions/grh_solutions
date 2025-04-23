@@ -1,13 +1,13 @@
 import { Box } from "@mui/material";
-import { useHorarios } from "../../../../hooks/horarios";
-import GrhGenericTable2 from "../../../../generics/grh-generics/tableWrapper2";
 import React from "react";
-import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
-import BasicModal from "./ModalTurno";
+import { Contracts } from "../../../domain/models/contratos/contratos.entities";
+import { useContratos } from "../../../hooks/contratos";
+import GrhGenericTable2 from "../../../generics/grh-generics/tableWrapper2";
+import GrhButton from "../../../generics/grh-generics/button";
 
-export const ListHorario = () => {
-  const { horarios, pagination, setPagination } = useHorarios();
-  const [current, setCurrent] = React.useState<Horarios | null>(null);
+export const ListContrato = () => {
+  const { Contratos, pagination, setPagination } = useContratos();
+  const [current, setCurrent] = React.useState<Contracts | null>(null);
   const handleClose = () => setCurrent(null);
   
   const ChangeCurrentPage = (page: number) => {
@@ -24,31 +24,30 @@ export const ListHorario = () => {
     <Box width={'100%'}>
       <GrhGenericTable2 
         columns={[{
-          key: 'grupo.nombre',
-          label: "Al grupo",
+          key: 'title',
+          label: "Titulo del contrato",
           onRowClick: (value)=>{
             onSubmit (value)
           },
           type: 'string'
         },{
-          key: 'creadoPor.area.nombre',
-          label: "Del area",
+          key: 'contractType',
+          label: "Tipo del contrato",
           type: 'string'
         },{
-          key: 'fechaInicio',
-          label: "fecha de inicio",
-          type: 'date'
-        },{
-          key: 'fechaFin',
-          label: "fecha de finalizacion",
+          key: 'createdAt',
+          label: "Fecha de creacion",
           type: 'date'
         }]} 
-        data={horarios} 
+        data={Contratos} 
         pagination={pagination} 
         onPageChange={ChangeCurrentPage}   
         maxHeight={'40rem'}
+        onShowingDate={{
+          showDate: true,
+          showTime: false
+        }}
       />
-        <BasicModal current={current} handleClose={handleClose} />
     </Box>
   );
 };

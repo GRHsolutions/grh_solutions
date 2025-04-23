@@ -39,7 +39,7 @@ const GrhButton: React.FC<GrhButtonProps> = ({
   const useVariant = (): SxProps => {
     const baseStyles: SxProps = {
       ...sx,
-      padding: p ?? theme.spacing(0.5),
+      padding: p,
       borderRadius: theme.shape.borderRadius,
       "&:hover": {
         backgroundColor: theme.palette.primary.divider,

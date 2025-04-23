@@ -1,17 +1,18 @@
 import React from "react";
 import { Errors } from "../domain/models/error/error.entities";
-import dayjs from "dayjs";
 import { PageParams, UseQueryParams } from "../hooks/queryParams";
 import { GrhPagination } from "../generics/grh-generics/tableWrapper2";
+import { Contracts } from "../domain/models/contratos/contratos.entities";
+import dayjs from "dayjs";
 
 interface CurrentProps {
-  item: Contratos | null;
+  item: Contracts | null;
   action: "create" | "view" | "delete" | "none" | string;
 }
 
 // Definición de tipos
 interface ContratosItems {
-  Contratos: Contratos[];
+  Contratos: Contracts[];
   status: Errors | null;
   reload: () => void;
   current: CurrentProps;
@@ -30,7 +31,7 @@ export const ContratosContext = React.createContext<ContratosItems | undefined>(
 export const ContratosProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [Contratos, setContratos] = React.useState<Contratos[]>([]);
+  const [Contratos, setContratos] = React.useState<Contracts[]>([]);
   const [status, setStatus] = React.useState<Errors | null>(null);
   const [useReload, setReload] = React.useState(false);
   const [current, setCurrent] = React.useState<CurrentProps>({
@@ -75,52 +76,15 @@ export const ContratosProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           setContratos([
             {
-              id: 1,
-              tipoContrato: {
-                id: 1,
-                nombre: "Contrato de trabajo",
-                descripcion: "Contrato de trabajo",
-                horaInicial: "08:00",
-                horaFinal: "17:00",
-              },
-              fechaInicio: dayjs("2021-03-20"),
-              fechaFin: dayjs("2021-03-28"),
-              creadoPor: {
-                id: 1,
-                primerNombre: "Pedro",
-                segundoNombre: "Pedro",
-                primerApellido: "",
-                segundoApellido: "",
-                correo: "pedro.sanchez@gmail.com",
-                photo: null,
-                area: {
-                  id: 41,
-                  nombre: "Contabilidad"
-                }
-              },
-              grupo: {
-                id: 1,
-                nombre: "Turno diurno",
-                usuarios: [
-                  {
-                    id: 1,
-                    primerNombre: "Pedro",
-                    segundoNombre: "Pedro",
-                    primerApellido: "",
-                    segundoApellido: "",
-                    correo: "",
-                    photo: null,
-                    area: {
-                      id: 41,
-                      nombre: "Contabilidad"
-                    }
-                  }
-                ]
-              }
+              id: "",
+              title: "Contrato laboral para un egresado del sena",
+              contractType: "laboral",
+              createdAt: dayjs('02-02-2010'),
+              involved: []
             }
           ]);
         } catch (error) {
-          setStatus({ statusCode: 500, message: "Error al cargar las noticias" });
+          setStatus({ statusCode: 500, message: "Error al cargar los contratos" });
         }
       };
     fetchContratos();

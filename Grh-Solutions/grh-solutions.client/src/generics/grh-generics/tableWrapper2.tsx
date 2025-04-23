@@ -23,6 +23,10 @@ interface GrhGenericTableProps {
   onPageChange: (page: number) => void;
   maxHeight?: string | number;
   maxWidth?: string | number;
+  onShowingDate?: {
+    showDate: boolean,
+    showTime: boolean
+  }
 }
 
 const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({ 
@@ -31,7 +35,8 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
     pagination, 
     onPageChange,
     maxHeight,
-    maxWidth
+    maxWidth,
+    onShowingDate
 }) => {
   const theme = useTheme();
   const getNestedValue = (obj: any, path: string) => {
@@ -94,7 +99,7 @@ const GrhGenericTable2: React.FC<GrhGenericTableProps> = ({
                       {getNestedValue(row, col.key)}
                     </span>
                   ) : (
-                    col.type == "date" ? formatearFecha(getNestedValue(row, col.key)) : getNestedValue(row, col.key)
+                    col.type == "date" ? formatearFecha(getNestedValue(row, col.key), onShowingDate?.showDate, onShowingDate?.showTime) : getNestedValue(row, col.key)
                   )}
                 </TableCell>
                 ))}
