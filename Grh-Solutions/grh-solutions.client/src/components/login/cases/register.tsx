@@ -1,12 +1,13 @@
 import { Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { LoginService } from "../../../domain/services/login/login.service";
-import { useAuth } from "../../../hooks/auth";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { LoginService } from "../../../domain/services/login/login.service";
+import { LoginRepository } from "../../../infrastructure/repositories/usuario";
+import { RegisterForm } from "../../../domain/models/usuario/login.entities";
 
 interface RegisterProps {
   onLogin: () => void;
@@ -21,18 +22,37 @@ const styles = {
 };
 
 export default function Register({ onLogin }: RegisterProps) {
+  const lgnService = new LoginService(new LoginRepository());
+
   const initialValues = {
     nombre: "",
     correo: "",
-    contraseña: "",
-    confirmarContraseña: "",
-  };
+    contrasena: "",
+    confirmContrasena: "",
+  } as RegisterForm;
   const theme = useTheme();
+  const [loading, setLoading] = React.useState(false);
 
-  const handleSubmit = (values: { nombre: string; correo: string; contraseña: string }) => {
-    LoginService.register(values.nombre, values.correo, values.contraseña).then((e) => {
-      //login(e.token, e.usrName, e.photo, e.correo);
-    });
+  const handleSubmit = (values: RegisterForm) => {
+    setLoading(true);
+    lgnService
+      .register(values)
+      .then((e) => {
+        if (
+          e.code === "200" &&
+          e.message === "Registro completado exitosamente"
+        ) {
+          onLogin();
+          console.log(e);
+        } else {
+          console.error("Error en respuesta:", e);
+          setLoading(false);
+        }
+      })
+      .catch((ex) => {
+        console.error("Error en catch:", ex);
+        setLoading(false);
+      });
   };
 
   const validationSchema = Yup.object({
@@ -40,15 +60,15 @@ export default function Register({ onLogin }: RegisterProps) {
     correo: Yup.string()
       .email("Correo electrónico no válido")
       .required("El correo electrónico es obligatorio"),
-    contraseña: Yup.string()
+    contrasena: Yup.string()
       .min(8, "La contraseña debe tener al menos 8 caracteres")
-      .matches(/[0-9]/, "La contraseña debe contener al menos un número")
-      .matches(/[a-z]/, "La contraseña debe contener al menos una letra minúscula")
-      .matches(/[A-Z]/, "La contraseña debe contener al menos una letra mayúscula")
-      .matches(/[\W_]/, "La contraseña debe contener al menos un carácter especial")
+      .matches(/[0-9]/, "Debe contener al menos un número")
+      .matches(/[a-z]/, "Debe contener una letra minúscula")
+      .matches(/[A-Z]/, "Debe contener una letra mayúscula")
+      .matches(/[\W_]/, "Debe contener un carácter especial")
       .required("La contraseña es obligatoria"),
-    confirmarContraseña: Yup.string()
-      .oneOf([Yup.ref('contraseña'), undefined], 'Las contraseñas deben coincidir')
+    confirmContrasena: Yup.string()
+      .oneOf([Yup.ref("contrasena")], "Las contraseñas deben coincidir")
       .required("La confirmación de la contraseña es obligatoria"),
   });
 
@@ -99,19 +119,19 @@ export default function Register({ onLogin }: RegisterProps) {
                 autoComplete="off"
               />
               <GrhTextField
-                name="contraseña"
+                name="contrasena"
                 label="Contraseña"
                 placeholder="Super123*"
-                value={values.contraseña}
+                value={values.contrasena}
                 onChange={handleChange}
                 autoComplete="off"
                 type="password"
               />
               <GrhTextField
-                name="confirmarContraseña"
+                name="confirmContrasena"
                 label="Confirmar Contraseña"
                 placeholder="Super123*"
-                value={values.confirmarContraseña}
+                value={values.confirmContrasena}
                 onChange={handleChange}
                 autoComplete="off"
                 type="password"
@@ -131,7 +151,7 @@ export default function Register({ onLogin }: RegisterProps) {
                 type="submit"
                 variant="principal"
                 label="Registrar"
-                disabled={!isValid || !values.nombre || !values.correo || !values.contraseña || !values.confirmarContraseña}
+                disabled={!isValid}
               />
             </Box>
           </Form>

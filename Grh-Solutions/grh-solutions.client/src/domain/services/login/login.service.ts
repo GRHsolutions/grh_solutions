@@ -1,18 +1,14 @@
-import { KaiCenat } from "../../../const/variables";
+import { ILoginRepository } from "../../../infrastructure/interfaces/IUsuario";
+import { Login, RegisterConfirmation, RegisterForm, ReturnableLogin } from "../../models/usuario/login.entities";
 
-export const LoginService = {
-    async login(correo: string, pass: string) { // ESTO ES UN SERVICIO QUE SOLO ES DE PRUEBA EN DESARROLLO SE HACE DE OTRA FORMA, JODIDOS.
-        console.log(pass);
+export class LoginService {
+    constructor(private readonly usuarioRepo: ILoginRepository) {}
 
-        return {
-            token: "fdshf7fghoifufn'28hf0iejfolfppñf02'fñ¿f'fpf2i90lfñ2'¿e{f2'¿h4ik9'e2{}h{34¿g09kgñfb.{ortnmteogkep",
-            usrName: "Pedro Sanchez",
-            photo: KaiCenat,
-            correo: correo
-        }
-    },
-    async register(nombre: string, correo: string, pass: string) {
-        console.log(nombre, correo, pass);
-        return true;
+    register(rg: RegisterForm): Promise<RegisterConfirmation> {
+        return this.usuarioRepo.register(rg);
     }
-  };
+
+    login(lgn: Login): Promise<ReturnableLogin> {
+        return this.usuarioRepo.login(lgn);
+    }
+}

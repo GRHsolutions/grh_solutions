@@ -1,10 +1,25 @@
 import { Response, Request } from 'express';
 import { userService } from '../services/users.service';
 
+type RegisterForm = {
+  nombre: string,
+  correo: string,
+  contrasena: string,
+  confirmContrasena: string
+}
+
 export const loginController = {
   register: async (req: Request, res: Response) => {
     try {
-      const data = await userService.create(req.body);
+      const dt = req.body as RegisterForm;
+
+      if(dt.confirmContrasena != dt.contrasena){
+        return res.status(402).json({
+          message: "Las contraseñas no coinciden"
+        })
+      };
+
+      const data = await userService.create(dt);
       return res.status(201).json(data)
     } catch (error: any) {
       res.status(400).json({

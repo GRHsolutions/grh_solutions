@@ -1,6 +1,6 @@
-import { Usuario } from "../../domain/models/usuario/user.entities";
+import { Login, RegisterConfirmation, RegisterForm, ReturnableLogin } from "../../domain/models/usuario/login.entities";
 
-export interface IUsuarioRepository {
-    register(usuario: Usuario): Promise<Usuario>;
-    login(correo: string, contrasena: string): Promise<Usuario>
+export interface ILoginRepository {
+    register(usuario: RegisterForm): Promise<RegisterConfirmation>;
+    login(login: Login): Promise<ReturnableLogin>
 }
