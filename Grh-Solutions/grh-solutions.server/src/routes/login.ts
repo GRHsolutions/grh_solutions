@@ -7,13 +7,16 @@ const router = express.Router();
  * @swagger
  * components:
  *   schemas:
- *     User:
+ *     RegisterForm:
  *       type: object
  *       required:
  *         - primerNombre
+ *         - segundoNombre
  *         - primerApellido
+ *         - segundoApellido
  *         - correo
- *         - contraseña
+ *         - contrasena
+ *         - confirmContrasena
  *       properties:
  *         primerNombre:
  *           type: string
@@ -29,23 +32,33 @@ const router = express.Router();
  *           description: Segundo apellido del usuario
  *         correo:
  *           type: string
+ *           format: email
  *           description: Correo electrónico del usuario
- *         contraseña:
+ *         contrasena:
  *           type: string
+ *           format: password
  *           description: Contraseña del usuario
+ *         confirmContrasena:
+ *           type: string
+ *           format: password
+ *           description: Confirmación de la contraseña del usuario
+ * 
  *     LoginCredentials:
  *       type: object
  *       required:
  *         - correo
- *         - contraseña
+ *         - pass
  *       properties:
  *         correo:
  *           type: string
+ *           format: email
  *           description: Correo electrónico del usuario
- *         contraseña:
+ *         pass:
  *           type: string
+ *           format: password
  *           description: Contraseña del usuario
  */
+
 
 /**
  * @swagger
@@ -87,14 +100,14 @@ router.post('/login', loginController.login);
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/User'
+ *             $ref: '#/components/schemas/RegisterForm'
  *     responses:
  *       201:
  *         description: Usuario creado exitosamente
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/User'
+ *               $ref: '#/components/schemas/RegisterForm'
  *       400:
  *         description: Error en los datos proporcionados
  */

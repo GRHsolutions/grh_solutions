@@ -28,10 +28,19 @@ export default function Login({ onRegister }: LoginProps) {
   const theme = useTheme();
   const { login } = useAuth();
 
-  const handleSubmit = (values: { correo: string; contraseña: string }) => {
-    LoginService.login(values.correo, values.contraseña).then((e) => {
-      login(e.token, e.usrName, e.photo, e.correo);
-    });
+  const handleSubmit = async(values: { correo: string; contraseña: string }) => {
+    await login(values.correo, values.contraseña).then((res) => {
+      if (res) {
+        // Aquí puedes manejar la redirección o cualquier otra acción después de un inicio de sesión exitoso
+        console.log("Inicio de sesión exitoso");
+      } else {
+        // Manejo de error en el inicio de sesión
+        console.error("Error en el inicio de sesión");
+      }
+    })
+    .catch((error) => {
+      console.error("Error en el inicio de sesión:", error);
+    })
   };
 
   // Validación de Yup

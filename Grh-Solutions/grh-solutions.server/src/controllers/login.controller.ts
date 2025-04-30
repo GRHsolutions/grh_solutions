@@ -13,7 +13,7 @@ export const loginController = {
     try {
       const dt = req.body as RegisterForm;
 
-      if(dt.confirmContrasena != dt.contrasena){
+      if (dt.confirmContrasena != dt.contrasena) {
         return res.status(402).json({
           message: "Las contraseñas no coinciden"
         })
@@ -28,47 +28,47 @@ export const loginController = {
     }
   },
 
+  // login: async (req: Request, res: Response) => {
+  //   try {
+  //     const { correo, contraseña } = req.body
+
+  //     if (!correo || !contraseña) {
+  //       return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
+  //     }
+
+  //     const { user, token } = await userService.login(correo, contraseña);
+
+  //     // Respondemos con el usuario y el token
+  //     return res.status(200).json({ user, token });
+  //   } catch (error: any) {
+  //     return res.status(400).json({
+  //       message: error.message,
+  //     });
+  //   }
+  // },
   login: async (req: Request, res: Response) => {
     try {
-      const { correo, contraseña } = req.body
-
-      if (!correo || !contraseña) {
-        return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-      }
-
-      const { user, token } = await userService.login(correo, contraseña);
-
-      // Respondemos con el usuario y el token
-      return res.status(200).json({ user, token });
-    } catch (error: any) {
-      return res.status(400).json({
-        message: error.message,
-      });
-    }
-  },
-
-  /* 
-      login: async (req: Request, res: Response) => {
-    try {
-      const { 
-        correo, 
-        contraseña 
+      const {
+        correo,
+        pass
       } = req.body
 
-      if (!correo || !contraseña) {
+      if (!correo || !pass) {
         return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
       }
 
-      const { 
+      const {
         user,
-        token 
-      } = await userService.login(correo, contraseña);
+        token
+      } = await userService.login(correo, pass);
 
       // Respondemos con el usuario y el token
       return res.status(200).json({
-        contraseña: "********",
-        ...user,
-        token,
+        user: {
+          correo: user.correo,
+          photo: user.photo,
+        },
+        token: token,
       });
 
     } catch (error: any) {
@@ -77,5 +77,4 @@ export const loginController = {
       });
     }
   },
-  */
 };

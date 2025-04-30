@@ -4,9 +4,11 @@ export type Login = {
 };
 
 export type ReturnableLogin = {
-    correo: string,
+    user: {
+        correo: string,
+        photo: string,
+    },
     token: string,
-    photo: string;
 }
 
 export type RegisterConfirmation = {

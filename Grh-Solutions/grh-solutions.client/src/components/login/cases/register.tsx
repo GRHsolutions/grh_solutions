@@ -31,7 +31,7 @@ export default function Register({ onLogin }: RegisterProps) {
     confirmContrasena: "",
   } as RegisterForm;
   const theme = useTheme();
-  const [loading, setLoading] = React.useState(false);
+  const [_loading, setLoading] = React.useState(false);
 
   const handleSubmit = (values: RegisterForm) => {
     setLoading(true);

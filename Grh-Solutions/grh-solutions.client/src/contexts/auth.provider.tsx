@@ -1,16 +1,12 @@
 import React from "react";
 import { localStorageUtil } from "../utils/localStorage";
-
-interface Auth {
-  token: string | null;
-  usrName: string | null;
-  photo: string | null;
-  correo: string | null;
-}
+import { LoginRepository } from "../infrastructure/repositories/usuario";
+import { LoginService } from "../domain/services/login/login.service";
+import { ReturnableLogin } from '../domain/models/usuario/login.entities';
 
 interface AuthContextType {
-  auth: Auth;
-  login: (token: string, usrName: string, photo?: string, correo?: string) => void;
+  auth: ReturnableLogin;
+  login: (correo: string, contr: string) => Promise<boolean>;
   logout: () => void;
   isLoggedIn: boolean;
 }
@@ -18,44 +14,65 @@ interface AuthContextType {
 export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Inicializar auth desde localStorage
+  // Inicializar auth desde localStorage, asegurándose de que esté de acuerdo con ReturnableLogin
   const initialAuthState = {
-    token: localStorageUtil.get("usr_items_token"),
-    usrName: localStorageUtil.get("usr_items_usrName"),
-    photo: localStorageUtil.get("usr_items_photo"),
-    correo: localStorageUtil.get("usr_items_correo"),
-  } as Auth;
+    user: {
+      correo: localStorageUtil.get("usr_items_correo") || "",
+      photo: localStorageUtil.get("usr_items_photo") || "",
+    },
+    token: localStorageUtil.get("usr_items_token") || "",
+  } as ReturnableLogin;
 
-  const [auth, setAuth] = React.useState<Auth>(initialAuthState);
+  const [auth, setAuth] = React.useState<ReturnableLogin>(initialAuthState);
   const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(!!initialAuthState.token);
+  const service = new LoginService(new LoginRepository());
 
-  // Maneja el login
-  const login = (token: string, usrName: string, photo?: string, correo?: string) => {
-    const newAuth = { token, usrName, photo: photo || null, correo: correo || null };
-    setAuth(newAuth);
-    localStorageUtil.set("usr_items_token", token);
-    localStorageUtil.set("usr_items_usrName", usrName);
-    if (photo) localStorageUtil.set("usr_items_photo", photo);
-    if (correo) localStorageUtil.set("usr_items_correo", correo);
-    setIsLoggedIn(true); // Establece isLoggedIn al login exitoso
+  // Maneja el login de manera asíncrona
+  const login = async (correo: string, contr: string): Promise<boolean> => {
+    try {
+      const res = await service.login({ correo, pass: contr });
+      
+      // Actualizar estado de autenticación
+      setAuth({
+        user: {
+          correo: res.user.correo,
+          photo: res.user.photo,
+        },
+        token: res.token,
+      });
+
+      // Guardar los datos en localStorage
+      localStorageUtil.set("usr_items_token", res.token);
+      localStorageUtil.set("usr_items_usrName", res.user.correo); // Aquí, si es necesario puedes usar un campo diferente
+      if (res.user.photo) localStorageUtil.set("usr_items_photo", res.user.photo);
+      if (res.user.correo) localStorageUtil.set("usr_items_correo", res.user.correo);
+
+      setIsLoggedIn(true); // Establecer como logueado
+
+      return true;
+    } catch (err) {
+      console.error("Error en el login:", err);
+      setIsLoggedIn(false); // Establecer como no logueado en caso de error
+      return false;
+    }
   };
 
   // Maneja el logout
   const logout = () => {
     localStorageUtil.deleteExclude(["theme"]);
     setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
+    setAuth({
+      user: { correo: "", photo: "" },
+      token: "",
+    }); // Limpiar auth
   };
 
   const actualValues = {
-    auth: auth,
-    login: login,
-    logout: logout,
-    isLoggedIn: isLoggedIn
-  } as AuthContextType;
+    auth,
+    login,
+    logout,
+    isLoggedIn,
+  };
 
-  return (
-    <AuthContext.Provider value={actualValues}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={actualValues}>{children}</AuthContext.Provider>;
 };
