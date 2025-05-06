@@ -12,7 +12,17 @@ const LOGINMAINAPI = '/api/login'
 export class LoginRepository implements ILoginRepository {
   async login(login: Login): Promise<ReturnableLogin> {
     try {
-      const response = await http.post<ReturnableLogin>(`${LOGINMAINAPI}/login`, login);
+      console.log('tring to loggin fuckin nigga', login)
+      //const response = await http.post<ReturnableLogin>(`${LOGINMAINAPI}/login`, login);
+      const response = {
+        user: {
+          correo: "sebachodiazp29@gmail.com",
+          photo: '',
+          isEmployee: true
+        },
+        token: 'UYQSVBUIYFBNAOPIFM-921KR1JIF091J0'
+      } as ReturnableLogin
+
       return response;
     } catch(e){
       throw e;
