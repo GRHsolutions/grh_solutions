@@ -34,7 +34,7 @@ const swaggerOptions = {
       }
     ]
   },
-  apis: ['./src/routes/*.ts', './src/models/*.ts']
+  apis: ['./src/routes/**/*.ts', './src/models/**/*.ts'] // Updated path to include subdirectories
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

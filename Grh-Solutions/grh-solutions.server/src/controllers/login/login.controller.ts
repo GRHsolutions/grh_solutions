@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { userService } from '../services/users.service';
+import { userService } from '../../services/users.service';
 
 type RegisterForm = {
   nombre: string,

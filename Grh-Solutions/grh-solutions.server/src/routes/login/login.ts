@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginController } from '../controllers/login.controller';
+import { loginController } from '../../controllers/login/login.controller';
 
 const router = express.Router();
 
@@ -10,35 +10,35 @@ const router = express.Router();
  *     RegisterForm:
  *       type: object
  *       required:
- *         - primerNombre
- *         - segundoNombre
- *         - primerApellido
- *         - segundoApellido
- *         - correo
- *         - contrasena
- *         - confirmContrasena
+ *         - firstName
+ *         - middleName
+ *         - lastName
+ *         - secondLastName
+ *         - email
+ *         - password
+ *         - confirmPassword
  *       properties:
- *         primerNombre:
+ *         firstName:
  *           type: string
  *           description: Primer nombre del usuario
- *         segundoNombre:
+ *         middleName:
  *           type: string
  *           description: Segundo nombre del usuario
- *         primerApellido:
+ *         lastName:
  *           type: string
  *           description: Primer apellido del usuario
- *         segundoApellido:
+ *         secondLastName:
  *           type: string
  *           description: Segundo apellido del usuario
- *         correo:
+ *         email:
  *           type: string
  *           format: email
  *           description: Correo electrónico del usuario
- *         contrasena:
+ *         password:
  *           type: string
  *           format: password
  *           description: Contraseña del usuario
- *         confirmContrasena:
+ *         confirmPassword:
  *           type: string
  *           format: password
  *           description: Confirmación de la contraseña del usuario

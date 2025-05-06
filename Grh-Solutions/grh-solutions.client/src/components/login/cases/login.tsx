@@ -1,6 +1,5 @@
 import { Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { LoginService } from "../../../domain/services/login/login.service";
 import { useAuth } from "../../../hooks/auth";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
@@ -71,20 +70,24 @@ export default function Login({ onRegister }: LoginProps) {
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
-      style={undefined}
     >
       {({ values, handleChange, isValid }) => {
         return (
-          <Form>
+          <Form
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+          >
             <Box
               sx={{
-                display: "grid",
-                width: { xs: "100%", sm: "100%", md: "100%" }, // Ajuste de ancho responsivo
-                gap: "1.5rem",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '15px',
+                justifyContent: 'center',
                 fontFamily: theme.typography.fontFamily,
                 color: theme.palette.primary.contrastText,
-                justifyContent: "center",
-                alignItems: "center",
+                width: '100%'
               }}
             >
               <Typography

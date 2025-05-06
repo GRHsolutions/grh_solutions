@@ -80,17 +80,21 @@ export default function Register({ onLogin }: RegisterProps) {
     >
       {({ values, handleChange, isValid }) => {
         return (
-          <Form>
+          <Form
+            style={{
+              width: '100%',
+              height: '100%',
+            }}
+          >
             <Box
               sx={{
-                display: "grid",
-                width: { xs: "100%", sm: "100%", md: "100%" },
-                gap: "1rem",
-                margin: "0 auto",
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '15px',
+                justifyContent: 'center',
                 fontFamily: theme.typography.fontFamily,
                 color: theme.palette.primary.contrastText,
-                justifyContent: "center",
-                alignItems: "center",
+                width: '100%'
               }}
             >
               <Typography

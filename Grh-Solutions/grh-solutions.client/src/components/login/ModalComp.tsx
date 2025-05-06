@@ -15,12 +15,13 @@ const styleBox = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: { xs: "90%", sm: "80%", md: "70%", lg: "50%" }, // Ajuste de ancho responsivo
-  height: { xs: "90vh", sm: "80vh", md: "70vh" }, // Ajuste de altura responsivo
+  width: '60%',
+  height: "80vh", // Ajuste de altura responsivo
   bgcolor: "background.paper",
   boxShadow: 24,
+  //border: '1px solid red',
   display: "flex",
-  flexDirection: { xs: "column", sm: "row" },
+  flexDirection: "row",
   borderRadius: "8px", // Bordes redondeados
   overflow: "hidden", // Evitar desbordamiento
   "&:focus": {
@@ -69,13 +70,12 @@ export const ModalComp = ({ open, onClose }: ModalCompProps) => {
           <SideItems actual={actual} onSelect={setActual} />
         </Box>
         <Box
+          width={'100%'}
+          padding={'15px'}
+          display={'flex'}
+          alignItems={'center'}
           sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: { xs: "16px", sm: "24px" }, // Padding responsivo
+            border: '1px solid red',
           }}
         >
           {useActual()}
