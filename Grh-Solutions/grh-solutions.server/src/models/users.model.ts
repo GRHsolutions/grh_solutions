@@ -1,42 +1,42 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const usuarioSchema = new Schema({
-  primerNombre: {
+const userSchema = new Schema({
+  firstName: {
     type: String,
     required: true,
   },
-  segundoNombre: {
+  middleName: {
     type: String,
     required: false,
   },
-  primerApellido: {
+  lastName: {
     type: String,
     required: true,
   },
-  segundoApellido: {
+  secondLastName: {
     type: String,
     required: false,
   },
-  correo: {
+  email: {
     type: String,
     required: true,
     unique: true,
   },
-  contraseña: {
+  password: {
     type: String,
     required: true,
   }
 }, { timestamps: true });
 
-usuarioSchema.pre('save', async function (next) {
+userSchema.pre('save', async function (next) {
   const user = this;
 
-  if (!user.isModified('contraseña')) return next();
+  if (!user.isModified('password')) return next();
 
   const salt = await bcrypt.genSalt(10);
-  user.contraseña = await bcrypt.hash(user.contraseña, salt);
+  user.password = await bcrypt.hash(user.password, salt);
   next();
 });
 
-export const UsuarioModel = model('usuarios', usuarioSchema);
+export const UserModel = model('users', userSchema);

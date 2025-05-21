@@ -6,6 +6,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes/routes';
 import { MONGO_URI } from './config';
+import { swaggerComponents, swaggerPaths } from './swagger/initializations';
 
 dotenv.config();
 
@@ -32,9 +33,11 @@ const swaggerOptions = {
       {
         url: `http://localhost:${PORT}`
       }
-    ]
+    ],
+    components: swaggerComponents,
+    paths: swaggerPaths
   },
-  apis: ['./src/routes/*.ts', './src/models/*.ts']
+  apis: []
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);

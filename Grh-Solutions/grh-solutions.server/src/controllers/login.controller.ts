@@ -2,10 +2,13 @@ import { Response, Request } from 'express';
 import { userService } from '../services/users.service';
 
 type RegisterForm = {
-  nombre: string,
-  correo: string,
-  contrasena: string,
-  confirmContrasena: string
+  'firstName': string,
+  'middleName': string,
+  'lastName': string,
+  'secondLastName': string,
+  'email': string,
+  'password': string,
+  'confirmPassword': string
 }
 
 export const loginController = {
@@ -13,9 +16,9 @@ export const loginController = {
     try {
       const dt = req.body as RegisterForm;
 
-      if (dt.confirmContrasena != dt.contrasena) {
+      if (dt.confirmPassword != dt.password) {
         return res.status(402).json({
-          message: "Las contraseñas no coinciden"
+          message: "Passwords do not match"
         })
       };
 
@@ -28,44 +31,25 @@ export const loginController = {
     }
   },
 
-  // login: async (req: Request, res: Response) => {
-  //   try {
-  //     const { correo, contraseña } = req.body
-
-  //     if (!correo || !contraseña) {
-  //       return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
-  //     }
-
-  //     const { user, token } = await userService.login(correo, contraseña);
-
-  //     // Respondemos con el usuario y el token
-  //     return res.status(200).json({ user, token });
-  //   } catch (error: any) {
-  //     return res.status(400).json({
-  //       message: error.message,
-  //     });
-  //   }
-  // },
   login: async (req: Request, res: Response) => {
     try {
       const {
-        correo,
-        pass
+        email,
+        password
       } = req.body
 
-      if (!correo || !pass) {
-        return res.status(400).json({ message: 'Correo y contraseña son requeridos' });
+      if (!email || !password) {
+        return res.status(400).json({ message: 'Email and password are required' });
       }
 
       const {
         user,
         token
-      } = await userService.login(correo, pass);
+      } = await userService.login(email, password);
 
-      // Respondemos con el usuario y el token
       return res.status(200).json({
         user: {
-          correo: user.correo,
+          email: user.email,
           photo: user.photo,
         },
         token: token,
