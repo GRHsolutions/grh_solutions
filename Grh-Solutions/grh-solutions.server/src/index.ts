@@ -25,9 +25,9 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Task and Report API',
+      title: 'Grh Solutions api',
       version: '1.0.0',
-      description: 'A simple API for managing tasks and reports'
+      description: ''
     },
     servers: [
       {
@@ -35,18 +35,26 @@ const swaggerOptions = {
       }
     ],
     components: swaggerComponents,
-    paths: swaggerPaths
+    paths: swaggerPaths,
+    security: [{ bearerAuth: []}]
   },
   apis: []
 };
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
+app.use('/swagger', swaggerUI.serve, swaggerUI.setup(swaggerDocs));
 
 // MongoDB Connection
 mongoose.connect(MONGO_URI as string)
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('MongoDB connection error:', err));
+
+// Middleware before handling endpoint, global middleware
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.log("request right before executing any endpoint", req.headers);
+  console.log("authorization item", req.headers.authorization);
+  next();
+});
 
 // Routes
 app.use('/api', routes);
@@ -59,5 +67,5 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
+  console.log(`Swagger documentation available at http://localhost:${PORT}/swagger`);
 });

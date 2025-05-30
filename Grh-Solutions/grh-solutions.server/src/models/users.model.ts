@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 
 const userSchema = new Schema({
@@ -26,6 +26,11 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
+  },
+  typeDocument: {
+    type: Types.ObjectId,
+    ref: 'type_documents',
+    required: true
   }
 }, { timestamps: true });
 

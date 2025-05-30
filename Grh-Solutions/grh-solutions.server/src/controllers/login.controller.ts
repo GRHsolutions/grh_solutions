@@ -8,7 +8,8 @@ type RegisterForm = {
   'secondLastName': string,
   'email': string,
   'password': string,
-  'confirmPassword': string
+  'confirmPassword': string,
+  'documentType': string
 }
 
 export const loginController = {

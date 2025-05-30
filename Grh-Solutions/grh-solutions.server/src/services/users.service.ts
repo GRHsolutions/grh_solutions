@@ -10,6 +10,14 @@ export const userService = {
     return await UserModel.find({ email: filter.email });
   },
 
+  getById: async (id: string) => {
+    const user = await UserModel.findById(id);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user;
+  },
+
   create: async (entity: object) => {
     return await UserModel.create(entity);
   },
