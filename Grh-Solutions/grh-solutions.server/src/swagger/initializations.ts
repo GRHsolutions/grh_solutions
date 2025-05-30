@@ -122,6 +122,31 @@ export const swaggerComponents: Components = {
         },
       },
     },
+    UpdateUserRequest: {
+      type: "object",
+      properties: {
+        firstName: {
+          type: "string",
+          description: "User's first name",
+        },
+        middleName: {
+          type: "string",
+          description: "User's middle name",
+        },
+        lastName: {
+          type: "string",
+          description: "User's last name",
+        },
+        secondLastName: {
+          type: "string",
+          description: "User's second last name",
+        },
+        typeDocument: {
+          type: "string",
+          description: "Reference to user's document type",
+        },
+      },
+    },
   },
 };
 
@@ -233,8 +258,7 @@ export const swaggerPaths: Paths = {
       tags: ["User"],
       requestBody: {
         required: false,
-        content: {
-        },
+        content: {},
       },
       responses: {
         200: {
@@ -251,8 +275,47 @@ export const swaggerPaths: Paths = {
           description: "No hay nombre para el tipo de documento",
         },
         500: {
-          description: "userId detected as undefined check the token validation"
-        }
+          description:
+            "userId detected as undefined check the token validation",
+        },
+      },
+    },
+  },
+  "/api/user/update": {
+    put: {
+      summary: "Update user information",
+      tags: ["User"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/UpdateUserRequest",
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "User updated successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/User1",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error updating user",
+        },
+        401: {
+          description: "Unauthorized - Invalid or missing token",
+        },
+        500: {
+          description: "Server error",
+        },
       },
     },
   },

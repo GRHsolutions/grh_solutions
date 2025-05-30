@@ -11,10 +11,12 @@ export const userService = {
   },
 
   getById: async (id: string) => {
-    const user = await UserModel.findById(id);
+    const user = await UserModel.findById(id).populate('typeDocument');
+
     if (!user) {
       throw new Error('User not found');
-    }
+    };
+
     return user;
   },
 
