@@ -10,7 +10,7 @@ type RegisterForm = {
   'password': string,
   'confirmPassword': string,
   'documentType': string
-}
+};
 
 export const loginController = {
   register: async (req: Request, res: Response) => {
