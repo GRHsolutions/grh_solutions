@@ -285,7 +285,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/update/:id": {
+    "/api/typeDocuments/update": {
     put: {
       summary: "Update a type of document",
       tags: ["TypeDocument"],
@@ -327,8 +327,8 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/delete/:id": {
-    post: {
+    "/api/typeDocuments/delete": {
+    delete: {
       summary: "Delete a type of document",
       tags: ["TypeDocument"],
       parameters: [
@@ -359,8 +359,8 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/getById/:id": {
-    post: {
+    "/api/typeDocuments/getById": {
+    get: {
       summary: "Returns a type of document by ID",
       tags: ["TypeDocument"],
       parameters: [

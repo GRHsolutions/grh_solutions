@@ -46,9 +46,9 @@ export const documentTypeController = {
   },
   update: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id } = req.query;
 
-      if (!id || id == "") {
+      if (!id || id == "" || typeof id !== 'string') {
         return res.status(400).json({
           message: "No se ha proporcionado un ID para el tipo de documento"
         });
@@ -76,9 +76,9 @@ export const documentTypeController = {
   },
   delete: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id } = req.query;
 
-      if (!id || id == "") {
+      if (!id || id == "" || typeof id !== 'string') {
         return res.status(400).json({
           message: "No se ha proporcionado un ID para el tipo de documento"
         });
@@ -104,9 +104,9 @@ export const documentTypeController = {
   },
   getById: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id } = req.query;
 
-      if (!id || id == "") {
+      if (!id || id == "" || typeof id !== 'string') {
         return res.status(400).json({
           message: "No se ha proporcionado un ID para el tipo de documento"
         });

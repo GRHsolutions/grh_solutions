@@ -15,9 +15,9 @@ const validationSchema = [
 
 router.post('/create', validationSchemaHandler({ schema: validationSchema }), documentTypeController.create);
 router.get('/getAllNoPage', documentTypeController.getAll); // Usar sin paginado por el momento :V
-router.put('/update/:id', validationSchemaHandler({ schema: validationSchema }), documentTypeController.update);
-router.delete('/delete/:id', documentTypeController.delete);
-router.get('/getById/:id', documentTypeController.getById); // Obtener por ID
+router.put('/update', validationSchemaHandler({ schema: validationSchema }), documentTypeController.update);
+router.delete('/delete', documentTypeController.delete);
+router.get('/getById', documentTypeController.getById); // Obtener por ID
 
 
 export default router;
