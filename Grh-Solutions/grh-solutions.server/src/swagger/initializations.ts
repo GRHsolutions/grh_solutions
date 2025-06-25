@@ -252,6 +252,145 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+    "/api/typeDocuments/getAllNoPage": {
+    get: {
+      summary: "Get all types of document",
+      tags: ["TypeDocument"],
+      parameters: [
+        {
+          name: "name",
+          in: "query",
+          required: false,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by document type name",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Document Type created successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/TypeDocument",
+                array: true
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el tipo de documento",
+        },
+      },
+    },
+  },
+    "/api/typeDocuments/update": {
+    put: {
+      summary: "Update a type of document",
+      tags: ["TypeDocument"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by document type for his id",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/TypeDocument",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Document Type updated successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/TypeDocument",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el tipo de documento",
+        },
+      },
+    },
+  },
+    "/api/typeDocuments/delete": {
+    delete: {
+      summary: "Delete a type of document",
+      tags: ["TypeDocument"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by document type for his id",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Document Type deleted successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/TypeDocument",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el tipo de documento",
+        },
+      },
+    },
+  },
+    "/api/typeDocuments/getById": {
+    get: {
+      summary: "Returns a type of document by ID",
+      tags: ["TypeDocument"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by document type for his id",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Response with the type of document",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/TypeDocument",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el tipo de documento",
+        },
+      },
+    },
+  },
   "/api/user/getMyInfo": {
     get: {
       summary: "Get the user`s internal info from logged user",
