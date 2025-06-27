@@ -95,6 +95,14 @@ export const swaggerComponents: Components = {
         },
       },
     },
+    Rol: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+    },
     User1: {
       type: "object",
       properties: {
@@ -454,6 +462,177 @@ export const swaggerPaths: Paths = {
         },
         500: {
           description: "Server error",
+        },
+      },
+    },
+  },
+  /// ROL ENDPOINTS INITIALIZATION FOR SWAGGER.
+  "/api/rol/create": {
+    post: {
+      summary: "Create a new rol for users",
+      tags: ["Rol"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Rol",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Rol created successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Rol",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el rol",
+        },
+      },
+    },
+  },
+    "/api/rol/getAllNoPage": {
+    get: {
+      summary: "Get all rols",
+      tags: ["Rol"],
+      parameters: [
+        {
+          name: "name",
+          in: "query",
+          required: false,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by rol name",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Rol created successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/TypeDocument",
+                array: true
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el rol",
+        },
+      },
+    },
+  },
+    "/api/rol/update": {
+    put: {
+      summary: "Update a rol",
+      tags: ["Rol"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by rol for his id",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Rol",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Rol updated successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Rol",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el rol",
+        },
+      },
+    },
+  },
+    "/api/rol/delete": {
+    delete: {
+      summary: "Delete a Rol",
+      tags: ["Rol"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by rol for his id",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Rol deleted successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Rol",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el rol",
+        },
+      },
+    },
+  },
+    "/api/rol/getById": {
+    get: {
+      summary: "Returns a rol by ID",
+      tags: ["Rol"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "Filter by rol for his id",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Response with the rol",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/rol",
+              },
+            },
+          },
+        },
+        400: {
+          description: "No hay nombre para el rol",
         },
       },
     },
