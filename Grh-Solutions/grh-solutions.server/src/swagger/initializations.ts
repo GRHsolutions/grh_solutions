@@ -626,7 +626,7 @@ export const swaggerPaths: Paths = {
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/rol",
+                $ref: "#/components/schemas/Rol",
               },
             },
           },

@@ -5,7 +5,7 @@ const rolSchema = new Schema({
         type: String,
         required: true
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 
 export const rolModel = model('rol', rolSchema);

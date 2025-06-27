@@ -19,11 +19,20 @@ export const validationSchemaHandler = ({
 
         schema.forEach((item) => {
             const { name, required = true, type = 'string' } = item;
+            const value = req.body[name];
 
-            if (required && !req.body[name]) {
+            if (required && (value === undefined || value === null || value === '')) {
                 errors.push(`El campo ${name} es requerido`);
-            } else if (req.body[name] && typeof req.body[name] !== type) {
-                errors.push(`El campo ${name} debe ser de tipo ${type}`);
+            } else if (value !== undefined && value !== null && value !== '') {
+                if (type === 'date') {
+                    // Validar que sea una fecha válida
+                    const date = new Date(value);
+                    if (isNaN(date.getTime())) {
+                        errors.push(`El campo ${name} debe ser una fecha válida`);
+                    }
+                } else if (typeof value !== type) {
+                    errors.push(`El campo ${name} debe ser de tipo ${type}`);
+                }
             }
         });
 

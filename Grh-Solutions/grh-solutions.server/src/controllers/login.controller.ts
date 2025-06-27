@@ -1,5 +1,6 @@
 import { Response, Request } from 'express';
 import { userService } from '../services/users.service';
+import { cvService } from '../services/cv.service';
 
 type RegisterForm = {
   'firstName': string,
@@ -34,6 +35,7 @@ export const loginController = {
 
   login: async (req: Request, res: Response) => {
     try {
+      let miss : { statusCode: number, message: string };
       const {
         email,
         password
@@ -48,12 +50,18 @@ export const loginController = {
         token
       } = await userService.login(email, password);
 
+      const countCVs = await cvService.verifyMyCvs(user.id);
+
       return res.status(200).json({
         user: {
           email: user.email,
           photo: user.photo,
         },
         token: token,
+          warnings: countCVs <= 0 ? {
+            code: 100,
+            message: "Debe crear su hoja de vida"
+          } : undefined
       });
 
     } catch (error: any) {

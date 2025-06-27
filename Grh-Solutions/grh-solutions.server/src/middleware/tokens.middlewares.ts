@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { cvService } from '../services/cv.service';
 
 interface JwtPayload {
   id: string;
@@ -14,7 +15,7 @@ declare global {
   }
 }
 
-export const validateToken = (req: Request, res: Response, next: NextFunction) => {
+export const validateToken = async(req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization;
 
@@ -36,7 +37,7 @@ export const validateToken = (req: Request, res: Response, next: NextFunction) =
     // Verify and decode the token
     const decoded = jwt.verify(tokenValue, 'my_secret') as JwtPayload;
     
-    console.log("decoded token: ",decoded);
+    console.log("decoded token: ", decoded);
 
     // Add userId to the request object
     req.userId = decoded.id;
