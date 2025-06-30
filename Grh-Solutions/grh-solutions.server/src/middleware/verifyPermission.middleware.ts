@@ -4,7 +4,7 @@ import { rolModel } from "../models/rol.model";
 export const verifyPermissionHandler = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { method, originalUrl, currentRol} = req;
+      const { method, originalUrl, currentRol } = req;
 
       if (!currentRol) {
         return res.status(401).json({
