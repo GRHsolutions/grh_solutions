@@ -1,11 +1,11 @@
 export type Login = {
-    correo: string,
-    pass: string
+    email: string,
+    password: string
 };
 
 export type ReturnableLogin = {
     user: {
-        correo: string,
+        email: string,
         photo: string,
         isEmployee: boolean,
     },
@@ -18,8 +18,12 @@ export type RegisterConfirmation = {
 }
 
 export type RegisterForm = {
-    nombre: string,
-    correo: string,
-    contrasena: string,
-    confirmContrasena: string
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  secondLastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  typeDocument: string;
 }

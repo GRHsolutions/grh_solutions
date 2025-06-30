@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '^/api/': {
-        target: 'http://localhost:5300', // definir puerto donde el backend se aloja
+        target: 'http://localhost:3000', // definir puerto donde el backend se aloja
         secure: false,
         ws: true,
       }
