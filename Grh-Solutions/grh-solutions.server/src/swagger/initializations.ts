@@ -19,7 +19,7 @@ export const swaggerComponents: Components = {
         "email",
         "password",
         "confirmPassword",
-        "documentType",
+        "typeDocument",
       ],
       properties: {
         firstName: {
@@ -53,7 +53,7 @@ export const swaggerComponents: Components = {
           format: "password",
           description: "Password confirmation",
         },
-        documentType: {
+        typeDocument: {
           type: "string",
           description: "Reference to user`s document type",
         }
@@ -102,6 +102,48 @@ export const swaggerComponents: Components = {
           type: "string",
         },
       },
+    },
+    Vacancy: {
+      type: "object",
+      required: [
+        "tittle",
+        "description",
+        "type_contract",
+        "salary",
+        "horary",
+        "charge",
+        "address",
+        "telephone",
+        "email",
+        "type_modality",
+        "experience",
+        "formation",
+        "status",
+      ],
+      properties: {
+        tittle: { type: "string" },
+        description: { type: "string" },
+        type_contract: { type: "string" },
+        salary: { type: "string" },
+        horary: { type: "string" },
+        charge: { type: "string" },
+        address: { type: "string" },
+        telephone: { type: "string" },
+        email: { type: "string" },
+        type_modality: { type: "string" },
+        experience: { type: "string" },
+        formation: { type: "string" },
+        status: { type: "string" },
+      },
+    },
+    TypeContract: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+      },
+      required: ["name"],
     },
     User1: {
       type: "object",
@@ -260,7 +302,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/getAllNoPage": {
+  "/api/typeDocuments/getAllNoPage": {
     get: {
       summary: "Get all types of document",
       tags: ["TypeDocument"],
@@ -282,7 +324,7 @@ export const swaggerPaths: Paths = {
             "application/json": {
               schema: {
                 $ref: "#/components/schemas/TypeDocument",
-                array: true
+                array: true,
               },
             },
           },
@@ -293,7 +335,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/update": {
+  "/api/typeDocuments/update": {
     put: {
       summary: "Update a type of document",
       tags: ["TypeDocument"],
@@ -335,7 +377,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/delete": {
+  "/api/typeDocuments/delete": {
     delete: {
       summary: "Delete a type of document",
       tags: ["TypeDocument"],
@@ -367,7 +409,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/typeDocuments/getById": {
+  "/api/typeDocuments/getById": {
     get: {
       summary: "Returns a type of document by ID",
       tags: ["TypeDocument"],
@@ -498,7 +540,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/rol/getAllNoPage": {
+  "/api/rol/getAllNoPage": {
     get: {
       summary: "Get all rols",
       tags: ["Rol"],
@@ -520,7 +562,7 @@ export const swaggerPaths: Paths = {
             "application/json": {
               schema: {
                 $ref: "#/components/schemas/TypeDocument",
-                array: true
+                array: true,
               },
             },
           },
@@ -531,7 +573,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/rol/update": {
+  "/api/rol/update": {
     put: {
       summary: "Update a rol",
       tags: ["Rol"],
@@ -573,7 +615,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/rol/delete": {
+  "/api/rol/delete": {
     delete: {
       summary: "Delete a Rol",
       tags: ["Rol"],
@@ -605,7 +647,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-    "/api/rol/getById": {
+  "/api/rol/getById": {
     get: {
       summary: "Returns a rol by ID",
       tags: ["Rol"],
@@ -633,6 +675,342 @@ export const swaggerPaths: Paths = {
         },
         400: {
           description: "No hay nombre para el rol",
+        },
+      },
+    },
+  },
+  /// VACANTES ENDPOINTS INITIALIZATION FOR SWAGGER.
+  "/api/vacancies/create": {
+    post: {
+      summary: "Create a new vacancy",
+      tags: ["Vacantes"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Vacancy",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Vacancy created successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Vacancy",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Missing or invalid fields for vacancy creation",
+        },
+      },
+    },
+  },
+  "/api/vacancies/getAll": {
+    get: {
+      summary: "Get all vacancies",
+      tags: ["Vacantes"],
+      responses: {
+        201: {
+          description: "Vacancies retrieved successfully",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Vacancy",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error retrieving vacancies",
+        },
+      },
+    },
+  },
+  "/api/vacancies/update": {
+    put: {
+      summary: "Update a vacancy",
+      tags: ["Vacantes"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID of the vacancy to update",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Vacancy",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Vacancy updated successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Vacancy",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Missing or invalid fields for vacancy update",
+        },
+      },
+    },
+  },
+  "/api/vacancies/delete": {
+    delete: {
+      summary: "Delete a vacancy",
+      tags: ["Vacantes"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID of the vacancy to delete",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Vacancy deleted successfully",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Vacancy",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Invalid vacancy ID or not found",
+        },
+      },
+    },
+  },
+  "/api/vacancies/getById": {
+    get: {
+      summary: "Returns a vacancy by ID",
+      tags: ["Vacantes"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID of the vacancy",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Vacancy found",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/Vacancy",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Invalid ID or vacancy not found",
+        },
+      },
+    },
+  },
+  "/api/vacancies/getPaginated": {
+    get: {
+      summary: "Get paginated vacancies",
+      tags: ["Vacantes"],
+      parameters: [
+        {
+          name: "page",
+          in: "query",
+          required: true,
+          schema: {
+            type: "integer",
+          },
+          description: "Page number",
+        },
+        {
+          name: "limit",
+          in: "query",
+          required: false,
+          schema: {
+            type: "integer",
+          },
+          description: "Items per page",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Paginated vacancies retrieved",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Vacancy",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Invalid pagination parameters",
+        },
+      },
+    },
+  },
+  "/api/vacancies/getTotalPages": {
+    get: {
+      summary: "Get total pages of vacancies",
+      tags: ["Vacantes"],
+      responses: {
+        201: {
+          description: "Total pages retrieved successfully",
+          content: {
+            "application/json": {
+              schema: {
+                type: "integer",
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error getting total pages",
+        },
+      },
+    },
+  },
+  /// TYPECONTRACT ENDPOINTS FOR SWAGGER
+  "/api/typeContract/create": {
+    post: {
+      summary: "Crear un tipo de contrato",
+      tags: ["TypeContract"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/TypeContract",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Tipo de contrato creado exitosamente",
+        },
+        400: {
+          description: "Error al crear el tipo de contrato",
+        },
+      },
+    },
+  },
+  "/api/typeContract/update": {
+    put: {
+      summary: "Actualizar un tipo de contrato",
+      tags: ["TypeContract"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del tipo de contrato a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/TypeContract",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Tipo de contrato actualizado exitosamente",
+        },
+        400: {
+          description: "Error al actualizar",
+        },
+      },
+    },
+  },
+  "/api/typeContract/delete": {
+    delete: {
+      summary: "Eliminar un tipo de contrato",
+      tags: ["TypeContract"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del tipo de contrato a eliminar",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Tipo de contrato eliminado exitosamente",
+        },
+        400: {
+          description: "Error al eliminar",
+        },
+      },
+    },
+  },
+  "/api/typeContract/getAll": {
+    get: {
+      summary: "Obtener todos los tipos de contrato",
+      tags: ["TypeContract"],
+      responses: {
+        201: {
+          description: "Lista de tipos de contrato",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/TypeContract",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error al obtener los tipos de contrato",
         },
       },
     },

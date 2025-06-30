@@ -7,33 +7,31 @@ import {
 import { http } from "../axios/axios";
 import { ILoginRepository } from "../interfaces/IUsuario";
 
-const LOGINMAINAPI = '/api/login'
+const LOGINMAINAPI = "/api/login";
 
 export class LoginRepository implements ILoginRepository {
   async login(login: Login): Promise<ReturnableLogin> {
     try {
-      console.log('tring to loggin fuckin nigga', login)
-      //const response = await http.post<ReturnableLogin>(`${LOGINMAINAPI}/login`, login);
-      const response = {
-        user: {
-          correo: "sebachodiazp29@gmail.com",
-          photo: '',
-          isEmployee: true
-        },
-        token: 'UYQSVBUIYFBNAOPIFM-921KR1JIF091J0'
-      } as ReturnableLogin
-
+      console.log(login);
+      const response = await http.post<ReturnableLogin>(
+        `${LOGINMAINAPI}/login`,
+        login
+      );
       return response;
-    } catch(e){
+    } catch (e) {
       throw e;
-    };
+    }
   }
+
   async register(usuario: RegisterForm): Promise<RegisterConfirmation> {
     try {
-      const response = await http.post<RegisterConfirmation>(`${LOGINMAINAPI}/register`, usuario);
+      const response = await http.post<RegisterConfirmation>(
+        `${LOGINMAINAPI}/register`, 
+        usuario
+      );
       return response;
-    } catch(e){
+    } catch (e) {
       throw e;
-    };
+    }
   }
 }
