@@ -56,7 +56,7 @@ export const swaggerComponents: Components = {
         documentType: {
           type: "string",
           description: "Reference to user`s document type",
-        },
+        }
       },
     },
     LoginCredentials: {
@@ -154,7 +154,7 @@ export const swaggerComponents: Components = {
           description: "Reference to user's document type",
         },
       },
-    },
+    }
   },
 };
 

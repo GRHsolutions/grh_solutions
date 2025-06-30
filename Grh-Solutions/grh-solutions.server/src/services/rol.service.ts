@@ -60,5 +60,11 @@ export const rolService = {
   
   delete: async (id: string) => {
     return await rolModel.findByIdAndDelete(id);
+  },
+
+  getBasicRol: async(term: string) => {
+    return await rolModel.findOne({
+      name: term
+    })
   }
 }

@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { UserModel } from '../models/users.model';
+import { rolService } from './rol.service';
 
 export const userService = {
   getAll: async (filter: any) => {
@@ -21,7 +22,17 @@ export const userService = {
   },
 
   create: async (entity: object) => {
-    return await UserModel.create(entity);
+    const rol = await rolService.getBasicRol('Administrador');
+
+    if(!rol){
+      throw Error("No se encontro el id del rol cliente") // en el servicio debe cambiarse para que se cree si no existe :P
+    }
+    
+    const obj = {
+      ...entity,
+      rol: rol._id
+    }
+    return await UserModel.create(obj);
   },
 
   update: async (id: string, body: object) => {
@@ -48,7 +59,7 @@ export const userService = {
     
     delete userObject.password
 
-    const token = jwt.sign({ id: user._id, email: user.email }, 'my_secret', {
+    const token = jwt.sign({ id: user._id, email: user.email, rol: user.rol }, 'my_secret', {
       expiresIn: '1h',
     })
 

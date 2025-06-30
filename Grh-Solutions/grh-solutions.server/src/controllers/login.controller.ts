@@ -56,6 +56,7 @@ export const loginController = {
         user: {
           email: user.email,
           photo: user.photo,
+          rol: user.rol
         },
         token: token,
           warnings: countCVs <= 0 ? {

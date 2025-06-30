@@ -5,12 +5,14 @@ import { cvService } from '../services/cv.service';
 interface JwtPayload {
   id: string;
   email: string;
+  rol: string;
 }
 
 declare global {
   namespace Express {
     interface Request {
       userId?: string;
+      currentRol?: string;
     }
   }
 }
@@ -41,6 +43,7 @@ export const validateToken = async(req: Request, res: Response, next: NextFuncti
 
     // Add userId to the request object
     req.userId = decoded.id;
+    req.currentRol = decoded.rol;
 
     next();
   } catch (error) {
