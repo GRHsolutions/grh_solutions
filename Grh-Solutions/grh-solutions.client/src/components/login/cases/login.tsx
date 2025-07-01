@@ -1,6 +1,5 @@
 import { Typography, useTheme } from "@mui/material";
 import Box from "@mui/material/Box";
-import { LoginService } from "../../../domain/services/login/login.service";
 import { useAuth } from "../../../hooks/auth";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
@@ -19,17 +18,18 @@ const styles = {
     textDecoration: "underline", // Subrayado para enlaces
   } as React.CSSProperties,
 };
+const initialValues = {
+  email: "",
+  password: "",
+};
 
 export default function Login({ onRegister }: LoginProps) {
-  const initialValues = {
-    correo: "",
-    contraseña: "",
-  };
+
   const theme = useTheme();
   const { login } = useAuth();
 
-  const handleSubmit = async(values: { correo: string; contraseña: string }) => {
-    await login(values.correo, values.contraseña).then((res) => {
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    await login(values.email, values.password).then((res) => {
       if (res) {
         // Aquí puedes manejar la redirección o cualquier otra acción después de un inicio de sesión exitoso
         console.log("Inicio de sesión exitoso");
@@ -38,17 +38,17 @@ export default function Login({ onRegister }: LoginProps) {
         console.error("Error en el inicio de sesión");
       }
     })
-    .catch((error) => {
-      console.error("Error en el inicio de sesión:", error);
-    })
+      .catch((error) => {
+        console.error("Error en el inicio de sesión:", error);
+      })
   };
 
   // Validación de Yup
   const validationSchema = Yup.object({
-    correo: Yup.string()
+    email: Yup.string()
       .email("Correo electrónico no válido")
       .required("El correo electrónico es obligatorio"),
-    contraseña: Yup.string()
+    password: Yup.string()
       .min(8, "La contraseña debe tener al menos 8 caracteres")
       .matches(/[0-9]/, "La contraseña debe contener al menos un número")
       .matches(
@@ -97,18 +97,18 @@ export default function Login({ onRegister }: LoginProps) {
                 Inicio de Sesión
               </Typography>
               <GrhTextField
-                name="correo"
+                name="email"
                 label="Correo electrónico"
                 placeholder="example@example.com"
-                value={values.correo}
+                value={values.email}
                 onChange={handleChange}
                 autoComplete="off"
               />
               <GrhTextField
-                name="contraseña"
+                name="password"
                 label="Contraseña"
                 placeholder="Super123*"
-                value={values.contraseña}
+                value={values.password}
                 onChange={handleChange}
                 autoComplete="off"
                 type="password"
@@ -128,7 +128,7 @@ export default function Login({ onRegister }: LoginProps) {
                 type="submit"
                 variant="principal"
                 label="Ingresar"
-                disabled={!isValid || !values.correo || !values.contraseña}
+                disabled={!isValid || !values.email || !values.password}
               />
             </Box>
           </Form>

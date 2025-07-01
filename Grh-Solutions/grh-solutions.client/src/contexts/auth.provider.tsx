@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Inicializar auth desde localStorage, asegurándose de que esté de acuerdo con ReturnableLogin
   const initialAuthState = {
     user: {
-      correo: localStorageUtil.get("usr_items_correo") || "",
+      email: localStorageUtil.get("usr_items_correo") || "",
       photo: localStorageUtil.get("usr_items_photo") || "",
     },
     token: localStorageUtil.get("usr_items_token") || "",
@@ -28,14 +28,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const service = new LoginService(new LoginRepository());
 
   // Maneja el login de manera asíncrona
-  const login = async (correo: string, contr: string): Promise<boolean> => {
+  const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const res = await service.login({ correo, pass: contr });
+      const res = await service.login({ email, password});
       
       // Actualizar estado de autenticación
       setAuth({
         user: {
-          correo: res.user.correo,
+          email: res.user.email,
           photo: res.user.photo,
         },
         token: res.token,
@@ -43,9 +43,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // Guardar los datos en localStorage
       localStorageUtil.set("usr_items_token", res.token);
-      localStorageUtil.set("usr_items_usrName", res.user.correo); // Aquí, si es necesario puedes usar un campo diferente
+      localStorageUtil.set("usr_items_correo", res.user.email); // Aquí, si es necesario puedes usar un campo diferente
       if (res.user.photo) localStorageUtil.set("usr_items_photo", res.user.photo);
-      if (res.user.correo) localStorageUtil.set("usr_items_correo", res.user.correo);
+      if (res.user.email) localStorageUtil.set("usr_items_correo", res.user.email);
 
       setIsLoggedIn(true); // Establecer como logueado
 
@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorageUtil.deleteExclude(["theme"]);
     setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
     setAuth({
-      user: { correo: "", photo: "" },
+      user: { email: "", photo: "" },
       token: "",
     }); // Limpiar auth
   };
