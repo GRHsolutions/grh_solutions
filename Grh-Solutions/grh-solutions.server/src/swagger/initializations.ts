@@ -145,6 +145,25 @@ export const swaggerComponents: Components = {
       },
       required: ["name"],
     },
+    Postulante: {
+      type: "object",
+      properties: {
+        user: {
+          type: "string",
+          description: "ID del usuario que se postula",
+        },
+        vacante: {
+          type: "string",
+          description: "ID de la vacante a la que se postula",
+        },
+        status: {
+          type: "string",
+          description: "Estado de la postulación",
+          example: "Pendiente",
+        },
+      },
+      required: ["vacante"],
+    },
     User1: {
       type: "object",
       properties: {
@@ -1011,6 +1030,147 @@ export const swaggerPaths: Paths = {
         },
         400: {
           description: "Error al obtener los tipos de contrato",
+        },
+      },
+    },
+  },
+  /// POSTULANTE ENDPOINTS FOR SWAGGER
+  "/api/postulante/create": {
+    post: {
+      summary: "Crear postulación a vacante",
+      tags: ["Postulante"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Postulante",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Postulación creada exitosamente",
+        },
+        400: {
+          description: "Error de validación o datos incorrectos",
+        },
+        500: {
+          description: "Error interno del servidor",
+        },
+      },
+    },
+  },
+
+  "/api/postulante/getAllByVacante/{vacanteId}": {
+    get: {
+      summary: "Obtener postulantes por vacante",
+      tags: ["Postulante"],
+      parameters: [
+        {
+          name: "vacanteId",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID de la vacante",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de postulantes",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Postulante",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "ID de vacante inválido",
+        },
+        500: {
+          description: "Error interno",
+        },
+      },
+    },
+  },
+
+  "/api/postulante/update/{id}": {
+    put: {
+      summary: "Actualizar postulante",
+      tags: ["Postulante"],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del postulante a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                status: {
+                  type: "string",
+                  description: "Nuevo estado del postulante",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Postulante actualizado",
+        },
+        400: {
+          description: "ID inválido o datos incorrectos",
+        },
+        500: {
+          description: "Error interno",
+        },
+      },
+    },
+  },
+
+  "/api/postulante/delete/{id}": {
+    delete: {
+      summary: "Eliminar postulante",
+      tags: ["Postulante"],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del postulante a eliminar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Postulante eliminado correctamente",
+        },
+        400: {
+          description: "ID inválido",
+        },
+        500: {
+          description: "Error interno",
         },
       },
     },

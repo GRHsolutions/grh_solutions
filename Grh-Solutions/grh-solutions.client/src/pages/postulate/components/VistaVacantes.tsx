@@ -1,25 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, Card, CardContent, IconButton, Pagination } from "@mui/material";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { VacanteData } from "../../../domain/models/vacantes/vacantes.entities";
-
-const vacantes = [
-  {
-    titulo: "Se ocupa mecánico.",
-    salario: "1.500.000",
-    modalidad: "Presencial - Mecánico",
-  },
-  {
-    titulo: "Se ocupa técnico en desarrollo",
-    salario: "1.500.000",
-    modalidad: "Virtual - Desarrollador",
-  },
-  {
-    titulo: "Se ocupa cocinero.",
-    salario: "3.000.000",
-    modalidad: "Presencial - Cocina",
-  },
-];
+import { getVacancies } from "../../../domain/services/vacancies/vacancies.service";
+import { useAuth } from "../../../hooks/auth";
 
 interface Vacante {
   setSelectOption: React.Dispatch<React.SetStateAction<VacanteData | null>>;
@@ -27,7 +11,18 @@ interface Vacante {
 
 export default function VistaVacantes({ setSelectOption }: Vacante) {
   const [page, setPage] = useState(1);
+  const [vacantes, setVacantes] = useState<VacanteData[]>([]);
+  const { auth } = useAuth();
 
+  useEffect(() => {
+    getVacancies(auth.token)
+      .then((response) => {
+        setVacantes(response.data);
+      })
+      .catch((error) => {
+        console.error("Error al obtener las vacantes:", error);
+      });
+  }, [page]);
   return (
     <Box sx={{ maxWidth: "85%", margin: "auto", textAlign: "center", mt: 4, height: "100%" }}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -69,11 +64,11 @@ export default function VistaVacantes({ setSelectOption }: Vacante) {
               >
                 <Box sx={{ textAlign: "left" }}>
                   <Typography variant="body1" fontWeight="bold" sx={{ fontSize: "1rem" }}>
-                    {vacante.titulo}
+                    {vacante.tittle}
                   </Typography>
-                  <Typography variant="body2" sx={{ fontSize: "0.9rem" }}> {vacante.salario}</Typography>
+                  <Typography variant="body2" sx={{ fontSize: "0.9rem" }}> {vacante.salary}</Typography>
                   <Typography variant="body2" color="textSecondary" sx={{ fontSize: "0.85rem" }}>
-                     {vacante.modalidad}
+                    {vacante.type_modality}
                   </Typography>
                 </Box>
                 <IconButton onClick={() => setSelectOption(vacante)} sx={{ transition: "0.2s", ":hover": { transform: "scale(1.1)" } }}>

@@ -5,6 +5,7 @@ import User from './user';
 import rol from './rol';
 import Vacancies from './vacancies';
 import TypeContract from './typeContract';
+import postulante from './postulante';
 
 const routes = Router();
 
@@ -14,5 +15,6 @@ routes.use('/user', User);
 routes.use('/rol', rol);
 routes.use('/vacancies', Vacancies);
 routes.use('/typeContract', TypeContract);
+routes.use('/postulante', postulante);
 
 export default routes;

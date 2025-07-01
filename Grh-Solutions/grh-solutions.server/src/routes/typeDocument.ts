@@ -5,7 +5,7 @@ import { validateToken } from '../middleware/tokens.middlewares';
 
 const router = express.Router();
 
-// Define the validation schema for creating a document type
+
 const validationSchema = [
     {
         name: 'name',
@@ -15,9 +15,9 @@ const validationSchema = [
 ];
 
 router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), documentTypeController.create);
-router.get('/getAllNoPage', validateToken, documentTypeController.getAll); // Usar sin paginado por el momento :V
-router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), documentTypeController.update);
-router.delete('/delete', validateToken, documentTypeController.delete);
+router.get('/getAllNoPage',  documentTypeController.getAll); // Usar sin paginado por el momento :V
+router.put('/update/:id', validateToken, validationSchemaHandler({ schema: validationSchema }), documentTypeController.update);
+router.delete('/delete/:id', validateToken, documentTypeController.delete);
 router.get('/getById', validateToken, documentTypeController.getById); // Obtener por ID
 
 

@@ -1,38 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Typography, IconButton, Modal, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ModalDeleteVacante from "./ModalDeleteVacante";
 import ModalEditVacant from "./ModalEditVacant";
+import { getPostulantes } from "../../../domain/services/postulante/postulante.service";
+import { useAuth } from "../../../hooks/auth";
+import { Postulante, VacanteData } from "../../../domain/models/vacantes/vacantes.entities";
+import { deleteVacancy } from "../../../domain/services/vacancies/vacancies.service";
 
-// Datos de ejemplo para la vacante
-const vacantData = {
-  type: "Full-time", // o el tipo que correspondiera
-  title: "Desarrollador Frontend", // título en inglés
-  description: "Se busca desarrollador con experiencia en React.",
-  requisitos: "Experiencia en React y conocimientos de TypeScript.",
-  typeVacant: "Remoto",
-  salario: "$5000"
-};
 
 interface IModalProps {
   open: boolean;
   handleClose: () => void;
+  vacantData: VacanteData
 }
 
-const data = [
-  { nombre: "Roberto Gómez Bolaños", fechaPostulacion: "2025-04-01" },
-  { nombre: "Juan Pérez", fechaPostulacion: "2025-04-02" },
-  { nombre: "María López", fechaPostulacion: "2025-04-03" },
-];
 
-export default function ViewSelectVacante({ open, handleClose }: IModalProps) {
+export default function ViewSelectVacante({ open, handleClose, vacantData }: IModalProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
-
+  const [Vacantes, setvacantes] = useState<Postulante[]>([]);
   const openMenu = Boolean(anchorEl);
-
+  const { auth } = useAuth();
+  console.log(vacantData);
+  useEffect(() => {
+    getPostulantes(vacantData?._id, auth.token).then(res => setvacantes(res.data));
+  }, [vacantData]);
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -54,19 +49,30 @@ export default function ViewSelectVacante({ open, handleClose }: IModalProps) {
     setOpenDeleteModal(false);
   };
 
-  const handleDeleteVacante = () => {
-    console.log("Vacante eliminada");
-    setOpenDeleteModal(false);
+  const handleDeleteVacante = async () => {
+    try {
+      if (!vacantData?._id) {
+        console.error("ID de la vacante no disponible");
+        return;
+      }
+
+      const response = await deleteVacancy(vacantData._id, auth.token);
+      console.log("Vacante eliminada:", response.data);
+
+      setOpenDeleteModal(false);
+      handleClose(); // opcional: cerrar también el modal principal si aplica
+
+      // Puedes mostrar un snackbar aquí si deseas notificar al usuario
+    } catch (error) {
+      console.error("Error al eliminar la vacante:", error);
+      // También podrías mostrar un Snackbar de error aquí
+    }
   };
 
   const handleCloseEditModal = () => {
     setOpenEditModal(false);
   };
 
-  const handleEditVacant = (updatedData: typeof vacantData) => {
-    console.log('Vacante actualizada:', updatedData);
-    setOpenEditModal(false);
-  }
   const theme = useTheme();
 
   return (
@@ -91,9 +97,9 @@ export default function ViewSelectVacante({ open, handleClose }: IModalProps) {
           <CloseIcon />
         </IconButton>
         <Box display="flex" justifyContent="space-between" alignItems="center">
-        <Typography variant="h5" fontWeight="bold" color={theme.palette.text.primary} sx={{ textAlign: 'center' }}>
-          Usuarios Postulados a la Vacante
-        </Typography>
+          <Typography variant="h5" fontWeight="bold" color={theme.palette.text.primary} sx={{ textAlign: 'center' }}>
+            Usuarios Postulados a la Vacante
+          </Typography>
           <IconButton onClick={handleMenuClick}>
             <MoreVertIcon />
           </IconButton>
@@ -114,13 +120,21 @@ export default function ViewSelectVacante({ open, handleClose }: IModalProps) {
               <TableRow>
                 <TableCell align="center"><Typography variant="h6">Nombre</Typography></TableCell>
                 <TableCell align="center"><Typography variant="h6">Fecha de Postulación</Typography></TableCell>
+                <TableCell align="center"><Typography variant="h6">Estado</Typography></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
+              {Vacantes.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell align="center">{row.nombre}</TableCell>
-                  <TableCell align="center">{row.fechaPostulacion}</TableCell>
+                  <TableCell align="center">{row.user.firstName + " " + row.user.lastName}</TableCell>
+                  <TableCell align="center">
+                    {new Date(row.application_date).toLocaleDateString('es-CO', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                    })}
+                  </TableCell>
+                  <TableCell align="center">{row.status}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -135,7 +149,8 @@ export default function ViewSelectVacante({ open, handleClose }: IModalProps) {
           open={openEditModal}
           handleClose={handleCloseEditModal}
           initialValues={vacantData}
-          handleEdit={handleEditVacant}
+          token={auth.token}
+          vacationId={vacantData?._id}
         />
       </Box>
     </Modal>

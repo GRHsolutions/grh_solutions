@@ -59,6 +59,7 @@ const makeRequest = async<T>(
     }
     const response = await axios(config);
     if (response.status === 401) {
+      throw new Error("Unauthorized");
     }
     return response.data as T;
   } catch (error: any) {

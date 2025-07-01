@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Inicializar auth desde localStorage, asegurándose de que esté de acuerdo con ReturnableLogin
   const initialAuthState = {
     user: {
-      correo: localStorageUtil.get("usr_items_correo") || "",
+      email: localStorageUtil.get("usr_items_correo") || "",
       photo: localStorageUtil.get("usr_items_photo") || "",
     },
     token: localStorageUtil.get("usr_items_token") || "",
@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorageUtil.deleteExclude(["theme"]);
     setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
     setAuth({
-      user: { correo: "", photo: "" },
+      user: { email: "", photo: "" },
       token: "",
     }); // Limpiar auth
   };

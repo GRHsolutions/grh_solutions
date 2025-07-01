@@ -11,6 +11,7 @@ const vacanciesSchema = new Schema({
   },
   type_contract: {
     type: String,
+    ref: 'type_contract',
     required: true
   },
   salary: {
