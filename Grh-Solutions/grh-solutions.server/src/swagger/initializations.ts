@@ -155,6 +155,65 @@ export const swaggerComponents: Components = {
         },
       },
     },
+    scheduleType: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        start_Date: {
+          type: "date",
+        },
+        end_Date: {
+          type: "date",
+        }
+      },
+    },
+    schedules: {
+      type: "object",
+      properties: {
+        start_date: {
+          type: "date",
+        },
+        end_date: {
+          type: "date",
+        },
+        group: {
+          type: "string",
+        },
+        ScheduleType: {
+          type: "string",
+        }
+      },
+    },
+    group: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+         users: {
+           type: "array",
+           item: {
+             type: "string",
+           }
+         },
+         area: {
+           type: "string",
+         }
+      },
+    },
+    area: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        user: {
+          type: "string",
+        }
+      },
+    },
   },
 };
 
