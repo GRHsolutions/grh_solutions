@@ -7,7 +7,6 @@ export type ReturnableLogin = {
     user: {
         email: string,
         photo: string,
-        isEmployee: boolean,
     },
     token: string,
 }

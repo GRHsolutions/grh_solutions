@@ -2,13 +2,14 @@ import { Typography, useTheme, MenuItem } from "@mui/material";
 import Box from "@mui/material/Box";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { LoginService } from "../../../domain/services/login/login.service";
 import { LoginRepository } from "../../../infrastructure/repositories/usuario";
 import { RegisterForm } from "../../../domain/models/usuario/login.entities";
 import GrhCustomSelect from "../../../generics/grh-generics/inputSelect";
+import { getTypeDocuments } from "../../../domain/services/typeDocument/typeDocument.service";
 
 interface RegisterProps {
   onLogin: () => void;
@@ -21,32 +22,21 @@ const styles = {
     textDecoration: "underline",
   } as React.CSSProperties,
 };
-
-// Ejemplo de opciones para el select de tipo de documento
-export const documentTypes = [
-  { value: "6839bc96301727fc0856cd47", name: "Cédula de Ciudadanía" },
-  { value: "TI", name: "Tarjeta de Identidad" },
-  { value: "CE", name: "Cédula de Extranjería" },
-  { value: "PA", name: "Pasaporte" },
-  { value: "RC", name: "Registro Civil" },
-  { value: "NIT", name: "NIT" },
-];
+const initialValues = {
+  firstName: "",
+  middleName: "",
+  lastName: "",
+  secondLastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  typeDocument: "",
+} as RegisterForm;
 export default function Register({ onLogin }: RegisterProps) {
   const lgnService = new LoginService(new LoginRepository());
-
-  const initialValues = {
-    firstName: "",
-    middleName: "",
-    lastName: "",
-    secondLastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    typeDocument: "",
-  } as RegisterForm;
-
   const theme = useTheme();
   const [_loading, setLoading] = React.useState(false);
+  const [documentTypes, setDocumentTypes] = React.useState([]);
 
   const handleSubmit = (values: RegisterForm) => {
     setLoading(true);
@@ -66,6 +56,17 @@ export default function Register({ onLogin }: RegisterProps) {
       });
   };
 
+
+  useEffect(() => {
+    getTypeDocuments()
+      .then((response) => {
+        const optionMao = response.data.map((item: any) => ({ value: item.id, name: item.name }));
+        setDocumentTypes(optionMao);
+      })
+      .catch((error) => {
+        console.error("Error al obtener los tipos de documentos:", error);
+      });
+  }, []);
   const validationSchema = Yup.object({
     firstName: Yup.string().required("El primer nombre es obligatorio"),
     middleName: Yup.string(),

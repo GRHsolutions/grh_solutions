@@ -145,6 +145,25 @@ export const swaggerComponents: Components = {
       },
       required: ["name"],
     },
+    Postulante: {
+      type: "object",
+      properties: {
+        user: {
+          type: "string",
+          description: "ID del usuario que se postula",
+        },
+        vacante: {
+          type: "string",
+          description: "ID de la vacante a la que se postula",
+        },
+        status: {
+          type: "string",
+          description: "Estado de la postulación",
+          example: "Pendiente",
+        },
+      },
+      required: ["vacante"],
+    },
     User1: {
       type: "object",
       properties: {
@@ -224,7 +243,66 @@ export const swaggerComponents: Components = {
         }
       },
       required: ["ident"]
-    }
+    },
+    scheduleType: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        start_Date: {
+          type: "date",
+        },
+        end_Date: {
+          type: "date",
+        }
+      },
+    },
+    schedules: {
+      type: "object",
+      properties: {
+        start_date: {
+          type: "date",
+        },
+        end_date: {
+          type: "date",
+        },
+        group: {
+          type: "string",
+        },
+        ScheduleType: {
+          type: "string",
+        }
+      },
+    },
+    group: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+         users: {
+           type: "array",
+           item: {
+             type: "string",
+           }
+         },
+         area: {
+           type: "string",
+         }
+      },
+    },
+    area: {
+      type: "object",
+      properties: {
+        name: {
+          type: "string",
+        },
+        user: {
+          type: "string",
+        }
+      },
+    },
   },
 };
 
@@ -1068,9 +1146,9 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-  "/api/permission/getPagination": {
-    get: {
+  // "/api/permission/getPagination": {
+  //   get: {
 
-    }
-  }
+  //   }
+  // }
 };
