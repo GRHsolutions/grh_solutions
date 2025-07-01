@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { cvService } from '../services/cv.service';
+import { permissionUtl } from '../utls/permission.utl';
 
 interface JwtPayload {
   id: string;
@@ -13,6 +14,7 @@ declare global {
     interface Request {
       userId?: string;
       currentRol?: string;
+      isPublic?: boolean;
     }
   }
 }
@@ -20,6 +22,16 @@ declare global {
 export const validateToken = async(req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization;
+    const method = req.method;
+    const originalUrl = req.originalUrl;
+
+    const validationAccess = await permissionUtl.verifyPublicAccess(method, originalUrl);
+    req.isPublic = validationAccess;
+
+    if(validationAccess){ // this means method an url are public
+      console.log(`method access to ${method} - ${originalUrl} is public, no validations for token`);
+      return next(); // <-- ¡Aquí debe ir el return!
+    }
 
     if (!token) {
       return res.status(401).json({

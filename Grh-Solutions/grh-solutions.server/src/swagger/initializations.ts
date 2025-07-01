@@ -196,6 +196,34 @@ export const swaggerComponents: Components = {
           description: "Reference to user's document type",
         },
       },
+    },
+    Permission: {
+      type: "object",
+      properties: {
+        ident: {
+          type: "object",
+          properties: {
+            method: {
+              type: "string",
+              enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+              example: "GET"
+            },
+            originalUrl: {
+              type: "string",
+              example: "/api/users/list"
+            },
+            module: {
+              type: "string",
+            }
+          },
+          required: ["method", "originalUrl", "module"]
+        },
+        description: {
+          type: "string",
+          example: "Permite listar usuarios"
+        }
+      },
+      required: ["ident"]
     }
   },
 };
@@ -1015,4 +1043,34 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  /// PERMISSIONS ENDPOINTS  FOR SWAGGER
+  "/api/permission/":{
+    get: {
+      summary: "Obtener todos los permisos del eplicativo",
+      tags: ["Permission"],
+      responses: {
+        201: {
+          description: "Lista de permisos",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Permission",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error al obtener los permisos",
+        },
+      },
+    },
+  },
+  "/api/permission/getPagination": {
+    get: {
+
+    }
+  }
 };

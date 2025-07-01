@@ -4,7 +4,11 @@ import { rolModel } from "../models/rol.model";
 export const verifyPermissionHandler = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { method, originalUrl, currentRol } = req;
+      const { method, originalUrl, currentRol, isPublic } = req;
+
+      if(isPublic){
+        return next();
+      }
 
       if (!currentRol) {
         return res.status(401).json({
@@ -47,7 +51,7 @@ export const verifyPermissionHandler = () => {
         });
       }
 
-      next();
+      return next();
     } catch (error: any) {
       console.error("Permission validation error:", error);
       res.status(500).json({

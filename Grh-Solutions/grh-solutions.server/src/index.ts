@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 import routes from './routes/routes';
 import { MONGO_URI } from './config';
 import { swaggerComponents, swaggerPaths } from './swagger/initializations';
+import { validateToken } from './middleware/tokens.middlewares';
+import { verifyPermissionHandler } from './middleware/verifyPermission.middleware';
 
 dotenv.config();
 
@@ -57,7 +59,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Routes
-app.use('/api', routes);
+app.use('/api'/*, validateToken, verifyPermissionHandler, */ ,routes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
