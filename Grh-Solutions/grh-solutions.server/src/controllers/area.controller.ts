@@ -1,5 +1,5 @@
 import { Response, Request } from 'express';
-import { rolService } from '../services/rol.service';
+import { areaService } from '../services/area.service';
 
 export const areaController = {
     create : async (req: Request, res: Response) => {
@@ -12,7 +12,7 @@ export const areaController = {
               });
             }
     
-            const data = await rolService.create({
+            const data = await areaService.create({
               name: name
             });
     
@@ -30,7 +30,7 @@ export const areaController = {
     
             console.log(name)
     
-            const data = await rolService.getAll({
+            const data = await areaService.getAll({
               name: name as string | undefined
             });
     
@@ -60,7 +60,7 @@ export const areaController = {
               })
             };
     
-            const data = await rolService.update(id, {
+            const data = await areaService.update(id, {
               name: name
             });
     
@@ -82,7 +82,7 @@ export const areaController = {
               });
             }
     
-            const data = await rolService.delete(id);
+            const data = await areaService.delete(id);
     
             if (!data) {
               return res.status(404).json({
@@ -110,7 +110,7 @@ export const areaController = {
               });
             }
     
-            const data = await rolService.getById(id);
+            const data = await areaService.getById(id);
     
             if (!data) {
               return res.status(404).json({

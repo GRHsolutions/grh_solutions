@@ -2,6 +2,24 @@ import { Response, Request } from "express";
 import { groupService } from "../services/group.service";
 
 export const groupController = {
+  getAll: async (req: Request, res: Response) => {
+    try {
+      const {
+        name
+      } = req.query;
+
+      console.log(name)
+
+     const data = await groupService.getAll({name: name as string | undefined});
+
+      return res.status(200).json(data);
+    } catch (error: any) {
+      res.status(400).json({
+        message: error.message,
+        innerExpression: error.innerExpression
+      });
+    }
+  },
   create: async (req: Request, res: Response) => {
     try {
       const { name } = req.body;

@@ -14,7 +14,7 @@ type RegisterForm = {
 };
 
 export const loginController = {
-  register: async (req: Request, res: Response) => {
+register: async (req: Request, res: Response) => {
     try {
       const dt = req.body as RegisterForm;
 

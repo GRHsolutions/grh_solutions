@@ -13,6 +13,9 @@ const validationSchema = [
     }
 ];
 
+router.get("/getAll", validateToken, groupController.getAll)
 router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), groupController.create);
 router.delete('/delete', validateToken, groupController.delete);
 router.delete ("deleteUser", validateToken, groupController.deleteUserFromGroup);
+
+export default router;
