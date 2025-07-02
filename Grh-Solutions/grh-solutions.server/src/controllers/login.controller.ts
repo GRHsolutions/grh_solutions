@@ -39,7 +39,9 @@ register: async (req: Request, res: Response) => {
       const {
         email,
         password
-      } = req.body
+      } = req.body;
+
+      console.log("Login attempt with email:", email);
 
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
@@ -56,6 +58,7 @@ register: async (req: Request, res: Response) => {
         user: {
           email: user.email,
           photo: user.photo,
+          rol: user.rol
         },
         token: token,
           warnings: countCVs <= 0 ? {

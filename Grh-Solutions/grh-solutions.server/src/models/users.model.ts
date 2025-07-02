@@ -1,5 +1,6 @@
 import { Schema, Types, model } from 'mongoose';
 import bcrypt from 'bcrypt';
+import { rolService } from '../services/rol.service';
 
 const userSchema = new Schema({
   firstName: {
@@ -31,6 +32,11 @@ const userSchema = new Schema({
     type: Types.ObjectId,
     ref: 'type_documents',
     required: true
+  },
+  rol: {
+    type: Types.ObjectId,
+    ref: 'rol',
+    required: false
   }
 }, { timestamps: true });
 

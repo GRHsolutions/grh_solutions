@@ -56,7 +56,7 @@ export const swaggerComponents: Components = {
         typeDocument: {
           type: "string",
           description: "Reference to user`s document type",
-        },
+        }
       },
     },
     LoginCredentials: {
@@ -98,11 +98,46 @@ export const swaggerComponents: Components = {
     Rol: {
       type: "object",
       properties: {
+        _id: {
+          type: "string",
+          example: "60f6c0c1a3d2f9001c8a64b2",
+        },
         name: {
           type: "string",
+          example: "admin",
+        },
+        permissions: {
+          type: "array",
+          items: {
+            type: "string",
+            example: "60f6c2f0a3d2f9001c8a64b3", // ObjectId de permiso
+          },
+        },
+        isActive: {
+          type: "boolean",
+          example: true,
         },
       },
+      required: ["name"],
     },
+    PartialUpdateRol: {
+        type: "object",
+        properties: {
+          name: { type: "string", example: "editor" },
+          isActive: { type: "boolean", example: true },
+          addPermissions: {
+            type: "array",
+            items: { type: "string" },
+            example: ["60f6c2f0a3d2f9001c8a64b4"],
+          },
+          removePermissions: {
+            type: "array",
+            items: { type: "string" },
+            example: ["60f6c2f0a3d2f9001c8a64b3"],
+          },
+        },
+      
+  },
     Vacancy: {
       type: "object",
       required: [
@@ -215,6 +250,34 @@ export const swaggerComponents: Components = {
           description: "Reference to user's document type",
         },
       },
+    },
+    Permission: {
+      type: "object",
+      properties: {
+        ident: {
+          type: "object",
+          properties: {
+            method: {
+              type: "string",
+              enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+              example: "GET"
+            },
+            originalUrl: {
+              type: "string",
+              example: "/api/users/list"
+            },
+            module: {
+              type: "string",
+            }
+          },
+          required: ["method", "originalUrl", "module"]
+        },
+        description: {
+          type: "string",
+          example: "Permite listar usuarios"
+        }
+      },
+      required: ["ident"]
     },
     scheduleType: {
       type: "object",
@@ -730,7 +793,7 @@ export const swaggerPaths: Paths = {
         content: {
           "application/json": {
             schema: {
-              $ref: "#/components/schemas/Rol",
+              $ref: "#/components/schemas/PartialUpdateRol",
             },
           },
         },
@@ -1152,30 +1215,51 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-  /// POSTULANTE ENDPOINTS FOR SWAGGER
-  "/api/postulante/create": {
-    post: {
-      summary: "Crear postulación a vacante",
-      tags: ["Postulante"],
+  /// PERMISSIONS ENDPOINTS  FOR SWAGGER
+  "/api/permission/":{
+    get: {
+      summary: "Obtener todos los permisos del eplicativo",
+      tags: ["Permission"],
+      responses: {
+        201: {
+          description: "Lista de permisos",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Permission",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error al obtener los permisos",
+        },
+      },
+    },
+  },
+  "/api/permission/create": {
+   post: {
+      summary: "Crear un nuevo permiso",
+      tags: ["Permission"],
       requestBody: {
         required: true,
         content: {
           "application/json": {
             schema: {
-              $ref: "#/components/schemas/Postulante",
+              $ref: "#/components/schemas/Permission",
             },
           },
         },
       },
       responses: {
         201: {
-          description: "Postulación creada exitosamente",
+          description: "Permiso creado exitosamente",
         },
         400: {
-          description: "Error de validación o datos incorrectos",
-        },
-        500: {
-          description: "Error interno del servidor",
+          description: "Error al crear el permiso",
         },
       },
     },
