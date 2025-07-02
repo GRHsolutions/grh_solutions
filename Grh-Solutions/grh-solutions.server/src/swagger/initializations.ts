@@ -264,6 +264,65 @@ export const swaggerComponents: Components = {
          }
       },
     },
+    // GRUPOS EJEMPLO ----------------------------------------
+    Group: {
+      type: "object",
+      required: ["name", "users", "area"],
+      properties: {
+        _id: {
+          type: "string",
+          example: "64e3f82b9f6d3c1234567890"
+        },
+        name: {
+          type: "string",
+          example: "Grupo A"
+        },
+        users: {
+          type: "array",
+          items: {
+            type: "string",
+            example: "64e3f82b9f6d3c1234567891"
+          }
+        },
+        area: {
+          type: "string",
+          example: "64e3f82b9f6d3c1234567892"
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time",
+          example: "2025-07-01T12:00:00.000Z"
+        },
+        updatedAt: {
+          type: "string",
+          format: "date-time",
+          example: "2025-07-01T12:00:00.000Z"
+        }
+      }
+    },
+    GroupInput: {
+      type: "object",
+      required: ["name", "users", "area"],
+      properties: {
+        name: {
+          type: "string",
+          example: "Grupo A"
+        },
+        users: {
+          type: "array",
+          items: {
+            type: "string",
+            example: "64e3f82b9f6d3c1234567891"
+          }
+        },
+        area: {
+          type: "string",
+          example: "64e3f82b9f6d3c1234567892"
+        }
+      }
+    },
+
+    // ----------------------------------------------------------------------
     area: {
       type: "object",
       properties: {
@@ -1234,4 +1293,407 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  // GRUPOS ENDPOINTS FOR SWAGGER
+  "/api/group/getAll": {
+    get: {
+      summary: "Obtener todos los grupos (con filtro opcional por nombre)",
+      tags: ["Groups"],
+      parameters: [
+        {
+          name: "name",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "Filtrar grupos cuyo nombre contenga este valor"
+        }
+      ],
+      responses: {
+        200: {
+          description: "Lista de grupos",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/Group" }
+              }
+            }
+          }
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Error message aquí" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/group/create": {
+    post: {
+      summary: "crear grupo",
+      tags: ["Groups"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Group",
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Grupo creado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Group" }
+            }
+          }
+        },
+        404: {
+          description: "Grupo no encontrado"
+        }
+      }
+    },
+  },
+  "/api/group/delete":{
+      delete: {
+      summary: "Eliminar un grupo por ID",
+      tags: ["Groups"],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "string" }
+        }
+      ],
+      responses: {
+        204: {
+          description: "Grupo eliminado correctamente"
+        },
+        404: {
+          description: "Grupo no encontrado"
+        }
+      }
+    }
+  },
+  "/api/groups/deleteUserFromGroup": {
+    delete: {
+      summary: "Eliminar un usuario de un grupo",
+      tags: ["Groups"],
+      parameters: [
+        {
+          name: "groupId",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del grupo del que se quiere eliminar el usuario"
+        },
+        {
+          name: "userId",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del usuario que se quiere eliminar"
+        }
+      ],
+      responses: {
+        200: {
+          description: "Usuario eliminado del grupo correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Usuario eliminado del grupo correctamente" }
+                }
+              }
+            }
+          }
+        },
+        400: {
+          description: "Error en los parámetros o petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "No se ha proporcionado un ID para el grupo" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        },
+        404: {
+          description: "Grupo no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Grupo no encontrado" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  // AREAS ENDPOINTS FOR SWAGGER
+ "/api/area/create": {
+    post: {
+      summary: "Crear un área",
+      tags: ["Areas"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["name"],
+              properties: {
+                name: { type: "string", example: "Área 51" }
+              }
+            }
+          }
+        }
+      },
+      responses: {
+        201: {
+          description: "Área creada",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Area" }
+            }
+          }
+        },
+        400: {
+          description: "Error de validación",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/area/delete": {
+    delete: {
+      summary: "Eliminar un área",
+      tags: ["Areas"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del área a eliminar"
+        }
+      ],
+      responses: {
+        200: {
+          description: "Área eliminada correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Area eliminado correctamente" }
+                }
+              }
+            }
+          }
+        },
+        404: {
+          description: "Área no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Area no encontrado" }
+                }
+              }
+            }
+          }
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/area/getAllNoPage": {
+    get: {
+      summary: "Obtener todas las áreas sin paginación",
+      tags: ["Areas"],
+      security: [{ bearerAuth: [] }],
+      responses: {
+        200: {
+          description: "Lista de áreas",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/Area" }
+              }
+            }
+          }
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/area/getById": {
+    get: {
+      summary: "Obtener un área por ID",
+      tags: ["Areas"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del área"
+        }
+      ],
+      responses: {
+        200: {
+          description: "Área encontrada",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Area" }
+            }
+          }
+        },
+        404: {
+          description: "Área no encontrada",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Area no encontrado" }
+                }
+              }
+            }
+          }
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/area/update": {
+    put: {
+      summary: "Actualizar un área",
+      tags: ["Areas"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del área a actualizar"
+        }
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["name"],
+              properties: {
+                name: { type: "string", example: "Área actualizada" }
+              }
+            }
+          }
+        }
+      },
+      responses: {
+        200: {
+          description: "Área actualizada",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Area" }
+            }
+          }
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 };

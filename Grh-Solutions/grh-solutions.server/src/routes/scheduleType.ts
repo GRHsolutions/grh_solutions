@@ -18,3 +18,5 @@ router.get('/getAllNoPage', validateToken, scheduleTypeController.getAll); // Us
 router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.update);
 router.delete('/delete', validateToken, scheduleTypeController.delete);
 router.get('/getById', validateToken, scheduleTypeController.getById); // Obtener por ID
+
+export default router;

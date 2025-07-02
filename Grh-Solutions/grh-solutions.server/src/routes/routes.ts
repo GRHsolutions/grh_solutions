@@ -6,6 +6,10 @@ import rol from './rol';
 import Vacancies from './vacancies';
 import TypeContract from './typeContract';
 import postulante from './postulante';
+import schedules from './schedules';
+import area from './area';
+import scheduleType from './scheduleType';
+import group from './group';
 
 const routes = Router();
 
@@ -16,5 +20,9 @@ routes.use('/rol', rol);
 routes.use('/vacancies', Vacancies);
 routes.use('/typeContract', TypeContract);
 routes.use('/postulante', postulante);
+routes.use('/schedules', schedules);
+routes.use('/area', area);
+routes.use('/scheduleType', scheduleType);
+routes.use('/group', group);
 
 export default routes;
