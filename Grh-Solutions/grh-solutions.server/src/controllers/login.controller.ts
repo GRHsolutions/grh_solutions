@@ -39,7 +39,9 @@ export const loginController = {
       const {
         email,
         password
-      } = req.body
+      } = req.body;
+
+      console.log("Login attempt with email:", email);
 
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });

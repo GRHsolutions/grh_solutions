@@ -16,8 +16,7 @@ const permissionSchema = new Schema(
       },
       module: {
         type: Types.ObjectId,
-        ref: "module",
-        required: [true, "Module is required"],
+        ref: "module"
       },
     },
     description: {

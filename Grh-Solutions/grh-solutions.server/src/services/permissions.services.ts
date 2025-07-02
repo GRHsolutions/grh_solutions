@@ -2,22 +2,10 @@ import { permissionModel } from "../models/permission.model";
 import { Pagination } from "../filters/pagination.filters";
 
 export const permissionService = {
-  create: async (entity: {
-    method: string;
-    url: string;
-    module: string;
-    description: string;
-  }) => {
+  create: async (entity: any) => {
+    console.log("Creating permission with entity:", entity);
 
-    const trueMethod = entity.method.toUpperCase();
-    return await permissionModel.create({
-      ident: {
-        method: trueMethod,
-        originalUrl: entity.url,
-        module: entity.module
-      },
-      description: entity.description
-    });
+    return await permissionModel.create(entity);
   },
 
   getAll: async (filter: Pagination) => {

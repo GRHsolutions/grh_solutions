@@ -18,40 +18,9 @@ export const rolService = {
 
     return await rolModel.find(query);
   },
-  // Método para obtener lista paginada (filtrada opcionalmente)
-  // getPaginated: async (filter: RolFiler) => {
-  //   const query: any = {};
-
-  //   if (filter.name && filter.name.trim() !== '') {
-  //     query.$or = [{ name: new RegExp(filter.name, 'i') }];
-  //   }
-
-  //   const currentPage = filter.currentPage || 1;
-  //   const totalRow = filter.totalRow || 10;
-  //   const skip = (currentPage - 1) * totalRow;
-
-  //   return await rolModel
-  //     .find(query)
-  //     .skip(skip)
-  //     .limit(totalRow);
-  // },
-
-  // Método para obtener total de páginas según filtro y totalRow
-  // getTotalPages: async (filter: RolFiler) => {
-  //   const query: any = {};
-
-  //   if (filter.name && filter.name.trim() !== '') {
-  //     query.$or = [{ name: new RegExp(filter.name, 'i') }];
-  //   }
-
-  //   const totalRow = filter.totalRow || 10;
-  //   const totalDocuments = await rolModel.countDocuments(query);
-
-  //   return Math.ceil(totalDocuments / totalRow);
-  // },
 
   getById: async (id: string) => {
-    return await rolModel.findById(id);
+    return await rolModel.findById(id).populate('permissions');
   },
 
   update: async (id: string, entity: object) => {
@@ -66,5 +35,23 @@ export const rolService = {
     return await rolModel.findOne({
       name: term
     })
+  },
+
+  // ADDED: Method to add permissions to a role
+  addPermissionToRole: async (roleId: string, permissionId: string) => {
+    return await rolModel.findByIdAndUpdate(
+      roleId,
+      { $addToSet: { permissions: permissionId } },
+      { new: true }
+    );
+  },
+
+  // ADDED: Method to remove permission from role
+  removePermissionFromRole: async (roleId: string, permissionId: string) => {
+    return await rolModel.findByIdAndUpdate(
+      roleId,
+      { $pull: { permissions: permissionId } },
+      { new: true }
+    );
   }
 }

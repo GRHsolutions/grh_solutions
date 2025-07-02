@@ -18,11 +18,8 @@ export const permissionController = {
     },
 
     create: async(req: Request, res: Response) => {
-        const {
-            method, url, module, description
-        } = req.body;
 
-        const created = await permissionService.create({method, url, module, description});
+        const created = await permissionService.create(req.body);
 
         return res.status(200).json(created);
     }

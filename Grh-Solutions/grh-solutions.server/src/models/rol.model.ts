@@ -1,5 +1,4 @@
 import { Schema, model, Types } from "mongoose";
-import { permissionModel } from "./permission.model";
 
 const rolSchema = new Schema({
   name: {

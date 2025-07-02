@@ -98,11 +98,46 @@ export const swaggerComponents: Components = {
     Rol: {
       type: "object",
       properties: {
+        _id: {
+          type: "string",
+          example: "60f6c0c1a3d2f9001c8a64b2",
+        },
         name: {
           type: "string",
+          example: "admin",
+        },
+        permissions: {
+          type: "array",
+          items: {
+            type: "string",
+            example: "60f6c2f0a3d2f9001c8a64b3", // ObjectId de permiso
+          },
+        },
+        isActive: {
+          type: "boolean",
+          example: true,
         },
       },
+      required: ["name"],
     },
+    PartialUpdateRol: {
+        type: "object",
+        properties: {
+          name: { type: "string", example: "editor" },
+          isActive: { type: "boolean", example: true },
+          addPermissions: {
+            type: "array",
+            items: { type: "string" },
+            example: ["60f6c2f0a3d2f9001c8a64b4"],
+          },
+          removePermissions: {
+            type: "array",
+            items: { type: "string" },
+            example: ["60f6c2f0a3d2f9001c8a64b3"],
+          },
+        },
+      
+  },
     Vacancy: {
       type: "object",
       required: [
@@ -699,7 +734,7 @@ export const swaggerPaths: Paths = {
         content: {
           "application/json": {
             schema: {
-              $ref: "#/components/schemas/Rol",
+              $ref: "#/components/schemas/PartialUpdateRol",
             },
           },
         },
@@ -1146,9 +1181,28 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-  // "/api/permission/getPagination": {
-  //   get: {
-
-  //   }
-  // }
+  "/api/permission/create": {
+   post: {
+      summary: "Crear un nuevo permiso",
+      tags: ["Permission"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Permission",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Permiso creado exitosamente",
+        },
+        400: {
+          description: "Error al crear el permiso",
+        },
+      },
+    },
+  }
 };

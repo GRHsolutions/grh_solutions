@@ -59,7 +59,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 // Routes
-app.use('/api'/*, validateToken, verifyPermissionHandler, */ ,routes);
+app.use('/api', routes);
 
 // Error handling middleware
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
