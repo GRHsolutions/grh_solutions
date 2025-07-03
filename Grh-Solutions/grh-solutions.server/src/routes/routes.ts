@@ -6,17 +6,20 @@ import rol from './rol';
 import Vacancies from './vacancies';
 import TypeContract from './typeContract';
 import postulante from './postulante';
-import { validateToken } from '../middleware/tokens.middlewares';
-import { verifyPermissionHandler } from '../middleware/verifyPermission.middleware';
-import permission from './permission'; 
+// import { validateToken } from '../middleware/tokens.middlewares';
+// import { verifyPermissionHandler } from '../middleware/verifyPermission.middleware';
+import permission from './permission';
 import schedules from './schedules';
 import area from './area';
 import scheduleType from './scheduleType';
 import group from './group';
+import news from './news';
 
 const routes = Router();
 
 // Apply middlewares globally to all routes
+// routes.use(validateToken);
+// routes.use(verifyPermissionHandler);
 
 //Define routes
 routes.use('/login', Login);
@@ -31,5 +34,6 @@ routes.use('/schedules', schedules);
 routes.use('/area', area);
 routes.use('/scheduleType', scheduleType);
 routes.use('/group', group);
+routes.use('/news', news)
 
 export default routes;

@@ -56,7 +56,7 @@ export const swaggerComponents: Components = {
         typeDocument: {
           type: "string",
           description: "Reference to user`s document type",
-        }
+        },
       },
     },
     LoginCredentials: {
@@ -121,23 +121,22 @@ export const swaggerComponents: Components = {
       required: ["name"],
     },
     PartialUpdateRol: {
-        type: "object",
-        properties: {
-          name: { type: "string", example: "editor" },
-          isActive: { type: "boolean", example: true },
-          addPermissions: {
-            type: "array",
-            items: { type: "string" },
-            example: ["60f6c2f0a3d2f9001c8a64b4"],
-          },
-          removePermissions: {
-            type: "array",
-            items: { type: "string" },
-            example: ["60f6c2f0a3d2f9001c8a64b3"],
-          },
+      type: "object",
+      properties: {
+        name: { type: "string", example: "editor" },
+        isActive: { type: "boolean", example: true },
+        addPermissions: {
+          type: "array",
+          items: { type: "string" },
+          example: ["60f6c2f0a3d2f9001c8a64b4"],
         },
-      
-  },
+        removePermissions: {
+          type: "array",
+          items: { type: "string" },
+          example: ["60f6c2f0a3d2f9001c8a64b3"],
+        },
+      },
+    },
     Vacancy: {
       type: "object",
       required: [
@@ -260,24 +259,24 @@ export const swaggerComponents: Components = {
             method: {
               type: "string",
               enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-              example: "GET"
+              example: "GET",
             },
             originalUrl: {
               type: "string",
-              example: "/api/users/list"
+              example: "/api/users/list",
             },
             module: {
               type: "string",
-            }
+            },
           },
-          required: ["method", "originalUrl", "module"]
+          required: ["method", "originalUrl", "module"],
         },
         description: {
           type: "string",
-          example: "Permite listar usuarios"
-        }
+          example: "Permite listar usuarios",
+        },
       },
-      required: ["ident"]
+      required: ["ident"],
     },
     scheduleType: {
       type: "object",
@@ -290,32 +289,32 @@ export const swaggerComponents: Components = {
         },
         end_Date: {
           type: "date",
-        }
+        },
       },
     },
     schedules: {
-  type: "object",
-  required: ["start_date", "end_date", "group", "ScheduleType"],
-  properties: {
-    start_date: {
-      type: "string",
-      format: "date-time",
-      example: "2025-07-03T08:00:00Z"
-    },
-    end_date: {
-      type: "string",
-      format: "date-time",
-      example: "2025-07-03T16:00:00Z"
-    },
-    group: {
-      type: "string",
-      example: "64e3f82b9f6d3c1234567891"
-    },
-    scheduleType: {
-      type: "string",
-      example: "64e3f82b9f6d3c1234567892"
-    },
-  }
+      type: "object",
+      required: ["start_date", "end_date", "group", "ScheduleType"],
+      properties: {
+        start_date: {
+          type: "string",
+          format: "date-time",
+          example: "2025-07-03T08:00:00Z",
+        },
+        end_date: {
+          type: "string",
+          format: "date-time",
+          example: "2025-07-03T16:00:00Z",
+        },
+        group: {
+          type: "string",
+          example: "64e3f82b9f6d3c1234567891",
+        },
+        scheduleType: {
+          type: "string",
+          example: "64e3f82b9f6d3c1234567892",
+        },
+      },
     },
     group: {
       type: "object",
@@ -323,15 +322,15 @@ export const swaggerComponents: Components = {
         name: {
           type: "string",
         },
-         users: {
-           type: "array",
-           item: {
-             type: "string",
-           }
-         },
-         area: {
-           type: "string",
-         }
+        users: {
+          type: "array",
+          item: {
+            type: "string",
+          },
+        },
+        area: {
+          type: "string",
+        },
       },
     },
     // GRUPOS EJEMPLO ----------------------------------------
@@ -341,34 +340,34 @@ export const swaggerComponents: Components = {
       properties: {
         _id: {
           type: "string",
-          example: "64e3f82b9f6d3c1234567890"
+          example: "64e3f82b9f6d3c1234567890",
         },
         name: {
           type: "string",
-          example: "Grupo A"
+          example: "Grupo A",
         },
         users: {
           type: "array",
           items: {
             type: "string",
-            example: "64e3f82b9f6d3c1234567891"
-          }
+            example: "64e3f82b9f6d3c1234567891",
+          },
         },
         area: {
           type: "string",
-          example: "64e3f82b9f6d3c1234567892"
+          example: "64e3f82b9f6d3c1234567892",
         },
         createdAt: {
           type: "string",
           format: "date-time",
-          example: "2025-07-01T12:00:00.000Z"
+          example: "2025-07-01T12:00:00.000Z",
         },
         updatedAt: {
           type: "string",
           format: "date-time",
-          example: "2025-07-01T12:00:00.000Z"
-        }
-      }
+          example: "2025-07-01T12:00:00.000Z",
+        },
+      },
     },
     GroupInput: {
       type: "object",
@@ -376,20 +375,20 @@ export const swaggerComponents: Components = {
       properties: {
         name: {
           type: "string",
-          example: "Grupo A"
+          example: "Grupo A",
         },
         users: {
           type: "array",
           items: {
             type: "string",
-            example: "64e3f82b9f6d3c1234567891"
-          }
+            example: "64e3f82b9f6d3c1234567891",
+          },
         },
         area: {
           type: "string",
-          example: "64e3f82b9f6d3c1234567892"
-        }
-      }
+          example: "64e3f82b9f6d3c1234567892",
+        },
+      },
     },
     // ----------------------------------------------------------------------
     Area: {
@@ -412,7 +411,94 @@ export const swaggerComponents: Components = {
         },
         end_Date: {
           type: "date",
-        }
+        },
+      },
+    },
+    //---------------- news
+    News: {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+        },
+        description: {
+          type: "string",
+        },
+        images: {
+          type: "array",
+          items: {
+            type: "string",
+            format: "uri",
+          },
+        },
+        formulary: {
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            form: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  description: { type: "string" },
+                  marked: { type: "boolean" },
+                },
+              },
+            },
+          },
+        },
+        status: {
+          type: "string",
+          enum: ["deleted", "shown"],
+        },
+        type: {
+          type: "string",
+          enum: [
+            "simple-publication",
+            "publication-with-images",
+            "publication-with-survey",
+          ],
+        },
+        numberLikes: {
+          type: "integer",
+          default: 0,
+        },
+        numberDisLikes: {
+          type: "integer",
+          default: 0,
+        },
+        date: {
+          type: "string",
+          format: "date-time",
+        },
+        madeBy: {
+          type: "string",
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time",
+        },
+        updatedAt: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+    },
+    Pagination: {
+      type: "object",
+      properties: {
+        currentPage: {
+          type: "number",
+        },
+        rowsPerPage: {
+          type: "number",
+        },
+        totalPages: {
+          type: "number",
+        },
+        totalItems: {
+          type: "number",
+        },
       },
     },
   },
@@ -1234,10 +1320,40 @@ export const swaggerPaths: Paths = {
     },
   },
   /// PERMISSIONS ENDPOINTS  FOR SWAGGER
-  "/api/permission/":{
+  "/api/permission/": {
     get: {
       summary: "Obtener todos los permisos del eplicativo",
       tags: ["Permission"],
+      parameters: [
+        {
+          name: "search",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+        },
+        {
+          name: "currentPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Página actual para paginación",
+        },
+        {
+          name: "rowsPerPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Cantidad de elementos por página",
+        },
+        {
+          name: "useGetAllNoPage",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          description:
+            "Si es true, ignora la paginación y trae todos los elementos",
+        },
+      ],
       responses: {
         201: {
           description: "Lista de permisos",
@@ -1259,7 +1375,7 @@ export const swaggerPaths: Paths = {
     },
   },
   "/api/permission/create": {
-   post: {
+    post: {
       summary: "Crear un nuevo permiso",
       tags: ["Permission"],
       requestBody: {
@@ -1406,8 +1522,8 @@ export const swaggerPaths: Paths = {
           in: "query",
           required: false,
           schema: { type: "string" },
-          description: "Filtrar grupos cuyo nombre contenga este valor"
-        }
+          description: "Filtrar grupos cuyo nombre contenga este valor",
+        },
       ],
       responses: {
         200: {
@@ -1416,10 +1532,10 @@ export const swaggerPaths: Paths = {
             "application/json": {
               schema: {
                 type: "array",
-                items: { $ref: "#/components/schemas/Group" }
-              }
-            }
-          }
+                items: { $ref: "#/components/schemas/Group" },
+              },
+            },
+          },
         },
         400: {
           description: "Error en la petición",
@@ -1429,14 +1545,14 @@ export const swaggerPaths: Paths = {
                 type: "object",
                 properties: {
                   message: { type: "string", example: "Error message aquí" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/api/group/create": {
     post: {
@@ -1457,18 +1573,18 @@ export const swaggerPaths: Paths = {
           description: "Grupo creado",
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/Group" }
-            }
-          }
+              schema: { $ref: "#/components/schemas/Group" },
+            },
+          },
         },
         404: {
-          description: "Grupo no encontrado"
-        }
-      }
+          description: "Grupo no encontrado",
+        },
+      },
     },
   },
-  "/api/group/delete":{
-      delete: {
+  "/api/group/delete": {
+    delete: {
       summary: "Eliminar un grupo por ID",
       tags: ["Groups"],
       parameters: [
@@ -1476,18 +1592,18 @@ export const swaggerPaths: Paths = {
           name: "id",
           in: "path",
           required: true,
-          schema: { type: "string" }
-        }
+          schema: { type: "string" },
+        },
       ],
       responses: {
         204: {
-          description: "Grupo eliminado correctamente"
+          description: "Grupo eliminado correctamente",
         },
         404: {
-          description: "Grupo no encontrado"
-        }
-      }
-    }
+          description: "Grupo no encontrado",
+        },
+      },
+    },
   },
   "/api/group/deleteUserFromGroup": {
     delete: {
@@ -1499,15 +1615,15 @@ export const swaggerPaths: Paths = {
           in: "query",
           required: true,
           schema: { type: "string" },
-          description: "ID del grupo del que se quiere eliminar el usuario"
+          description: "ID del grupo del que se quiere eliminar el usuario",
         },
         {
           name: "userId",
           in: "query",
           required: true,
           schema: { type: "string" },
-          description: "ID del usuario que se quiere eliminar"
-        }
+          description: "ID del usuario que se quiere eliminar",
+        },
       ],
       responses: {
         200: {
@@ -1517,11 +1633,14 @@ export const swaggerPaths: Paths = {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Usuario eliminado del grupo correctamente" }
-                }
-              }
-            }
-          }
+                  message: {
+                    type: "string",
+                    example: "Usuario eliminado del grupo correctamente",
+                  },
+                },
+              },
+            },
+          },
         },
         400: {
           description: "Error en los parámetros o petición",
@@ -1530,12 +1649,15 @@ export const swaggerPaths: Paths = {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "No se ha proporcionado un ID para el grupo" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
+                  message: {
+                    type: "string",
+                    example: "No se ha proporcionado un ID para el grupo",
+                  },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "Grupo no encontrado",
@@ -1544,96 +1666,97 @@ export const swaggerPaths: Paths = {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Grupo no encontrado" }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  message: { type: "string", example: "Grupo no encontrado" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/api/group/update": {
-  put: {
-    summary: "Actualizar nombre del grupo y/o añadir un usuario",
-    description:
-      "Permite cambiar el nombre del grupo, añadir un usuario al array `users`, o ambas cosas a la vez.",
-    tags: ["Groups"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
+    put: {
+      summary: "Actualizar nombre del grupo y/o añadir un usuario",
+      description:
+        "Permite cambiar el nombre del grupo, añadir un usuario al array `users`, o ambas cosas a la vez.",
+      tags: ["Groups"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del grupo a actualizar",
+        },
+      ],
+      requestBody: {
         required: true,
-        schema: { type: "string" },
-        description: "ID del grupo a actualizar"
-      }
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-                example: "Grupo Renovado"
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                name: {
+                  type: "string",
+                  example: "Grupo Renovado",
+                },
+                userId: {
+                  type: "string",
+                  example: "64e3f82b9f6d3c1234567891",
+                  description: "ID del usuario que se añadirá al grupo",
+                },
               },
-              userId: {
-                type: "string",
-                example: "64e3f82b9f6d3c1234567891",
-                description: "ID del usuario que se añadirá al grupo"
-              }
+              oneOf: [{ required: ["name"] }, { required: ["userId"] }],
             },
-            oneOf: [
-              { required: ["name"] },
-              { required: ["userId"] }
-            ]
-          }
-        }
-      }
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Grupo actualizado correctamente",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Group" },
+            },
+          },
+        },
+        400: {
+          description: "Falta de parámetros o validación",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example:
+                      "Debes enviar al menos 'name' o 'userId' para actualizar",
+                  },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Grupo no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Grupo no encontrado" },
+                },
+              },
+            },
+          },
+        },
+      },
     },
-    responses: {
-      200: {
-        description: "Grupo actualizado correctamente",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/Group" }
-          }
-        }
-      },
-      400: {
-        description: "Falta de parámetros o validación",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Debes enviar al menos 'name' o 'userId' para actualizar" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      },
-      404: {
-        description: "Grupo no encontrado",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Grupo no encontrado" }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
+  },
   // AREAS ENDPOINTS FOR SWAGGER
- "/api/area/create": {
+  "/api/area/create": {
     post: {
       summary: "Crear un área",
       tags: ["Areas"],
@@ -1646,20 +1769,20 @@ export const swaggerPaths: Paths = {
               type: "object",
               required: ["name"],
               properties: {
-                name: { type: "string", example: "Área 51" }
-              }
-            }
-          }
-        }
+                name: { type: "string", example: "Área 51" },
+              },
+            },
+          },
+        },
       },
       responses: {
         201: {
           description: "Área creada",
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/Area" }
-            }
-          }
+              schema: { $ref: "#/components/schemas/Area" },
+            },
+          },
         },
         400: {
           description: "Error de validación",
@@ -1669,14 +1792,14 @@ export const swaggerPaths: Paths = {
                 type: "object",
                 properties: {
                   message: { type: "string" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/api/area/delete": {
     delete: {
@@ -1689,8 +1812,8 @@ export const swaggerPaths: Paths = {
           in: "query",
           required: true,
           schema: { type: "string" },
-          description: "ID del área a eliminar"
-        }
+          description: "ID del área a eliminar",
+        },
       ],
       responses: {
         200: {
@@ -1700,11 +1823,14 @@ export const swaggerPaths: Paths = {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Area eliminado correctamente" }
-                }
-              }
-            }
-          }
+                  message: {
+                    type: "string",
+                    example: "Area eliminado correctamente",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "Área no encontrado",
@@ -1713,11 +1839,11 @@ export const swaggerPaths: Paths = {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Area no encontrado" }
-                }
-              }
-            }
-          }
+                  message: { type: "string", example: "Area no encontrado" },
+                },
+              },
+            },
+          },
         },
         400: {
           description: "Error en la petición",
@@ -1727,14 +1853,14 @@ export const swaggerPaths: Paths = {
                 type: "object",
                 properties: {
                   message: { type: "string" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/api/area/getAllNoPage": {
     get: {
@@ -1748,10 +1874,10 @@ export const swaggerPaths: Paths = {
             "application/json": {
               schema: {
                 type: "array",
-                items: { $ref: "#/components/schemas/Area" }
-              }
-            }
-          }
+                items: { $ref: "#/components/schemas/Area" },
+              },
+            },
+          },
         },
         400: {
           description: "Error en la petición",
@@ -1761,14 +1887,14 @@ export const swaggerPaths: Paths = {
                 type: "object",
                 properties: {
                   message: { type: "string" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/api/area/getById": {
     get: {
@@ -1781,17 +1907,17 @@ export const swaggerPaths: Paths = {
           in: "query",
           required: true,
           schema: { type: "string" },
-          description: "ID del área"
-        }
+          description: "ID del área",
+        },
       ],
       responses: {
         200: {
           description: "Área encontrada",
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/Area" }
-            }
-          }
+              schema: { $ref: "#/components/schemas/Area" },
+            },
+          },
         },
         404: {
           description: "Área no encontrada",
@@ -1800,11 +1926,11 @@ export const swaggerPaths: Paths = {
               schema: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Area no encontrado" }
-                }
-              }
-            }
-          }
+                  message: { type: "string", example: "Area no encontrado" },
+                },
+              },
+            },
+          },
         },
         400: {
           description: "Error en la petición",
@@ -1814,14 +1940,14 @@ export const swaggerPaths: Paths = {
                 type: "object",
                 properties: {
                   message: { type: "string" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   "/api/area/update": {
     put: {
@@ -1834,8 +1960,8 @@ export const swaggerPaths: Paths = {
           in: "query",
           required: true,
           schema: { type: "string" },
-          description: "ID del área a actualizar"
-        }
+          description: "ID del área a actualizar",
+        },
       ],
       requestBody: {
         required: true,
@@ -1845,20 +1971,20 @@ export const swaggerPaths: Paths = {
               type: "object",
               required: ["name"],
               properties: {
-                name: { type: "string", example: "Área actualizada" }
-              }
-            }
-          }
-        }
+                name: { type: "string", example: "Área actualizada" },
+              },
+            },
+          },
+        },
       },
       responses: {
         200: {
           description: "Área actualizada",
           content: {
             "application/json": {
-              schema: { $ref: "#/components/schemas/Area" }
-            }
-          }
+              schema: { $ref: "#/components/schemas/Area" },
+            },
+          },
         },
         400: {
           description: "Error en la petición",
@@ -1868,338 +1994,484 @@ export const swaggerPaths: Paths = {
                 type: "object",
                 properties: {
                   message: { type: "string" },
-                  innerExpression: { type: "string", nullable: true }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   // scheduletype
-"/api/scheduleType/create": {
-  post: {
-    summary: "Crear un tipo de horario",
-    tags: ["ScheduleType"],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            required: ["name", "start_Date", "end_Date"],
-            properties: {
-              name: { type: "string", example: "Turno Mañana" },
-              start_Date: { type: "string", format: "date-time", example: "2025-07-03T06:00:00Z" },
-              end_Date: { type: "string", format: "date-time", example: "2025-07-03T14:00:00Z" }
-            }
-          }
-        }
-      }
-    },
-    responses: {
-      201: {
-        description: "Tipo de horario creado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/ScheduleType" }
-          }
-        }
-      },
-      400: {
-        description: "Error de validación"
-      }
-    }
-  }
-},
-"/api/scheduleType/getAllNoPage": {
-  get: {
-    summary: "Obtener todos los tipos de horario",
-    tags: ["ScheduleType"],
-    responses: {
-      200: {
-        description: "Lista de tipos de horario",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: { $ref: "#/components/schemas/ScheduleType" }
-            }
-          }
-        }
-      },
-      400: {
-        description: "Error en la petición"
-      }
-    }
-  }
-},
-"/api/scheduleType/getById": {
-  get: {
-    summary: "Obtener un tipo de horario por ID",
-    tags: ["ScheduleType"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
+  "/api/scheduleType/create": {
+    post: {
+      summary: "Crear un tipo de horario",
+      tags: ["ScheduleType"],
+      requestBody: {
         required: true,
-        schema: { type: "string" },
-        description: "ID del tipo de horario"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Tipo de horario encontrado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/ScheduleType" }
-          }
-        }
-      },
-      404: {
-        description: "Tipo de horario no encontrado"
-      }
-    }
-  }
-},
-"/api/scheduleType/update": {
-  put: {
-    summary: "Actualizar un tipo de horario",
-    tags: ["ScheduleType"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del tipo de horario"
-      }
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            required: ["name", "start_Date", "end_Date"],
-            properties: {
-              name: { type: "string", example: "Turno Tarde" },
-              start_Date: { type: "string", format: "date-time", example: "2025-07-03T14:00:00Z" },
-              end_Date: { type: "string", format: "date-time", example: "2025-07-03T22:00:00Z" }
-            }
-          }
-        }
-      }
-    },
-    responses: {
-      200: {
-        description: "Tipo de horario actualizado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/ScheduleType" }
-          }
-        }
-      },
-      400: {
-        description: "Error en la petición"
-      }
-    }
-  }
-},
-"/api/scheduleType/delete": {
-  delete: {
-    summary: "Eliminar un tipo de horario",
-    tags: ["ScheduleType"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del tipo de horario a eliminar"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Tipo de horario eliminado correctamente",
         content: {
           "application/json": {
             schema: {
               type: "object",
+              required: ["name", "start_Date", "end_Date"],
               properties: {
-                message: {
+                name: { type: "string", example: "Turno Mañana" },
+                start_Date: {
                   type: "string",
-                  example: "Tipo de horario eliminado correctamente"
-                }
-              }
-            }
-          }
-        }
+                  format: "date-time",
+                  example: "2025-07-03T06:00:00Z",
+                },
+                end_Date: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-03T14:00:00Z",
+                },
+              },
+            },
+          },
+        },
       },
-      404: {
-        description: "Tipo de horario no encontrado"
-      }
-    }
-  }
-},
-//-------schedules
-"/api/schedules/create": {
-  post: {
-    summary: "Crear un horario",
-    tags: ["Schedules"],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            $ref: "#/components/schemas/schedules"
-          }
-        }
-      }
+      responses: {
+        201: {
+          description: "Tipo de horario creado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ScheduleType" },
+            },
+          },
+        },
+        400: {
+          description: "Error de validación",
+        },
+      },
     },
-    responses: {
-      201: {
-        description: "Horario creado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/schedules" }
-          }
-        }
+  },
+  "/api/scheduleType/getAllNoPage": {
+    get: {
+      summary: "Obtener todos los tipos de horario",
+      tags: ["ScheduleType"],
+      responses: {
+        200: {
+          description: "Lista de tipos de horario",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/ScheduleType" },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error en la petición",
+        },
       },
-      400: { description: "Error de validación" }
-    }
-  }
-},
-"/api/schedules/getAll": {
-  get: {
-    summary: "Obtener todos los horarios (con filtros opcionales)",
-    tags: ["Schedules"],
-    parameters: [
-      {
-        name: "group",
-        in: "query",
-        required: false,
-        schema: { type: "string" },
-        description: "ID del grupo para filtrar"
-      },
-      {
-        name: "scheduleType",
-        in: "query",
-        required: false,
-        schema: { type: "string" },
-        description: "ID del tipo de horario para filtrar"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Lista de horarios",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: { $ref: "#/components/schemas/schedules" }
-            }
-          }
-        }
-      },
-      400: { description: "Error en la petición" }
-    }
-  }
-},
-"/api/schedules/getById": {
-  get: {
-    summary: "Obtener un horario por ID",
-    tags: ["Schedules"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" }
-      }
-    ],
-    responses: {
-      200: {
-        description: "Horario encontrado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/schedules" }
-          }
-        }
-      },
-      404: { description: "Horario no encontrado" }
-    }
-  }
-},
-"/api/schedules/update": {
-  put: {
-    summary: "Actualizar un horario",
-    tags: ["Schedules"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del horario a actualizar"
-      }
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            $ref: "#/components/schemas/schedules"
-          }
-        }
-      }
     },
-    responses: {
-      200: {
-        description: "Horario actualizado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/schedules" }
-          }
-        }
+  },
+  "/api/scheduleType/getById": {
+    get: {
+      summary: "Obtener un tipo de horario por ID",
+      tags: ["ScheduleType"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del tipo de horario",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Tipo de horario encontrado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ScheduleType" },
+            },
+          },
+        },
+        404: {
+          description: "Tipo de horario no encontrado",
+        },
       },
-      400: { description: "Error en la petición" }
-    }
-  }
-},
-"/api/schedules/delete": {
-  delete: {
-    summary: "Eliminar un horario por ID",
-    tags: ["Schedules"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
+    },
+  },
+  "/api/scheduleType/update": {
+    put: {
+      summary: "Actualizar un tipo de horario",
+      tags: ["ScheduleType"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del tipo de horario",
+        },
+      ],
+      requestBody: {
         required: true,
-        schema: { type: "string" },
-        description: "ID del horario a eliminar"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Horario eliminado correctamente",
         content: {
           "application/json": {
             schema: {
               type: "object",
+              required: ["name", "start_Date", "end_Date"],
               properties: {
-                message: {
+                name: { type: "string", example: "Turno Tarde" },
+                start_Date: {
                   type: "string",
-                  example: "Horario eliminado correctamente"
-                }
-              }
-            }
-          }
-        }
+                  format: "date-time",
+                  example: "2025-07-03T14:00:00Z",
+                },
+                end_Date: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-03T22:00:00Z",
+                },
+              },
+            },
+          },
+        },
       },
-      404: { description: "Horario no encontrado" }
-    }
-  }
-}
+      responses: {
+        200: {
+          description: "Tipo de horario actualizado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/ScheduleType" },
+            },
+          },
+        },
+        400: {
+          description: "Error en la petición",
+        },
+      },
+    },
+  },
+  "/api/scheduleType/delete": {
+    delete: {
+      summary: "Eliminar un tipo de horario",
+      tags: ["ScheduleType"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del tipo de horario a eliminar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Tipo de horario eliminado correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Tipo de horario eliminado correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Tipo de horario no encontrado",
+        },
+      },
+    },
+  },
+  //-------schedules
+  "/api/schedules/create": {
+    post: {
+      summary: "Crear un horario",
+      tags: ["Schedules"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/schedules",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Horario creado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/schedules" },
+            },
+          },
+        },
+        400: { description: "Error de validación" },
+      },
+    },
+  },
+  "/api/schedules/getAll": {
+    get: {
+      summary: "Obtener todos los horarios (con filtros opcionales)",
+      tags: ["Schedules"],
+      parameters: [
+        {
+          name: "group",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        },
+        {
+          name: "scheduleType",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del tipo de horario para filtrar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de horarios",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/schedules" },
+              },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    },
+  },
+  "/api/schedules/getById": {
+    get: {
+      summary: "Obtener un horario por ID",
+      tags: ["Schedules"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      responses: {
+        200: {
+          description: "Horario encontrado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/schedules" },
+            },
+          },
+        },
+        404: { description: "Horario no encontrado" },
+      },
+    },
+  },
+  "/api/schedules/update": {
+    put: {
+      summary: "Actualizar un horario",
+      tags: ["Schedules"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del horario a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/schedules",
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Horario actualizado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/schedules" },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    },
+  },
+  "/api/schedules/delete": {
+    delete: {
+      summary: "Eliminar un horario por ID",
+      tags: ["Schedules"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del horario a eliminar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Horario eliminado correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Horario eliminado correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: { description: "Horario no encontrado" },
+      },
+    },
+  },
+  //--------news-------------------
+  "/api/news/": {
+    get: {
+      summary: "Obtener todos los comunicados (con filtros opcionales)",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "search",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        },
+        {
+          name: "currentPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Página actual para paginación",
+        },
+        {
+          name: "rowsPerPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Cantidad de elementos por página",
+        },
+        {
+          name: "useGetAllNoPage",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          description:
+            "Si es true, ignora la paginación y trae todos los elementos",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de comunicados",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/News" },
+              },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    },
+    post: {
+      post: {
+        summary: "Crear un horario",
+        tags: ["News"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/News",
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: "Comunicado creado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/News" },
+              },
+            },
+          },
+          400: { description: "Error de validación" },
+        },
+      },
+    },
+  },
+  "/api/news/getPagination": {
+    get: {
+      summary: "Obtener todos los comunicados (con filtros opcionales)",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "search",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        },
+        {
+          name: "currentPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Página actual para paginación",
+        },
+        {
+          name: "rowsPerPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Cantidad de elementos por página",
+        },
+        {
+          name: "useGetAllNoPage",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          description:
+            "Si es true, ignora la paginación y trae todos los elementos",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de comunicados",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                items: { $ref: "#/components/schemas/Pagination" },
+              },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    },
+  },
 };

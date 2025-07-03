@@ -35,6 +35,8 @@ export const permissionService = {
       .skip(skip)
       .limit(filter.rowsPerPage);
 
+    console.log("get")
+
     return data;
   },
 
