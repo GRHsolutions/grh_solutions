@@ -13,8 +13,10 @@ const validationSchema = [
     }
 ];
 
-router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.create);
-router.get('/getAllNoPage', validateToken, scheduleTypeController.getAll); // Usar sin paginado por el momento :V
-router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.update);
-router.delete('/delete', validateToken, scheduleTypeController.delete);
-router.get('/getById', validateToken, scheduleTypeController.getById); // Obtener por ID
+router.post('/create',  validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.create);
+router.get('/getAllNoPage',  scheduleTypeController.getAll); 
+router.put('/update',  validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.update);
+router.delete('/delete',  scheduleTypeController.delete);
+router.get('/getById',  scheduleTypeController.getById); 
+
+export default router;

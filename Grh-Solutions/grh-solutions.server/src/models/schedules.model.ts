@@ -15,7 +15,7 @@ const schedulesSchema = new Schema(
       ref: "groups",
       required: true,
     },
-    ScheduleType: {
+    scheduleType: {
       type: Types.ObjectId,
       ref: "schedule_types",
       required: true,

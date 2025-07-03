@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 import routes from './routes/routes';
 import { MONGO_URI } from './config';
 import { swaggerComponents, swaggerPaths } from './swagger/initializations';
+import { validateToken } from './middleware/tokens.middlewares';
+import { verifyPermissionHandler } from './middleware/verifyPermission.middleware';
 
 dotenv.config();
 

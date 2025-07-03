@@ -18,6 +18,6 @@ export const deleteVacancy = (id: string, token: string): AxiosPromise => {
 }
 
 export const updateVacancy = (id: string, data: CreateVacancyDto, token: string): AxiosPromise => {
-  const url = `${LOGINMAINAPI}/update/${id}`;
+  const url = `${LOGINMAINAPI}/update?id=${id}`;
   return axios.put(url, data, { headers: { Authorization: `Bearer ${token}` } });
 }

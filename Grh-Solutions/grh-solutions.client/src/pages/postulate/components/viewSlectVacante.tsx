@@ -58,14 +58,13 @@ export default function ViewSelectVacante({ open, handleClose, vacantData }: IMo
 
       const response = await deleteVacancy(vacantData._id, auth.token);
       console.log("Vacante eliminada:", response.data);
-
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
       setOpenDeleteModal(false);
-      handleClose(); // opcional: cerrar también el modal principal si aplica
-
-      // Puedes mostrar un snackbar aquí si deseas notificar al usuario
+      handleClose();
     } catch (error) {
       console.error("Error al eliminar la vacante:", error);
-      // También podrías mostrar un Snackbar de error aquí
     }
   };
 

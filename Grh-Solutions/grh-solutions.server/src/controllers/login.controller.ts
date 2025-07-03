@@ -14,7 +14,7 @@ type RegisterForm = {
 };
 
 export const loginController = {
-  register: async (req: Request, res: Response) => {
+register: async (req: Request, res: Response) => {
     try {
       const dt = req.body as RegisterForm;
 
@@ -39,7 +39,9 @@ export const loginController = {
       const {
         email,
         password
-      } = req.body
+      } = req.body;
+
+      console.log("Login attempt with email:", email);
 
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
@@ -56,6 +58,7 @@ export const loginController = {
         user: {
           email: user.email,
           photo: user.photo,
+          rol: user.rol
         },
         token: token,
           warnings: countCVs <= 0 ? {

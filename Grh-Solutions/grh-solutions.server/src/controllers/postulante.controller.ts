@@ -1,14 +1,26 @@
 import { Request, Response } from "express";
 import { postulanteService } from "../services/postulante.service";
+import jwt from 'jsonwebtoken';
 
 export const postulanteController = {
   create: async (req: Request, res: Response) => {
     try {
-      const { vacante, status, user } = req.body;
+      const authHeader = req.headers.authorization;
 
-      if (!user || typeof user !== "string") {
-        return res.status(400).json({ message: "ID de usuario no válido" });
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Token no proporcionado" });
       }
+
+      const token = authHeader.split(" ")[1]; // Elimina el 'Bearer '
+
+      // Verifica y decodifica el token
+      const decoded = jwt.verify(token, "my_secret") as {
+        id: string;
+        email: string;
+        rol: string;
+      };
+
+      const { vacante, status } = req.body;
 
       if (!vacante || typeof vacante !== "string") {
         return res
@@ -17,7 +29,7 @@ export const postulanteController = {
       }
 
       const newPostulante = {
-        user,
+        user: decoded.id, // 👈 El ID del usuario autenticado viene del token
         vacante,
         application_date: new Date(),
         status: status || "Pendiente",
@@ -26,7 +38,7 @@ export const postulanteController = {
       const data = await postulanteService.create(newPostulante);
       return res.status(201).json(data);
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         message: error.message,
         innerExpression: error.innerExpression,
       });

@@ -17,6 +17,7 @@ import {
 } from '@mui/icons-material';
 
 export type DragNDropVariables = {
+  id: string;
   name: string,
   type: string, 
   size: number,
@@ -79,6 +80,7 @@ export function DragDropInput({
       reader.readAsDataURL(file);
       reader.onload = () => {
         resolve({
+          id: String(new Date()),
           name: file.name,
           type: file.type,
           size: file.size,
