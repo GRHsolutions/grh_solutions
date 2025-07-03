@@ -168,3 +168,171 @@ Contract: {
     },
   },
 },
+
+
+/// Solicitudes Swagger
+
+"/api/request/create": {
+  post: {
+    summary: "Crear solicitud",
+    tags: ["Solicitud"],
+    security: [{ bearerAuth: [] }],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/Solicitud"
+          }
+        }
+      }
+    },
+    responses: {
+      "201": {
+        description: "Solicitud creada exitosamente"
+      },
+      "400": {
+        description: "Faltan campos obligatorios o formato inválido"
+      },
+      "500": {
+        description: "Error del servidor"
+      }
+    }
+  }
+},
+
+"/api/request/getAll": {
+  get: {
+    summary: "Listar todas las solicitudes (con filtros opcionales)",
+    tags: ["Solicitud"],
+    security: [{ bearerAuth: [] }],
+    parameters: [
+      {
+        name: "title",
+        in: "query",
+        schema: { type: "string" },
+        description: "Filtrar por título"
+      },
+      {
+        name: "status",
+        in: "query",
+        schema: { type: "string" },
+        description: "Filtrar por estado"
+      },
+      {
+        name: "type_request",
+        in: "query",
+        schema: { type: "string" },
+        description: "Filtrar por tipo de solicitud"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Lista de solicitudes"
+      },
+      "500": {
+        description: "Error del servidor"
+      }
+    }
+  }
+},
+
+"/api/request/getById": {
+  get: {
+    summary: "Obtener solicitud por ID",
+    tags: ["Solicitud"],
+    security: [{ bearerAuth: [] }],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: {
+          type: "string"
+        },
+        description: "ID de la solicitud"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Solicitud encontrada"
+      },
+      "400": {
+        description: "ID inválido"
+      },
+      "404": {
+        description: "Solicitud no encontrada"
+      }
+    }
+  }
+},
+
+"/api/request/update": {
+  put: {
+    summary: "Actualizar solicitud",
+    tags: ["Solicitud"],
+    security: [{ bearerAuth: [] }],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: {
+          type: "string"
+        },
+        description: "ID de la solicitud a actualizar"
+      }
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/Solicitud"
+          }
+        }
+      }
+    },
+    responses: {
+      "200": {
+        description: "Solicitud actualizada correctamente"
+      },
+      "400": {
+        description: "Datos inválidos o ID incorrecto"
+      },
+      "404": {
+        description: "Solicitud no encontrada"
+      }
+    }
+  }
+},
+
+"/api/request/delete": {
+  delete: {
+    summary: "Eliminar solicitud",
+    tags: ["Solicitud"],
+    security: [{ bearerAuth: [] }],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: {
+          type: "string"
+        },
+        description: "ID de la solicitud a eliminar"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Solicitud eliminada exitosamente"
+      },
+      "400": {
+        description: "ID inválido"
+      },
+      "404": {
+        description: "Solicitud no encontrada"
+      },
+    },
+  },
+},

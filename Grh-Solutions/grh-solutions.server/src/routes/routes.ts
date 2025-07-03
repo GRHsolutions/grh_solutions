@@ -19,6 +19,7 @@ import news from "./news";
 import profileRoutes from "./profile";
 import commentary from './commentary';
 import contract from "./contract"
+import requests from './requests';
 
 const routes = Router();
 // Apply middlewares globally to all routes
@@ -44,5 +45,6 @@ routes.use("/news", news);
 routes.use('/commentary', commentary)
 routes.use("/profiles", profileRoutes);
 routes.use("/contract", contract);
+routes.use('/requests', requests);
 
 export default routes;
