@@ -6,6 +6,7 @@ import rol from "./rol";
 import Vacancies from "./vacancies";
 import TypeContract from "./typeContract";
 import postulante from "./postulante";
+import contract from "./contract"
 // import { validateToken } from '../middleware/tokens.middlewares';
 // import { verifyPermissionHandler } from '../middleware/verifyPermission.middleware';
 import permission from "./permission";
@@ -40,5 +41,6 @@ routes.use("/puesto", puesto);
 routes.use("/empleados", empleado);
 routes.use("/news", news);
 routes.use("/profiles", profileRoutes);
+routes.use("/contract", contract);
 
 export default routes;
