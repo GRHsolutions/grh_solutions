@@ -53,4 +53,15 @@ export const newsService = {
       totalItems,
     } as Pagination;
   },
+  delete: async (id: number) => {
+    const conf = await NewsModel.findByIdAndUpdate(
+      id,
+      { status: "deleted" }, // cambia el estado
+      { new: true }      // devuelve el documento actualizado
+    );
+
+    if(conf){
+      return conf;
+    };
+  },
 };

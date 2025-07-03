@@ -2950,6 +2950,33 @@ export const swaggerPaths: Paths = {
         },
       },
     },
+    delete: {
+      summary: "Elimina el comunicado",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        }
+      ],
+      responses: {
+        200: {
+          description: "Eliminado correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/News" },
+              },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    }
   },
   "/api/news/getPagination": {
     get: {
@@ -3002,6 +3029,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  //-------------PROFILES------------
   "/api/profiles/create": {
     post: {
       summary: "Crear perfil",

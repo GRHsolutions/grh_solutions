@@ -48,4 +48,4 @@ const newsSchema = new Schema(
   { timestamps: true }
 );
 
-export const NewsModel = model("News", newsSchema);
+export const NewsModel = model("news", newsSchema);
