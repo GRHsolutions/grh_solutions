@@ -79,12 +79,12 @@ export default function VistaVacantes({ setSelectOption }: Vacante) {
           ))}
         </Box>
       </Box>
-      <Pagination
+      {/* <Pagination
         count={10}
         page={page}
         onChange={(event, value) => setPage(value)}
         sx={{ mt: 2, display: "flex", justifyContent: "center" }}
-      />
+      /> */}
     </Box>
   );
 }

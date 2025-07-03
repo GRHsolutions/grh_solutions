@@ -72,13 +72,16 @@ const modalityOptions = [
 export default function ModalCreateVacant({ open, handleClose }: IModalOptionsProps) {
   const theme = useTheme();
   const [openAlert, setOpenAlert] = useState(false);
-  const { auth} = useAuth();
+  const { auth } = useAuth();
 
   const handleSubmit = (values: typeof initialValues) => {
     createVacancy(values, auth.token)
       .then((response) => {
         console.log("Vacante creada:", response.data);
         setOpenAlert(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
       })
       .catch((error) => {
         console.error("Error al crear la vacante:", error);

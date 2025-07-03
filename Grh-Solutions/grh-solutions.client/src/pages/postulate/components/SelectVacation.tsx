@@ -4,6 +4,8 @@ import { VacanteData } from "../../../domain/models/vacantes/vacantes.entities";
 import GrhButton from "../../../generics/grh-generics/button";
 import { Note, Visibility } from "@mui/icons-material";
 import ViewSelectVacante from "./viewSlectVacante";
+import { useAuth } from "../../../hooks/auth";
+import { CreatePostulante } from "../../../domain/services/postulante/postulante.service";
 
 interface SelectVacationProps {
   selectedVacante: VacanteData | null;
@@ -12,10 +14,19 @@ interface SelectVacationProps {
 export default function SelectVacation({ selectedVacante }: SelectVacationProps) {
   const [openAlert, setOpenAlert] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-
+  const { auth } = useAuth();
   const handleApply = () => {
-    setOpenAlert(true);
-  }
+    CreatePostulante(selectedVacante?._id, "pendiente", auth.token)
+      .then(() => {
+        setOpenAlert(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 5000);
+      })
+      .catch((err) => {
+        console.error("Error al postularse:", err);
+      });
+  };
 
   const handleview = () => {
     setOpenModal(true)
