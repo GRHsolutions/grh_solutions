@@ -4,7 +4,7 @@ import { validateToken } from '../middleware/tokens.middlewares';
 
 const router = express.Router();
 
-router.post("/create", empleadosController.create);
+// router.post("/create", empleadosController.create);
 router.get("/getAll", empleadosController.getAll);
 router.get("/getById", empleadosController.getById);
 router.put("/update", empleadosController.update);

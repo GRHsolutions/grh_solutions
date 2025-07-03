@@ -14,7 +14,7 @@ type RegisterForm = {
 };
 
 export const loginController = {
-register: async (req: Request, res: Response) => {
+  register: async (req: Request, res: Response) => {
     try {
       const dt = req.body as RegisterForm;
 
@@ -35,7 +35,7 @@ register: async (req: Request, res: Response) => {
 
   login: async (req: Request, res: Response) => {
     try {
-      let miss : { statusCode: number, message: string };
+      let miss: { statusCode: number, message: string };
       const {
         email,
         password
@@ -61,10 +61,10 @@ register: async (req: Request, res: Response) => {
           rol: user.rol
         },
         token: token,
-          warnings: countCVs <= 0 ? {
-            code: 100,
-            message: "Debe crear su hoja de vida"
-          } : undefined
+        warnings: countCVs <= 0 ? {
+          code: 100,
+          message: "Debe crear su hoja de vida"
+        } : undefined
       });
 
     } catch (error: any) {
