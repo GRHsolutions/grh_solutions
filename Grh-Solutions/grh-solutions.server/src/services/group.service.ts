@@ -14,13 +14,35 @@ export const groupService = {
 
     return await groupsModel.find(query);
   },
-    create : async (entity: object) => {
-        return await groupsModel.create(entity);
-    },
-    delete : async (id: string) => {
-        return await groupsModel.findByIdAndDelete(id);
-    },
-    deleteUserFromGroup : async (groupId: string, userId: string) => {
-        return await groupsModel.findOneAndUpdate({ _id: groupId }, { $pull: { users: userId } }, { new: true }); 
-    },
+  create: async (entity: { name: string; area: string; users: string[] }) => {
+    return groupsModel.create(entity);
+  },
+  update: async (
+  id: string,
+  payload: { name?: string; userId?: string }
+) => {
+  const update: any = {};
+
+  if (payload.name) {
+    update.name = payload.name.trim();
+  }
+
+  if (payload.userId) {
+    // añade solo si no existe (set‑like)
+    update.$addToSet = { users: payload.userId };
+  }
+
+  // { new:true } → devuelve el documento ya actualizado
+  return groupsModel.findByIdAndUpdate(id, update, { new: true });
+},
+  delete: async (id: string) => {
+    return groupsModel.findByIdAndDelete(id);
+  },
+deleteUserFromGroup: async (groupId: string, userId: string) => {
+  return await groupsModel.findOneAndUpdate(
+    { _id: groupId },
+    { $pull: { users: userId } },
+    { new: true }
+  );
+}
 }

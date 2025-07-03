@@ -294,21 +294,28 @@ export const swaggerComponents: Components = {
       },
     },
     schedules: {
-      type: "object",
-      properties: {
-        start_date: {
-          type: "date",
-        },
-        end_date: {
-          type: "date",
-        },
-        group: {
-          type: "string",
-        },
-        ScheduleType: {
-          type: "string",
-        }
-      },
+  type: "object",
+  required: ["start_date", "end_date", "group", "ScheduleType"],
+  properties: {
+    start_date: {
+      type: "string",
+      format: "date-time",
+      example: "2025-07-03T08:00:00Z"
+    },
+    end_date: {
+      type: "string",
+      format: "date-time",
+      example: "2025-07-03T16:00:00Z"
+    },
+    group: {
+      type: "string",
+      example: "64e3f82b9f6d3c1234567891"
+    },
+    scheduleType: {
+      type: "string",
+      example: "64e3f82b9f6d3c1234567892"
+    },
+  }
     },
     group: {
       type: "object",
@@ -384,16 +391,27 @@ export const swaggerComponents: Components = {
         }
       }
     },
-
     // ----------------------------------------------------------------------
-    area: {
+    Area: {
       type: "object",
       properties: {
         name: {
           type: "string",
         },
-        user: {
+      },
+    },
+    //------------- scheduleType
+    ScheduleType: {
+      type: "object",
+      properties: {
+        name: {
           type: "string",
+        },
+        start_Date: {
+          type: "date",
+        },
+        end_Date: {
+          type: "date",
         }
       },
     },
@@ -1471,7 +1489,7 @@ export const swaggerPaths: Paths = {
       }
     }
   },
-  "/api/groups/deleteUserFromGroup": {
+  "/api/group/deleteUserFromGroup": {
     delete: {
       summary: "Eliminar un usuario de un grupo",
       tags: ["Groups"],
@@ -1535,6 +1553,85 @@ export const swaggerPaths: Paths = {
       }
     }
   },
+  "/api/group/update": {
+  put: {
+    summary: "Actualizar nombre del grupo y/o añadir un usuario",
+    description:
+      "Permite cambiar el nombre del grupo, añadir un usuario al array `users`, o ambas cosas a la vez.",
+    tags: ["Groups"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" },
+        description: "ID del grupo a actualizar"
+      }
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              name: {
+                type: "string",
+                example: "Grupo Renovado"
+              },
+              userId: {
+                type: "string",
+                example: "64e3f82b9f6d3c1234567891",
+                description: "ID del usuario que se añadirá al grupo"
+              }
+            },
+            oneOf: [
+              { required: ["name"] },
+              { required: ["userId"] }
+            ]
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: "Grupo actualizado correctamente",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/Group" }
+          }
+        }
+      },
+      400: {
+        description: "Falta de parámetros o validación",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                message: { type: "string", example: "Debes enviar al menos 'name' o 'userId' para actualizar" },
+                innerExpression: { type: "string", nullable: true }
+              }
+            }
+          }
+        }
+      },
+      404: {
+        description: "Grupo no encontrado",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                message: { type: "string", example: "Grupo no encontrado" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
   // AREAS ENDPOINTS FOR SWAGGER
  "/api/area/create": {
     post: {
@@ -1779,5 +1876,330 @@ export const swaggerPaths: Paths = {
         }
       }
     }
+  },
+  // scheduletype
+"/api/scheduleType/create": {
+  post: {
+    summary: "Crear un tipo de horario",
+    tags: ["ScheduleType"],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            required: ["name", "start_Date", "end_Date"],
+            properties: {
+              name: { type: "string", example: "Turno Mañana" },
+              start_Date: { type: "string", format: "date-time", example: "2025-07-03T06:00:00Z" },
+              end_Date: { type: "string", format: "date-time", example: "2025-07-03T14:00:00Z" }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      201: {
+        description: "Tipo de horario creado",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ScheduleType" }
+          }
+        }
+      },
+      400: {
+        description: "Error de validación"
+      }
+    }
   }
+},
+"/api/scheduleType/getAllNoPage": {
+  get: {
+    summary: "Obtener todos los tipos de horario",
+    tags: ["ScheduleType"],
+    responses: {
+      200: {
+        description: "Lista de tipos de horario",
+        content: {
+          "application/json": {
+            schema: {
+              type: "array",
+              items: { $ref: "#/components/schemas/ScheduleType" }
+            }
+          }
+        }
+      },
+      400: {
+        description: "Error en la petición"
+      }
+    }
+  }
+},
+"/api/scheduleType/getById": {
+  get: {
+    summary: "Obtener un tipo de horario por ID",
+    tags: ["ScheduleType"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" },
+        description: "ID del tipo de horario"
+      }
+    ],
+    responses: {
+      200: {
+        description: "Tipo de horario encontrado",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ScheduleType" }
+          }
+        }
+      },
+      404: {
+        description: "Tipo de horario no encontrado"
+      }
+    }
+  }
+},
+"/api/scheduleType/update": {
+  put: {
+    summary: "Actualizar un tipo de horario",
+    tags: ["ScheduleType"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" },
+        description: "ID del tipo de horario"
+      }
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            required: ["name", "start_Date", "end_Date"],
+            properties: {
+              name: { type: "string", example: "Turno Tarde" },
+              start_Date: { type: "string", format: "date-time", example: "2025-07-03T14:00:00Z" },
+              end_Date: { type: "string", format: "date-time", example: "2025-07-03T22:00:00Z" }
+            }
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: "Tipo de horario actualizado",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ScheduleType" }
+          }
+        }
+      },
+      400: {
+        description: "Error en la petición"
+      }
+    }
+  }
+},
+"/api/scheduleType/delete": {
+  delete: {
+    summary: "Eliminar un tipo de horario",
+    tags: ["ScheduleType"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" },
+        description: "ID del tipo de horario a eliminar"
+      }
+    ],
+    responses: {
+      200: {
+        description: "Tipo de horario eliminado correctamente",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                message: {
+                  type: "string",
+                  example: "Tipo de horario eliminado correctamente"
+                }
+              }
+            }
+          }
+        }
+      },
+      404: {
+        description: "Tipo de horario no encontrado"
+      }
+    }
+  }
+},
+//-------schedules
+"/api/schedules/create": {
+  post: {
+    summary: "Crear un horario",
+    tags: ["Schedules"],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/schedules"
+          }
+        }
+      }
+    },
+    responses: {
+      201: {
+        description: "Horario creado",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/schedules" }
+          }
+        }
+      },
+      400: { description: "Error de validación" }
+    }
+  }
+},
+"/api/schedules/getAll": {
+  get: {
+    summary: "Obtener todos los horarios (con filtros opcionales)",
+    tags: ["Schedules"],
+    parameters: [
+      {
+        name: "group",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "ID del grupo para filtrar"
+      },
+      {
+        name: "scheduleType",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "ID del tipo de horario para filtrar"
+      }
+    ],
+    responses: {
+      200: {
+        description: "Lista de horarios",
+        content: {
+          "application/json": {
+            schema: {
+              type: "array",
+              items: { $ref: "#/components/schemas/schedules" }
+            }
+          }
+        }
+      },
+      400: { description: "Error en la petición" }
+    }
+  }
+},
+"/api/schedules/getById": {
+  get: {
+    summary: "Obtener un horario por ID",
+    tags: ["Schedules"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" }
+      }
+    ],
+    responses: {
+      200: {
+        description: "Horario encontrado",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/schedules" }
+          }
+        }
+      },
+      404: { description: "Horario no encontrado" }
+    }
+  }
+},
+"/api/schedules/update": {
+  put: {
+    summary: "Actualizar un horario",
+    tags: ["Schedules"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" },
+        description: "ID del horario a actualizar"
+      }
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/schedules"
+          }
+        }
+      }
+    },
+    responses: {
+      200: {
+        description: "Horario actualizado",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/schedules" }
+          }
+        }
+      },
+      400: { description: "Error en la petición" }
+    }
+  }
+},
+"/api/schedules/delete": {
+  delete: {
+    summary: "Eliminar un horario por ID",
+    tags: ["Schedules"],
+    parameters: [
+      {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" },
+        description: "ID del horario a eliminar"
+      }
+    ],
+    responses: {
+      200: {
+        description: "Horario eliminado correctamente",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                message: {
+                  type: "string",
+                  example: "Horario eliminado correctamente"
+                }
+              }
+            }
+          }
+        }
+      },
+      404: { description: "Horario no encontrado" }
+    }
+  }
+}
 };

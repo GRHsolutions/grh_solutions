@@ -3,23 +3,31 @@ import { schedulesModel } from "../models/schedules.model";
 import { schedulesFilter } from "../filters/schedules.filters";
 
 export const schedulesService = {
-  create: async (entity: object) => {
+  create: async (entity: {
+    start_date: Date;
+    end_date: Date;
+    group: string;
+    scheduleType: string;
+  })=> {
     return await schedulesModel.create(entity);
   },
-  getAll: async (filter: schedulesFilter) => {
-    const query: any = {};
-    console.log(filter.name);
-    if (filter.name && filter.name.trim() !== "") {
-      query.$or = [{ name: new RegExp(filter.name, "i") }]; // Busqueda insensible a mayusculas
-    }
-    return await schedulesModel.find(query);
+  getAll: async () => {
+    return schedulesModel
+      .find()               
+      .populate("group")    
+      .populate("scheduleType");
   },
 
   getById: async (id: string) => {
-    return await schedulesModel.findById(id);
+    return await schedulesModel.findById(id).populate("group").populate("scheduleType");
   },
 
-  update: async (id: string, entity: object) => {
+  update: async (id: string, entity: Partial<{
+    start_date: Date;
+    end_date: Date;
+    group: string;
+    scheduleType: string;
+  }>) => {
     return await schedulesModel.findByIdAndUpdate(id, entity, { new: true });
   },
 

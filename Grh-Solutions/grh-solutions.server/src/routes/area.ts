@@ -13,10 +13,10 @@ const validationSchema = [
     }
 ];
 
-router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), areaController.create);
-router.delete('/delete', validateToken, areaController.delete);
-router.get('/getAllNoPage', validateToken, areaController.getAll); // Usar sin paginado por el momento :V
-router.get('/getById', validateToken, areaController.getById); // Obtener por ID
-router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), areaController.update);
+router.post('/create',  validationSchemaHandler({ schema: validationSchema }), areaController.create);
+router.delete('/delete',  areaController.delete);
+router.get('/getAllNoPage',  areaController.getAll); // Usar sin paginado por el momento :V
+router.get('/getById',  areaController.getById); // Obtener por ID
+router.put('/update',  validationSchemaHandler({ schema: validationSchema }), areaController.update);
 
 export default router;

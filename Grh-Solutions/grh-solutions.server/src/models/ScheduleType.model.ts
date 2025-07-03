@@ -3,7 +3,8 @@ import { Schema,Types, model } from "mongoose";
 const scheduleTypeSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        trim: true
     },
     start_Date: {
         type: Date,

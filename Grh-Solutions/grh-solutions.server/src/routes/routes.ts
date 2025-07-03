@@ -17,8 +17,6 @@ import group from './group';
 const routes = Router();
 
 // Apply middlewares globally to all routes
-routes.use(validateToken);
-routes.use(verifyPermissionHandler);
 
 //Define routes
 routes.use('/login', Login);
