@@ -312,7 +312,10 @@ export const swaggerComponents: Components = {
         },
         scheduleType: {
           type: "string",
+<<<<<<< Updated upstream
           example: "64e3f82b9f6d3c1234567892",
+=======
+>>>>>>> Stashed changes
         },
       },
     },
@@ -406,6 +409,7 @@ export const swaggerComponents: Components = {
         name: {
           type: "string",
         },
+<<<<<<< Updated upstream
         start_Date: {
           type: "date",
         },
@@ -499,6 +503,28 @@ export const swaggerComponents: Components = {
         totalItems: {
           type: "number",
         },
+=======
+      },
+    },
+
+    Profile: {
+      type: "object",
+      properties: {
+        user: { type: "string" },
+        name: { type: "string" },
+        lastname: { type: "string" },
+        date_of_birth: { type: "string", format: "date" },
+        email: { type: "string" },
+        address: { type: "string" },
+        number_phone: { type: "number" },
+        telephone: { type: "number" },
+        rh: { type: "string" },
+        status: { type: "string" },
+        type_document: { type: "string" },
+        document: { type: "number" },
+        vacancy_name: { type: "string" },
+        date_application: { type: "string", format: "date" },
+>>>>>>> Stashed changes
       },
     },
   },
@@ -1674,6 +1700,7 @@ export const swaggerPaths: Paths = {
         },
       },
     },
+<<<<<<< Updated upstream
   },
   "/api/group/update": {
     put: {
@@ -1754,6 +1781,8 @@ export const swaggerPaths: Paths = {
         },
       },
     },
+=======
+>>>>>>> Stashed changes
   },
   // AREAS ENDPOINTS FOR SWAGGER
   "/api/area/create": {
@@ -2003,17 +2032,26 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+<<<<<<< Updated upstream
   // scheduletype
   "/api/scheduleType/create": {
     post: {
       summary: "Crear un tipo de horario",
       tags: ["ScheduleType"],
+=======
+  "/api/profiles/create": {
+    post: {
+      summary: "Crear perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+>>>>>>> Stashed changes
       requestBody: {
         required: true,
         content: {
           "application/json": {
             schema: {
               type: "object",
+<<<<<<< Updated upstream
               required: ["name", "start_Date", "end_Date"],
               properties: {
                 name: { type: "string", example: "Turno Mañana" },
@@ -2026,6 +2064,47 @@ export const swaggerPaths: Paths = {
                   type: "string",
                   format: "date-time",
                   example: "2025-07-03T14:00:00Z",
+=======
+              required: [
+                "user",
+                "name",
+                "lastname",
+                "date_of_birth",
+                "email",
+                "address",
+                "number_phone",
+                "rh",
+                "status",
+                "type_document",
+                "document",
+                "vacancy_name",
+              ],
+              properties: {
+                user: { type: "string", example: "64d1..." },
+                name: { type: "string", example: "Miguel" },
+                lastname: { type: "string", example: "Ballesta" },
+                date_of_birth: {
+                  type: "string",
+                  format: "date",
+                  example: "1995-06-10",
+                },
+                email: { type: "string", example: "miguel@example.com" },
+                address: { type: "string", example: "Calle 123" },
+                number_phone: { type: "number", example: 3121234567 },
+                telephone: { type: "number", example: 1234567 },
+                rh: { type: "string", example: "O+" },
+                status: { type: "string", example: "activo" },
+                type_document: { type: "string", example: "CC" },
+                document: { type: "number", example: 1020304050 },
+                vacancy_name: {
+                  type: "string",
+                  example: "Desarrollador Backend",
+                },
+                date_application: {
+                  type: "string",
+                  format: "date",
+                  example: "2025-07-03",
+>>>>>>> Stashed changes
                 },
               },
             },
@@ -2033,6 +2112,7 @@ export const swaggerPaths: Paths = {
         },
       },
       responses: {
+<<<<<<< Updated upstream
         201: {
           description: "Tipo de horario creado",
           content: {
@@ -2043,10 +2123,18 @@ export const swaggerPaths: Paths = {
         },
         400: {
           description: "Error de validación",
+=======
+        "201": {
+          description: "Perfil creado exitosamente",
+        },
+        "400": {
+          description: "Error en la solicitud",
+>>>>>>> Stashed changes
         },
       },
     },
   },
+<<<<<<< Updated upstream
   "/api/scheduleType/getAllNoPage": {
     get: {
       summary: "Obtener todos los tipos de horario",
@@ -2064,11 +2152,85 @@ export const swaggerPaths: Paths = {
           },
         },
         400: {
+=======
+
+  "/api/profiles/getById": {
+    get: {
+      summary: "Obtener perfil por ID",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Solicitud inválida",
+        },
+      },
+    },
+  },
+
+  "/api/profiles/getByUserId": {
+    get: {
+      summary: "Obtener perfil por ID de usuario",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Error al buscar perfil",
+        },
+      },
+    },
+  },
+
+  "/api/profiles/update": {
+    put: {
+      summary: "Actualizar un perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Profile",
+            },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Perfil actualizado",
+        },
+        "400": {
+>>>>>>> Stashed changes
           description: "Error en la petición",
         },
       },
     },
   },
+<<<<<<< Updated upstream
   "/api/scheduleType/getById": {
     get: {
       summary: "Obtener un tipo de horario por ID",
@@ -2153,12 +2315,21 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un tipo de horario",
       tags: ["ScheduleType"],
+=======
+
+  "/api/profiles/delete": {
+    delete: {
+      summary: "Eliminar un perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+>>>>>>> Stashed changes
       parameters: [
         {
           name: "id",
           in: "query",
           required: true,
           schema: { type: "string" },
+<<<<<<< Updated upstream
           description: "ID del tipo de horario a eliminar",
         },
       ],
@@ -2181,10 +2352,22 @@ export const swaggerPaths: Paths = {
         },
         404: {
           description: "Tipo de horario no encontrado",
+=======
+          description: "ID del perfil a eliminar",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Perfil eliminado",
+        },
+        "400": {
+          description: "Error al eliminar perfil",
+>>>>>>> Stashed changes
         },
       },
     },
   },
+<<<<<<< Updated upstream
   //-------schedules
   "/api/schedules/create": {
     post: {
@@ -2474,4 +2657,6 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+=======
+>>>>>>> Stashed changes
 };

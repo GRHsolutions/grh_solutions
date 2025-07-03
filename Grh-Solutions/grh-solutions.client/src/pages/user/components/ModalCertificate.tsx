@@ -1,7 +1,10 @@
-import { Box, Typography, Modal, IconButton, TextField, Select, MenuItem, Button, useTheme } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import { Box, Modal, Typography, useTheme } from '@mui/material';
 import GrhButton from '../../../generics/grh-generics/button';
+import { Profile } from '../../../domain/models/profile/profile.entities';
+import html2pdf from 'html2pdf.js';
+import { useRef } from 'react';
+import { generateLaborCertificateHTML } from './GenerateCertificate';
+import { IOption } from '../../../domain/interfaces/common.interface';
 
 const style = {
   position: 'absolute',
@@ -17,76 +20,69 @@ const style = {
   borderRadius: '15px',
   display: 'flex',
   flexDirection: 'column',
-  gap: 2
+  gap: 2,
+  overflowY: 'auto'
 };
 
 interface IModalOptionsProps {
   open: boolean;
   handleClose: () => void;
+  profile: Partial<Profile>;
+  documentType: IOption[];
 }
 
-export default function ModalCertificate({ open, handleClose }: IModalOptionsProps) {
+export default function ModalCertificate({ open, handleClose, profile, documentType }: IModalOptionsProps) {
   const theme = useTheme();
+  const certificateRef = useRef<HTMLDivElement>(null);
+
+  const handleDownloadPDF = () => {
+    const element = certificateRef.current;
+    if (!element) return;
+
+    html2pdf()
+      .set({
+        margin: 1,
+        filename: `certificado_laboral_${profile.name || 'usuario'}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      })
+      .from(element)
+      .save();
+  };
 
   return (
-    <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
-      <Box sx={style}>
-        <IconButton onClick={handleClose} sx={{ position: 'absolute', top: 10, right: 10, color: theme.palette.text.primary }}>
-          <CloseIcon />
-        </IconButton>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          <PictureAsPdfIcon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
-          <Box>
-            <Typography variant="h5" fontWeight="bold" color={theme.palette.text.primary}>
-              Descargar Certificados
-            </Typography>
-            <Typography variant="body1" color={theme.palette.text.primary}>Roberto - Gerente</Typography>
-          </Box>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-          <Box sx={{ flex: 1, mr: 2 }}>
-            <Typography variant="body2" color={theme.palette.text.primary}>Tipo de documento:</Typography>
-            <Select fullWidth defaultValue="" sx={{ color: theme.palette.text.primary }}>
-              <MenuItem value="">Seleccione el tipo de documento</MenuItem>
-              <MenuItem value="certificado1">Certificado 1</MenuItem>
-              <MenuItem value="certificado2">Certificado 2</MenuItem>
-            </Select>
-          </Box>
-          <Box sx={{ flex: 1 }}>
-            <Typography variant="body2" color={theme.palette.text.primary}>Búsqueda:</Typography>
-            <TextField fullWidth placeholder="Buscar..." sx={{ input: { color: theme.palette.text.primary } }} />
-          </Box>
-        </Box>
+    <Modal open={open} onClose={handleClose}>
+      <Box sx={{ ...style, bgcolor: theme.palette.background.default }}>
+        <Typography variant="h5" sx={{ textAlign: "center", fontWeight: "bold", color: theme.palette.text.primary }}>
+          Certificado laboral
+        </Typography>
+
         <Box
+          ref={certificateRef}
           sx={{
             flex: 1,
-            border: '2px solid black',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
+            border: `1px solid ${theme.palette.divider}`,
             mt: 2,
-            p: 2,
-            color: theme.palette.text.primary
+            p: 4,
+            bgcolor: "#ffffff", // Blanco forzado solo para impresión PDF
+            color: "#000000", // Negro para texto en PDF
+            borderRadius: 2,
+            fontFamily: 'Arial, sans-serif'
           }}
         >
-          <Typography variant="h4" fontWeight="bold" color={theme.palette.text.primary}>
-            DOCUMENTO PDF
-          </Typography>
-          <Typography variant="body2" sx={{ mt: 1, fontStyle: 'italic' }} color={theme.palette.text.primary}>
-            (Previsualización del documento)
-          </Typography>
+          <div dangerouslySetInnerHTML={{ __html: generateLaborCertificateHTML(profile, documentType) }} />
         </Box>
+
         <GrhButton
-          label={"Descargar PDF"}
-          variant='tertiary'
+          label="Descargar PDF"
+          variant="tertiary"
+          onClick={handleDownloadPDF}
           sx={{
-            width: '15%',
+            width: '20%',
             alignSelf: 'flex-end',
-             mt: 2
+            mt: 2
           }}
-          id={"descargar-pdf"}
+          id="descargar-pdf"
         />
       </Box>
     </Modal>

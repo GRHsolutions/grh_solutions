@@ -14,11 +14,11 @@ const validationSchema = [
     }
 ];
 
-router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), rolController.create);
-router.get('/getAllNoPage', validateToken, rolController.getAll); // Usar sin paginado por el momento :V
-router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), rolController.update);
-router.delete('/delete', validateToken, rolController.delete);
-router.get('/getById', validateToken, rolController.getById); // Obtener por ID
+router.post('/create',  validationSchemaHandler({ schema: validationSchema }), rolController.create);
+router.get('/getAllNoPage',  rolController.getAll); // Usar sin paginado por el momento :V
+router.put('/update',  validationSchemaHandler({ schema: validationSchema }), rolController.update);
+router.delete('/delete',  rolController.delete);
+router.get('/getById',  rolController.getById); // Obtener por ID
 
 
 export default router;

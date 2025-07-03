@@ -1,28 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
-  Box, Typography, Modal, IconButton, TextField, Select, MenuItem, InputLabel, FormControl, Button, Checkbox, Grid, useTheme,
-  Switch
+  Box, Typography, Modal, IconButton, TextField, Select, MenuItem, InputLabel, FormControl,
+  Button, Grid, useTheme, Switch, CircularProgress
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import ModalCreateRol from './ModalCreateRol';
+import { CreateRolDto, UpdateRolDto } from '../../../domain/models/role/role.entities';
+import { getRoles, updateRol } from '../../../domain/services/Roles/Roles.service';
+import { getPermissions } from '../../../domain/services/Permissions/Permissions.service';
+import { useAuth } from '../../../hooks/auth';
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '80%',
-  height: '90%',
-  bgcolor: 'background.paper',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: '15px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 2,
-  overflowY: 'auto',
-  border: '2px solid #000',
-};
 
 interface IModalRoleProps {
   open: boolean;
@@ -31,86 +18,129 @@ interface IModalRoleProps {
 
 export default function ModalRole({ open, handleClose }: IModalRoleProps) {
   const theme = useTheme();
-  const [selectedRole, setSelectedRole] = useState('');
-  const [selectedModule, setSelectedModule] = useState('');
+  const [roles, setRoles] = useState<CreateRolDto[]>([]);
+  const [selectedRoleId, setSelectedRoleId] = useState('');
+  const [permissions, setPermissions] = useState<{ _id: string, description: string }[]>([]);
+  const [assignedPermissions, setAssignedPermissions] = useState<string[]>([]);
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const {auth } = useAuth();
 
-  const roles = ["Empleado - Emp", "Jefe de Área - JA", "Administrador - Admin", "Recursos Humanos - RH"];
-  const permissions = [
-    "Permiso para ingresar al módulo de empleados.",
-    "Permiso para aprobar una vacante.",
-    "Permiso para editar información de un empleado.",
-    "Permiso para deshabilitar un empleado.",
-    "Permiso para rechazar una petición."
-  ];
-  const [checked, setChecked] = useState([false, true, true, true, false]);
+  useEffect(() => {
 
-  const handleCheck = (index: number) => {
-    setChecked(prev => prev.map((c, i) => (i === index ? !c : c)));
+
+    getRoles(auth.token).then(res => setRoles(res.data));
+    getPermissions(auth.token).then(res => setPermissions(res.data));
+  }, []);
+
+  useEffect(() => {
+    const selectedRole = roles.find(role => role._id === selectedRoleId);
+    setAssignedPermissions(selectedRole?.permissions || []);
+  }, [selectedRoleId, roles]);
+
+  const handlePermissionToggle = (permId: string) => {
+    setAssignedPermissions(prev =>
+      prev.includes(permId)
+        ? prev.filter(id => id !== permId)
+        : [...prev, permId]
+    );
   };
-  const handleModal = () => {
-    setOpenModal(!openModal);
-  }
+
+  const handleSave = async () => {
+    const currentRole = roles.find(r => r._id === selectedRoleId);
+    if (!currentRole) return;
+
+    const originalPermissions = currentRole.permissions;
+    const addPermissions = assignedPermissions.filter(p => !originalPermissions.includes(p));
+    const removePermissions = originalPermissions.filter(p => !assignedPermissions.includes(p));
+
+    const payload: UpdateRolDto = {
+      name: currentRole.name,
+      isActive: currentRole.isActive,
+      addPermissions,
+      removePermissions
+    };
+
+    setIsSaving(true);
+    try {
+      await updateRol(currentRole._id, payload, token);
+      alert("Permisos actualizados con éxito");
+    } catch (error) {
+      console.error("Error al actualizar el rol", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const filteredPermissions = permissions.filter(p =>
+    p.description.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <>
       <Modal open={open} onClose={handleClose} aria-labelledby="modal-title">
-        <Box sx={style}>
+        <Box sx={{
+          position: 'absolute', top: '50%', left: '50%',
+          transform: 'translate(-50%, -50%)', width: '80%', height: '90%',
+          bgcolor: 'background.paper', boxShadow: 24, p: 4,
+          borderRadius: '15px', display: 'flex', flexDirection: 'column',
+          gap: 2, overflowY: 'auto', border: '2px solid #000',
+        }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6" fontWeight="bold">Administración de roles</Typography>
+            <Typography variant="h6" fontWeight="bold" sx={{color: theme.palette.primary.contrastText}}>Administración de roles</Typography>
             <IconButton onClick={handleClose}><CloseIcon /></IconButton>
           </Box>
           <Typography variant="body2">Crea roles y administra sus permisos.</Typography>
+
           <Grid container spacing={2}>
             <Grid item xs={4}>
               <FormControl fullWidth>
                 <InputLabel>Roles disponibles</InputLabel>
-                <Select value={selectedRole} onChange={(e) => setSelectedRole(e.target.value)}>
+                <Select value={selectedRoleId} onChange={(e) => setSelectedRoleId(e.target.value)}>
                   <MenuItem value="">Seleccione...</MenuItem>
-                  {roles.map((role, index) => (
-                    <MenuItem key={index} value={role}>{role}</MenuItem>
+                  {roles.map(role => (
+                    <MenuItem key={role._id} value={role._id}>{role.name}</MenuItem>
                   ))}
                 </Select>
               </FormControl>
-              <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={handleModal}>+ Agregar Rol</Button>
+              <Button variant="contained" fullWidth sx={{ mt: 2 }} onClick={() => setOpenModal(true)}>+ Agregar Rol</Button>
             </Grid>
+
             <Grid item xs={8}>
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Módulo</InputLabel>
-                    <Select value={selectedModule} onChange={(e) => setSelectedModule(e.target.value)}>
-                      <MenuItem value="">Seleccione...</MenuItem>
-                      <MenuItem value="Empleados">Empleados</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
                   <TextField fullWidth label="Buscar permiso" value={search} onChange={(e) => setSearch(e.target.value)} />
                 </Grid>
               </Grid>
-              <Box sx={{ mt: 2 }}>
-                {permissions.map((permiso, index) => (
-                  <Box key={index} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 1, bgcolor: index % 2 === 0 ? '#f5f5f5' : 'transparent' }}>
-                    <Typography variant="body2">{permiso}</Typography>
-                    <Switch checked={checked[index]} onChange={() => handleCheck(index)} color="secondary" />
+
+              <Box sx={{ mt: 2, maxHeight: 400, overflowY: 'auto' }}>
+                {filteredPermissions.map(perm => (
+                  <Box key={perm._id} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', py: 1, px: 2, bgcolor: 'rgba(0,0,0,0.04)', borderRadius: 1, mb: 1 }}>
+                    <Typography variant="body2">{perm.description}</Typography>
+                    <Switch
+                      checked={assignedPermissions.includes(perm._id)}
+                      onChange={() => handlePermissionToggle(perm._id)}
+                      color="primary"
+                    />
                   </Box>
                 ))}
               </Box>
-              <Grid container justifyContent="center" spacing={1} sx={{ mt: 2 }}>
-                <Grid item><Button variant="outlined">&lt;&lt;</Button></Grid>
-                <Grid item><Button variant="outlined">1</Button></Grid>
-                <Grid item><Button variant="outlined">2</Button></Grid>
-                <Grid item><Button variant="outlined">3</Button></Grid>
-                <Grid item><Button variant="outlined">...</Button></Grid>
-                <Grid item><Button variant="outlined">10</Button></Grid>
-                <Grid item><Button variant="outlined">&gt;&gt;</Button></Grid>
-              </Grid>
+
+              <Button
+                variant="contained"
+                onClick={handleSave}
+                disabled={!selectedRoleId || isSaving}
+                sx={{ mt: 2, float: "right" }}
+              >
+                {isSaving ? <CircularProgress size={24} /> : "Guardar Cambios"}
+              </Button>
             </Grid>
           </Grid>
         </Box>
       </Modal>
-      <ModalCreateRol open={openModal} handleClose={handleModal} />
+
+      <ModalCreateRol open={openModal} handleClose={() => setOpenModal(false)} />
     </>
   );
 }

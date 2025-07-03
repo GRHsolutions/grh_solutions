@@ -13,6 +13,7 @@ import schedules from './schedules';
 import area from './area';
 import scheduleType from './scheduleType';
 import group from './group';
+<<<<<<< Updated upstream
 import news from './news';
 
 const routes = Router();
@@ -20,6 +21,13 @@ const routes = Router();
 // Apply middlewares globally to all routes
 // routes.use(validateToken);
 // routes.use(verifyPermissionHandler);
+=======
+import profileRoutes from './profile';
+const routes = Router();
+
+// Apply middlewares globally to all routes
+
+>>>>>>> Stashed changes
 
 //Define routes
 routes.use('/login', Login);
@@ -34,6 +42,10 @@ routes.use('/schedules', schedules);
 routes.use('/area', area);
 routes.use('/scheduleType', scheduleType);
 routes.use('/group', group);
+<<<<<<< Updated upstream
 routes.use('/news', news)
+=======
+routes.use('/profiles', profileRoutes);
+>>>>>>> Stashed changes
 
 export default routes;
