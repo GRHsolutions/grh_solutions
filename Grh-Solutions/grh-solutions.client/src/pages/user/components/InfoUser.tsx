@@ -1,5 +1,5 @@
 import { Avatar, Box, Typography, Menu, MenuItem, ListItemIcon, IconButton } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalEdit from "./ModalEdit";
 import ModalContratos from "./ModalContratos";
 import EditIcon from "@mui/icons-material/Edit";
@@ -12,41 +12,18 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import ModalChangePassword from "./ModalChangePassword";
 import { useNavigate } from "react-router-dom";
+import { getProfileById } from "../../../domain/services/profile/profile.service";
+import { IOption, Profile } from "../../../domain/models/profile/profile.entities";
+import { useAuth } from "../../../hooks/auth";
 
-const userInfo = [
-  {
-    title: "Info personal",
-    data: [
-      { label: "Nombre", value: "Roberto" },
-      { label: "Apellido", value: "Gomez Bolanos" },
-      { label: "Fecha de nacimiento", value: "12/12/2000 / 18 años" },
-      { label: "País/Ciudad", value: "Colombia/Bogotá" },
-    ],
-  },
-  {
-    title: "Contacto",
-    data: [
-      { label: "Teléfono", value: "12345678" },
-      { label: "Correo", value: "rGKt2@example.com" },
-      { label: "Dirección", value: "Calle 12 # 12-12" },
-    ],
-  },
-  {
-    title: "Datos laborales",
-    data: [
-      { label: "Fecha de contrato", value: "12/12/2000" },
-      { label: "Fecha final de contrato", value: "12/12/2000" },
-      { label: "Cargo", value: "Desarrollador" },
-      { label: "Estado", value: "Activo" },
-    ],
-  },
-];
-
-export default function InfoUser() {
+interface InfoUserProps { id?: string, documentType: IOption[] }
+export default function InfoUser({ id, documentType }: InfoUserProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [modalType, setModalType] = useState<string | null>(null);
+  const [profile, setProfile] = useState<Partial<Profile>>({});
   const open = Boolean(anchorEl);
- const navigate = useNavigate();
+  const { auth } = useAuth();
+  const navigate = useNavigate();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -67,8 +44,12 @@ export default function InfoUser() {
   const sendHvc = () => {
     navigate("/hv-user")
   }
-
-
+  console.log(profile)
+  useEffect(() => {
+    getProfileById(id, auth.token).then((res) => {
+      setProfile(res.data)
+    })
+  }, [id]);
   return (
     <>
       <Box
@@ -116,7 +97,7 @@ export default function InfoUser() {
               <ListItemIcon>
                 <DownloadIcon fontSize="small" />
               </ListItemIcon>
-              Descargar certificados
+              Certificado laboral
             </MenuItem>
             <MenuItem onClick={() => handleOpenModal("contratos")}>
               <ListItemIcon>
@@ -143,24 +124,55 @@ export default function InfoUser() {
               Hoja de vida
             </MenuItem>
           </Menu>
+          {profile && (
+            <>
+              <Avatar
+                alt={`${profile.name} ${profile.lastname}`}
+                src="/static/images/avatar/1.jpg"
+                sx={{ width: 200, height: 200, margin: "auto", marginBottom: 6 }}
+              />
 
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 200, height: 200, margin: "auto", marginBottom: 6 }} />
-
-          {userInfo.map((section) => (
-            <Box key={section.title} sx={{ marginLeft: 8, marginBottom: 2 }}>
-              <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>{section.title}</Typography>
-              {section.data.map((item) => (
-                <Typography key={item.label} sx={{ marginBottom: 1 }}>
-                  {item.label}: {item.value}
+              <Box sx={{ marginLeft: 8, marginBottom: 2 }}>
+                <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+                  Info personal
                 </Typography>
-              ))}
-            </Box>
-          ))}
+                <Typography>Nombre: {profile.name}</Typography>
+                <Typography>Apellido: {profile.lastname}</Typography>
+                <Typography>
+                  Fecha de nacimiento: {new Date(profile.date_of_birth || "").toLocaleDateString("es-CO")}
+                </Typography>
+                <Typography>Documento: {profile.document}</Typography>
+                <Typography>Tipo de documento: {documentType.find((doc) => doc.value === profile.type_document)?.name}</Typography>
+                <Typography>RH: {profile.rh}</Typography>
+                <Typography>Estado: {profile.status}</Typography>
+              </Box>
+
+              <Box sx={{ marginLeft: 8, marginBottom: 2 }}>
+                <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+                  Contacto
+                </Typography>
+                <Typography>Teléfono: {profile.number_phone}</Typography>
+                <Typography>Teléfono fijo: {profile.telephone}</Typography>
+                <Typography>Email: {profile.email}</Typography>
+                <Typography>Dirección: {profile.address}</Typography>
+              </Box>
+
+              <Box sx={{ marginLeft: 8, marginBottom: 2 }}>
+                <Typography variant="h5" sx={{ fontWeight: "bold", marginBottom: 1 }}>
+                  Datos laborales
+                </Typography>
+                <Typography>Nombre de vacante: {profile.vacancy_name}</Typography>
+                <Typography>
+                  Fecha de aplicación: {new Date(profile.date_application || "").toLocaleDateString("es-CO")}
+                </Typography>
+              </Box>
+            </>
+          )}
         </Box>
       </Box>
 
-      {modalType === "edit" && <ModalEdit open={true} handleClose={handleCloseModal} />}
-      {modalType === "certificate" && <ModalCertificate open={true} handleClose={handleCloseModal} />}
+      {modalType === "edit" && <ModalEdit open={true} handleClose={handleCloseModal} profile={profile} documentType={documentType} />}
+      {modalType === "certificate" && <ModalCertificate open={true} handleClose={handleCloseModal}  profile={profile} documentType={documentType}/>}
       {modalType === "contratos" && <ModalContratos open={true} handleClose={handleCloseModal} />}
       {modalType === "roles" && <ModalRole open={true} handleClose={handleCloseModal} />}
       {modalType === "password" && <ModalChangePassword open={true} handleClose={handleCloseModal} />}

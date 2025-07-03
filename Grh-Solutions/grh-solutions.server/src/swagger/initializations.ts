@@ -386,18 +386,104 @@ export const swaggerComponents: Components = {
     },
     empleados: {
       type: "object",
-      required: ["users","puesto"],
+      required: ["users", "puesto"],
       properties: {
-    users: {
-      type: "array",
-      items: {
-        $ref: "#/components/schemas/User"
-      }
+        users: {
+          type: "array",
+          items: {
+            $ref: "#/components/schemas/User",
+          },
         },
-    puesto: {
-      $ref: "#/components/schemas/Puesto"
+        puesto: {
+          $ref: "#/components/schemas/Puesto",
+        },
+      },
     },
-      }
+    News: {
+      type: "object",
+      properties: {
+        title: {
+          type: "string",
+        },
+        description: {
+          type: "string",
+        },
+        images: {
+          type: "array",
+          items: {
+            type: "string",
+            format: "uri",
+          },
+        },
+        formulary: {
+          type: "object",
+          properties: {
+            id: { type: "integer" },
+            form: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  description: { type: "string" },
+                  marked: { type: "boolean" },
+                },
+              },
+            },
+          },
+        },
+        status: {
+          type: "string",
+          enum: ["deleted", "shown"],
+        },
+        type: {
+          type: "string",
+          enum: [
+            "simple-publication",
+            "publication-with-images",
+            "publication-with-survey",
+          ],
+        },
+        numberLikes: {
+          type: "integer",
+          default: 0,
+        },
+        numberDisLikes: {
+          type: "integer",
+          default: 0,
+        },
+        date: {
+          type: "string",
+          format: "date-time",
+        },
+        madeBy: {
+          type: "string",
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time",
+        },
+        updatedAt: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+    },
+    Pagination: {
+      type: "object",
+      properties: {
+        currentPage: {
+          type: "number",
+        },
+        rowsPerPage: {
+          type: "number",
+        },
+        totalPages: {
+          type: "number",
+        },
+        totalItems: {
+          type: "number",
+        },
+      },
     },
   },
 };
@@ -1222,6 +1308,36 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener todos los permisos del eplicativo",
       tags: ["Permission"],
+      parameters: [
+        {
+          name: "search",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+        },
+        {
+          name: "currentPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Página actual para paginación",
+        },
+        {
+          name: "rowsPerPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Cantidad de elementos por página",
+        },
+        {
+          name: "useGetAllNoPage",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          description:
+            "Si es true, ignora la paginación y trae todos los elementos",
+        },
+      ],
       responses: {
         201: {
           description: "Lista de permisos",
@@ -1544,93 +1660,94 @@ export const swaggerPaths: Paths = {
     },
   },
   "/api/group/update": {
-  put: {
-    summary: "Actualizar nombre del grupo, añadir usuario y/o cambiar el área",
-    description:
-      "Permite cambiar el nombre del grupo, añadir un usuario al array `users`, cambiar el área, o cualquier combinación de estas acciones.",
-    tags: ["Groups"],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
+    put: {
+      summary:
+        "Actualizar nombre del grupo, añadir usuario y/o cambiar el área",
+      description:
+        "Permite cambiar el nombre del grupo, añadir un usuario al array users, cambiar el área, o cualquier combinación de estas acciones.",
+      tags: ["Groups"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del grupo a actualizar",
+        },
+      ],
+      requestBody: {
         required: true,
-        schema: { type: "string" },
-        description: "ID del grupo a actualizar"
-      }
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              name: {
-                type: "string",
-                example: "Grupo Renovado"
-              },
-              userId: {
-                type: "string",
-                example: "64e3f82b9f6d3c1234567891",
-                description: "ID del usuario que se añadirá al grupo"
-              },
-              area: {
-                type: "string",
-                example: "64e3f82b9f6d3c1234567800",
-                description: "ID del área que se asignará al grupo"
-              }
-            },
-            oneOf: [
-              { required: ["name"] },
-              { required: ["userId"] },
-              { required: ["area"] }
-            ]
-          }
-        }
-      }
-    },
-    responses: {
-      200: {
-        description: "Grupo actualizado correctamente",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/Group" }
-          }
-        }
-      },
-      400: {
-        description: "Falta de parámetros o validación",
         content: {
           "application/json": {
             schema: {
               type: "object",
               properties: {
-                message: {
+                name: {
                   type: "string",
-                  example:
-                    "Debes enviar al menos 'name', 'userId' o 'area' para actualizar"
+                  example: "Grupo Renovado",
                 },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
+                userId: {
+                  type: "string",
+                  example: "64e3f82b9f6d3c1234567891",
+                  description: "ID del usuario que se añadirá al grupo",
+                },
+                area: {
+                  type: "string",
+                  example: "64e3f82b9f6d3c1234567800",
+                  description: "ID del área que se asignará al grupo",
+                },
+              },
+              oneOf: [
+                { required: ["name"] },
+                { required: ["userId"] },
+                { required: ["area"] },
+              ],
+            },
+          },
+        },
       },
-      404: {
-        description: "Grupo no encontrado",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Grupo no encontrado" }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+      responses: {
+        200: {
+          description: "Grupo actualizado correctamente",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Group" },
+            },
+          },
+        },
+        400: {
+          description: "Falta de parámetros o validación",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example:
+                      "Debes enviar al menos 'name', 'userId' o 'area' para actualizar",
+                  },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Grupo no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Grupo no encontrado" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   // AREAS ENDPOINTS FOR SWAGGER
   "/api/area/create": {
@@ -2222,514 +2339,830 @@ export const swaggerPaths: Paths = {
     },
   },
   // PUESTO ENDPOINTS FOR SWAGGER
-"/api/puesto/create": {
-  post: {
-    summary: "Crear un puesto",
-    tags: ["Puestos"],
-    security: [{ bearerAuth: [] }],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            required: ["name"],
-            properties: {
-              name: { type: "string", example: "Supervisor de turno" }
-            }
-          }
-        }
-      }
-    },
-    responses: {
-      201: {
-        description: "Puesto creado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/Puesto" }
-          }
-        }
-      },
-      400: {
-        description: "Error de validación",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/puesto/delete": {
-  delete: {
-    summary: "Eliminar un puesto",
-    tags: ["Puestos"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
+  "/api/puesto/create": {
+    post: {
+      summary: "Crear un puesto",
+      tags: ["Puestos"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
         required: true,
-        schema: { type: "string" },
-        description: "ID del puesto a eliminar"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Puesto eliminado correctamente",
         content: {
           "application/json": {
             schema: {
               type: "object",
+              required: ["name"],
               properties: {
-                message: {
-                  type: "string",
-                  example: "puesto eliminada correctamente"
-                }
-              }
-            }
-          }
-        }
-      },
-      404: {
-        description: "Puesto no encontrado",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "puesto no encontrado" }
-              }
-            }
-          }
-        }
-      },
-      400: {
-        description: "Error en la petición",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/puesto/getAll": {
-  get: {
-    summary: "Obtener todos los puestos",
-    tags: ["Puestos"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "name",
-        in: "query",
-        required: false,
-        schema: { type: "string" },
-        description: "Filtrar puestos por nombre"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Lista de puestos",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: { $ref: "#/components/schemas/Puesto" }
-            }
-          }
-        }
-      },
-      400: {
-        description: "Error en la petición",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/puesto/getById": {
-  get: {
-    summary: "Obtener un puesto por ID",
-    tags: ["Puestos"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del puesto"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Puesto encontrado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/Puesto" }
-          }
-        }
-      },
-      404: {
-        description: "Puesto no encontrado",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "puesto no encontrado" }
-              }
-            }
-          }
-        }
-      },
-      400: {
-        description: "Error en la petición",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/puesto/update": {
-  put: {
-    summary: "Actualizar un puesto",
-    tags: ["Puestos"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del puesto a actualizar"
-      }
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            required: ["name"],
-            properties: {
-              name: { type: "string", example: "Jefe de Producción" }
-            }
-          }
-        }
-      }
-    },
-    responses: {
-      200: {
-        description: "Puesto actualizado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/Puesto" }
-          }
-        }
-      },
-      400: {
-        description: "Error en la petición",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-// EMPLEADOS ENDPOINTS FOR SWAGGER
-"/api/empleados/create": {
-  post: {
-    summary: "Crear un empleado",
-    tags: ["Empleados"],
-    security: [{ bearerAuth: [] }],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            required: ["users", "puesto"],
-            properties: {
-              users: {
-                type: "array",
-                items: { type: "string", example: "64e3f82b9f6d3c1234567891" }
+                name: { type: "string", example: "Supervisor de turno" },
               },
-              puesto: {
-                type: "string",
-                example: "64e3f82b9f6d3c1234567892"
-              }
-            }
-          }
-        }
-      }
-    },
-    responses: {
-      201: {
-        description: "Empleado creado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/empleados" }
-          }
-        }
-      },
-      400: {
-        description: "Error de validación",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Se debe proporcionar al menos un ID de usuario en 'users'" },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/empleados/getAll": {
-  get: {
-    summary: "Obtener todos los empleados",
-    tags: ["Empleados"],
-    security: [{ bearerAuth: [] }],
-    responses: {
-      200: {
-        description: "Lista de empleados",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: { $ref: "#/components/schemas/empleados" }
-            }
-          }
-        }
-      },
-      500: {
-        description: "Error del servidor"
-      }
-    }
-  }
-},
-"/api/empleados/getById": {
-  get: {
-    summary: "Obtener un empleado por ID",
-    tags: ["Empleados"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del empleado"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Empleado encontrado",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/empleados" }
-          }
-        }
-      },
-      404: {
-        description: "Empleado no encontrado",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Empleado no encontrado" }
-              }
-            }
-          }
-        }
-      },
-      400: {
-        description: "ID inválido",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "ID inválido para el empleado" }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/empleados/update": {
-  put: {
-    summary: "Actualizar un empleado",
-    description: "Permite cambiar la lista de usuarios y/o el puesto asociado.",
-    tags: ["Empleados"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" },
-        description: "ID del empleado a actualizar"
-      }
-    ],
-    requestBody: {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              users: {
-                type: "array",
-                items: { type: "string", example: "64e3f82b9f6d3c1234567891" }
-              },
-              puesto: {
-                type: "string",
-                example: "64e3f82b9f6d3c1234567892"
-              }
             },
-            oneOf: [
-              { required: ["users"] },
-              { required: ["puesto"] }
-            ]
-          }
-        }
-      }
-    },
-    responses: {
-      200: {
-        description: "Empleado actualizado correctamente",
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/empleados" }
-          }
-        }
+          },
+        },
       },
-      400: {
-        description: "Falta de parámetros o validación",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: {
-                  type: "string",
-                  example: "Debes enviar al menos 'users' o 'puesto' para actualizar"
+      responses: {
+        201: {
+          description: "Puesto creado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Puesto" },
+            },
+          },
+        },
+        400: {
+          description: "Error de validación",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true },
                 },
-                innerExpression: { type: "string", nullable: true }
-              }
-            }
-          }
-        }
+              },
+            },
+          },
+        },
       },
-      404: {
-        description: "Empleado no encontrado",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Empleado no encontrado" }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-},
-"/api/empleados/delete/{id}": {
-  delete: {
-    summary: "Eliminar un empleado",
-    tags: ["Empleados"],
-    security: [{ bearerAuth: [] }],
-    parameters: [
-      {
-        name: "id",
-        in: "path",
+    },
+  },
+  "/api/puesto/delete": {
+    delete: {
+      summary: "Eliminar un puesto",
+      tags: ["Puestos"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del puesto a eliminar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Puesto eliminado correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "puesto eliminada correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Puesto no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "puesto no encontrado" },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/puesto/getAll": {
+    get: {
+      summary: "Obtener todos los puestos",
+      tags: ["Puestos"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "name",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "Filtrar puestos por nombre",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de puestos",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/Puesto" },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/puesto/getById": {
+    get: {
+      summary: "Obtener un puesto por ID",
+      tags: ["Puestos"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del puesto",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Puesto encontrado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Puesto" },
+            },
+          },
+        },
+        404: {
+          description: "Puesto no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "puesto no encontrado" },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/puesto/update": {
+    put: {
+      summary: "Actualizar un puesto",
+      tags: ["Puestos"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del puesto a actualizar",
+        },
+      ],
+      requestBody: {
         required: true,
-        schema: { type: "string" },
-        description: "ID del empleado a eliminar"
-      }
-    ],
-    responses: {
-      200: {
-        description: "Empleado eliminado correctamente",
         content: {
           "application/json": {
             schema: {
               type: "object",
+              required: ["name"],
               properties: {
-                message: { type: "string", example: "Empleado eliminado correctamente" }
-              }
-            }
-          }
-        }
+                name: { type: "string", example: "Jefe de Producción" },
+              },
+            },
+          },
+        },
       },
-      404: {
-        description: "Empleado no encontrado",
+      responses: {
+        200: {
+          description: "Puesto actualizado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Puesto" },
+            },
+          },
+        },
+        400: {
+          description: "Error en la petición",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: { type: "string" },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  // EMPLEADOS ENDPOINTS FOR SWAGGER
+  "/api/empleados/create": {
+    post: {
+      summary: "Crear un empleado",
+      tags: ["Empleados"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["users", "puesto"],
+              properties: {
+                users: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    example: "64e3f82b9f6d3c1234567891",
+                  },
+                },
+                puesto: {
+                  type: "string",
+                  example: "64e3f82b9f6d3c1234567892",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Empleado creado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/empleados" },
+            },
+          },
+        },
+        400: {
+          description: "Error de validación",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example:
+                      "Se debe proporcionar al menos un ID de usuario en 'users'",
+                  },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/empleados/getAll": {
+    get: {
+      summary: "Obtener todos los empleados",
+      tags: ["Empleados"],
+      security: [{ bearerAuth: [] }],
+      responses: {
+        200: {
+          description: "Lista de empleados",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/empleados" },
+              },
+            },
+          },
+        },
+        500: {
+          description: "Error del servidor",
+        },
+      },
+    },
+  },
+  "/api/empleados/getById": {
+    get: {
+      summary: "Obtener un empleado por ID",
+      tags: ["Empleados"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del empleado",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Empleado encontrado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/empleados" },
+            },
+          },
+        },
+        404: {
+          description: "Empleado no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Empleado no encontrado",
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "ID inválido",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "ID inválido para el empleado",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/empleados/update": {
+    put: {
+      summary: "Actualizar un empleado",
+      description:
+        "Permite cambiar la lista de usuarios y/o el puesto asociado.",
+      tags: ["Empleados"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del empleado a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
         content: {
           "application/json": {
             schema: {
               type: "object",
               properties: {
-                message: { type: "string", example: "Empleado no encontrado" }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
+                users: {
+                  type: "array",
+                  items: {
+                    type: "string",
+                    example: "64e3f82b9f6d3c1234567891",
+                  },
+                },
+                puesto: {
+                  type: "string",
+                  example: "64e3f82b9f6d3c1234567892",
+                },
+              },
+              oneOf: [{ required: ["users"] }, { required: ["puesto"] }],
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Empleado actualizado correctamente",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/empleados" },
+            },
+          },
+        },
+        400: {
+          description: "Falta de parámetros o validación",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example:
+                      "Debes enviar al menos 'users' o 'puesto' para actualizar",
+                  },
+                  innerExpression: { type: "string", nullable: true },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Empleado no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Empleado no encontrado",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  "/api/empleados/delete/{id}": {
+    delete: {
+      summary: "Eliminar un empleado",
+      tags: ["Empleados"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del empleado a eliminar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Empleado eliminado correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Empleado eliminado correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: {
+          description: "Empleado no encontrado",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Empleado no encontrado",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  //--------news-------------------
+  "/api/news/": {
+    get: {
+      summary: "Obtener todos los comunicados (con filtros opcionales)",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "search",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        },
+        {
+          name: "currentPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Página actual para paginación",
+        },
+        {
+          name: "rowsPerPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Cantidad de elementos por página",
+        },
+        {
+          name: "useGetAllNoPage",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          description:
+            "Si es true, ignora la paginación y trae todos los elementos",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de comunicados",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/News" },
+              },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    },
+    post: {
+      post: {
+        summary: "Crear un horario",
+        tags: ["News"],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/News",
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: "Comunicado creado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/News" },
+              },
+            },
+          },
+          400: { description: "Error de validación" },
+        },
+      },
+    },
+  },
+  "/api/news/getPagination": {
+    get: {
+      summary: "Obtener todos los comunicados (con filtros opcionales)",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "search",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        },
+        {
+          name: "currentPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Página actual para paginación",
+        },
+        {
+          name: "rowsPerPage",
+          in: "query",
+          required: false,
+          schema: { type: "integer", minimum: 1 },
+          description: "Cantidad de elementos por página",
+        },
+        {
+          name: "useGetAllNoPage",
+          in: "query",
+          required: false,
+          schema: { type: "boolean" },
+          description:
+            "Si es true, ignora la paginación y trae todos los elementos",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de comunicados",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                items: { $ref: "#/components/schemas/Pagination" },
+              },
+            },
+          },
+        },
+        400: { description: "Error en la petición" },
+      },
+    },
+  },
+  "/api/profiles/create": {
+    post: {
+      summary: "Crear perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["name", "start_Date", "end_Date"],
+              properties: {
+                name: { type: "string", example: "Turno Mañana" },
+                start_Date: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-03T06:00:00Z",
+                },
+                end_Date: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-03T14:00:00Z",
+                },
+                user: { type: "string", example: "64d1..." },
+                lastname: { type: "string", example: "Ballesta" },
+                date_of_birth: {
+                  type: "string",
+                  format: "date",
+                  example: "1995-06-10",
+                },
+                email: { type: "string", example: "miguel@example.com" },
+                address: { type: "string", example: "Calle 123" },
+                number_phone: { type: "number", example: 3121234567 },
+                telephone: { type: "number", example: 1234567 },
+                rh: { type: "string", example: "O+" },
+                status: { type: "string", example: "activo" },
+                type_document: { type: "string", example: "CC" },
+                document: { type: "number", example: 1020304050 },
+                vacancy_name: {
+                  type: "string",
+                  example: "Desarrollador Backend",
+                },
+                date_application: {
+                  type: "string",
+                  format: "date",
+                  example: "2025-07-03",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        "201": {
+          description: "Perfil creado exitosamente",
+        },
+        "400": {
+          description: "Error en la solicitud",
+        },
+      },
+    },
+  },
+  "/api/profiles/getById": {
+    get: {
+      summary: "Obtener perfil por ID",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Solicitud inválida",
+        },
+      },
+    },
+  },
+  "/api/profiles/getByUserId": {
+    get: {
+      summary: "Obtener perfil por ID de usuario",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Error al buscar perfil",
+        },
+      },
+    },
+  },
+  "/api/profiles/update": {
+    put: {
+      summary: "Actualizar un perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Profile",
+            },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Perfil actualizado",
+        },
+        "400": {
+          description: "Error en la petición",
+        },
+      },
+    },
+  },
+  "/api/profiles/delete": {
+    delete: {
+      summary: "Eliminar un perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil a eliminar",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Perfil eliminado",
+        },
+        "400": {
+          description: "Error al eliminar perfil",
+        },
+        "404": {
+          description: "Perfil no encontrado",
+        },
+      },
+    },
+  },
 };

@@ -34,7 +34,7 @@ export default function ModalChangePassword({ open, handleClose }: IModalChangeP
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title">
       <Box sx={style}>
-        <Typography variant="h5" sx={{ textAlign: "center", fontWeight: "bold" }}>
+        <Typography variant="h5" sx={{ textAlign: "center", fontWeight: "bold", color: theme.palette.text.primary }}>
           Cambiar contraseña
         </Typography>
 
