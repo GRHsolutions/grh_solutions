@@ -45,4 +45,26 @@ export const newsController = {
       });
     }
   },
+  delete: async (req: Request, resp: Response) => {
+    try {
+      const id = req.query;
+
+      if(!id || typeof id != "number" || id <= 0){
+        return resp.status(400).json({
+          message: 'Id no puede ser null o menor e igual a 0'
+        })
+      };
+      const conf = await newsService.delete(id);
+
+      return resp.status(200).json({
+        obj: conf,
+        message: "new borrada exitosamente"
+      })
+    } catch(Error: any){
+      return resp.status(500).json({
+        message: Error.message,
+        inner: Error.innerExpression
+      })
+    }
+  }
 };

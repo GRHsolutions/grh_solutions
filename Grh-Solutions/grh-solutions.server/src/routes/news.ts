@@ -6,5 +6,6 @@ const router = express.Router();
 router.get('/', newsController.get);
 router.get('/getPagination', newsController.getPages);
 router.post('/', newsController.create);
+router.delete('/', newsController.delete);
 
 export default router;
