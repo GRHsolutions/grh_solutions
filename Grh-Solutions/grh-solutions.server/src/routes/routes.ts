@@ -13,10 +13,15 @@ import schedules from './schedules';
 import area from './area';
 import scheduleType from './scheduleType';
 import group from './group';
+import puesto from './puesto';
+import empleado from './empleados';
 
 const routes = Router();
 
 // Apply middlewares globally to all routes
+
+// routes.use(validateToken);
+// routes.use(verifyPermissionHandler);
 
 //Define routes
 routes.use('/login', Login);
@@ -31,5 +36,7 @@ routes.use('/schedules', schedules);
 routes.use('/area', area);
 routes.use('/scheduleType', scheduleType);
 routes.use('/group', group);
+routes.use('/puesto', puesto);
+routes.use('/empleados', empleado);
 
 export default routes;

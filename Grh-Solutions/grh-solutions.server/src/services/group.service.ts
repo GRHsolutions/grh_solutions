@@ -17,22 +17,19 @@ export const groupService = {
   create: async (entity: { name: string; area: string; users: string[] }) => {
     return groupsModel.create(entity);
   },
-  update: async (
+update: async (
   id: string,
-  payload: { name?: string; userId?: string }
+  payload: { name?: string; userId?: string; area?: string }
 ) => {
   const update: any = {};
 
-  if (payload.name) {
-    update.name = payload.name.trim();
-  }
+  if (payload.name)   update.name = payload.name;
+  if (payload.area)   update.area = payload.area;
 
   if (payload.userId) {
-    // añade solo si no existe (set‑like)
-    update.$addToSet = { users: payload.userId };
+    update.$addToSet = { users: payload.userId }; // añade usuario sin duplicar
   }
 
-  // { new:true } → devuelve el documento ya actualizado
   return groupsModel.findByIdAndUpdate(id, update, { new: true });
 },
   delete: async (id: string) => {

@@ -14,9 +14,9 @@ const validationSchema = [
 ];
 
 router.post('/create', validateToken, schedulesController.create);
-router.get('/getAllNoPage', validateToken, schedulesController.getAll); // Usar sin paginado por el momento :V
+router.get('/getAllNoPage', validateToken, schedulesController.getAll); 
 router.put('/update', validateToken, schedulesController.update);
 router.delete('/delete', validateToken, schedulesController.delete);
-router.get('/getById', validateToken, schedulesController.getById); // Obtener por ID
+router.get('/getById', validateToken, schedulesController.getById); 
 
 export default router;

@@ -6,7 +6,6 @@ export const schedulesController = {
     try {
       const { start_date, end_date, group, scheduleType } = req.body;
 
-      // ── Validación básica ──
       if (!start_date || !end_date || !group || !scheduleType) {
         return res.status(400).json({ message: "Faltan campos obligatorios" });
       }
@@ -18,7 +17,6 @@ export const schedulesController = {
       if (start >= end) {
         return res.status(400).json({ message: "start_date debe ser anterior a end_date" });
       }
-      // ──────────────────────
 
       const data = await schedulesService.create({
         start_date: start,
@@ -34,7 +32,7 @@ export const schedulesController = {
   },
 getAll: async (_req: Request, res: Response) => {
   try {
-    const data = await schedulesService.getAll(); // ← sin argumentos
+    const data = await schedulesService.getAll(); 
     return res.status(200).json(data);
   } catch (error: any) {
     return res.status(500).json({ message: error.message });

@@ -57,7 +57,7 @@ export const groupController = {
 
   delete: async (req: Request, res: Response) => {
     try {
-      const { id } = req.query;
+      const { id } = req.params;
 
       if (!id || typeof id !== "string" || id.trim() === "") {
         return res.status(400).json({
@@ -84,52 +84,59 @@ export const groupController = {
     }
   },
 
- deleteUserFromGroup: async (req: Request, res: Response) => {
-  try {
-    const { groupId, userId } = req.query;
+  deleteUserFromGroup: async (req: Request, res: Response) => {
+    try {
+      const { groupId, userId } = req.query;
 
-    if (!groupId || typeof groupId !== "string" || !userId || typeof userId !== "string") {
-      return res.status(400).json({
-        message: "Faltan parámetros groupId o userId",
+      if (
+        !groupId ||
+        typeof groupId !== "string" ||
+        !userId ||
+        typeof userId !== "string"
+      ) {
+        return res.status(400).json({
+          message: "Faltan parámetros groupId o userId",
+        });
+      }
+
+      const data = await groupService.deleteUserFromGroup(groupId, userId);
+
+      if (!data) {
+        return res.status(404).json({
+          message: "Grupo no encontrado o usuario no pertenecía al grupo",
+        });
+      }
+
+      return res.status(200).json({
+        message: "Usuario eliminado del grupo correctamente",
+      });
+    } catch (error: any) {
+      res.status(400).json({
+        message: error.message,
+        innerExpression: error.innerExpression,
       });
     }
-
-    const data = await groupService.deleteUserFromGroup(groupId, userId);
-
-    if (!data) {
-      return res.status(404).json({
-        message: "Grupo no encontrado o usuario no pertenecía al grupo",
-      });
-    }
-
-    return res.status(200).json({
-      message: "Usuario eliminado del grupo correctamente",
-    });
-  } catch (error: any) {
-    res.status(400).json({
-      message: error.message,
-      innerExpression: error.innerExpression,
-    });
-  }
-},
+  },
 update: async (req: Request, res: Response) => {
   try {
     const { id } = req.query;
-    const { name, userId } = req.body;   // ← puedes mandar uno o ambos campos
+    const { name, userId, area } = req.body;  
 
-    // ── Validaciones básicas ─────────────────────────────
     if (!id || typeof id !== "string" || id.trim() === "") {
       return res.status(400).json({ message: "ID de grupo requerido" });
     }
 
-    if (!name && !userId) {
+    if (!name && !userId && !area) {
       return res.status(400).json({
-        message: "Debes enviar al menos 'name' o 'userId' para actualizar",
+        message: "Debes enviar al menos 'name', 'userId' o 'area' para actualizar",
       });
     }
-    // ────────────────────────────────────────────────────
+    const payload: any = {};
+    if (name)    payload.name  = name.trim();
+    if (userId)  payload.userId = userId.trim();   // se usará para $addToSet
+    if (area)    payload.area  = area.trim();
 
-    const data = await groupService.update(id.trim(), { name, userId });
+    const data = await groupService.update(id.trim(), payload);
 
     if (!data) {
       return res.status(404).json({ message: "Grupo no encontrado" });
