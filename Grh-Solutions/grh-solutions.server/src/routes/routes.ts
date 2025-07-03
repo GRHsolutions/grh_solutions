@@ -14,12 +14,13 @@ import area from './area';
 import scheduleType from './scheduleType';
 import group from './group';
 import news from './news';
-
+import profileRoutes from './profile';
 const routes = Router();
 
 // Apply middlewares globally to all routes
 // routes.use(validateToken);
 // routes.use(verifyPermissionHandler);
+
 
 //Define routes
 routes.use('/login', Login);
@@ -35,5 +36,6 @@ routes.use('/area', area);
 routes.use('/scheduleType', scheduleType);
 routes.use('/group', group);
 routes.use('/news', news)
+routes.use('/profiles', profileRoutes);
 
 export default routes;

@@ -137,6 +137,25 @@ export const swaggerComponents: Components = {
         },
       },
     },
+    Profile: {
+      type: "object",
+      properties: {
+        user: { type: "string" },
+        name: { type: "string" },
+        lastname: { type: "string" },
+        date_of_birth: { type: "string", format: "date" },
+        email: { type: "string" },
+        address: { type: "string" },
+        number_phone: { type: "number" },
+        telephone: { type: "number" },
+        rh: { type: "string" },
+        status: { type: "string" },
+        type_document: { type: "string" },
+        document: { type: "number" },
+        vacancy_name: { type: "string" },
+        date_application: { type: "string", format: "date" },
+      },
+    },
     Vacancy: {
       type: "object",
       required: [
@@ -2471,6 +2490,169 @@ export const swaggerPaths: Paths = {
           },
         },
         400: { description: "Error en la petición" },
+      },
+    },
+  },
+  "/api/profiles/create": {
+    post: {
+      summary: "Crear perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              required: ["name", "start_Date", "end_Date"],
+              properties: {
+                name: { type: "string", example: "Turno Mañana" },
+                start_Date: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-03T06:00:00Z",
+                },
+                end_Date: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2025-07-03T14:00:00Z",
+                },
+                user: { type: "string", example: "64d1..." },
+                lastname: { type: "string", example: "Ballesta" },
+                date_of_birth: {
+                  type: "string",
+                  format: "date",
+                  example: "1995-06-10",
+                },
+                email: { type: "string", example: "miguel@example.com" },
+                address: { type: "string", example: "Calle 123" },
+                number_phone: { type: "number", example: 3121234567 },
+                telephone: { type: "number", example: 1234567 },
+                rh: { type: "string", example: "O+" },
+                status: { type: "string", example: "activo" },
+                type_document: { type: "string", example: "CC" },
+                document: { type: "number", example: 1020304050 },
+                vacancy_name: {
+                  type: "string",
+                  example: "Desarrollador Backend",
+                },
+                date_application: {
+                  type: "string",
+                  format: "date",
+                  example: "2025-07-03",
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        "201": {
+          description: "Perfil creado exitosamente",
+        },
+        "400": {
+          description: "Error en la solicitud",
+        },
+      },
+    },
+  },
+  "/api/profiles/getById": {
+    get: {
+      summary: "Obtener perfil por ID",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Solicitud inválida",
+        },
+      },
+    },
+  },
+  "/api/profiles/getByUserId": {
+    get: {
+      summary: "Obtener perfil por ID de usuario",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Error al buscar perfil",
+        },
+      },
+    },
+  },
+  "/api/profiles/update": {
+    put: {
+      summary: "Actualizar un perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Profile",
+            },
+          },
+        },
+      },
+      responses: {
+        "200": {
+          description: "Perfil actualizado",
+        },
+        "400": {
+          description: "Error en la petición",
+        },
+      },
+    },
+  },
+  "/api/profiles/delete": {
+    delete: {
+      summary: "Eliminar un perfil",
+      tags: ["Profiles"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil a eliminar",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Perfil eliminado",
+        },
+        "400": {
+          description: "Error al eliminar perfil",
+        },
+        "404": {
+          description: "Perfil no encontrado",
+        },
       },
     },
   },

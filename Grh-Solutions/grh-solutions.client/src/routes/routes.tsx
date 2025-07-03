@@ -49,7 +49,7 @@ export const AppRoutes = (): RouteObject[] => {
       element: <>{CompoRender({ element: TryColorsAndGenerics })}</>
     },
     {
-      path: "/user",
+      path: "/user/:id",
       element: <>{CompoRender({ element: UserPage })}</>
     },
     {
