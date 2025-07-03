@@ -11,6 +11,10 @@ export const userService = {
     return await UserModel.find({ email: filter.email });
   },
 
+    getAllUsers: async () => {
+    return UserModel.find().select("-password");  
+  },
+
   getById: async (id: string) => {
     const user = await UserModel.findById(id).populate('typeDocument');
 

@@ -6,5 +6,5 @@ const router = express.Router();
 
 router.get('/getMyInfo', validateToken, userController.getMyInfo); // obtener mi propia informacion
 router.put('/update', validateToken, userController.updateUser); // actualizar mi informacion
-
+router.get("/getAll",  validateToken, userController.getAll);
 export default router;

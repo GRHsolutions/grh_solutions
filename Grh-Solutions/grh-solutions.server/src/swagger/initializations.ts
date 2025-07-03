@@ -796,6 +796,28 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  "/api/user/getAll": {
+  get: {
+    summary: "Obtener todos los usuarios",
+    tags: ["Users"],
+    security: [{ bearerAuth: [] }],      // quítalo si no usas JWT
+    responses: {
+      200: {
+        description: "Lista de usuarios",
+        content: {
+          "application/json": {
+            schema: {
+              type: "array",
+              items: { $ref: "#/components/schemas/User" }
+            }
+          }
+        }
+      },
+      401: { description: "No autorizado" },
+      500: { description: "Error del servidor" }
+    }
+  }
+},
   /// ROL ENDPOINTS INITIALIZATION FOR SWAGGER.
   "/api/rol/create": {
     post: {

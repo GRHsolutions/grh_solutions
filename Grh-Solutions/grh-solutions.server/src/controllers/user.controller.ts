@@ -49,4 +49,12 @@ export const userController = {
       });
     }
   },
+  getAll: async (_req: Request, res: Response) => {
+    try {
+      const users = await userService.getAllUsers();
+      return res.status(200).json(users);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
 };

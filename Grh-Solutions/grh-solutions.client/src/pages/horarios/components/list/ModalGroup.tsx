@@ -5,9 +5,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Groups3Icon from "@mui/icons-material/Groups3";
-import GrhTextField from '../../../../generics/grh-generics/textField';
+import GrhTextField from "../../../../generics/grh-generics/textField";
 import GrhButton from "../../../../generics/grh-generics/button";
-import LogoutIcon from '@mui/icons-material/Logout';
+import LogoutIcon from "@mui/icons-material/Logout";
 import {
   IconButton,
   MenuItem,
@@ -32,40 +32,91 @@ const style = {
     outline: "none",
   },
 };
+
 interface IModalOptionsProps {
   open: boolean;
   handleClose: () => void;
 }
 export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
   const theme = useTheme();
+  const [areasOptions, setAreasOptions] = React.useState<
+    { value: string; name: string }[]
+  >([]);
+  const [usersOptions, setUsersOptions] = React.useState<
+    { value: string; name: string }[]
+  >([]);
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem("token") || "";
+      try {
+        const [areasRes, usersRes] = await Promise.all([
+          fetch("http://localhost:3000/api/area/getAllNoPage", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch("http://localhost:3000/api/user/getAll", {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        const areas = await areasRes.json();
+        const users = await usersRes.json();
+
+        setAreasOptions(
+          areas.map((a: any) => ({ value: a._id, name: a.name }))
+        );
+        setUsersOptions(
+          users.map((u: any) => ({
+            value: u._id,
+            name: `${u.firstName} ${u.middleName} ${u.lastName} ${u.secondLastName}`,
+          }))
+        );
+      } catch (err) {
+        console.error("Error cargando áreas o usuarios:", err);
+      }
+    };
+
+    fetchData();
+  }, []); // ← se ejecuta solo al montar el modal
+
   const [text, setText] = React.useState("");
-  const [currentInputSelected, setCurrentInputSelected] = React.useState(0);
-  const options = [
-    {
-      id: 1,
-      name: "Martin Rodriguez",
-    },
-    {
-      id: 2,
-      name: "Rosalba Salazar",
-    },
-    {
-      id: 3,
-      name: "Gemita Mendez",
-    },
-    {
-      id: 4,
-      name: "Miguel Ballesteros",
-    },
-    {
-      id: 5,
-      name: "Juan Diaz",
-    },
-  ];
-  const setFieldValue = (_field: string, value: number[]) => {
-    setMult(value);
+  const [currentInputSelected, setCurrentInputSelected] =
+    React.useState<string>("");
+  const [mult, setMult] = React.useState<string[]>([]);
+  console.log("usersOptions:", usersOptions);
+  console.log("mult:", mult);
+  const setFieldValue = (_f: string, v: string[]) => setMult(v);
+
+  const handleSubmit = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/group/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          name: text.trim(),
+          users: mult.map(String),
+          area: String(currentInputSelected),
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        console.error("Error al crear grupo:", data.message);
+        return;
+      }
+
+      console.log("Grupo creado:", data);
+      // Puedes cerrar el modal y limpiar inputs:
+      handleClose();
+      setText("");
+      setMult([]);
+      setCurrentInputSelected("");
+    } catch (error) {
+      console.error("Error al enviar solicitud:", error);
+    }
   };
-  const [mult, setMult] = React.useState<number[]>([]);
   return (
     <div>
       <Modal
@@ -103,50 +154,53 @@ export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box sx={{  mt:2, display: "flex", gap: 2, alignItems: "center" }}>
-          <GrhTextField sx={{mt:1.3}}
-            label='Nombre'
-            value={text}
-            onChange={(e) => {
-              setText(e.target.value || "");
-            }}
-          />
-          <GrhCustomSelect 
-            label={"Del Area"} 
-            options={options.map(item => ({
-              value: item.id, 
-              name: item.name
-            }))} 
-            value={currentInputSelected} 
-            onChange={(e) => {
-              setCurrentInputSelected(e.target.value as number);
-            }}
-          />
+          <Box sx={{ mt: 2, display: "flex", gap: 2, alignItems: "center" }}>
+            <GrhTextField
+              sx={{ mt: 1.3 }}
+              label="Nombre"
+              value={text}
+              onChange={(e) => {
+                setText(e.target.value || "");
+              }}
+            />
+            <GrhCustomSelect
+              label="Del Área"
+              options={areasOptions}
+              value={currentInputSelected}
+              onChange={(e) =>
+                setCurrentInputSelected(e.target.value as string)
+              }
+            />
           </Box>
-          <Box sx={{mt: 1}}>
-            <MultipleSelect sx={{mt: 4}}
-              label={"listado de usuarios"}
-              name={"input"}
-              options={options.map((item) => ({
-                id: item.id,
-                nombre: item.name,
-              }))}
-              value={mult}
+          <Box sx={{ mt: 1 }}>
+            <MultipleSelect
+              label="Listado de usuarios"
+              name="users"
+              options={usersOptions} // [{ value: string, name: string }]
+              value={mult} // string[] de values
               setFieldValue={setFieldValue}
             />
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: "flex-end", height: "64vh", p: 2 }}>
-          <GrhButton
-            onClick={handleClose}
-            startIcon={<LogoutIcon  />}
-            label={"Enviar solicitud"}
-            variant='principal'
+          <Box
             sx={{
-            width: '30%'
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
+              height: "64vh",
+              p: 2,
             }}
-            id={"solicitud"}
-          />
-        </Box>
+          >
+            <GrhButton
+              onClick={handleSubmit}
+              startIcon={<LogoutIcon />}
+              label={"Enviar solicitud"}
+              variant="principal"
+              sx={{
+                width: "30%",
+              }}
+              id={"solicitud"}
+            />
+          </Box>
         </Box>
       </Modal>
     </div>
