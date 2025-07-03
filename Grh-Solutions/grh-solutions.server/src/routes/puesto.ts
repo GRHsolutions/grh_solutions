@@ -12,10 +12,10 @@ const validationSchema = [
     }
 ];
 
-router.post('/create',  validateToken,puestoController.create);
-router.delete('/delete', validateToken,puestoController.delete);
-router.get('/getAll',  validateToken,puestoController.getAll); 
-router.get('/getById',  validateToken,puestoController.getById); 
-router.put('/update',   validateToken,puestoController.update);
+router.post('/create',  puestoController.create);
+router.delete('/delete', puestoController.delete);
+router.get('/getAll',  puestoController.getAll); 
+router.get('/getById',  puestoController.getById); 
+router.put('/update',   puestoController.update);
 
 export default router;

@@ -13,10 +13,10 @@ const validationSchema = [
     }
 ];
 
-router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.create);
-router.get('/getAllNoPage', validateToken, scheduleTypeController.getAll); 
-router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.update);
-router.delete('/delete', validateToken, scheduleTypeController.delete);
-router.get('/getById', validateToken, scheduleTypeController.getById); 
+router.post('/create',  validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.create);
+router.get('/getAllNoPage',  scheduleTypeController.getAll); 
+router.put('/update',  validationSchemaHandler({ schema: validationSchema }), scheduleTypeController.update);
+router.delete('/delete',  scheduleTypeController.delete);
+router.get('/getById',  scheduleTypeController.getById); 
 
 export default router;
