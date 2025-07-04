@@ -3,9 +3,23 @@ import { Pagination } from "../filters/pagination.filters";
 
 export const permissionService = {
   create: async (entity: any) => {
-    console.log("Creating permission with entity:", entity);
+    try {
+      const newPermission = await permissionModel.create(entity);
 
-    return await permissionModel.create(entity);
+      return {
+        success: true,
+        message: "Permiso creado correctamente",
+        data: newPermission,
+      };
+    } catch (error: any) {
+      console.error("Error creating permission:", error);
+
+      return {
+        success: false,
+        message: "Error al crear el permiso",
+        error: error.message,
+      };
+    }
   },
 
   getAll: async (filter: Pagination) => {
@@ -35,7 +49,7 @@ export const permissionService = {
       .skip(skip)
       .limit(filter.rowsPerPage);
 
-    console.log("get")
+    console.log("get");
 
     return data;
   },
@@ -60,5 +74,45 @@ export const permissionService = {
       totalPages,
       totalItems,
     } as Pagination;
+  },
+
+  update: async (id: string, entity: any) => {
+    try {
+      const updatedPermission = await permissionModel.findByIdAndUpdate(
+        id,
+        entity,
+        { new: true }
+      );
+
+      return {
+        success: true,
+        message: "Permiso actualizado correctamente",
+        data: updatedPermission,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: "Error al actualizar el permiso",
+        error: error.message,
+      };
+    }
+  },
+
+  delete: async (id: string) => {
+    try {
+      const deletedPermission = await permissionModel.findByIdAndDelete(id);
+
+      return {
+        success: true,
+        message: "Permiso eliminado correctamente",
+        data: deletedPermission,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: "Error al eliminar el permiso",
+        error: error.message,
+      };
+    }
   },
 };

@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { userService } from "../services/users.service";
+import bcrypt from "bcrypt";
 
 export const userController = {
   getMyInfo: async (req: Request, res: Response) => {
@@ -98,6 +99,41 @@ export const userController = {
       return res
         .status(200)
         .json({ message: "Usuario desactivado (isActive: false)" });
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+  changePassword: async (req: Request, res: Response) => {
+    try {
+      const userId = req.userId;
+      const { currentPassword, newPassword } = req.body;
+
+      if (!userId) {
+        return res.status(401).json({ message: "No autorizado" });
+      }
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: "Contraseñas incompletas" });
+      }
+
+      const user = await userService.getById(userId);
+      const passwordMatch = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+
+      if (!passwordMatch) {
+        return res
+          .status(401)
+          .json({ message: "Contraseña actual incorrecta" });
+      }
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+      await userService.update(userId, { password: hashedNewPassword });
+
+      return res
+        .status(200)
+        .json({ message: "Contraseña actualizada correctamente" });
     } catch (error: any) {
       return res.status(500).json({ message: error.message });
     }

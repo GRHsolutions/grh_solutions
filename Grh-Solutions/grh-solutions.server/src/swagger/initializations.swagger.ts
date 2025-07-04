@@ -146,6 +146,7 @@ export const swaggerComponents: Components = {
         "salary",
         "horary",
         "charge",
+        "area",
         "address",
         "telephone",
         "email",
@@ -161,6 +162,7 @@ export const swaggerComponents: Components = {
         salary: { type: "string" },
         horary: { type: "string" },
         charge: { type: "string" },
+        area: { type: "string" },
         address: { type: "string" },
         telephone: { type: "string" },
         email: { type: "string" },
@@ -179,25 +181,25 @@ export const swaggerComponents: Components = {
       },
       required: ["name"],
     },
-    Postulante: {
+    PostulanteCreate: {
       type: "object",
       properties: {
-        user: {
-          type: "string",
-          description: "ID del usuario que se postula",
-        },
-        vacante: {
-          type: "string",
-          description: "ID de la vacante a la que se postula",
-        },
-        status: {
-          type: "string",
-          description: "Estado de la postulación",
-          example: "Pendiente",
-        },
+        user: { type: "string" },
+        vacante: { type: "string" },
+        status: { type: "string", example: "Pendiente" },
       },
-      required: ["vacante"],
+      required: ["vacante", "user"],
     },
+PostulanteUpdate: {
+  type: "object",
+  properties: {
+    status: {
+      type: "string",
+      description: "Nuevo estado del postulante",
+      example: "contratado"
+    }
+  }
+},
     User1: {
       type: "object",
       properties: {
@@ -937,6 +939,46 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  "/api/user/changePassword": {
+    put: {
+      summary: "Cambiar contraseña",
+      tags: ["User"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                currentPassword: { type: "string" },
+                newPassword: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "Contraseña cambiada correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Contraseña cambiada correctamente",
+                  },
+                },
+              },
+            },
+          },
+        },
+        401: { description: "No autorizado" },
+      },
+    },
+  },
   /// ROL ENDPOINTS INITIALIZATION FOR SWAGGER.
   "/api/rol/create": {
     post: {
@@ -1523,7 +1565,92 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  "/api/permission/update": {
+    put: {
+      summary: "Actualizar un permiso",
+      tags: ["Permission"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del permiso a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/Permission",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Permiso actualizado exitosamente",
+        },
+        400: {
+          description: "Error al actualizar el permiso",
+        },
+      },
+    },
+  },
+  "/api/permission/delete": {
+    delete: {
+      summary: "Eliminar un permiso",
+      tags: ["Permission"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del permiso a eliminar",
+        },
+      ],
+      responses: {
+        201: {
+          description: "Permiso eliminado exitosamente",
+        },
+        400: {
+          description: "Error al eliminar el permiso",
+        },
+      },
+    },
+  },
 
+  /// POSTULANTE ENDPOINTS  FOR SWAGGER
+  "/api/postulante/create": {
+    post: {
+      summary: "Crear un nuevo postulante",
+      tags: ["Postulante"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/PostulanteCreate",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Postulante creado exitosamente",
+        },
+        400: {
+          description: "Error al crear el postulante",
+        },
+      },
+    },
+  },
   "/api/postulante/getAllByVacante/{vacanteId}": {
     get: {
       summary: "Obtener postulantes por vacante",
@@ -1583,13 +1710,7 @@ export const swaggerPaths: Paths = {
         content: {
           "application/json": {
             schema: {
-              type: "object",
-              properties: {
-                status: {
-                  type: "string",
-                  description: "Nuevo estado del postulante",
-                },
-              },
+              $ref: "#/components/schemas/PostulanteUpdate",
             },
           },
         },
