@@ -57,4 +57,49 @@ export const userController = {
       return res.status(500).json({ message: error.message });
     }
   },
+  getById: async (req: Request, res: Response) => {
+    const { id } = req.query;
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    try {
+      const user = await userService.getById(id);
+      return res.status(200).json(user);
+    } catch (error: any) {
+      return res.status(404).json({ message: error.message });
+    }
+  },
+  update: async (req: Request, res: Response) => {
+    const { id } = req.query;
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    try {
+      const updated = await userService.update(id, req.body);
+      return res.status(200).json(updated);
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+  delete: async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    if (!id || typeof id !== "string") {
+      return res.status(400).json({ message: "ID inválido" });
+    }
+
+    try {
+      const user = await userService.delete(id);
+      if (!user) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+      return res
+        .status(200)
+        .json({ message: "Usuario desactivado (isActive: false)" });
+    } catch (error: any) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
 };

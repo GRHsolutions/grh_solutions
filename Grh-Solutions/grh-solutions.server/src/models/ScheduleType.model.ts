@@ -1,19 +1,24 @@
-import { Schema,Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 
-const scheduleTypeSchema = new Schema({
+const scheduleTypeSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
-    start_Date: {
-        type: Date,
-        required: true
+    startTime: {
+      type: String,
+      required: true,
+      match: /^([01]\d|2[0-3]):([0-5]\d)$/, 
     },
-    end_Date: {
-        type: Date,
-        required: true
-    }
-}, { timestamps: true });
+    endTime: {
+      type: String,
+      required: true,
+      match: /^([01]\d|2[0-3]):([0-5]\d)$/,
+    },
+  },
+  { timestamps: true }
+);
 
-export const scheduleTypeModel = model('schedule_types', scheduleTypeSchema);
+export const ScheduleTypeModel = model("schedule_types", scheduleTypeSchema);

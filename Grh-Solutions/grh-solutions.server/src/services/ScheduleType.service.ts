@@ -1,30 +1,31 @@
-import {scheduleTypeFilter} from "../filters/scheduleType.filter";
-import { scheduleTypeModel } from "../models/ScheduleType.model";
+import { ScheduleTypeModel } from "../models/scheduleType.model";
+import { scheduleTypeFilter } from "../filters/scheduleType.filter";
 
 export const scheduleTypeService = {
   create: async (entity: {
     name: string;
-    start_Date: Date;
-    end_Date: Date;
+    startTime: string;  
+    endTime: string;   
   }) => {
-    return scheduleTypeModel.create(entity);
+    return ScheduleTypeModel.create(entity);
   },
-
-    getAll: async (filter: scheduleTypeFilter) => {
-        const query: any = {};
+  getAll: async (filter: scheduleTypeFilter) => {
+    const query: any = {};
     if (filter.name && filter.name.trim() !== "") {
       query.name = new RegExp(filter.name.trim(), "i");
     }
-    return scheduleTypeModel.find(query);
+    return ScheduleTypeModel.find(query);
   },
-    getById: async (id: string) => {
-        return await scheduleTypeModel.findById(id);
-    },
+  getById: async (id: string) => {
+    return ScheduleTypeModel.findById(id);
+  },
   update: async (
     id: string,
-    entity: { name?: string; start_Date?: Date; end_Date?: Date }
-  ) => scheduleTypeModel.findByIdAndUpdate(id, entity, { new: true }),
-    delete: async (id: string) => {
-        return await scheduleTypeModel.findByIdAndDelete(id);
-    },
-}
+    entity: { name?: string; startTime?: string; endTime?: string }
+  ) => {
+    return ScheduleTypeModel.findByIdAndUpdate(id, entity, { new: true });
+  },
+  delete: async (id: string) => {
+    return ScheduleTypeModel.findByIdAndDelete(id);
+  },
+};

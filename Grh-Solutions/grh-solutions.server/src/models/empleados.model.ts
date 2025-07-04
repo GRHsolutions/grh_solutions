@@ -6,8 +6,7 @@ const empleadosSchema = new Schema({
       ref: "area",
       required: true
   },
-  user:
-  {
+  user:{
     type: Types.ObjectId,
     ref: "users",
     required: true,

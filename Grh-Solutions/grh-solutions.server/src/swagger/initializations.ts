@@ -223,6 +223,11 @@ export const swaggerComponents: Components = {
         typeDocument: {
           type: "string",
         },
+        isActive: {
+          type: "boolean",
+          example: true,
+          description: "Indica si el usuario está activo o ha sido desactivado",
+        },
       },
     },
     UpdateUserRequest: {
@@ -367,12 +372,17 @@ export const swaggerComponents: Components = {
       properties: {
         name: {
           type: "string",
+          example: "Turno mañana",
         },
-        start_Date: {
-          type: "date",
+        startTime: {
+          type: "string",
+          example: "08:00",
+          description: "Hora de inicio en formato HH:mm",
         },
-        end_Date: {
-          type: "date",
+        endTime: {
+          type: "string",
+          example: "12:00",
+          description: "Hora de fin en formato HH:mm",
         },
       },
     },
@@ -397,13 +407,13 @@ export const swaggerComponents: Components = {
         puesto: {
           $ref: "#/components/schemas/Puesto",
         },
-        area : {
+        area: {
           $ref: "#/components/schemas/Area",
         },
         status: {
           type: "string",
           enum: ["activo", "inactivo", "eliminado"],
-        }
+        },
       },
     },
     News: {
@@ -491,7 +501,7 @@ export const swaggerComponents: Components = {
           type: "number",
         },
       },
-    }
+    },
   },
 };
 
@@ -736,6 +746,7 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  /// USER ENDPOINTS INITIALIZATION FOR SWAGGER.
   "/api/user/getMyInfo": {
     get: {
       summary: "Get the user`s internal info from logged user",
@@ -804,27 +815,128 @@ export const swaggerPaths: Paths = {
     },
   },
   "/api/user/getAll": {
-  get: {
-    summary: "Obtener todos los usuarios",
-    tags: ["Users"],
-    security: [{ bearerAuth: [] }],      // quítalo si no usas JWT
-    responses: {
-      200: {
-        description: "Lista de usuarios",
+    get: {
+      summary: "Obtener todos los usuarios",
+      tags: ["User"],
+      security: [{ bearerAuth: [] }], // quítalo si no usas JWT
+      responses: {
+        200: {
+          description: "Lista de usuarios",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/User" },
+              },
+            },
+          },
+        },
+        401: { description: "No autorizado" },
+        500: { description: "Error del servidor" },
+      },
+    },
+  },
+  "/api/user/getById": {
+    get: {
+      summary: "Obtener usuario por ID",
+      tags: ["User"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del usuario a consultar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Usuario encontrado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/User1" },
+            },
+          },
+        },
+        400: { description: "ID inválido" },
+        404: { description: "Usuario no encontrado" },
+      },
+    },
+  },
+  "/api/user/updateUser": {
+    put: {
+      summary: "Actualizar cualquier usuario por ID",
+      tags: ["User"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del usuario a actualizar",
+        },
+      ],
+      requestBody: {
+        required: true,
         content: {
           "application/json": {
-            schema: {
-              type: "array",
-              items: { $ref: "#/components/schemas/User" }
-            }
-          }
-        }
+            schema: { $ref: "#/components/schemas/User1" }, // ó UpdateUserRequest
+          },
+        },
       },
-      401: { description: "No autorizado" },
-      500: { description: "Error del servidor" }
-    }
-  }
-},
+      responses: {
+        200: {
+          description: "Usuario actualizado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/User1" },
+            },
+          },
+        },
+        400: { description: "Error de validación" },
+        401: { description: "No autorizado" },
+        500: { description: "Error del servidor" },
+      },
+    },
+  },
+  "/api/user/delete": {
+    delete: {
+      summary: "Desactivar usuario (cambio de estado isActive = false)",
+      tags: ["User"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del usuario a desactivar",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Usuario desactivado correctamente",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Usuario desactivado (isActive: false)",
+                  },
+                },
+              },
+            },
+          },
+        },
+        404: { description: "Usuario no encontrado" },
+        401: { description: "No autorizado" },
+      },
+    },
+  },
   /// ROL ENDPOINTS INITIALIZATION FOR SWAGGER.
   "/api/rol/create": {
     post: {
@@ -2037,18 +2149,18 @@ export const swaggerPaths: Paths = {
           "application/json": {
             schema: {
               type: "object",
-              required: ["name", "start_Date", "end_Date"],
+              required: ["name", "startTime", "endTime"],
               properties: {
                 name: { type: "string", example: "Turno Mañana" },
-                start_Date: {
+                startTime: {
                   type: "string",
-                  format: "date-time",
-                  example: "2025-07-03T06:00:00Z",
+                  example: "08:00",
+                  description: "Hora de inicio en formato HH:mm",
                 },
-                end_Date: {
+                endTime: {
                   type: "string",
-                  format: "date-time",
-                  example: "2025-07-03T14:00:00Z",
+                  example: "12:00",
+                  description: "Hora de fin en formato HH:mm",
                 },
               },
             },
@@ -2064,9 +2176,7 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        400: {
-          description: "Error de validación",
-        },
+        400: { description: "Error de validación" },
       },
     },
   },
@@ -2086,9 +2196,7 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        400: {
-          description: "Error en la petición",
-        },
+        400: { description: "Error en la petición" },
       },
     },
   },
@@ -2114,9 +2222,7 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        404: {
-          description: "Tipo de horario no encontrado",
-        },
+        404: { description: "Tipo de horario no encontrado" },
       },
     },
   },
@@ -2139,18 +2245,16 @@ export const swaggerPaths: Paths = {
           "application/json": {
             schema: {
               type: "object",
-              required: ["name", "start_Date", "end_Date"],
+              required: ["name", "startTime", "endTime"],
               properties: {
                 name: { type: "string", example: "Turno Tarde" },
-                start_Date: {
+                startTime: {
                   type: "string",
-                  format: "date-time",
-                  example: "2025-07-03T14:00:00Z",
+                  example: "14:00",
                 },
-                end_Date: {
+                endTime: {
                   type: "string",
-                  format: "date-time",
-                  example: "2025-07-03T22:00:00Z",
+                  example: "22:00",
                 },
               },
             },
@@ -2166,9 +2270,7 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        400: {
-          description: "Error en la petición",
-        },
+        400: { description: "Error en la petición" },
       },
     },
   },
@@ -2202,9 +2304,7 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        404: {
-          description: "Tipo de horario no encontrado",
-        },
+        404: { description: "Tipo de horario no encontrado" },
       },
     },
   },
@@ -2927,7 +3027,7 @@ export const swaggerPaths: Paths = {
           required: false,
           schema: { type: "string" },
           description: "ID del grupo para filtrar",
-        }
+        },
       ],
       responses: {
         200: {
@@ -2943,7 +3043,7 @@ export const swaggerPaths: Paths = {
         },
         400: { description: "Error en la petición" },
       },
-    }
+    },
   },
   "/api/news/getPagination": {
     get: {
@@ -3159,5 +3259,5 @@ export const swaggerPaths: Paths = {
         },
       },
     },
-  }
+  },
 };
