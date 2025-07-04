@@ -1,18 +1,28 @@
 import { Schema, Types, model } from "mongoose";
 
-const empleadosSchema = new Schema ({
-    users: [
-      {
-        type: Types.ObjectId,
-        ref: "users",
-        required: true,
-      },
-    ],
-    puesto: {
-      type: Types.ObjectId,
-      ref: "puesto",
-      required: true
-    }
-}, {timestamps: true,}
-)
+const empleadosSchema = new Schema({
+  /*
+    ------------------------------------------------
+    ------------------------------------------------
+    FALTA RELACION AL AREA
+    ------------------------------------------------
+    ------------------------------------------------
+  */
+  user:
+  {
+    type: Types.ObjectId,
+    ref: "users",
+    required: true,
+    unique: true
+  },
+  puesto: {
+    type: Types.ObjectId,
+    ref: "puesto",
+    required: true
+  },
+  status: {
+    type: String, 
+    enum: ["activo", "inactivo", "eliminado"],
+  }
+})
 export const empleadosModel = model("empleados", empleadosSchema);

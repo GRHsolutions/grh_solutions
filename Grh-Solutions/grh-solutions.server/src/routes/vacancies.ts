@@ -1,7 +1,7 @@
 import express from 'express';
 import { validationSchemaHandler } from '../middleware/validationSquema';
 import { vacanciesController } from '../controllers/vacancies.controller';
-import { validateToken } from '../middleware/tokens.middlewares';
+
 const router = express.Router();
 const validationSchema = [
   { name: 'tittle', type: 'string', required: true },
@@ -20,12 +20,12 @@ const validationSchema = [
 ];
 
 
-router.get('/getAll', validateToken,  vacanciesController.getAll);
-router.get('/getById', validateToken, vacanciesController.getById);
-router.post('/create', validateToken, validationSchemaHandler({ schema: validationSchema }), vacanciesController.create);
-router.put('/update', validateToken, validationSchemaHandler({ schema: validationSchema }), vacanciesController.update);
-router.delete('/delete', validateToken, vacanciesController.delete);
-router.get('/getPaginated', validateToken, vacanciesController.getPaginated);
-router.get('/getTotalPages', validateToken, vacanciesController.getTotalPages);
+router.get('/getAll', vacanciesController.getAll);
+router.get('/getById', vacanciesController.getById);
+router.post('/create', validationSchemaHandler({ schema: validationSchema }), vacanciesController.create);
+router.put('/update', validationSchemaHandler({ schema: validationSchema }), vacanciesController.update);
+router.delete('/delete', vacanciesController.delete);
+router.get('/getPaginated', vacanciesController.getPaginated);
+router.get('/getTotalPages', vacanciesController.getTotalPages);
 
 export default router;

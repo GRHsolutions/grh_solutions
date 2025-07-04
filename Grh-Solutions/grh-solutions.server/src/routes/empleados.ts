@@ -4,10 +4,10 @@ import { validateToken } from '../middleware/tokens.middlewares';
 
 const router = express.Router();
 
-router.post("/create",validateToken, empleadosController.create);
-router.get("/getAll",validateToken, empleadosController.getAll);
-router.get("/getById", validateToken,empleadosController.getById);
-router.put("/update",validateToken, empleadosController.update);
-router.delete('/delete/:id', validateToken, empleadosController.delete);
+// router.post("/create", empleadosController.create);
+router.get("/getAll", empleadosController.getAll);
+router.get("/getById", empleadosController.getById);
+router.put("/update", empleadosController.update);
+router.delete('/delete/:id',  empleadosController.delete);
 
 export default router;

@@ -6,8 +6,19 @@ import { newsService } from "../services/news.service";
 export const newsController = {
   create: async (req: Request, res: Response) => {
     try {
+      const user = req.userId;
+
+      if (!user || typeof user != "string") {
+        return res.status(400).json({
+          message: "Usuario no encontrado"
+        })
+      }
       const entity = new NewsModel(req.body);
-      const cre = await newsService.create({ ...entity, status: "shown" });
+      const cre = await newsService.create({
+        ...entity,
+        status: "shown",
+        madeBy: user
+      });
 
       return res.status(200).json(cre);
     } catch (error: any) {
@@ -45,4 +56,26 @@ export const newsController = {
       });
     }
   },
+  delete: async (req: Request, resp: Response) => {
+    try {
+      const id = req.query;
+
+      if (!id || typeof id != "number" || id <= 0) {
+        return resp.status(400).json({
+          message: 'Id no puede ser null o menor e igual a 0'
+        })
+      };
+      const conf = await newsService.delete(id);
+
+      return resp.status(200).json({
+        obj: conf,
+        message: "new borrada exitosamente"
+      })
+    } catch (Error: any) {
+      return resp.status(500).json({
+        message: Error.message,
+        inner: Error.innerExpression
+      })
+    }
+  }
 };

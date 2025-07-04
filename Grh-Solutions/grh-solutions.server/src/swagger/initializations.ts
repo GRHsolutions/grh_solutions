@@ -389,7 +389,7 @@ export const swaggerComponents: Components = {
       required: ["users", "puesto"],
       properties: {
         users: {
-          type: "array",
+          type: "object",
           items: {
             $ref: "#/components/schemas/User",
           },
@@ -762,7 +762,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Update user information",
       tags: ["User"],
-      security: [{ bearerAuth: [] }],
+
       requestBody: {
         required: true,
         content: {
@@ -1776,7 +1776,7 @@ export const swaggerPaths: Paths = {
     post: {
       summary: "Crear un área",
       tags: ["Areas"],
-      security: [{ bearerAuth: [] }],
+
       requestBody: {
         required: true,
         content: {
@@ -1821,7 +1821,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un área",
       tags: ["Areas"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -1882,7 +1882,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener todas las áreas sin paginación",
       tags: ["Areas"],
-      security: [{ bearerAuth: [] }],
+
       responses: {
         200: {
           description: "Lista de áreas",
@@ -1916,7 +1916,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener un área por ID",
       tags: ["Areas"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -1969,7 +1969,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Actualizar un área",
       tags: ["Areas"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2365,7 +2365,7 @@ export const swaggerPaths: Paths = {
     post: {
       summary: "Crear un puesto",
       tags: ["Puestos"],
-      security: [{ bearerAuth: [] }],
+
       requestBody: {
         required: true,
         content: {
@@ -2410,7 +2410,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un puesto",
       tags: ["Puestos"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2471,7 +2471,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener todos los puestos",
       tags: ["Puestos"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "name",
@@ -2514,7 +2514,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener un puesto por ID",
       tags: ["Puestos"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2567,7 +2567,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Actualizar un puesto",
       tags: ["Puestos"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2618,70 +2618,10 @@ export const swaggerPaths: Paths = {
     },
   },
   // EMPLEADOS ENDPOINTS FOR SWAGGER
-  "/api/empleados/create": {
-    post: {
-      summary: "Crear un empleado",
-      tags: ["Empleados"],
-      security: [{ bearerAuth: [] }],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              required: ["users", "puesto"],
-              properties: {
-                users: {
-                  type: "array",
-                  items: {
-                    type: "string",
-                    example: "64e3f82b9f6d3c1234567891",
-                  },
-                },
-                puesto: {
-                  type: "string",
-                  example: "64e3f82b9f6d3c1234567892",
-                },
-              },
-            },
-          },
-        },
-      },
-      responses: {
-        201: {
-          description: "Empleado creado",
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/empleados" },
-            },
-          },
-        },
-        400: {
-          description: "Error de validación",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  message: {
-                    type: "string",
-                    example:
-                      "Se debe proporcionar al menos un ID de usuario en 'users'",
-                  },
-                  innerExpression: { type: "string", nullable: true },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  },
   "/api/empleados/getAll": {
     get: {
       summary: "Obtener todos los empleados",
       tags: ["Empleados"],
-      security: [{ bearerAuth: [] }],
       responses: {
         200: {
           description: "Lista de empleados",
@@ -2704,7 +2644,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener un empleado por ID",
       tags: ["Empleados"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2764,7 +2704,7 @@ export const swaggerPaths: Paths = {
       description:
         "Permite cambiar la lista de usuarios y/o el puesto asociado.",
       tags: ["Empleados"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2848,7 +2788,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un empleado",
       tags: ["Empleados"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -2946,32 +2886,57 @@ export const swaggerPaths: Paths = {
       },
     },
     post: {
-      post: {
-        summary: "Crear un horario",
-        tags: ["News"],
-        requestBody: {
-          required: true,
+      summary: "Crear un horario",
+      tags: ["News"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/News",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Comunicado creado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/News" },
+            },
+          },
+        },
+        400: { description: "Error de validación" },
+      },
+    },
+    delete: {
+      summary: "Elimina el comunicado",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        }
+      ],
+      responses: {
+        200: {
+          description: "Eliminado correctamente",
           content: {
             "application/json": {
               schema: {
-                $ref: "#/components/schemas/News",
+                type: "array",
+                items: { $ref: "#/components/schemas/News" },
               },
             },
           },
         },
-        responses: {
-          201: {
-            description: "Comunicado creado",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/News" },
-              },
-            },
-          },
-          400: { description: "Error de validación" },
-        },
+        400: { description: "Error en la petición" },
       },
-    },
+    }
   },
   "/api/news/getPagination": {
     get: {
@@ -3024,11 +2989,12 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  //-------------PROFILES------------
   "/api/profiles/create": {
     post: {
       summary: "Crear perfil",
       tags: ["Profiles"],
-      security: [{ bearerAuth: [] }],
+
       requestBody: {
         required: true,
         content: {
@@ -3091,7 +3057,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener perfil por ID",
       tags: ["Profiles"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -3115,7 +3081,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener perfil por ID de usuario",
       tags: ["Profiles"],
-      security: [{ bearerAuth: [] }],
+
       responses: {
         "200": {
           description: "Perfil encontrado",
@@ -3130,7 +3096,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Actualizar un perfil",
       tags: ["Profiles"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",
@@ -3164,7 +3130,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un perfil",
       tags: ["Profiles"],
-      security: [{ bearerAuth: [] }],
+
       parameters: [
         {
           name: "id",

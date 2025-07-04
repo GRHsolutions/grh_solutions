@@ -2,35 +2,35 @@ import { Request, Response } from "express";
 import { empleadosService } from "../services/empleados.service";
 
 export const empleadosController = {
-  create: async (req: Request, res: Response) => {
-    try {
-      const { users, puesto } = req.body;
+  // create: async (req: Request, res: Response) => {
+  //   try {
+  //     const { users, puesto } = req.body;
 
-      if (!Array.isArray(users) || users.length === 0) {
-        return res.status(400).json({
-          message: "Se debe proporcionar al menos un ID de usuario en 'users'",
-        });
-      }
+  //     if (!Array.isArray(users) || users.length === 0) {
+  //       return res.status(400).json({
+  //         message: "Se debe proporcionar al menos un ID de usuario en 'users'",
+  //       });
+  //     }
 
-      if (!puesto || typeof puesto !== "string" || puesto.trim() === "") {
-        return res
-          .status(400)
-          .json({ message: "El campo 'puesto' es obligatorio" });
-      }
+  //     if (!puesto || typeof puesto !== "string" || puesto.trim() === "") {
+  //       return res
+  //         .status(400)
+  //         .json({ message: "El campo 'puesto' es obligatorio" });
+  //     }
 
-      const data = await empleadosService.create({
-        users,
-        puesto: puesto.trim(),
-      });
+  //     const data = await empleadosService.create({
+  //       users,
+  //       puesto: puesto.trim(),
+  //     });
 
-      return res.status(201).json(data);
-    } catch (error: any) {
-      return res.status(500).json({
-        message: error.message,
-        innerExpression: error.innerExpression,
-      });
-    }
-  },
+  //     return res.status(201).json(data);
+  //   } catch (error: any) {
+  //     return res.status(500).json({
+  //       message: error.message,
+  //       innerExpression: error.innerExpression,
+  //     });
+  //   }
+  // },
 
   getAll: async (_req: Request, res: Response) => {
     try {
@@ -93,7 +93,7 @@ export const empleadosController = {
 
   delete: async (req: Request, res: Response) => {
     try {
-const { id } = req.params;
+      const { id } = req.params;
 
       if (!id || typeof id !== "string" || id.trim() === "") {
         return res.status(400).json({ message: "ID inválido" });
