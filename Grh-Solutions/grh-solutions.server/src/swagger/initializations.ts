@@ -397,6 +397,13 @@ export const swaggerComponents: Components = {
         puesto: {
           $ref: "#/components/schemas/Puesto",
         },
+        area : {
+          $ref: "#/components/schemas/Area",
+        },
+        status: {
+          type: "string",
+          enum: ["activo", "inactivo", "eliminado"],
+        }
       },
     },
     News: {
