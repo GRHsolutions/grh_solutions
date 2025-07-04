@@ -1,6 +1,7 @@
-import { PathsObject } from "openapi3-ts";
+import { PathItem, Schema } from "swagger-jsdoc";
 
-export const ContractPaths: PathsObject = {
+
+export const ContractPaths: PathItem = {
   "/api/contracts/create": {
     post: {
       summary: "Crear contrato",
@@ -103,9 +104,7 @@ export const ContractPaths: PathsObject = {
   },
 };
 
-import { SchemaObject } from "openapi3-ts";
-
-export const ContractSchema: SchemaObject = {
+export const ContractSchema: Schema = {
   type: "object",
   required: ["empleados", "tittle", "description", "content", "type_contract", "status"],
   properties: {
