@@ -5,6 +5,7 @@ export const empleadosService = {
     create: async (id: string, puesto: string) => {
         return await empleadosModel.create({
             user: id,
+            area: id,   
             puesto: puesto,
             status: "activo"
         });
@@ -12,15 +13,17 @@ export const empleadosService = {
     getAll: async () => {
         return await empleadosModel
             .find()
-            .populate('users')
+            .populate('user')
             .populate('puesto')
+            .populate('area');
     },
 
     getById: async (id: string) => {
         return empleadosModel
             .findById(id)
-            .populate("users")
-            .populate("puesto");
+            .populate("user")
+            .populate("puesto")
+            .populate('area');
     },
 
     update: async (id: string, entity: object) => {
