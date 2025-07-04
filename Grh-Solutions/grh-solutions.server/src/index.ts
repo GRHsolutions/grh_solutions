@@ -6,8 +6,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import routes from './routes/routes';
 import { MONGO_URI } from './config';
-import { swaggerComponents, swaggerPaths } from './swagger/initializations';
-import { ContractPaths, ContractSchema } from './swagger/contrato';
+import { swaggerComponents, swaggerPaths } from './swagger/initializations.swagger';
+import { ContractPaths, ContractSchema } from './swagger/contrato.swagger';
+import { globalComponents, globalPaths } from './swagger/global.swagger';
 
 dotenv.config();
 
@@ -35,14 +36,8 @@ const swaggerOptions = {
         url: `http://localhost:${PORT}`
       }
     ],
-    components: {
-      ...swaggerComponents, 
-      ...ContractSchema
-    },
-    paths: {
-      ...swaggerPaths, 
-      ...ContractPaths
-    },
+    components: globalComponents,
+    paths: globalPaths,
     security: [{ bearerAuth: []}]
   },
   apis: []
