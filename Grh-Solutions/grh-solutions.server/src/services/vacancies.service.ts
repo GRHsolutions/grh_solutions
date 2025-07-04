@@ -5,17 +5,25 @@ export const vacanciesService = {
   create: async (entity: object) => {
     return await VacanciesModel.create(entity);
   },
+
   getAll: async (filter: any) => {
-    if (Object.keys(filter).length === 0) {
-      return await VacanciesModel.find();
+    const query: any = {};
+
+    if (filter.tittle && filter.tittle.trim() !== "") {
+      query.tittle = { $regex: filter.tittle, $options: "i" };
     }
-    return await VacanciesModel.find({ tittle: filter.tittle });
+
+    return await VacanciesModel.find(query)
+      .populate("charge")
+      .populate("area")
+      .sort({ createdAt: -1 });
   },
+
   getTotalPages: async (filter: VacanciesFiler) => {
     const query: any = {};
 
-    if (filter.name && filter.name.trim() !== "") {
-      query.$or = [{ name: new RegExp(filter.name, "i") }];
+    if (filter.tittle && filter.tittle.trim() !== "") {
+      query.tittle = { $regex: filter.tittle, $options: "i" };
     }
 
     const totalRow = filter.totalRow || 10;
@@ -23,11 +31,12 @@ export const vacanciesService = {
 
     return Math.ceil(totalDocuments / totalRow);
   },
+
   getPaginated: async (filter: VacanciesFiler) => {
     const query: any = {};
 
-    if (filter.name && filter.name.trim() !== "") {
-      query.$or = [{ name: new RegExp(filter.name, "i") }];
+    if (filter.tittle && filter.tittle.trim() !== "") {
+      query.tittle = { $regex: filter.tittle, $options: "i" };
     }
 
     const currentPage = filter.currentPage || 1;
@@ -36,14 +45,22 @@ export const vacanciesService = {
 
     return await VacanciesModel.find(query)
       .skip(skip)
-      .limit(totalRow);
+      .limit(totalRow)
+      .populate("charge")
+      .populate("area")
+      .sort({ createdAt: -1 });
   },
+
   getById: async (id: string) => {
-    return await VacanciesModel.findById(id);
+    return await VacanciesModel.findById(id)
+      .populate("charge")
+      .populate("area");
   },
+
   update: async (id: string, entity: object) => {
     return await VacanciesModel.findByIdAndUpdate(id, entity, { new: true });
   },
+
   delete: async (id: string) => {
     return await VacanciesModel.findByIdAndDelete(id);
   },

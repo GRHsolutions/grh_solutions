@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { postulanteService } from "../services/postulante.service";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import { empleadosModel } from "../models/empleados.model";
+import { VacanciesModel } from "../models/vacancies.model";
 
 export const postulanteController = {
   create: async (req: Request, res: Response) => {
@@ -59,8 +61,6 @@ export const postulanteController = {
       res.status(500).json({ message: error.message });
     }
   },
-
-  // Actualizar un postulante por ID
   update: async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -70,11 +70,37 @@ export const postulanteController = {
         return res.status(400).json({ message: "ID inválido" });
       }
 
+      const postulante = await postulanteService.getById(id);
+      if (!postulante) {
+        return res.status(404).json({ message: "Postulante no encontrado" });
+      }
+
       const updatedPostulante = await postulanteService.update(id, updates);
+
+      if (updates.status === "contratado" && postulante.status !== "contratado") {
+        const empleadoExistente = await empleadosModel.findOne({ user: postulante.user });
+
+        if (!empleadoExistente) {
+          const vacante = await VacanciesModel.findById(postulante.vacante);
+
+          if (!vacante) {
+            return res.status(400).json({ message: "Vacante no encontrada para el postulante." });
+          }
+
+          await empleadosModel.create({
+            user: postulante.user,
+            area: vacante.area,
+            puesto: vacante.charge,
+            status: "activo",
+          });
+        }
+      }
+
       return res.status(200).json(updatedPostulante);
     } catch (error: any) {
-      res.status(500).json({
-        message: error.message,
+      return res.status(500).json({
+        message: "Error al actualizar el postulante",
+        error: error.message,
       });
     }
   },

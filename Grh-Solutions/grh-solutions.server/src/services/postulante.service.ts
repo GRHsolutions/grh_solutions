@@ -1,3 +1,4 @@
+import { get } from "http";
 import { postulantesModel } from "../models/postulante.model";
 
 export const postulanteService = {
@@ -14,5 +15,8 @@ export const postulanteService = {
     return await postulantesModel
       .find({ vacante: vacanteId })
       .populate("user")
+  },
+  getById: async (id: string) => {
+    return await postulantesModel.findById(id).populate("user");
   },
 };

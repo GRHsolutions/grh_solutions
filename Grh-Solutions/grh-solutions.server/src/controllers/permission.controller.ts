@@ -22,5 +22,19 @@ export const permissionController = {
         const created = await permissionService.create(req.body);
 
         return res.status(200).json(created);
+    },
+
+    update: async(req: Request, res: Response) => {
+        const { id } = req.params;
+        const updated = await permissionService.update(id, req.body);
+
+        return res.status(200).json(updated);
+    },
+
+    delete: async(req: Request, res: Response) => {
+        const { id } = req.params;
+        const deleted = await permissionService.delete(id);
+
+        return res.status(200).json(deleted);
     }
 };

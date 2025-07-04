@@ -10,6 +10,7 @@ const validationSchema = [
   { name: 'salary', type: 'string', required: true },
   { name: 'horary', type: 'string', required: true },
   { name: 'charge', type: 'string', required: true },
+  { name: 'area', type: 'string', required: true },
   { name: 'address', type: 'string', required: true },
   { name: 'telephone', type: 'string', required: true },
   { name: 'email', type: 'string', required: true },

@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 
 const vacanciesSchema = new Schema({
   tittle: {
@@ -23,8 +23,14 @@ const vacanciesSchema = new Schema({
     required: true
   },
   charge: {
-    type: String,
-    required: true
+    type: Types.ObjectId,
+    ref: "puesto", 
+    required: false
+  },
+  area: {
+    type: Types.ObjectId,
+    ref: "area",
+    required: false
   },
   address: {
     type: String,
