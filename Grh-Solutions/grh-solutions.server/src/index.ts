@@ -7,8 +7,7 @@ import dotenv from 'dotenv';
 import routes from './routes/routes';
 import { MONGO_URI } from './config';
 import { swaggerComponents, swaggerPaths } from './swagger/initializations';
-import { validateToken } from './middleware/tokens.middlewares';
-import { verifyPermissionHandler } from './middleware/verifyPermission.middleware';
+import { ContractPaths, ContractSchema } from './swagger/contrato';
 
 dotenv.config();
 
@@ -36,8 +35,14 @@ const swaggerOptions = {
         url: `http://localhost:${PORT}`
       }
     ],
-    components: swaggerComponents,
-    paths: swaggerPaths,
+    components: {
+      ...swaggerComponents, 
+      ...ContractSchema
+    },
+    paths: {
+      ...swaggerPaths, 
+      ...ContractPaths
+    },
     security: [{ bearerAuth: []}]
   },
   apis: []

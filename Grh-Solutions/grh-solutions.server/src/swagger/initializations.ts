@@ -484,7 +484,7 @@ export const swaggerComponents: Components = {
           type: "number",
         },
       },
-    },
+    }
   },
 };
 
@@ -3152,5 +3152,5 @@ export const swaggerPaths: Paths = {
         },
       },
     },
-  },
+  }
 };
