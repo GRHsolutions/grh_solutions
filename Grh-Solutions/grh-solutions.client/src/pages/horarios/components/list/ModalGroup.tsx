@@ -173,13 +173,13 @@ export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
             />
           </Box>
           <Box sx={{ mt: 1 }}>
-            <MultipleSelect
+            {/* <MultipleSelect
               label="Listado de usuarios"
               name="users"
-              options={usersOptions} // [{ value: string, name: string }]
-              value={mult} // string[] de values
+              // options={usersOptions} 
+              // value={mult} 
               setFieldValue={setFieldValue}
-            />
+            /> */}
           </Box>
           <Box
             sx={{
