@@ -1,5 +1,6 @@
 import { Dayjs } from "dayjs";
 import { DragNDropVariables } from "../../../generics/grh-generics/DragNDrop";
+import { Pagination } from "../pagination/pagination";
 
 export type News = {
     id: number;
@@ -31,8 +32,8 @@ export type Commentary = {
     madeBy: number,
 }
 
-export type NewsFilter = {
-    status: string;
+export interface NewsFilter extends Pagination {
+    status?: string | undefined;
 }
 
 export type Birthday = {

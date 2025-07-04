@@ -1,10 +1,10 @@
 import { Schema, Types, model } from "mongoose";
 
-const cvSchema = new Schema(
+const cvSchema = new Schema( // ES CONTRACT SCHEMA NO CV
   {
-    empleados: {
+    empleados: { // SE RELACIONA A UN EMPLEADO, DE ESTA FORMA CUANDO SE VENZA EL CONTRATO SE CAMBIA EL ESTADO AL EMPLEADO
       type: Types.ObjectId,
-      ref: "empleados", // Relacion con el modelo de empleados
+      ref: "empleados", 
       required: true,
     },
     tittle: {
@@ -24,11 +24,11 @@ const cvSchema = new Schema(
       ref: "type_contract", // Relacion con el modelo de tipo contrato
       required: true,
     },
-    status: {
-      type: String,
+    status: { 
+      type: String, // los estados son "POR REVISAR" "APROBADO" "REPROBADO" "POR FIRMAR" "FIRMADOS" "POR RENOVAR"
       required: true,
     },
-    signatures: {
+    signatures: { // NO HACE FALTA UNA RELACION A OTRA TABLA
       type: Types.ObjectId,
       ref: "signatures", // Relacion con el modelo de asignacion
       required: false,

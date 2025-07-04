@@ -1,6 +1,13 @@
 import { Schema, Types, model } from "mongoose";
 
 const empleadosSchema = new Schema({
+  /*
+    ------------------------------------------------
+    ------------------------------------------------
+    FALTA RELACION AL AREA
+    ------------------------------------------------
+    ------------------------------------------------
+  */
   user:
   {
     type: Types.ObjectId,

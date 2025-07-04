@@ -4,6 +4,11 @@ import { scheduleTypeService } from "../services/ScheduleType.service";
 export const scheduleTypeController = {
   create: async (req: Request, res: Response) => {
     try {
+      /*
+        -------------------------------------------------------------------
+        AQUI SE USAN HORAS NO FECHASSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+        -------------------------------------------------------------------
+      */
       const { name, start_Date, end_Date } = req.body;
 
       if (!name || name.trim() === "") {

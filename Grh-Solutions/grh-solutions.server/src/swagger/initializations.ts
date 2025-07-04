@@ -762,7 +762,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Update user information",
       tags: ["User"],
-      
+
       requestBody: {
         required: true,
         content: {
@@ -1754,7 +1754,7 @@ export const swaggerPaths: Paths = {
     post: {
       summary: "Crear un área",
       tags: ["Areas"],
-      
+
       requestBody: {
         required: true,
         content: {
@@ -1799,7 +1799,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un área",
       tags: ["Areas"],
-      
+
       parameters: [
         {
           name: "id",
@@ -1860,7 +1860,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener todas las áreas sin paginación",
       tags: ["Areas"],
-      
+
       responses: {
         200: {
           description: "Lista de áreas",
@@ -1894,7 +1894,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener un área por ID",
       tags: ["Areas"],
-      
+
       parameters: [
         {
           name: "id",
@@ -1947,7 +1947,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Actualizar un área",
       tags: ["Areas"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2343,7 +2343,7 @@ export const swaggerPaths: Paths = {
     post: {
       summary: "Crear un puesto",
       tags: ["Puestos"],
-      
+
       requestBody: {
         required: true,
         content: {
@@ -2388,7 +2388,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un puesto",
       tags: ["Puestos"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2449,7 +2449,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener todos los puestos",
       tags: ["Puestos"],
-      
+
       parameters: [
         {
           name: "name",
@@ -2492,7 +2492,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener un puesto por ID",
       tags: ["Puestos"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2545,7 +2545,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Actualizar un puesto",
       tags: ["Puestos"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2622,7 +2622,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener un empleado por ID",
       tags: ["Empleados"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2682,7 +2682,7 @@ export const swaggerPaths: Paths = {
       description:
         "Permite cambiar la lista de usuarios y/o el puesto asociado.",
       tags: ["Empleados"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2766,7 +2766,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un empleado",
       tags: ["Empleados"],
-      
+
       parameters: [
         {
           name: "id",
@@ -2864,30 +2864,28 @@ export const swaggerPaths: Paths = {
       },
     },
     post: {
-      post: {
-        summary: "Crear un horario",
-        tags: ["News"],
-        requestBody: {
-          required: true,
+      summary: "Crear un horario",
+      tags: ["News"],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/News",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Comunicado creado",
           content: {
             "application/json": {
-              schema: {
-                $ref: "#/components/schemas/News",
-              },
+              schema: { $ref: "#/components/schemas/News" },
             },
           },
         },
-        responses: {
-          201: {
-            description: "Comunicado creado",
-            content: {
-              "application/json": {
-                schema: { $ref: "#/components/schemas/News" },
-              },
-            },
-          },
-          400: { description: "Error de validación" },
-        },
+        400: { description: "Error de validación" },
       },
     },
     delete: {
@@ -2974,7 +2972,7 @@ export const swaggerPaths: Paths = {
     post: {
       summary: "Crear perfil",
       tags: ["Profiles"],
-      
+
       requestBody: {
         required: true,
         content: {
@@ -3037,7 +3035,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener perfil por ID",
       tags: ["Profiles"],
-      
+
       parameters: [
         {
           name: "id",
@@ -3061,7 +3059,7 @@ export const swaggerPaths: Paths = {
     get: {
       summary: "Obtener perfil por ID de usuario",
       tags: ["Profiles"],
-      
+
       responses: {
         "200": {
           description: "Perfil encontrado",
@@ -3076,7 +3074,7 @@ export const swaggerPaths: Paths = {
     put: {
       summary: "Actualizar un perfil",
       tags: ["Profiles"],
-      
+
       parameters: [
         {
           name: "id",
@@ -3110,7 +3108,7 @@ export const swaggerPaths: Paths = {
     delete: {
       summary: "Eliminar un perfil",
       tags: ["Profiles"],
-      
+
       parameters: [
         {
           name: "id",

@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
 const rawFormularySchema = new Schema(
   {
@@ -43,7 +43,7 @@ const newsSchema = new Schema(
     numberLikes: { type: Number, default: 0 },
     numberDisLikes: { type: Number, default: 0 },
     date: { type: Date, required: true },
-    madeBy: { type: String, required: true },
+    madeBy: { type: Types.ObjectId, required: true, ref: "users" },
   },
   { timestamps: true }
 );
