@@ -24,3 +24,19 @@ export const CreatePostulante = (
     }
   });
 };
+
+export const updatePostulante = (
+  id: string,
+  status: string,
+  token: string
+): AxiosPromise => {
+  const url = `${LOGINMAINAPI}/update/${id}`;
+  const body = {
+    status,
+  };
+  return axios.put(url, body, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+};

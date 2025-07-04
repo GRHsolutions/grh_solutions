@@ -13,6 +13,7 @@ export interface VacanteData {
   experience: string;
   formation: string;
   status: string;
+  area: string
 }
 
 export interface CreateVacancyDto {
@@ -29,6 +30,7 @@ export interface CreateVacancyDto {
   experience: string;
   formation: string;
   status: string;
+  area: string
 }
 
 export interface Postulante {

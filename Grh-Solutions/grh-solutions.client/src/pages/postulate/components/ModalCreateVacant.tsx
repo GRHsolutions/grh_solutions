@@ -11,6 +11,8 @@ import GrhCustomSelect from '../../../generics/grh-generics/inputSelect';
 import { useState } from 'react';
 import { createVacancy } from '../../../domain/services/vacancies/vacancies.service';
 import { useAuth } from '../../../hooks/auth';
+import { Charge } from '../../../domain/models/charge/charge.entities';
+import { Area } from '../../../domain/models/area/area.entities';
 
 const modalStyle = {
   position: 'absolute',
@@ -27,6 +29,8 @@ const modalStyle = {
 interface IModalOptionsProps {
   open: boolean;
   handleClose: () => void;
+  charges: Charge[]
+  areas: Area[]
 }
 
 const initialValues = {
@@ -42,7 +46,8 @@ const initialValues = {
   type_modality: '',
   experience: '',
   formation: '',
-  status: ''
+  status: '',
+  area: ''
 };
 
 const validationSchema = Yup.object({
@@ -69,7 +74,7 @@ const modalityOptions = [
   { value: "internship", name: "Pasantía" }
 ];
 
-export default function ModalCreateVacant({ open, handleClose }: IModalOptionsProps) {
+export default function ModalCreateVacant({ open, handleClose, charges, areas }: IModalOptionsProps) {
   const theme = useTheme();
   const [openAlert, setOpenAlert] = useState(false);
   const { auth } = useAuth();
@@ -125,7 +130,13 @@ export default function ModalCreateVacant({ open, handleClose }: IModalOptionsPr
                   <GrhTextField name="horary" label="Horario" value={values.horary} onChange={handleChange} fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
-                  <GrhTextField name="charge" label="Cargo" value={values.charge} onChange={handleChange} fullWidth />
+                  <GrhCustomSelect
+                    name="charge"
+                    label="Cargo"
+                    options={charges.map((charge) => ({ value: charge._id, name: charge.name }))}
+                    value={values.charge}
+                    onChange={handleChange}
+                  />
                 </Grid2>
 
                 <Grid2 size={6}>
@@ -148,10 +159,20 @@ export default function ModalCreateVacant({ open, handleClose }: IModalOptionsPr
                     onChange={handleChange}
                   />
                 </Grid2>
+
                 <Grid2 size={6}>
                   <GrhTextField name="status" label="Estado" value={values.status} onChange={handleChange} fullWidth />
                 </Grid2>
 
+                <Grid2 size={12}>
+                  <GrhCustomSelect
+                    name="area"
+                    label="Area"
+                    options={areas.map((area) => ({ value: area._id, name: area.name }))}
+                    value={values.area}
+                    onChange={handleChange}
+                  />
+                </Grid2>
                 <Grid2 size={6}>
                   <GrhTextField name="experience" label="Experiencia" value={values.experience} onChange={handleChange} fullWidth />
                 </Grid2>

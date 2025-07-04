@@ -20,6 +20,8 @@ import GrhTextField from '../../../generics/grh-generics/textField';
 import GrhCustomSelect from '../../../generics/grh-generics/inputSelect';
 import { VacanteData } from '../../../domain/models/vacantes/vacantes.entities';
 import { updateVacancy } from '../../../domain/services/vacancies/vacancies.service';
+import { Charge } from '../../../domain/models/charge/charge.entities';
+import { Area } from '../../../domain/models/area/area.entities';
 
 const modalStyle = {
   position: 'absolute',
@@ -66,9 +68,11 @@ interface IModalEditProps {
   initialValues: VacanteData;
   token: string;
   vacationId: string;
+    charges: Charge[]
+  areas: Area[]
 }
 
-export default function ModalEditVacant({ open, handleClose, initialValues, token, vacationId }: IModalEditProps) {
+export default function ModalEditVacant({ open, handleClose, initialValues, token, vacationId, charges, areas }: IModalEditProps) {
   const theme = useTheme();
   const [openAlert, setOpenAlert] = useState(false);
 
@@ -120,7 +124,13 @@ export default function ModalEditVacant({ open, handleClose, initialValues, toke
                   <GrhTextField name="horary" label="Horario" value={values.horary} onChange={handleChange} fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
-                  <GrhTextField name="charge" label="Cargo" value={values.charge} onChange={handleChange} fullWidth />
+                                    <GrhCustomSelect
+                    name="charge"
+                    label="Cargo"
+                    options={charges.map((charge) => ({ value: charge._id, name: charge.name }))}
+                    value={values.charge}
+                    onChange={handleChange}
+                  />
                 </Grid2>
 
                 <Grid2 size={6}>
@@ -146,7 +156,15 @@ export default function ModalEditVacant({ open, handleClose, initialValues, toke
                 <Grid2 size={6}>
                   <GrhTextField name="status" label="Estado" value={values.status} onChange={handleChange} fullWidth />
                 </Grid2>
-
+               <Grid2 size={12}>
+                  <GrhCustomSelect
+                    name="area"
+                    label="Area"
+                    options={areas.map((area) => ({ value: area._id, name: area.name }))}
+                    value={values.area}
+                    onChange={handleChange}
+                  />
+                </Grid2>
                 <Grid2 size={6}>
                   <GrhTextField name="experience" label="Experiencia" value={values.experience} onChange={handleChange} fullWidth />
                 </Grid2>
