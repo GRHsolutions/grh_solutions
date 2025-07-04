@@ -1,42 +1,13 @@
-import express from 'express';
-import { solicitudesController } from '../controllers/requests.controller';
-import { validateToken } from '../middleware/tokens.middlewares';
-import { validationSchemaHandler } from '../middleware/validationSquema';
+import { Router } from "express";
+import { requestsController } from "../controllers/requests.controller";
+import { validateToken } from "../middleware/tokens.middlewares";
 
-const router = express.Router();
+const router = Router();
 
-
-const validationSchema = [
-  { name: 'users', required: true, type: 'string' },
-  { name: 'title', required: true, type: 'string' },
-  { name: 'status', required: true, type: 'string' },
-  { name: 'type_request', required: true, type: 'string' },
-  { name: 'info', required: false, type: 'string' },
-];
-
-
-router.post(
-  '/create',
-  validateToken,
-  validationSchemaHandler({ schema: validationSchema }),
-  solicitudesController.create
-);
-
-
-router.get('/getAll', validateToken, solicitudesController.getAll);
-
-
-router.get('/getById/:id', validateToken, solicitudesController.getById);
-
-
-router.put(
-  '/update/:id',
-  validateToken,
-  validationSchemaHandler({ schema: validationSchema }),
-  solicitudesController.update
-);
-
-
-router.delete('/delete/:id', validateToken, solicitudesController.delete);
+router.post("/create", validateToken, requestsController.create);
+router.get("/getAll", validateToken, requestsController.getAll);
+router.get("/getById/:id", validateToken, requestsController.getById);   
+router.put("/update/:id", validateToken, requestsController.update);     
+router.delete("/delete/:id", validateToken, requestsController.delete);  
 
 export default router;

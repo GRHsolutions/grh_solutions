@@ -47,7 +47,7 @@ routes.use("/news", news);
 routes.use('/commentary', commentary)
 routes.use("/profiles", profileRoutes);
 routes.use("/contract", contract);
-routes.use('/requests', requests);
+routes.use('/request', requests);
 routes.use('/report', report);
 routes.use('/modules', module);
 
