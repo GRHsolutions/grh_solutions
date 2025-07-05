@@ -1,6 +1,61 @@
-import { Components, Paths } from "swagger-jsdoc";
+import { PathItem, Schema } from "swagger-jsdoc";
 
-export const cvSchemas: Components["schemas"] = {
+export const cvPaths: Record<string, PathItem> = {
+  "/api/cv/": {
+    post: {
+      summary: "Crear CV",
+      tags: ["CV"],
+      security: [{ bearerAuth: [] }],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/CV" },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "CV creado exitosamente",
+        },
+        400: {
+          description: "Error de validación o de solicitud",
+        },
+      },
+    },
+    put: {
+      summary: "Editar CV",
+      tags: ["CV"],
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/CV" },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: "CV actualizado exitosamente",
+        },
+        400: {
+          description: "Error de validación o de solicitud",
+        },
+      },
+    },
+  },
+};
+
+export const cvSchemas: { schemas: Record<string, Schema> } = {
   schemas: {
     Skill: {
       type: "object",
@@ -78,61 +133,6 @@ export const cvSchemas: Components["schemas"] = {
         },
       },
       required: ["firstName", "lastName", "mail", "phone"],
-    },
-  },
-};
-
-export const cvPaths: Paths = {
-  "/api/cv/": {
-    post: {
-      summary: "Crear CV",
-      tags: ["CV"],
-      security: [{ bearerAuth: [] }],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/CV" },
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: "CV creado exitosamente",
-        },
-        400: {
-          description: "Error de validación o de solicitud",
-        },
-      },
-    },
-    put: {
-      summary: "Editar CV",
-      tags: ["CV"],
-      security: [{ bearerAuth: [] }],
-      parameters: [
-        {
-          name: "id",
-          in: "query",
-          required: true,
-          schema: { type: "string" },
-        },
-      ],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: { $ref: "#/components/schemas/CV" },
-          },
-        },
-      },
-      responses: {
-        200: {
-          description: "CV actualizado exitosamente",
-        },
-        400: {
-          description: "Error de validación o de solicitud",
-        },
-      },
     },
   },
 };

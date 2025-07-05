@@ -1,6 +1,6 @@
 import { PathItem, Schema } from "swagger-jsdoc";
 
-export const RequestPaths: PathItem = {
+export const RequestPaths: Record<string, PathItem> = {
   "/api/request/create": {
     post: {
       summary: "Crear solicitud",
@@ -51,7 +51,7 @@ export const RequestPaths: PathItem = {
       parameters: [
         {
           name: "id",
-          in: "path",
+          in: "query",
           required: true,
           schema: { type: "string" },
           description: "ID de la solicitud",
@@ -73,7 +73,7 @@ export const RequestPaths: PathItem = {
       parameters: [
         {
           name: "id",
-          in: "path",
+          in: "query",
           required: true,
           schema: { type: "string" },
           description: "ID de la solicitud a actualizar",
@@ -102,7 +102,7 @@ export const RequestPaths: PathItem = {
       parameters: [
         {
           name: "id",
-          in: "path",
+          in: "query",
           required: true,
           schema: { type: "string" },
           description: "ID de la solicitud a desactivar",
