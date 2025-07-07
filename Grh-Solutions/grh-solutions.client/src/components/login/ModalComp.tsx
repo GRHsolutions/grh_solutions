@@ -44,15 +44,15 @@ export const ModalComp = ({ open, onClose }: ModalCompProps) => {
       xs: "95vw",
       sm: "90vw", 
       md: "80vw",
-      lg: "70vw",
-      xl: "60vw"
+      lg: "80vw",
+      xl: "80vw"
     },
-    maxWidth: "1200px",
+    maxWidth: "1600px",
     height: {
       xs: "95vh",
       sm: "90vh",
-      md: "85vh",
-      lg: "80vh"
+      md: "90vh",
+      lg: "90vh"
     },
     maxHeight: "800px",
     outline: "none",
@@ -160,8 +160,12 @@ export const ModalComp = ({ open, onClose }: ModalCompProps) => {
                 <Box
                   sx={{
                     width: "100%",
-                    maxWidth: actual === "register" ? "600px" : "400px",
-                    transition: "max-width 0.3s ease-in-out",
+                    height: '100%',
+                    maxWidth: actual === "register" ? "800px" : "500px",
+                    overflowY: actual === 'register' ? "auto"  : "hidden",
+                    overflowX: "hidden",
+                    maxHeight: actual === 'register' ? "600px" : "500px",
+                    pt: actual === 'register' ? 2 : undefined,
                   }}
                 >
                   {useActual()}

@@ -10,6 +10,8 @@ import { LoginRepository } from "../../../infrastructure/repositories/usuario";
 import { RegisterForm } from "../../../domain/models/usuario/login.entities";
 import GrhCustomSelect from "../../../generics/grh-generics/inputSelect";
 import { getTypeDocuments } from "../../../domain/services/typeDocument/typeDocument.service";
+import dayjs, { Dayjs } from "dayjs";
+import GenericDatePicker from "../../comunicados/datePicker";
 
 interface RegisterProps {
   onLogin: () => void;
@@ -32,6 +34,8 @@ const initialValues = {
   password: "",
   confirmPassword: "",
   typeDocument: "",
+  document: "",
+  birthDate: dayjs(),
 } as RegisterForm;
 
 export default function Register({ onLogin }: RegisterProps) {
@@ -39,11 +43,11 @@ export default function Register({ onLogin }: RegisterProps) {
   const theme = useTheme();
   const [loading, setLoading] = React.useState(false);
   const [documentTypes, setDocumentTypes] = React.useState([]);
+  const [birthDate, setBitchDate] = React.useState<Dayjs | null>(dayjs());
 
   useEffect(() => {
     getTypeDocuments()
       .then((response) => {
-        console.log("Tipos de documentos obtenidos:", response.data); // Debug
         const optionMap = response.data.map((item: any) => ({
           value: item["_id"],
           name: item.name,
@@ -91,6 +95,15 @@ export default function Register({ onLogin }: RegisterProps) {
       .oneOf([Yup.ref("password")], "Las contraseñas no coinciden")
       .required("Confirmación obligatoria"),
     typeDocument: Yup.string().required("Tipo de documento obligatorio"),
+    document: Yup.string().required("Numero de documento requerido"),
+    birthDate: Yup.mixed()
+      .required("La fecha de nacimiento es obligatoria")
+      .test("is-valid", "Fecha inválida", (value: any) =>
+        dayjs(value).isValid()
+      )
+      .test("not-in-future", "La fecha no puede ser en el futuro", (value) => {
+        return dayjs(value as Dayjs).isBefore(dayjs(), "day");
+      }),
   });
 
   return (
@@ -110,11 +123,20 @@ export default function Register({ onLogin }: RegisterProps) {
         isValid,
         setFieldValue,
       }) => {
+        const setValue = (fieldName: string, newVal: Dayjs | null) => {
+          setFieldValue(fieldName, newVal);
+        };
+
+        React.useEffect(() => {
+          setValue("birthDate", birthDate);
+        }, [birthDate]);
+
         return (
           <Form onSubmit={handleSubmit}>
             <Box
               sx={{
-                display: "grid",
+                display: "flex",
+                flexDirection: "column",
                 width: "100%",
                 height: "100%",
                 gap: "1rem",
@@ -135,84 +157,104 @@ export default function Register({ onLogin }: RegisterProps) {
                 Registro
               </Typography>
 
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                 <GrhTextField
+                  variant="standard"
                   name="firstName"
                   label="Primer Nombre"
                   value={values.firstName}
                   onChange={handleChange}
                   fullWidth
-                  error={touched.firstName && Boolean(errors.firstName)}
                 />
                 <GrhTextField
+                  variant="standard"
                   name="middleName"
                   label="Segundo Nombre"
                   value={values.middleName}
                   onChange={handleChange}
                   fullWidth
-                  error={touched.middleName && Boolean(errors.middleName)}
                 />
               </Box>
 
-              <Box sx={{ display: "flex", gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2, width: "100%" }}>
                 <GrhTextField
+                  variant="standard"
                   name="lastName"
                   label="Primer Apellido"
                   value={values.lastName}
                   onChange={handleChange}
                   fullWidth
-                  error={touched.lastName && Boolean(errors.lastName)}
                 />
                 <GrhTextField
+                  variant="standard"
                   name="secondLastName"
                   label="Segundo Apellido"
                   value={values.secondLastName}
                   onChange={handleChange}
                   fullWidth
-                  error={
-                    touched.secondLastName && Boolean(errors.secondLastName)
-                  }
                 />
               </Box>
 
               <GrhTextField
                 name="email"
                 label="Correo Electrónico"
+                variant="standard"
                 value={values.email}
                 onChange={handleChange}
-                error={touched.email && Boolean(errors.email)}
+                fullWidth
               />
 
               <GrhTextField
                 name="password"
                 label="Contraseña"
+                variant="standard"
                 type="password"
                 value={values.password}
                 onChange={handleChange}
-                error={touched.password && Boolean(errors.password)}
+                fullWidth
               />
 
               <GrhTextField
                 name="confirmPassword"
                 label="Confirmar Contraseña"
+                variant="standard"
                 type="password"
                 value={values.confirmPassword}
                 onChange={handleChange}
-                error={
-                  touched.confirmPassword && Boolean(errors.confirmPassword)
-                }
+                fullWidth
               />
 
               <GrhCustomSelect
                 name="typeDocument"
+                variant="standard"
                 label="Tipo de Documento"
                 value={values.typeDocument}
                 onChange={(event) => {
                   setFieldValue("typeDocument", event.target.value);
                 }}
                 options={documentTypes}
-                error={touched.typeDocument && Boolean(errors.typeDocument)}
                 fullWidth
+              />
+
+              <GrhTextField
+                name="document"
+                label="Numero de documento"
+                variant="standard"
+                value={values.document}
+                onChange={handleChange}
+                fullWidth
+              />
+
+              <GenericDatePicker
+                mode="date"
+                label="Fecha de nacimiento"
+                value={birthDate}
+                onChange={(newVal) => {
+                  setBitchDate(newVal as Dayjs);
+                }}
+                title="Cumpleaños"
+                color="info"
+                fullWidth={true}
               />
 
               <Typography
@@ -233,21 +275,19 @@ export default function Register({ onLogin }: RegisterProps) {
                   aquí
                 </label>
               </Typography>
-
               <GrhButton
                 type="submit"
                 variant="principal"
                 label={loading ? "Registrando..." : "Registrar"}
                 disabled={!isValid || loading}
                 onClick={() => {
-                  resetForm()
+                  //resetForm();
                 }}
               />
-
-              {/* <pre style={{ fontSize: "10px", whiteSpace: "pre-wrap" }}>
-              {JSON.stringify({ values, errors, touched, isValid }, null, 2)}
-            </pre> */}
             </Box>
+             <pre style={{ fontSize: "10px", whiteSpace: "pre-wrap" }}>
+              {JSON.stringify({ values, errors, touched, isValid }, null, 2)}
+            </pre> 
           </Form>
         );
       }}

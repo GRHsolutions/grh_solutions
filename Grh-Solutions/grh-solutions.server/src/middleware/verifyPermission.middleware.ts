@@ -28,7 +28,6 @@ export const verifyPermissionHandler = async (req: Request, res: Response, next:
     }
 
     // Find role with populated permissions - FIXED: Proper population
-    //console.log("Searching for role with ID:", currentRol);
     const rol = await rolModel.findById(currentRol).populate('permissions');
 
     //console.log("Role found:", rol ? "Yes" : "No");
@@ -63,12 +62,6 @@ export const verifyPermissionHandler = async (req: Request, res: Response, next:
     if (rol.permissions && rol.permissions.length > 0) {
       for (let i = 0; i < rol.permissions.length; i++) {
         const permission = rol.permissions[i] as any;
-        
-        // console.log(`Permission ${i + 1}:`, {
-        //   method: permission.ident?.method,
-        //   url: permission.ident?.originalUrl,
-        //   module: permission.ident?.module
-        // });
 
         // Check if permission matches
         if (permission.ident?.method === method.toUpperCase() && 

@@ -13,9 +13,17 @@ export const newsController = {
           message: "Usuario no encontrado"
         })
       }
-      const entity = new NewsModel(req.body);
+      
+      const {
+        type,
+        title,
+        description,
+      } = req.body;
+
       const cre = await newsService.create({
-        ...entity,
+        type: type,
+        title: title,
+        description: description,
         status: "shown",
         madeBy: user
       });

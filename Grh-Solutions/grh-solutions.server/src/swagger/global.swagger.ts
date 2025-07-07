@@ -7,6 +7,7 @@ import { cvPaths, cvSchemas } from "./cv.swagger";
 import { RequestPaths, RequestSchema } from "./request.swagger";
 import { FollowUpTypePaths, FollowUpTypeSchema } from "./followUpType.swagger";
 import { HistoryPaths, HistorySchema } from "./history.swagger";
+import { newPaths, NewsSchema } from "./comunicados.swagger";
 
 // Combinar todos los paths
 export const globalPaths: Paths = {
@@ -18,6 +19,7 @@ export const globalPaths: Paths = {
   ...RequestPaths,
   ...FollowUpTypePaths,
   ...HistoryPaths,
+  ...newPaths
 };
 
 // Combinar todos los componentes
@@ -49,5 +51,8 @@ export const globalComponents: Components = {
 
     // Schemas de historial
     ...(HistorySchema.schemas || {}),
+
+    // new
+    ...NewsSchema
   },
 };

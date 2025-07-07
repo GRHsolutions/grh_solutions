@@ -10,7 +10,10 @@ type RegisterForm = {
   'email': string,
   'password': string,
   'confirmPassword': string,
-  'documentType': string
+  'documentType': string,
+  // new data
+  'document': string,
+  'birthDate': string
 };
 
 export const loginController = {

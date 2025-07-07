@@ -60,6 +60,7 @@ const vacanciesSchema = new Schema({
     type: String,
     required: true
   }
+  //------------------------------- USUARIO QUIEN CREO LA VACANTE--------------------------------------------
 }, { timestamps: true });
 
 export const VacanciesModel = model('Vacancy', vacanciesSchema);

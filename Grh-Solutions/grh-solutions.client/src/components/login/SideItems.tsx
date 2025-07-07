@@ -198,42 +198,6 @@ export const SideItems = ({ actual, onSelect }: SideItemsProps) => {
           ))}
         </Stack>
       </Box>
-
-      {/* Footer del Sidebar
-      <Box
-        sx={{
-          mt: "auto",
-          p: 3,
-          borderTop: `1px solid ${theme.palette.divider}`,
-        }}
-      >
-        <Typography 
-          variant="caption" 
-          color="text.secondary"
-          sx={{
-            display: "block",
-            textAlign: "center",
-            lineHeight: 1.4,
-          }}
-        >
-          ¿Necesitas ayuda?
-        </Typography>
-        <Typography 
-          variant="caption" 
-          color="primary.main"
-          sx={{
-            display: "block",
-            textAlign: "center",
-            fontWeight: 500,
-            cursor: "pointer",
-            "&:hover": {
-              textDecoration: "underline",
-            },
-          }}
-        >
-          Contactar soporte
-        </Typography>
-      </Box> */}
     </Box>
   );
 };

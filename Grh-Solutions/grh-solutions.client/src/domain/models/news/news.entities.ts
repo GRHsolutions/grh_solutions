@@ -42,3 +42,12 @@ export type Birthday = {
     name: string;               
     date: Dayjs;
 }
+
+export type NewForm = {
+    _id: string;
+    type: string;
+    title: string;
+    description: string;
+    images: DragNDropVariables[];
+    form: object // todavia no decidido
+}

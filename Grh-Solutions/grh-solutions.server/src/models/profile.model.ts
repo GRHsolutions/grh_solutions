@@ -3,7 +3,7 @@ import { Schema, model, Types } from "mongoose";
 const profileSchema = new Schema({
   user: {
     type: Types.ObjectId,
-    ref: "User", // Referencia al usuario autenticado
+    ref: "users", // Referencia al usuario autenticado
     required: true
   },
   name: {
@@ -24,11 +24,11 @@ const profileSchema = new Schema({
   },
   address: {
     type: String,
-    required: true
+    required: false
   },
   number_phone: {
     type: Number,
-    required: true
+    required: false
   },
   telephone: {
     type: Number,
@@ -40,25 +40,19 @@ const profileSchema = new Schema({
   },
   status: {
     type: String,
+    enum: ["disabled", "enabled"],
     required: true
   },
   type_document: {
-    type: String,
-    required: true
+    type: Types.ObjectId,
+    ref: 'type_documents',
+    required: true,
   },
   document: {
-    type: Number,
+    type: String,
     required: true,
     unique: true
-  },
-  vacancy_name: {
-    type: String,
-    required: true
-  },
-  date_application: {
-    type: Date,
-    default: Date.now
   }
 }, { timestamps: true });
 
-export const ProfileModel = model("Profile", profileSchema);
+export const ProfileModel = model("profile", profileSchema);

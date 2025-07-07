@@ -1,10 +1,10 @@
 import { Grid2, Typography, useTheme } from "@mui/material";
-import { News } from "../../../../../../domain/models/news/news.entities";
+import { NewForm, News } from "../../../../../../domain/models/news/news.entities";
 import GrhTextField from "../../../../../../generics/grh-generics/textField";
 import GrhCustomSelect from "../../../../../../generics/grh-generics/inputSelect";
 
 interface MainInfoProps {
-  value: News;
+  value: News | NewForm;
   handleChange: {
     (e: React.ChangeEvent<any>): void;
     <T = string | React.ChangeEvent<any>>(
@@ -57,7 +57,8 @@ export const MainInfo = ({
           options={select} 
           value={value.type}
           name="type" 
-          onChange={handleChange}        
+          onChange={handleChange}   
+          fullWidth     
         />
       </Grid2>
       <Grid2

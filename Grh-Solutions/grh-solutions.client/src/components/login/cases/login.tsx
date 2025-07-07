@@ -5,6 +5,7 @@ import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 interface LoginProps {
   onRegister: () => void;
@@ -18,18 +19,17 @@ const initialValues = {
 export default function Login({ /*onRegister*/ }: LoginProps) {
   const theme = useTheme();
   const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     await login(values.email, values.password).then((res) => {
       if (res) {
-        console.log("Inicio de sesión exitoso");
-      } else {
-        console.error("Error en el inicio de sesión");
+        navigate("/comunicados?action=none");
       }
     })
-      .catch((error) => {
-        console.error("Error en el inicio de sesión:", error);
-      })
+    .catch((error) => {
+      console.error("Error en el inicio de sesión:", error);
+    })
   };
 
   const validationSchema = Yup.object({
@@ -99,6 +99,7 @@ export default function Login({ /*onRegister*/ }: LoginProps) {
                   label="Correo electrónico"
                   placeholder="ejemplo@correo.com"
                   value={values.email}
+                  variant='standard'
                   onChange={handleChange}
                   autoComplete="email"
                   error={touched.email && Boolean(errors.email)}
@@ -109,6 +110,7 @@ export default function Login({ /*onRegister*/ }: LoginProps) {
                   name="password"
                   label="Contraseña"
                   placeholder="••••••••"
+                  variant='standard'
                   value={values.password}
                   onChange={handleChange}
                   autoComplete="current-password"

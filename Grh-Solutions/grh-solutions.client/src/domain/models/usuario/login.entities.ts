@@ -1,20 +1,22 @@
+import { Dayjs } from "dayjs";
+
 export type Login = {
-    email: string,
-    password: string
+  email: string;
+  password: string;
 };
 
 export type ReturnableLogin = {
-    user: {
-        email: string,
-        photo: string,
-    },
-    token: string,
-}
+  user: {
+    email: string;
+    photo: string;
+  };
+  token: string;
+};
 
 export type RegisterConfirmation = {
-    message: string,
-    code: string
-}
+  message: string;
+  code: string;
+};
 
 export type RegisterForm = {
   firstName: string;
@@ -25,4 +27,6 @@ export type RegisterForm = {
   password: string;
   confirmPassword: string;
   typeDocument: string;
-}
+  document: string;
+  birthDate: Dayjs;
+};
