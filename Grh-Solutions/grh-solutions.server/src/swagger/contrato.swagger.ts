@@ -1,7 +1,6 @@
 import { PathItem, Schema } from "swagger-jsdoc";
 
-
-export const ContractPaths: PathItem = {
+export const ContractPaths: Record<string, PathItem> = {
   "/api/contracts/create": {
     post: {
       summary: "Crear contrato",
@@ -104,37 +103,49 @@ export const ContractPaths: PathItem = {
   },
 };
 
-export const ContractSchema: Schema = {
-  type: "object",
-  required: ["empleados", "tittle", "description", "content", "type_contract", "status"],
-  properties: {
-    empleados: {
-      type: "string",
-      example: "64e8f5e12345678901234567",
-    },
-    tittle: {
-      type: "string",
-      example: "Contrato indefinido",
-    },
-    description: {
-      type: "string",
-      example: "Contrato para desarrollador senior",
-    },
-    content: {
-      type: "string",
-      example: "El contrato incluye todas las cláusulas estipuladas en el acuerdo general entre las partes...",
-    },
-    type_contract: {
-      type: "string",
-      example: "64e8f5e12345678901234568",
-    },
-    status: {
-      type: "string",
-      example: "activo",
-    },
-    signatures: {
-      type: "string",
-      example: "64e8f5e12345678901234569",
+export const ContractSchema: { schemas: Record<string, Schema> } = {
+  schemas: {
+    Contract: {
+      type: "object",
+      required: [
+        "empleados",
+        "tittle",
+        "description",
+        "content",
+        "type_contract",
+        "status",
+      ],
+      properties: {
+        empleados: {
+          type: "string",
+          example: "64e8f5e12345678901234567",
+        },
+        tittle: {
+          type: "string",
+          example: "Contrato indefinido",
+        },
+        description: {
+          type: "string",
+          example: "Contrato para desarrollador senior",
+        },
+        content: {
+          type: "string",
+          example:
+            "El contrato incluye todas las cláusulas estipuladas en el acuerdo general entre las partes...",
+        },
+        type_contract: {
+          type: "string",
+          example: "64e8f5e12345678901234568",
+        },
+        status: {
+          type: "string",
+          example: "activo",
+        },
+        signatures: {
+          type: "string",
+          example: "64e8f5e12345678901234569",
+        },
+      },
     },
   },
 };

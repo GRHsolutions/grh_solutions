@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema,  Types, model } from "mongoose";
 
 const solicitudSchema = new Schema({
     /* 
@@ -9,37 +9,34 @@ const solicitudSchema = new Schema({
      5. se manejan asignaciones a la solicitud por lo tanto cada uusarios en involved se manejaria como "asignated to" "was asignated" "creator" "mentioned", reunirce con juan por dudas :V
      6.
     */
-    user: { 
-        type: String,
-        ref: 'users',
-        required: true
-    },
-    created_request: { 
-        type: Date,
-        default: Date.now,
-        required: true
-    },
-    update_request: {
-        type: Date,
-        default: Date.now
+   createdBy: {
+      type: Types.ObjectId,
+      ref: "users",
+      required: true,
+      index: true,
     },
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
+      trim: true,
     },
     status: {
-        type: String,
-        required: true,
-        enum: ['pendiente', 'aprobada', 'rechazada']
+      type: String,
+      required: true,
+      enum: ["pendiente", "aprobada", "rechazada"],
+      default: "pendiente",
     },
     type_request: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
+      trim: true,
     },
-    info: {
-        type: String
-    }
-});
+    infoDx: {
+      type: String,
+      trim: true,
+    },
+}, { timestamps: true }
+);
 
 
-export const solicitudModel = model('solicitudes', solicitudSchema);
+export const RequestModel  = model('solicitudes', solicitudSchema);

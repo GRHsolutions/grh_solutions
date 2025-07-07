@@ -1,37 +1,55 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, IconButton, Modal, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme } from "@mui/material";
+import { Box, Typography, IconButton, Modal, Menu, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, useTheme, Snackbar, Alert } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ModalDeleteVacante from "./ModalDeleteVacante";
 import ModalEditVacant from "./ModalEditVacant";
-import { getPostulantes } from "../../../domain/services/postulante/postulante.service";
+import { getPostulantes, updatePostulante } from "../../../domain/services/postulante/postulante.service";
 import { useAuth } from "../../../hooks/auth";
 import { Postulante, VacanteData } from "../../../domain/models/vacantes/vacantes.entities";
 import { deleteVacancy } from "../../../domain/services/vacancies/vacancies.service";
+import { Charge } from "../../../domain/models/charge/charge.entities";
+import { Area } from "../../../domain/models/area/area.entities";
+import { useNavigate } from "react-router-dom";
+import { getProfiles } from "../../../domain/services/profile/profile.service";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 
 interface IModalProps {
   open: boolean;
   handleClose: () => void;
   vacantData: VacanteData
+  charges: Charge[]
+  areas: Area[]
 }
 
 
-export default function ViewSelectVacante({ open, handleClose, vacantData }: IModalProps) {
+export default function ViewSelectVacante({ open, handleClose, vacantData, charges, areas }: IModalProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [Vacantes, setvacantes] = useState<Postulante[]>([]);
+  const [openAlert, setOpenAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [profiles, setProfiles] = useState("");
+  const navigate = useNavigate();
   const openMenu = Boolean(anchorEl);
   const { auth } = useAuth();
-  console.log(vacantData);
   useEffect(() => {
-    getPostulantes(vacantData?._id, auth.token).then(res => setvacantes(res.data));
+    if (vacantData?._id) {
+      getPostulantes(vacantData._id, auth.token).then(res => setvacantes(res.data));
+    }
   }, [vacantData]);
+  // Obtener todos los perfiles para cruzar luego
+  useEffect(() => {
+    getProfiles(auth.token).then(res => setProfiles(res.data));
+  }, []);
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
+  console.log(profiles);
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
@@ -72,8 +90,43 @@ export default function ViewSelectVacante({ open, handleClose, vacantData }: IMo
     setOpenEditModal(false);
   };
 
-  const theme = useTheme();
+  const handleAccept = async (postulanteId: string) => {
+    try {
+      await updatePostulante(postulanteId, "contratado", auth.token);
+      setAlertMessage("Postulante contratado exitosamente");
+      setOpenAlert(true);
 
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    } catch (error) {
+      console.error("Error al aceptar postulante:", error);
+    }
+  };
+
+  const handleReject = async (postulanteId: string) => {
+    try {
+      await updatePostulante(postulanteId, "rechazado", auth.token);
+      setAlertMessage("Postulante rechazado exitosamente");
+      setOpenAlert(true);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
+    } catch (error) {
+      console.error("Error al rechazar postulante:", error);
+    }
+  };
+  useEffect(() => {
+    getProfiles(auth.token);
+
+  }, []);
+  const handleView = (id: string) => {
+
+    navigate(`/user/${id}`);
+  }
+
+  const theme = useTheme();
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
       <Box sx={{
@@ -120,6 +173,7 @@ export default function ViewSelectVacante({ open, handleClose, vacantData }: IMo
                 <TableCell align="center"><Typography variant="h6">Nombre</Typography></TableCell>
                 <TableCell align="center"><Typography variant="h6">Fecha de Postulación</Typography></TableCell>
                 <TableCell align="center"><Typography variant="h6">Estado</Typography></TableCell>
+                <TableCell align="center"><Typography variant="h6">Acciones</Typography></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -134,6 +188,52 @@ export default function ViewSelectVacante({ open, handleClose, vacantData }: IMo
                     })}
                   </TableCell>
                   <TableCell align="center">{row.status}</TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        bgcolor: "#4caf50",
+                        color: "white",
+                        m: 0.5,
+                        "&:hover": { bgcolor: "#43a047" },
+                        borderRadius: "50%",
+                      }}
+                      onClick={() => handleAccept(row._id)}
+                    >
+                      <CheckIcon fontSize="small" />
+                    </IconButton>
+
+                    <IconButton
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        bgcolor: "#f44336",
+                        color: "white",
+                        m: 0.5,
+                        "&:hover": { bgcolor: "#e53935" },
+                        borderRadius: "50%",
+                      }}
+                      onClick={() => handleReject(row._id)}
+                    >
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+
+                    <IconButton
+                      sx={{
+                        width: 36,
+                        height: 36,
+                        bgcolor: "#2196f3",
+                        color: "white",
+                        m: 0.5,
+                        "&:hover": { bgcolor: "#1976d2" },
+                        borderRadius: "50%",
+                      }}
+                      onClick={() => handleView(profiles[0]?._id)}
+                    >
+                      <VisibilityIcon fontSize="small" />
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -150,7 +250,14 @@ export default function ViewSelectVacante({ open, handleClose, vacantData }: IMo
           initialValues={vacantData}
           token={auth.token}
           vacationId={vacantData?._id}
+          areas={areas}
+          charges={charges}
         />
+        <Snackbar open={openAlert} autoHideDuration={3000} onClose={() => setOpenAlert(false)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+          <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
+            <Typography variant="body1"><strong>{alertMessage}</strong></Typography>
+          </Alert>
+        </Snackbar>
       </Box>
     </Modal>
   );

@@ -6,12 +6,16 @@ import { Note, Visibility } from "@mui/icons-material";
 import ViewSelectVacante from "./viewSlectVacante";
 import { useAuth } from "../../../hooks/auth";
 import { CreatePostulante } from "../../../domain/services/postulante/postulante.service";
+import { Charge } from "../../../domain/models/charge/charge.entities";
+import { Area } from "../../../domain/models/area/area.entities";
 
 interface SelectVacationProps {
   selectedVacante: VacanteData | null;
+  charges: Charge[]
+  areas: Area[]
 }
 
-export default function SelectVacation({ selectedVacante }: SelectVacationProps) {
+export default function SelectVacation({ selectedVacante, charges, areas }: SelectVacationProps) {
   const [openAlert, setOpenAlert] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { auth } = useAuth();
@@ -83,13 +87,14 @@ export default function SelectVacation({ selectedVacante }: SelectVacationProps)
               <Typography><strong>Tipo de contrato:</strong> {selectedVacante.type_contract}</Typography>
               <Typography><strong>Salario:</strong> {selectedVacante.salary}</Typography>
               <Typography><strong>Horario:</strong> {selectedVacante.horary}</Typography>
-              <Typography><strong>Cargo:</strong> {selectedVacante.charge}</Typography>
+              <Typography><strong>Cargo:</strong> {selectedVacante.charge?.name}</Typography>
               <Typography><strong>Dirección:</strong> {selectedVacante.address}</Typography>
               <Typography><strong>Teléfono:</strong> {selectedVacante.telephone}</Typography>
               <Typography><strong>Correo:</strong> {selectedVacante.email}</Typography>
               <Typography><strong>Experiencia requerida:</strong> {selectedVacante.experience}</Typography>
               <Typography><strong>Formación:</strong> {selectedVacante.formation}</Typography>
               <Typography><strong>Estado:</strong> {selectedVacante.status}</Typography>
+              <Typography><strong>Area:</strong> {selectedVacante.area?.name}</Typography>
             </Box>
           </CardContent>
 
@@ -107,6 +112,8 @@ export default function SelectVacation({ selectedVacante }: SelectVacationProps)
         open={openModal}
         handleClose={handleClose}
         vacantData={selectedVacante}
+        areas={areas}
+        charges={charges}
       />
     </Box>
   );

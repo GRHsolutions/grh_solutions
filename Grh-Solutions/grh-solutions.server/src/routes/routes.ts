@@ -22,6 +22,8 @@ import contract from "./contract"
 import requests from './requests';
 import report from "./report";
 import module from "./module";
+import FollowUp from "./followUpType";
+import history from "./history"
 
 const routes = Router();
 // Apply middlewares globally to all routes
@@ -47,8 +49,10 @@ routes.use("/news", news);
 routes.use('/commentary', commentary)
 routes.use("/profiles", profileRoutes);
 routes.use("/contract", contract);
-routes.use('/requests', requests);
+routes.use('/request', requests);
 routes.use('/report', report);
 routes.use('/modules', module);
+routes.use("followUpType", FollowUp)
+routes.use("history", history)
 
 export default routes;

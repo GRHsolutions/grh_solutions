@@ -3,11 +3,16 @@ import { Box, Grid2, useTheme } from "@mui/material";
 import { useParametros } from "../../contexts/useParamether.provider";
 import VistaVacantes from "./components/VistaVacantes";
 import SelectVacation from "./components/SelectVacation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { VacanteData } from "../../domain/models/vacantes/vacantes.entities";
 import { FloatingButton } from "../../generics/floatingButton/floatingButton";
 import AddIcon from '@mui/icons-material/Add';
 import ModalCreateVacant from "./components/ModalCreateVacant";
+import { Charge } from "../../domain/models/charge/charge.entities";
+import { getPuestos } from "../../domain/services/puesto/puesto.service";
+import { useAuth } from "../../hooks/auth";
+import { Area } from "../../domain/models/area/area.entities";
+import { getAreas } from "../../domain/services/area/area.service";
 
 export default function Postulate() {
   const [selectOption, setSelectOption] = useState<VacanteData | null>(null);
@@ -15,7 +20,13 @@ export default function Postulate() {
   const { parametros } = useParametros();
   const theme = useTheme();
   const { usePhoneScreen } = parametros;
-
+  const [charge, setCharge] = useState<Charge[]>([]);
+  const [area, setArea] = useState<Area[]>([]);
+  const { auth } = useAuth();
+  useEffect(() => {
+    getPuestos(auth.token).then((response) => setCharge(response.data));
+    getAreas(auth.token).then((response) => setArea(response.data));
+  }, []);
   return (
     <Box
       sx={{
@@ -55,7 +66,7 @@ export default function Postulate() {
               height: "100%",
             }}
           >
-            <SelectVacation selectedVacante={selectOption} />
+            <SelectVacation selectedVacante={selectOption} areas={area} charges={charge} />
           </Grid2>
         )}
       </Grid2>
@@ -72,7 +83,7 @@ export default function Postulate() {
         }}
         borderColor={theme.palette.secondary.hover}
       />
-      <ModalCreateVacant open={openModal} handleClose={() => setOpenModal(false)} />
+      <ModalCreateVacant open={openModal} handleClose={() => setOpenModal(false)} charges={charge} areas={area} />
     </Box>
   );
 }

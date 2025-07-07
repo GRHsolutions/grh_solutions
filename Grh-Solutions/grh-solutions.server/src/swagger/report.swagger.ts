@@ -1,6 +1,6 @@
 import { PathItem, Schema } from "swagger-jsdoc";
 
-export const ReportPaths: PathItem = {
+export const ReportPaths: Record<string, PathItem> = {
   "/api/report/create": {
     post: {
       summary: "Crear reporte",
@@ -103,27 +103,29 @@ export const ReportPaths: PathItem = {
   },
 };
 
-export const ReportSchema: Schema = {
-  Report: {
-    type: "object",
-    required: ["title", "descripcion", "fk_solicitud", "fk_user"],
-    properties: {
-      title: {
-        type: "string",
-        example: "Informe de progreso del proyecto",
-      },
-      descripcion: {
-        type: "string",
-        example:
-          "Este informe detalla el avance de la fase inicial del desarrollo.",
-      },
-      fk_solicitud: {
-        type: "string",
-        example: "64efb1d45a75c87ab0123456",
-      },
-      fk_user: {
-        type: "string",
-        example: "64efa7e39d6c23dcb0987654",
+export const ReportSchema: { schemas: Record<string, Schema> } = {
+  schemas: {
+    Report: {
+      type: "object",
+      required: ["title", "descripcion", "fk_solicitud", "fk_user"],
+      properties: {
+        title: {
+          type: "string",
+          example: "Informe de progreso del proyecto",
+        },
+        descripcion: {
+          type: "string",
+          example:
+            "Este informe detalla el avance de la fase inicial del desarrollo.",
+        },
+        fk_solicitud: {
+          type: "string",
+          example: "64efb1d45a75c87ab0123456",
+        },
+        fk_user: {
+          type: "string",
+          example: "64efa7e39d6c23dcb0987654",
+        },
       },
     },
   },
