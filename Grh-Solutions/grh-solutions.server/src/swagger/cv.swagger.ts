@@ -1,82 +1,84 @@
 import { Components, Paths } from "swagger-jsdoc";
 
 export const cvSchemas: Components["schemas"] = {
-  Skill: {
-    type: "object",
-    properties: {
-      name: { type: "string" },
-      level: {
-        type: "string",
-        enum: ["PRINCIPIANTE", "INTERMEDIO", "BUENO", "ALTO", "EXCELENTE"],
+  schemas: {
+    Skill: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        level: {
+          type: "string",
+          enum: ["PRINCIPIANTE", "INTERMEDIO", "BUENO", "ALTO", "EXCELENTE"],
+        },
       },
+      required: ["name", "level"],
     },
-    required: ["name", "level"],
-  },
-  Language: {
-    type: "object",
-    properties: {
-      name: { type: "string" },
-      level: {
-        type: "string",
-        enum: [
-          "PRINCIPIANTE",
-          "INTERMEDIO",
-          "BUENO",
-          "ALTO",
-          "FLUIDO",
-          "A1",
-          "A2",
-          "B1",
-          "B2",
-          "C1",
-          "C2",
-        ],
+    Language: {
+      type: "object",
+      properties: {
+        name: { type: "string" },
+        level: {
+          type: "string",
+          enum: [
+            "PRINCIPIANTE",
+            "INTERMEDIO",
+            "BUENO",
+            "ALTO",
+            "FLUIDO",
+            "A1",
+            "A2",
+            "B1",
+            "B2",
+            "C1",
+            "C2",
+          ],
+        },
       },
+      required: ["name", "level"],
     },
-    required: ["name", "level"],
-  },
-  Formation: {
-    type: "object",
-    properties: {
-      tittle: { type: "string" },
-      school: { type: "string" },
-      city: { type: "string" },
-      startDate: { type: "string", format: "date" },
-      endDate: { type: "string", format: "date" },
-      finished: { type: "boolean" },
-      descroption: { type: "string" },
-      index: { type: "number" },
+    Formation: {
+      type: "object",
+      properties: {
+        tittle: { type: "string" },
+        school: { type: "string" },
+        city: { type: "string" },
+        startDate: { type: "string", format: "date" },
+        endDate: { type: "string", format: "date" },
+        finished: { type: "boolean" },
+        descroption: { type: "string" },
+        index: { type: "number" },
+      },
+      required: ["tittle", "school", "city", "startDate", "finished"],
     },
-    required: ["tittle", "school", "city", "startDate", "finished"],
-  },
-  CV: {
-    type: "object",
-    properties: {
-      firstName: { type: "string" },
-      middleName: { type: "string", nullable: true },
-      lastName: { type: "string" },
-      secondLastName: { type: "string", nullable: true },
-      mail: { type: "string" },
-      phone: { type: "string" },
-      address: { type: "string" },
-      postal: { type: "string" },
-      city: { type: "string" },
-      birthDay: { type: "string", format: "date" },
-      perfil: { type: "string" },
-      formations: {
-        type: "array",
-        items: { $ref: "#/components/schemas/Formation" },
+    CV: {
+      type: "object",
+      properties: {
+        firstName: { type: "string" },
+        middleName: { type: "string", nullable: true },
+        lastName: { type: "string" },
+        secondLastName: { type: "string", nullable: true },
+        mail: { type: "string" },
+        phone: { type: "string" },
+        address: { type: "string" },
+        postal: { type: "string" },
+        city: { type: "string" },
+        birthDay: { type: "string", format: "date" },
+        perfil: { type: "string" },
+        formations: {
+          type: "array",
+          items: { $ref: "#/components/schemas/Formation" },
+        },
+        skills: {
+          type: "array",
+          items: { $ref: "#/components/schemas/Skill" },
+        },
+        lenguages: {
+          type: "array",
+          items: { $ref: "#/components/schemas/Language" },
+        },
       },
-      skills: {
-        type: "array",
-        items: { $ref: "#/components/schemas/Skill" },
-      },
-      lenguages: {
-        type: "array",
-        items: { $ref: "#/components/schemas/Language" },
-      },
+      required: ["firstName", "lastName", "mail", "phone"],
     },
-    required: ["firstName", "lastName", "mail", "phone"],
   },
 };
 

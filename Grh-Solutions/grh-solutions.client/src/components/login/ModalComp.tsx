@@ -1,4 +1,12 @@
-import { Box, IconButton, Modal, useTheme } from "@mui/material";
+import {
+  Box,
+  Grid2,
+  IconButton,
+  Modal,
+  useTheme,
+  Paper,
+  useMediaQuery,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { SideItems } from "./SideItems";
 import React from "react";
@@ -10,77 +18,159 @@ interface ModalCompProps {
   onClose: () => void;
 }
 
-const styleBox = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: { xs: "90%", sm: "80%", md: "70%", lg: "50%" }, // Ajuste de ancho responsivo
-  height: { xs: "90vh", sm: "80vh", md: "70vh" }, // Ajuste de altura responsivo
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  display: "flex",
-  flexDirection: { xs: "column", sm: "row" },
-  borderRadius: "8px", // Bordes redondeados
-  overflow: "hidden", // Evitar desbordamiento
-  "&:focus": {
-    outline: "none",
-  },
-};
-
 type Tabs = "register" | "login";
 
 export const ModalComp = ({ open, onClose }: ModalCompProps) => {
   const [actual, setActual] = React.useState<Tabs>("login");
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
 
   const useActual = () => {
     switch (actual) {
       case "login":
-        return <Login onRegister={() => setActual('register')} />;
+        return <Login onRegister={() => setActual("register")} />;
       case "register":
-        return <Register onLogin={() => setActual('login')} />;
+        return <Register onLogin={() => setActual("login")} />;
     }
   };
 
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: {
+      xs: "95vw",
+      sm: "90vw", 
+      md: "80vw",
+      lg: "70vw",
+      xl: "60vw"
+    },
+    maxWidth: "1200px",
+    height: {
+      xs: "95vh",
+      sm: "90vh",
+      md: "85vh",
+      lg: "80vh"
+    },
+    maxHeight: "800px",
+    outline: "none",
+    borderRadius: 3,
+    overflow: "hidden",
+    boxShadow: theme.shadows[24],
+  };
+
   return (
-    <Modal open={open} onClose={onClose}>
-      <Box sx={styleBox}>
+    <Modal 
+      open={open} 
+      onClose={onClose}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Paper elevation={24} sx={modalStyle}>
+        {/* Close Button */}
         <IconButton
           onClick={onClose}
           sx={{
             position: "absolute",
-            top: 8,
-            right: 8,
-            zIndex: 1,
+            top: 12,
+            right: 12,
+            zIndex: 10,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[2],
+            "&:hover": {
+              backgroundColor: theme.palette.action.hover,
+            },
           }}
         >
           <CloseIcon />
         </IconButton>
-        <Box
-          sx={{
-            width: { xs: "100%", sm: "30%" }, // Ajuste de ancho responsivo
-            height: { xs: "auto", sm: "100%" },
-            borderRight: { xs: "none", sm: "1px solid #ddd" },
-            backgroundColor: theme.palette.background.paper,
-            padding: { xs: "16px", sm: "24px" }, // Padding responsivo
-          }}
-        >
-          <SideItems actual={actual} onSelect={setActual} />
+
+        {/* Main Content */}
+        <Box sx={{ height: "100%", display: "flex" }}>
+          {isMobile ? (
+            // Mobile Layout - Stacked
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "column" }}>
+              {/* Mobile Navigation */}
+              <Box
+                sx={{
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                  backgroundColor: theme.palette.background.default,
+                  minHeight: "80px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <SideItems actual={actual} onSelect={setActual} />
+              </Box>
+              
+              {/* Mobile Content */}
+              <Box
+                sx={{
+                  flex: 1,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  p: 3,
+                  overflow: "auto",
+                }}
+              >
+                {useActual()}
+              </Box>
+            </Box>
+          ) : (
+            // Desktop/Tablet Layout - Side by side
+            <Grid2 container sx={{ height: "100%", width: "100%" }}>
+              {/* Sidebar */}
+              <Grid2
+                size={isTablet ? 4 : 3.5}
+                sx={{
+                  backgroundColor: theme.palette.background.default,
+                  borderRight: `1px solid ${theme.palette.divider}`,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  minHeight: "100%",
+                }}
+              >
+                <SideItems actual={actual} onSelect={setActual} />
+              </Grid2>
+
+              {/* Main Content */}
+              <Grid2
+                size={isTablet ? 8 : 8.5}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  p: {
+                    xs: 2,
+                    sm: 3,
+                    md: 4,
+                  },
+                  overflow: "auto",
+                  backgroundColor: theme.palette.background.paper,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "100%",
+                    maxWidth: actual === "register" ? "600px" : "400px",
+                    transition: "max-width 0.3s ease-in-out",
+                  }}
+                >
+                  {useActual()}
+                </Box>
+              </Grid2>
+            </Grid2>
+          )}
         </Box>
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: { xs: "16px", sm: "24px" }, // Padding responsivo
-          }}
-        >
-          {useActual()}
-        </Box>
-      </Box>
+      </Paper>
     </Modal>
   );
 };

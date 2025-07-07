@@ -1,9 +1,8 @@
-import { Typography, useTheme } from "@mui/material";
+import { Typography, useTheme, Link } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useAuth } from "../../../hooks/auth";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
-import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
@@ -11,30 +10,20 @@ interface LoginProps {
   onRegister: () => void;
 }
 
-const styles = {
-  link: {
-    cursor: "pointer",
-    color: "blue",
-    textDecoration: "underline", // Subrayado para enlaces
-  } as React.CSSProperties,
-};
 const initialValues = {
   email: "",
   password: "",
 };
 
-export default function Login({ onRegister }: LoginProps) {
-
+export default function Login({ /*onRegister*/ }: LoginProps) {
   const theme = useTheme();
   const { login } = useAuth();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     await login(values.email, values.password).then((res) => {
       if (res) {
-        // Aquí puedes manejar la redirección o cualquier otra acción después de un inicio de sesión exitoso
         console.log("Inicio de sesión exitoso");
       } else {
-        // Manejo de error en el inicio de sesión
         console.error("Error en el inicio de sesión");
       }
     })
@@ -43,7 +32,6 @@ export default function Login({ onRegister }: LoginProps) {
       })
   };
 
-  // Validación de Yup
   const validationSchema = Yup.object({
     email: Yup.string()
       .email("Correo electrónico no válido")
@@ -62,7 +50,7 @@ export default function Login({ onRegister }: LoginProps) {
       .matches(
         /[\W_]/,
         "La contraseña debe contener al menos un carácter especial"
-      ) // \W cubre todos los signos especiales
+      )
       .required("La contraseña es obligatoria"),
   });
 
@@ -71,64 +59,96 @@ export default function Login({ onRegister }: LoginProps) {
       initialValues={initialValues}
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
-      style={undefined}
     >
-      {({ values, handleChange, isValid }) => {
+      {({ values, handleChange, isValid, errors, touched }) => {
         return (
-          <Form>
+          <Form style={{ width: '100%' }}>
             <Box
               sx={{
-                display: "grid",
-                width: { xs: "100%", sm: "100%", md: "100%" }, // Ajuste de ancho responsivo
-                gap: "1.5rem",
+                display: "flex",
+                flexDirection: 'column',
+                width: "100%",
+                gap: 3,
                 fontFamily: theme.typography.fontFamily,
-                color: theme.palette.primary.contrastText,
-                justifyContent: "center",
-                alignItems: "center",
               }}
             >
-              <Typography
-                sx={{
-                  fontWeight: "bold",
-                  fontSize: { xs: "1.5rem", sm: "2rem" },
-                  textAlign: "center",
-                }}
-              >
-                Inicio de Sesión
-              </Typography>
-              <GrhTextField
-                name="email"
-                label="Correo electrónico"
-                placeholder="example@example.com"
-                value={values.email}
-                onChange={handleChange}
-                autoComplete="off"
-              />
-              <GrhTextField
-                name="password"
-                label="Contraseña"
-                placeholder="Super123*"
-                value={values.password}
-                onChange={handleChange}
-                autoComplete="off"
-                type="password"
-              />
-              <Typography
-                sx={{
-                  fontSize: { xs: "0.8rem", sm: "1rem" },
-                  textAlign: "center",
-                }}
-              >
-                ¿Has olvidado tu contraseña? Haz clic{" "}
-                <label onClick={onRegister} style={styles.link}>
-                  aquí
-                </label>
-              </Typography>
+              <Box sx={{ textAlign: "center", mb: 2 }}>
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: 700,
+                    color: theme.palette.text.primary,
+                    mb: 1,
+                  }}
+                >
+                  Iniciar Sesión
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    color: theme.palette.text.secondary,
+                  }}
+                >
+                  Ingresa tus credenciales para acceder
+                </Typography>
+              </Box>
+
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+                <GrhTextField
+                  name="email"
+                  label="Correo electrónico"
+                  placeholder="ejemplo@correo.com"
+                  value={values.email}
+                  onChange={handleChange}
+                  autoComplete="email"
+                  error={touched.email && Boolean(errors.email)}
+                  fullWidth
+                />
+                
+                <GrhTextField
+                  name="password"
+                  label="Contraseña"
+                  placeholder="••••••••"
+                  value={values.password}
+                  onChange={handleChange}
+                  autoComplete="current-password"
+                  type="password"
+                  error={touched.password && Boolean(errors.password)}
+                  fullWidth
+                />
+              </Box>
+
+              <Box sx={{ textAlign: "center", mt: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  ¿Has olvidado tu contraseña?{" "}
+                  <Link
+                    component="button"
+                    type="button"
+                    onClick={() => {
+                      // Aquí puedes agregar la lógica para recuperar contraseña
+                      console.log("Recuperar contraseña");
+                    }}
+                    sx={{
+                      color: theme.palette.primary.link,
+                      textDecoration: "none",
+                      fontWeight: 500,
+                      "&:hover": {
+                        textDecoration: "underline",
+                      },
+                    }}
+                  >
+                    Recuperar aquí
+                  </Link>
+                </Typography>
+              </Box>
+
               <GrhButton
                 type="submit"
                 variant="principal"
-                label="Ingresar"
+                label="Iniciar Sesión"
                 disabled={!isValid || !values.email || !values.password}
+                fullWidth
+                sx={{ mt: 2, py: 1.5 }}
               />
             </Box>
           </Form>
