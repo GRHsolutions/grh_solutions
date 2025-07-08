@@ -285,9 +285,6 @@ export default function Register({ onLogin }: RegisterProps) {
                 }}
               />
             </Box>
-             <pre style={{ fontSize: "10px", whiteSpace: "pre-wrap" }}>
-              {JSON.stringify({ values, errors, touched, isValid }, null, 2)}
-            </pre> 
           </Form>
         );
       }}

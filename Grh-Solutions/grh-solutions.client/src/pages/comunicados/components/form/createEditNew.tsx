@@ -33,6 +33,7 @@ export const CreateEditNew = () => {
     current, 
     noCurrnt 
   } = useNews();
+  
   const theme = useTheme();
   const [initial, setInitial] = React.useState<News | null>(null);
   const editting = current.action == "edit";
