@@ -18,7 +18,14 @@ export const cvPaths: Record<string, PathItem> = {
           description: "CV creado exitosamente",
         },
         400: {
-          description: "Error de validación o de solicitud",
+          description: "Error al encontrar la cv",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/BadRequestError",
+              },
+            },
+          },
         },
       },
     },
@@ -43,12 +50,22 @@ export const cvPaths: Record<string, PathItem> = {
       },
       responses: {
         "200": { 
-          description: "El objeto cv del perfil",
+          description: "Se actualizo el cv",
           content: {
             "application/json": {
               schema: {
                 type: "array",
                 items: { $ref: "#/components/schemas/CV" },
+              },
+            },
+          },
+        },
+        400: {
+          description: "Error al encontrar la cv",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/BadRequestError",
               },
             },
           },
@@ -70,12 +87,28 @@ export const cvPaths: Record<string, PathItem> = {
         },
       ],
       responses: {
-        200: {
-          description: "CV actualizado exitosamente",
+        "200": { 
+          description: "Objeto cv del id profile",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/CV" },
+              },
+            },
+          },
         },
         400: {
-          description: "Error de validación o de solicitud",
+          description: "Error al encontrar la cv",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/BadRequestError",
+              },
+            },
+          },
         },
+        "500": { description: "Error del servidor" },
       },
     },
   }

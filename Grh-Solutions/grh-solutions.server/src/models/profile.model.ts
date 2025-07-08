@@ -4,7 +4,8 @@ const profileSchema = new Schema({
   user: {
     type: Types.ObjectId,
     ref: "users", // Referencia al usuario autenticado
-    required: true
+    required: true,
+    unique: true
   },
   name: {
     type: String,

@@ -129,9 +129,9 @@ const cvSchema = new Schema({
     type: [languageSchema],
     default: [],
   },
-  fromProfile: {
+  fromUser: {
     type: Types.ObjectId,
-    ref: "profile",
+    ref: "users",
     required: true,
     unique: true // POR EL MOMENTO
   }

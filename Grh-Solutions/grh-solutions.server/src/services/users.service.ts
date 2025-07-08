@@ -17,7 +17,7 @@ export const userService = {
   },
 
   getById: async (id: string) => {
-    const user = await UserModel.findById(id).populate("typeDocument");
+    const user = await UserModel.findById(id);
 
     if (!user) {
       throw new Error("User not found");

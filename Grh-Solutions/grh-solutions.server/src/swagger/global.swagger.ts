@@ -8,6 +8,7 @@ import { RequestPaths, RequestSchema } from "./request.swagger";
 import { FollowUpTypePaths, FollowUpTypeSchema } from "./followUpType.swagger";
 import { HistoryPaths, HistorySchema } from "./history.swagger";
 import { newPaths, NewsSchema } from "./comunicados.swagger";
+import { BadRequestErrorSchemas } from "./error.swagger";
 
 // Combinar todos los paths
 export const globalPaths: Paths = {
@@ -52,7 +53,10 @@ export const globalComponents: Components = {
     // Schemas de historial
     ...(HistorySchema.schemas || {}),
 
+    // Schema error 
+    ...(BadRequestErrorSchemas.schemas || {}),
+
     // new
-    ...NewsSchema
+    ...NewsSchema,
   },
 };

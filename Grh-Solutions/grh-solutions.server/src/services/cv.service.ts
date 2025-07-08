@@ -20,7 +20,7 @@ export const cvService = {
   },
   getMyCvs: async (id: string) => {
     return await CVModel.findOne({
-      fromProfile: id
+      fromUser: id
     });
   }
 };
