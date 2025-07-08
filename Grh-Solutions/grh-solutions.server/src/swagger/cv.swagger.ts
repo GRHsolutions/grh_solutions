@@ -27,7 +27,7 @@ export const cvPaths: Record<string, PathItem> = {
       tags: ["CV"],
       parameters: [
         {
-          name: "profile",
+          name: "id",
           in: "query",
           required: true,
           schema: { type: "string" },
@@ -63,7 +63,7 @@ export const cvPaths: Record<string, PathItem> = {
       tags: ["CV"],
       parameters: [
         {
-          name: "id",
+          name: "profile",
           in: "query",
           required: true,
           schema: { type: "string" },
