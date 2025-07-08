@@ -18,4 +18,9 @@ export const cvService = {
     }
     return updatedCV;
   },
+  getMyCvs: async (id: string) => {
+    return await CVModel.findOne({
+      fromProfile: id
+    });
+  }
 };

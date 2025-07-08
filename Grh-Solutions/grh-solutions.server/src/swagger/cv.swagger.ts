@@ -5,7 +5,6 @@ export const cvPaths: Record<string, PathItem> = {
     post: {
       summary: "Crear CV",
       tags: ["CV"],
-      security: [{ bearerAuth: [] }],
       requestBody: {
         required: true,
         content: {
@@ -26,10 +25,9 @@ export const cvPaths: Record<string, PathItem> = {
     put: {
       summary: "Editar CV",
       tags: ["CV"],
-      security: [{ bearerAuth: [] }],
       parameters: [
         {
-          name: "id",
+          name: "profile",
           in: "query",
           required: true,
           schema: { type: "string" },
@@ -44,6 +42,34 @@ export const cvPaths: Record<string, PathItem> = {
         },
       },
       responses: {
+        "200": { 
+          description: "El objeto cv del perfil",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: { $ref: "#/components/schemas/CV" },
+              },
+            },
+          },
+        },
+        "500": { description: "Error del servidor" },
+      },
+    },
+  },
+  "/api/cv/getMyCv": {
+    get: {
+      summary: "Obtener mi cv",
+      tags: ["CV"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+        },
+      ],
+      responses: {
         200: {
           description: "CV actualizado exitosamente",
         },
@@ -52,7 +78,7 @@ export const cvPaths: Record<string, PathItem> = {
         },
       },
     },
-  },
+  }
 };
 
 export const cvSchemas: { schemas: Record<string, Schema> } = {

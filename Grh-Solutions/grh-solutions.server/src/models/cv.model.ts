@@ -129,7 +129,13 @@ const cvSchema = new Schema({
     type: [languageSchema],
     default: [],
   },
+  fromProfile: {
+    type: Types.ObjectId,
+    ref: "profile",
+    required: true,
+    unique: true // POR EL MOMENTO
+  }
 });
 
 // Exportar el modelo
-export const CVModel = model("CV", cvSchema);
+export const CVModel = model("cvs", cvSchema);

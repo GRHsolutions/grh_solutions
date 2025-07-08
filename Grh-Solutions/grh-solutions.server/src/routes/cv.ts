@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.post('/', cvController.create);
 router.put('/', cvController.edit);
+router.get('/getMyCv', cvController.getMyCv);
 
 
 export default router;
