@@ -28,7 +28,7 @@ import cv from './cv';
 
 const routes = Router();
 // Apply middlewares globally to all routes
-routes.use(validateToken);
+// routes.use(validateToken);
 //routes.use(verifyPermissionHandler);
 
 //Define routes

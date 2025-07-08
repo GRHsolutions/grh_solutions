@@ -34,9 +34,10 @@ export interface CreateVacancyDto {
 }
 
 export interface Postulante {
+  _id: string;
   user: {
-    firstName: string;
-    lastName: string;
+    _id: string;
+    email: string;
   };
   application_date: string;
   status: string;

@@ -62,7 +62,9 @@ export default function InfoPage() {
               overflowY: 'hidden',
             }}
           >
-            <ResumeUser />
+            <ResumeUser
+            id={id}
+            />
           </Grid2>
         )}
       </Grid2>

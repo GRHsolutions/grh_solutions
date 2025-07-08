@@ -1,4 +1,8 @@
 import { Box, Typography, Avatar, Divider, List, ListItem, ListItemText, Alert, Link, useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
+import { getMyCv } from "../../../domain/services/cv/cv.service";
+import { useAuth } from "../../../hooks/auth";
+import { ICv } from "../../../domain/models/Cv/cv.entities";
 
 const userInfo = {
   name: "Roberto Gómez Bolaños",
@@ -30,11 +34,18 @@ const skills = [
   "✅ Comunicación efectiva",
   "✅ Producción audiovisual",
 ];
-
-export default function ResumeUser() {
-  const hasResume = userInfo && (experiences.length || education.length || skills.length);
+interface props {
+  id?: string
+}
+export default function ResumeUser({ id }: props) {
+  const [dataCv, setDataCv] = useState<ICv | null>(null);
+  const { auth } = useAuth();
+  const hasResume = dataCv !== null
   const theme = useTheme();
-
+  useEffect(() => {
+    getMyCv(id, auth.token).then((res) => setDataCv(res.data));
+  }, []);
+  console.log(dataCv);
   return (
     <Box
       sx={{
@@ -67,10 +78,14 @@ export default function ResumeUser() {
         {hasResume ? (
           <>
             <Box sx={{ display: "flex", alignItems: "center", mb: 3, mt: 2 }}>
-              <Avatar sx={{ width: 100, height: 100, mr: 2 }} src={userInfo.avatar} />
+              <Avatar sx={{ width: 100, height: 100, mr: 2 }} src={"https://via.placeholder.com/100"} />
               <Box>
-                <Typography variant="h5" fontWeight="bold">{userInfo.name}</Typography>
-                <Typography variant="body1" color="textSecondary">{userInfo.title}</Typography>
+                <Typography variant="h5" fontWeight="bold">
+                  {`${dataCv.firstName} ${dataCv.middleName} ${dataCv.lastName} ${dataCv.secondLastName}`}
+                </Typography>
+                <Typography variant="body1" color="textSecondary">
+                  {dataCv.perfil}
+                </Typography>
               </Box>
             </Box>
 
@@ -78,46 +93,46 @@ export default function ResumeUser() {
 
             <Box sx={{ mt: 3 }}>
               <Typography variant="h6" fontWeight="bold">Información Personal</Typography>
-              <Typography variant="body2">📍 {userInfo.location}</Typography>
-              <Typography variant="body2">📞 {userInfo.phone}</Typography>
-              <Typography variant="body2">✉️ {userInfo.email}</Typography>
+              <Typography variant="body2">📍 {dataCv.city}, {dataCv.address}</Typography>
+              <Typography variant="body2">📞 {dataCv.phone}</Typography>
+              <Typography variant="body2">✉️ {dataCv.mail}</Typography>
             </Box>
 
-            {experiences.length > 0 && (
-              <>
-                <Divider sx={{ my: 1 }} />
-                <Box sx={{ mt: 3, flex: 1 }}>
-                  <Typography variant="h6" fontWeight="bold">Experiencia Laboral</Typography>
-                  <List>
-                    {experiences.map((exp, idx) => (
-                      <ListItem key={idx}>
-                        <ListItemText primary={exp.primary} secondary={exp.secondary} />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              </>
-            )}
-
-            {education.length > 0 && (
+            {dataCv.formations?.length > 0 && (
               <>
                 <Divider sx={{ my: 1 }} />
                 <Box sx={{ mt: 1 }}>
                   <Typography variant="h6" fontWeight="bold">Educación</Typography>
-                  {education.map((edu, idx) => (
-                    <Typography key={idx} variant="body2">{edu}</Typography>
+                  {dataCv.formations.map((edu: any, idx: number) => (
+                    <Typography key={idx} variant="body2">
+                      🎓 {edu.tittle} - {edu.school}, {edu.city} ({new Date(edu.startDate).getFullYear()} - {new Date(edu.endDate).getFullYear()})
+                    </Typography>
                   ))}
                 </Box>
               </>
             )}
 
-            {skills.length > 0 && (
+            {dataCv.skills?.length > 0 && (
               <>
                 <Divider sx={{ my: 2 }} />
                 <Box sx={{ mt: 3, mb: 4 }}>
                   <Typography variant="h6" fontWeight="bold">Habilidades</Typography>
-                  {skills.map((skill, idx) => (
-                    <Typography key={idx} variant="body2">{skill}</Typography>
+                  {dataCv.skills.map((skill: any, idx: number) => (
+                    <Typography key={idx} variant="body2">✅ {skill.name}</Typography>
+                  ))}
+                </Box>
+              </>
+            )}
+
+            {dataCv.lenguages?.length > 0 && (
+              <>
+                <Divider sx={{ my: 2 }} />
+                <Box sx={{ mt: 3, mb: 4 }}>
+                  <Typography variant="h6" fontWeight="bold">Idiomas</Typography>
+                  {dataCv.lenguages.map((lang: any, idx: number) => (
+                    <Typography key={idx} variant="body2">
+                      🌐 {lang.name} - Nivel: {lang.level}
+                    </Typography>
                   ))}
                 </Box>
               </>
@@ -125,26 +140,26 @@ export default function ResumeUser() {
           </>
         ) : (
           <Box
-          sx={{
-            mt: 4,
-            p: 3,
-            backgroundColor:
-              theme.palette.mode === "dark" ? "#3E3E3E" : "#FFF3CD",
-            borderRadius: 2,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            textAlign: "center",
-            boxShadow: theme.palette.mode === "dark" ? 3 : 2,
-          }}
+            sx={{
+              mt: 4,
+              p: 3,
+              backgroundColor:
+                theme.palette.mode === "dark" ? "#3E3E3E" : "#FFF3CD",
+              borderRadius: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+              boxShadow: theme.palette.mode === "dark" ? 3 : 2,
+            }}
           >
             <Typography
               variant="h6"
               fontWeight="bold"
               sx={{
                 mb: 2,
-                color: theme.palette.mode === "dark" ? "#FFF" : "#000", 
+                color: theme.palette.mode === "dark" ? "#FFF" : "#000",
               }}
             >
               No tienes una hoja de vida registrada.

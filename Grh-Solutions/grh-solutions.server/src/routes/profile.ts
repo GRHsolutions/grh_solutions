@@ -16,9 +16,7 @@ const validationSchema = [
   { name: 'rh', type: 'string', required: true },
   { name: 'status', type: 'string', required: true },
   { name: 'type_document', type: 'string', required: true },
-  { name: 'document', type: 'number', required: true },
-  { name: 'vacancy_name', type: 'string', required: true },
-  { name: 'date_application', type: 'string', required: false }, // opcional, por default es Date.now
+  { name: 'document', type: 'number', required: true }
 ];
 
 // Rutas protegidas con token y validador

@@ -33,7 +33,9 @@ export default function ViewSelectVacante({ open, handleClose, vacantData, charg
   const [Vacantes, setvacantes] = useState<Postulante[]>([]);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
-  const [profiles, setProfiles] = useState("");
+const [profiles, setProfiles] = useState<{ data: string[] }>({
+  data: [],
+});
   const navigate = useNavigate();
   const openMenu = Boolean(anchorEl);
   const { auth } = useAuth();
@@ -42,6 +44,7 @@ export default function ViewSelectVacante({ open, handleClose, vacantData, charg
       getPostulantes(vacantData._id, auth.token).then(res => setvacantes(res.data));
     }
   }, [vacantData]);
+  console.log(profiles);
   // Obtener todos los perfiles para cruzar luego
   useEffect(() => {
     getProfiles(auth.token).then(res => setProfiles(res.data));
@@ -170,7 +173,7 @@ export default function ViewSelectVacante({ open, handleClose, vacantData, charg
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell align="center"><Typography variant="h6">Nombre</Typography></TableCell>
+                <TableCell align="center"><Typography variant="h6">Correo</Typography></TableCell>
                 <TableCell align="center"><Typography variant="h6">Fecha de Postulación</Typography></TableCell>
                 <TableCell align="center"><Typography variant="h6">Estado</Typography></TableCell>
                 <TableCell align="center"><Typography variant="h6">Acciones</Typography></TableCell>
@@ -179,7 +182,7 @@ export default function ViewSelectVacante({ open, handleClose, vacantData, charg
             <TableBody>
               {Vacantes.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell align="center">{row.user.firstName + " " + row.user.lastName}</TableCell>
+                  <TableCell align="center">{row.user.email}</TableCell>
                   <TableCell align="center">
                     {new Date(row.application_date).toLocaleDateString('es-CO', {
                       day: '2-digit',

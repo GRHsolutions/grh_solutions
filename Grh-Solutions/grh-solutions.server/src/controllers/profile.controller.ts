@@ -18,8 +18,7 @@ export const profileController = {
         status,
         type_document,
         document,
-        vacancy_name,
-        date_application,
+        vacancy_name
       } = req.body;
 
       if (
@@ -52,8 +51,7 @@ export const profileController = {
         status,
         type_document,
         document,
-        vacancy_name,
-        date_application,
+        vacancy_name
       });
 
       return res.status(201).json(data);

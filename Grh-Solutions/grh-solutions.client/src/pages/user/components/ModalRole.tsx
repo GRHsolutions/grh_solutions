@@ -25,13 +25,15 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
   const [search, setSearch] = useState('');
   const [openModal, setOpenModal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const {auth } = useAuth();
+  const { auth } = useAuth();
 
   useEffect(() => {
-
-
-    getRoles(auth.token).then(res => setRoles(res.data));
-    getPermissions(auth.token).then(res => setPermissions(res.data));
+    const name = ""
+    getRoles(name, auth.token).then(res => setRoles(res.data));
+    getPermissions(auth.token).then(res => {
+      const maybeArray = Array.isArray(res.data) ? res.data : [];
+      setPermissions(maybeArray);
+    });
   }, []);
 
   useEffect(() => {
@@ -88,7 +90,7 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
           gap: 2, overflowY: 'auto', border: '2px solid #000',
         }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6" fontWeight="bold" sx={{color: theme.palette.primary.contrastText}}>Administración de roles</Typography>
+            <Typography variant="h6" fontWeight="bold" sx={{ color: theme.palette.primary.contrastText }}>Administración de roles</Typography>
             <IconButton onClick={handleClose}><CloseIcon /></IconButton>
           </Box>
           <Typography variant="body2">Crea roles y administra sus permisos.</Typography>
