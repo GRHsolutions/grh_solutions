@@ -2,10 +2,10 @@ import AcUnitIcon from '@mui/icons-material/AcUnit';
 import { Box, Button, Grid2, Paper, SxProps, Typography, useTheme } from '@mui/material';
 import dayjs, { Dayjs } from 'dayjs';
 import React from 'react';
-import { VarIma } from '../../const/variables';
+//import { VarIma } from '../../const/variables';
 import GrhButton from '../../generics/grh-generics/button';
 import { DragDropInput, DragNDropVariables } from '../../generics/grh-generics/DragNDrop';
-import { ImageCarousel } from '../../generics/grh-generics/imageCarousel';
+//import { ImageCarousel } from '../../generics/grh-generics/imageCarousel';
 import GenericDatePicker from '../../generics/grh-generics/inputDatePicker';
 import GrhCustomSelect from '../../generics/grh-generics/inputSelect';
 import GrhBasicMenu from '../../generics/grh-generics/menu';
@@ -441,7 +441,7 @@ const TryColorsAndGenerics = () => {
               setCurrentInputSelected(e.target.value as number);
             }}
           />
-          <ImageCarousel 
+          {/* <ImageCarousel 
             images={[
               {
                 name: "Imagen1",
@@ -450,7 +450,7 @@ const TryColorsAndGenerics = () => {
                 type: 'png'
               }
             ]}          
-          />
+          /> */}
           <TabsCompo 
             tabs={tabs}
           />

@@ -11,6 +11,7 @@ export type ReturnableLogin = {
     photo: string;
   };
   token: string;
+  warnings?: any;
 };
 
 export type RegisterConfirmation = {

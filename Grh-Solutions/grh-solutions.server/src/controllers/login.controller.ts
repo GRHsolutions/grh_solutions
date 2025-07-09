@@ -44,8 +44,6 @@ export const loginController = {
         password
       } = req.body;
 
-      console.log("Login attempt with email:", email);
-
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
       }
@@ -65,7 +63,6 @@ export const loginController = {
         },
         token: token,
         warnings: countCVs <= 0 ? {
-          code: 100,
           message: "Debe crear su hoja de vida"
         } : undefined
       });

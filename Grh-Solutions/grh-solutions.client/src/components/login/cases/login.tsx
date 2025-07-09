@@ -6,6 +6,7 @@ import GrhButton from "../../../generics/grh-generics/button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../../../contexts/NotificationContext";
 
 interface LoginProps {
   onRegister: () => void;
@@ -20,11 +21,33 @@ export default function Login({ /*onRegister*/ }: LoginProps) {
   const theme = useTheme();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     await login(values.email, values.password).then((res) => {
-      if (res) {
-        navigate("/comunicados?action=none");
+      if (res.t == "SUCCESS-CRAETE-CV") {
+        addNotification({
+          title: res.m,
+          color: "info",
+          position: "top-right",
+          duration: 4000
+        })
+        navigate("/hv-user");
+      } else if (res.t == "SUCCESS"){
+        addNotification({
+          title: res.m,
+          color: "info",
+          position: "top-right",
+          duration: 4000
+        })
+        navigate("/")
+      } else {
+        addNotification({
+          title: res.m,
+          color: "error",
+          position: "top-right",
+          duration: 4000
+        })
       }
     })
     .catch((error) => {
