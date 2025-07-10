@@ -16,6 +16,6 @@ export class NewRepository implements INewRepository {
     return response;
   }
   create(object: any): Promise<any> {
-      throw new Error("Method not implemented.");
+    throw new Error("Method not implemented.");
   }
 }

@@ -21,13 +21,21 @@ export const NavBar: React.FC = () => {
   const [switchValue, setSwitchValue] = React.useState(parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  //const [perfil, setPerfil] = React.useState("");
+  const [perfil, setPerfil] = React.useState("");
   const open = Boolean(anchorEl);
   const Styles = NavBarStyles();
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const theme = useTheme();
-  const { logout } = useAuth();
+  const { logout, auth } = useAuth();
+
+    useEffect(() => {
+      if(auth.token){
+        getProfileByUserId(auth.token).then((res) => {
+          setPerfil(res.data._id);
+        })
+      }
+  }, [isLoggedIn]);
 
   const handleSearchSubmit = () => {
     if (search == "") return;
@@ -131,7 +139,7 @@ export const NavBar: React.FC = () => {
                   >
                     <div style={Styles.menu}>
                       <label>Opciones</label>
-                      <MenuItem sx={{ marginTop: "10px", }} onClick={() => handleNavigate(`user/`)}>
+                      <MenuItem sx={{ marginTop: "10px", }} onClick={() => handleNavigate(`user/${perfil}`)}>
                         <PersonIcon sx={{ marginRight: "20px" }} />
                         <label>Informacion de perfil</label>
                       </MenuItem>
