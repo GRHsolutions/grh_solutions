@@ -2,6 +2,10 @@ import { Schema, model, Types } from "mongoose";
 
 // ---------------------- Skill Schema ----------------------
 const skillSchema = new Schema({
+  index: {
+    type: Number,
+    required: true
+  },
   name: {
     type: String,
     required: true,
@@ -16,6 +20,10 @@ const skillSchema = new Schema({
 
 // ---------------------- Language Schema ----------------------
 const languageSchema = new Schema({
+  index: {
+    type: Number,
+    required: true
+  },
   name: {
     type: String,
     required: true,
@@ -30,6 +38,10 @@ const languageSchema = new Schema({
 
 // ---------------------- Formation Schema ----------------------
 const formationSchema = new Schema({
+  index: {
+    type: Number,
+    required: true
+  },
   tittle: {
     type: String,
     required: true,
@@ -59,11 +71,7 @@ const formationSchema = new Schema({
   descroption: {
     type: String,
     trim: true,
-  },
-  index: {
-    type: Number,
-    default: 0,
-  },
+  }
 }, { _id: false });
 
 // ---------------------- CV Schema ----------------------

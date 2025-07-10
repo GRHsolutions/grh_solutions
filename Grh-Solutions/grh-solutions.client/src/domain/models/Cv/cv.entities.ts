@@ -1,37 +1,59 @@
-interface ICvFormation {
+import { Dayjs } from "dayjs";
+
+// src/domain/models/cv/cv.entities.ts
+export type SkillLevel = "PRINCIPIANTE" | "INTERMEDIO" | "BUENO" | "ALTO" | "EXCELENTE";
+export type LanguageLevel = 
+  | "PRINCIPIANTE"
+  | "INTERMEDIO"
+  | "BUENO"
+  | "ALTO"
+  | "FLUIDO"
+  | "A1"
+  | "A2"
+  | "B1"
+  | "B2"
+  | "C1"
+  | "C2";
+
+export interface Skill {
+  name: string;
+  level: SkillLevel;
+  index?: number;
+}
+
+export interface Language {
+  name: string;
+  index?: number;
+  level: LanguageLevel;
+}
+
+export interface Formation {
   tittle: string;
   school: string;
   city: string;
-  startDate: string;
-  endDate: string;
-  description?: string;
+  startDate: Dayjs; 
+  endDate?: Dayjs;
+  finished: boolean;
+  descroption?: string;
+  index?: number;
 }
 
-interface ICvSkill {
-  name: string;
-}
-
-interface ICvLanguage {
-  name: string;
-  level: string;
-}
-
-export interface ICv {
-  _id: string;
+export interface Cv {
+  _id?: string;
   firstName: string;
-  middleName: string;
+  middleName?: string | null;
   lastName: string;
-  secondLastName: string;
-  perfil: string;
+  secondLastName?: string | null;
   mail: string;
   phone: string;
-  address: string;
-  city: string;
-  birthDay: string;
+  address?: string;
   postal?: string;
-  fromUser: string;
-  skills: ICvSkill[];
-  lenguages: ICvLanguage[];
-  formations: ICvFormation[];
-  __v?: number;
+  city?: string;
+  birthDay?: Dayjs;
+  perfil?: string;
+  formations: Formation[];
+  skills: Skill[];
+  lenguages: Language[];
+  none: [] // ESTO NO QUITAR SE DANA OTRA COSAJ AJAJAJA
+  fromUser: string; // user ID
 }

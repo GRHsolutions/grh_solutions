@@ -82,7 +82,7 @@ export const cvPaths: Record<string, PathItem> = {
         {
           name: "profile",
           in: "query",
-          required: true,
+          required: false,
           schema: { type: "string" },
         },
       ],

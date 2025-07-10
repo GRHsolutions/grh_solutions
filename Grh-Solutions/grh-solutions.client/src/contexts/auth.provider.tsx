@@ -3,7 +3,6 @@ import { localStorageUtil } from "../utils/localStorage";
 import { LoginRepository } from "../infrastructure/repositories/usuario";
 import { LoginService } from "../domain/services/login/login.service";
 import { ReturnableLogin } from "../domain/models/usuario/login.entities";
-import { Warning } from "@mui/icons-material";
 
 interface AuthContextType {
   auth: ReturnableLogin;
@@ -20,6 +19,8 @@ type LoginNoti = "SUCCESS" | "SUCCESS-CRAETE-CV" | "ERROR";
 export const AuthContext = React.createContext<AuthContextType | undefined>(
   undefined
 );
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -47,6 +48,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const res = await service.login({ email, password });
 
+      // Guardar los datos en localStorage
+      localStorageUtil.set("usr_items_token", res.token);
+      localStorageUtil.set("usr_items_correo", res.user.email); // Aquí, si es necesario puedes usar un campo diferente
+      if (res.user.photo)
+        localStorageUtil.set("usr_items_photo", res.user.photo);
+      if (res.user.email)
+        localStorageUtil.set("usr_items_correo", res.user.email);
+      setIsLoggedIn(true); // Establecer como logueado
+      console.log("authorized, items in storage", localStorageUtil.get('usr_items_token'));
+
+      
+
       // Actualizar estado de autenticación
       setAuth({
         user: {
@@ -56,16 +69,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         token: res.token,
       });
 
-      // Guardar los datos en localStorage
-      localStorageUtil.set("usr_items_token", res.token);
-      localStorageUtil.set("usr_items_correo", res.user.email); // Aquí, si es necesario puedes usar un campo diferente
-      if (res.user.photo)
-        localStorageUtil.set("usr_items_photo", res.user.photo);
-      if (res.user.email)
-        localStorageUtil.set("usr_items_correo", res.user.email);
-      setIsLoggedIn(true); // Establecer como logueado
+      if(res.warnings === undefined ){
+        //await sleep(2000);
+        return {
+          t: "SUCCESS",
+          m: "Acceso concedido",
+        };
+      }
 
       if (res.warnings.message === "Debe crear su hoja de vida") {
+        await sleep(2000);
         return {
           t: "SUCCESS-CRAETE-CV",
           m: res.warnings.message,
@@ -73,9 +86,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       return {
-        t: "SUCCESS",
-        m: "Acceso concedido",
-      };
+        t: "ERROR",
+        m: "aa"
+      }
+      
     } catch (err: any) {
       if (err["message"] && typeof err["message"] === "string") {
         setIsLoggedIn(false); // Establecer como no logueado en caso de error
@@ -100,6 +114,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       user: { email: "", photo: "" },
       token: "",
     }); // Limpiar auth
+    window.location.href = "/";
   };
 
   const actualValues = {

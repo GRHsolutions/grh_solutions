@@ -53,7 +53,8 @@ export const loginController = {
         token
       } = await userService.login(email, password);
 
-      const countCVs = await cvService.verifyMyCvs(user.id);
+      const countCVs = await cvService.verifyMyCvs(user._id);
+      console.log("cantidad de cv de " + email + " es: " + countCVs)
 
       return res.status(200).json({
         user: {

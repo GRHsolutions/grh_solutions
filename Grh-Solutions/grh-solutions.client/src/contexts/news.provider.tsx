@@ -126,7 +126,6 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   React.useEffect(() => {
     setLoading(true);
-    console.log("ajahahaha")
     const fetchNews = async () => {
       try {
         await service.get(filter).then(e => {

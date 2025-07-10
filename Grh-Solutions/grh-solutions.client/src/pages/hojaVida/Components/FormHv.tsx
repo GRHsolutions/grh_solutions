@@ -1,229 +1,265 @@
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, FormControl, MenuItem, Select, Typography } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import dayjs from "dayjs";
-import { useState } from "react";
-import GenericDatePicker from "../../../generics/grh-generics/inputDatePicker";
 import GrhTextField from "../../../generics/grh-generics/textField";
+import { useFormikContext } from "formik";
+import { Cv } from "../../../domain/models/Cv/cv.entities";
+import { Grid2 } from "@mui/material";
+import React from "react";
+import { DisplayData, DisplayDataFields } from "./displayData/display";
+import dayjs from "dayjs";
+import { LANGUAGE_LEVELS, SKILL_LEVELS } from "../HojaVidaPage";
 
-interface ResumeAccordionProps {
-  onChange: (values: Record<string, string>) => void;
-  formData: Record<string, string>;
+interface Field {
+  name: string;
+  type: "string" | "date" | "mail" | "array";
+  size: {
+    xs: number;
+    md: number;
+  };
+  rows?: number;
+  label?: string;
 }
 
-export default function ResumeAccordion({
-  onChange,
-  formData,
-}: ResumeAccordionProps) {
-  const [image, setImage] = useState<string | null>(formData.foto || null);
-  const theme = useTheme();
+export default function ResumeAccordion() {
+  const { values, setFieldValue } = useFormikContext<Cv>();
+  const [current, setCurrent] = React.useState<
+    "formations" | "skills" | "lenguages" | "none"
+  >("none");
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === "string") {
-          setImage(reader.result);
-          onChange({ ...formData, foto: reader.result });
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleInputChange = (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement
-    > | { target: { name?: string; value: unknown } }
-  ) => {
-    const { name, value } = event.target;
-    if (name) {
-      onChange({ ...formData, [name]: value as string });
-    } else {
-      console.error("El campo 'name' no está definido en el evento.");
-    }
-  };
-
-  const sections = [
+  const fields: Field[] = [
     {
-      title: "Información Personal",
-      fields: [
-        "Nombre",
-        "Apellido",
-        "Direccion",
-        {
-          name: "Tipo De Documento",
-          label: "Tipo de Documento",
-          type: "select",
-          options: ["Cédula", "Pasaporte", "Otro"],
-        },
-        {
-          name: "RH (Grupo sanguíneo)",
-          label: "RH",
-          type: "select",
-          options: ["O+", "O-", "A+", "A-", "B+", "B-", "AB+", "AB-"],
-        },
-      ],
+      name: "firstName",
+      type: "string",
+      size: { xs: 12, md: 6 },
+      label: "Primer nombre",
     },
-    { title: "Perfil", fields: ["Ocupacion", "Descripcion"] },
     {
-      title: "Formación",
-      fields: [
-        "Titulo",
-        "Institucion",
-        { name: "Fecha De Graduacion", label: "Fecha de Graduación", type: "date" },
-      ],
+      name: "middleName",
+      type: "string",
+      size: { xs: 12, md: 6 },
+      label: "Segundo nombre",
     },
-    { title: "Experiencia", fields: ["Empresa", "Cargo", "Duracion"] },
-    { title: "Habilidades", fields: ["Habilidad", "Nivel De Habilidad"] },
-    { title: "Idiomas", fields: ["Idioma", "Nivel De Idioma"] },
+    {
+      name: "lastName",
+      type: "string",
+      size: { xs: 12, md: 6 },
+      label: "Primer apellido",
+    },
+    {
+      name: "secondLastName",
+      type: "string",
+      size: { xs: 12, md: 6 },
+      label: "Segundo apellido",
+    },
+    { name: "mail", type: "mail", size: { xs: 12, md: 6 }, label: "Correo" },
+    {
+      name: "phone",
+      type: "string",
+      size: { xs: 12, md: 6 },
+      label: "Telefono",
+    },
+    {
+      name: "address",
+      type: "string",
+      size: { xs: 12, md: 12 },
+      label: "Direccion",
+    },
+    {
+      name: "postal",
+      type: "string",
+      size: { xs: 12, md: 6 },
+      label: "Codigo postal",
+    },
+    { name: "city", type: "string", size: { xs: 12, md: 6 }, label: "Ciudad" },
+    {
+      name: "birthDay",
+      type: "date",
+      size: { xs: 12, md: 6 },
+      label: "Primer nombre",
+    },
+    {
+      name: "perfil",
+      type: "string",
+      size: { xs: 12, md: 12 },
+      rows: 5,
+      label: "Perfil",
+    },
+    { name: "formations", type: "array", size: { xs: 12, md: 12 } },
+    { name: "skills", type: "array", size: { xs: 12, md: 12 } },
+    { name: "lenguages", type: "array", size: { xs: 12, md: 12 } },
   ];
 
+  const fieldFormations: DisplayDataFields[] = [
+    {
+      name: "tittle",
+      label: "Titulo",
+      type: "string",
+      size: { xs: 12, md: 6 },
+    },
+    {
+      name: "school",
+      label: "Instituto",
+      type: "string",
+      size: { xs: 12, md: 6 },
+    },
+    {
+      name: "city",
+      label: "Ciudad",
+      type: "string",
+      size: { xs: 12, md: 12 },
+    },
+    {
+      name: "startDate",
+      label: "Fecha de inicio",
+      type: "date",
+      size: { xs: 6, md: 6 },
+    },
+    {
+      name: "endDate",
+      label: "Fecha de finalizacion",
+      type: "date",
+      size: { xs: 6, md: 6 },
+    },
+    {
+      name: "finished",
+      label: "Ha concluido?",
+      type: "boolean",
+      size: { xs: 12, md: 6 },
+    },
+    {
+      name: "descroption",
+      label: "Descripcion",
+      type: "string",
+      size: { xs: 12, md: 12 },
+      rows: 4
+    }
+  ];
+
+  const fieldSkills :DisplayDataFields[] = [
+    {
+      name: "name",
+      label: "Nombre",
+      type: "string",
+      size: { xs: 12, md: 6 },
+    },
+    {
+      name: "level",
+      label: "Nivel de habilidad",
+      type: "option",
+      size: { xs: 12, md: 6 },
+      options: SKILL_LEVELS
+    },
+  ] 
+
+    const fieldLenguages :DisplayDataFields[] = [
+    {
+      name: "name",
+      label: "Nombre",
+      type: "string",
+      size: { xs: 12, md: 6 },
+    },
+    {
+      name: "level",
+      label: "Nivel de lengua",
+      type: "option",
+      size: { xs: 12, md: 6 },
+      options: LANGUAGE_LEVELS
+    },
+  ] 
+
   return (
-    <Box sx={{ maxHeight: "80vh", overflowY: "auto", p: 2 }}>
-      {sections.map(({ title, fields }) => (
-        <Accordion
-          defaultExpanded={title === "Información Personal"}
-          key={title}
-        >
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography fontWeight="bold">{title}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Box
-              sx={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 2,
-              }}
-            >
-              {title === "Información Personal" && (
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 2,
-                    gridColumn: "span 2",
+    <Grid2 container spacing={2}>
+      {fields.map((f, i) => {
+        if (f.type === "array") {
+          if (f.name === "formations") {
+            return (
+              <Grid2 size={{ xs: f.size.xs, md: f.size.md }}>
+                <DisplayData
+                  key={`${i}`}
+                  expand={current == "formations"}
+                  fields={fieldFormations}
+                  handleChange={() => {
+                    setCurrent("formations");
                   }}
-                >
-                  <Avatar
-                    src={image || undefined}
-                    sx={{ width: 80, height: 80 }}
-                  />
-                  <Button variant="contained" component="label">
-                    Subir Imagen
-                    <input
-                      type="file"
-                      hidden
-                      accept="image/*"
-                      onChange={handleImageChange}
-                    />
-                  </Button>
-                </Box>
-              )}
+                  current={current}
+                  title={"Formacion"}
+                  defaultItem={{
+                    tittle: "",
+                    school: "",
+                    city: "",
+                    startDate: dayjs().toDate(),
+                    endDate: dayjs().toDate(),
+                    finished: false,
+                    descroption: "",
+                    index: 0,
+                  }}
+                />
+              </Grid2>
+            );
+          }
+          if (f.name === "skills") {
+            return (
+              <Grid2 size={{ xs: f.size.xs, md: f.size.md }}>
+                <DisplayData
+                  key={`${i}`}
+                  expand={current == "skills"}
+                  fields={fieldSkills}
+                  handleChange={() => {
+                    setCurrent("skills");
+                  }}
+                  current={current}
+                  title={"Habilidades"}
+                  defaultItem={{
+                    name: "",
+                    level: "PRINCIPIANTE",
+                    index: 0,
+                  }}
+                />
+              </Grid2>
+            );
+          }
+          if (f.name === "lenguages") {
+            return (
+              <Grid2 size={{ xs: f.size.xs, md: f.size.md }}>
+                <DisplayData
+                  key={`${i}`}
+                  expand={current == "lenguages"}
+                  fields={fieldLenguages}
+                  handleChange={() => {
+                    setCurrent("lenguages");
+                  }}
+                  current={current}
+                  title={"Lenguajes"}
+                  defaultItem={{
+                    name: "",
+                    level: "A1",
+                    index: 0,
+                  }}
+                />
+              </Grid2>
+            );
+          }
+          return <Grid2 size={{ xs: f.size.xs, md: f.size.md }}></Grid2>;
+        } // puedes manejar arrays aparte si deseas
 
-              {fields.map((field) => {
-                const fieldName =
-                  typeof field === "string" ? field : field.name;
-
-                const inputStyles = {
-                  backgroundColor: theme.palette.background.paper, 
-                  "& .MuiInputBase-input": {
-                    color: theme.palette.text.primary, 
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: theme.palette.text.primary,
-                  },
-                  "& .MuiOutlinedInput-root": {
-                    borderColor: theme.palette.text.primary,
-                    "&:hover fieldset": {
-                      borderColor: theme.palette.primary.main,
-                    },
-                    "&.Mui-focused fieldset": {
-                      borderColor: theme.palette.primary.main,
-                      backgroundColor: theme.palette.background.paper,
-                    },
-                  },
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderColor: theme.palette.text.primary,
-                  },
-                  "&:focus-within": {
-                    backgroundColor: theme.palette.background.paper,
-                  },
-                  "& .MuiOutlinedInput-root.Mui-focused": {
-                    backgroundColor: theme.palette.background.paper,
-                  },
-                };
-
-                if (typeof field === "string") {
-                  return (
-                    <GrhTextField
-                      key={fieldName}
-                      name={fieldName} 
-                      label={fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-                      value={formData[fieldName] || ""}
-                      onChange={handleInputChange}
-                      fullWidth
-                      sx={inputStyles}
-                    />
-                  );
-                }
-
-                if (field.type === "date") {
-                  return (
-                    <FormControl fullWidth key={fieldName}>
-                      <GenericDatePicker
-                        name={fieldName} // Aseguramos que el name se pase correctamente
-                        label={field.label || fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}
-                        value={formData[fieldName] ? dayjs(formData[fieldName]) : null} // Convertir a dayjs si es una cadena
-                        onChange={(date) => {
-                          if (fieldName) { // Validar que fieldName no sea undefined
-                            onChange({
-                              ...formData,
-                              [fieldName]: date ? date.format("YYYY-MM-DD") : "", // Formatear la fecha o dejarla vacía
-                            });
-                          } else {
-                            console.error("El campo 'fieldName' no está definido.");
-                          }
-                        }}
-                        sx={inputStyles} // Aplicar los estilos dinámicos
-                      />
-                    </FormControl>
-                  );
-                }
-
-                if (
-                  field.type === "select" &&
-                  "options" in field &&
-                  Array.isArray(field.options)
-                ) {
-                  return (
-                    <FormControl fullWidth key={fieldName}>
-                      <Select
-                        name={fieldName}  // Agregar name
-                        value={formData[fieldName] || ""}
-                        onChange={handleInputChange}
-                        displayEmpty
-                      >
-                        <MenuItem value="">
-                          {field.label || "Seleccione"}
-                        </MenuItem>
-                        {field.options?.map((option) => (
-                          <MenuItem key={option} value={option}>
-                            {option}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  );
-                }
-                return null;
-              })}
-            </Box>
-          </AccordionDetails>
-        </Accordion>
-      ))}
-    </Box>
+        if (f.type === "string" || f.type === "mail") {
+          return (
+            <Grid2 size={{ xs: f.size.xs, md: f.size.md }}>
+              <GrhTextField
+                variant="standard"
+                key={`${f.name} + ${i}`}
+                name={f.name}
+                label={f.name}
+                value={(values as any)[f.name]}
+                onChange={(e) => {
+                  setFieldValue(f.name, e.target.value);
+                }}
+                fullWidth
+                multirows={f.rows != undefined && f.rows > 0}
+                rows={f.rows}
+              />
+            </Grid2>
+          );
+        }
+      })}
+    </Grid2>
   );
 }
