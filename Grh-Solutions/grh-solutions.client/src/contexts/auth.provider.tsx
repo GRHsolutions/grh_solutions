@@ -55,10 +55,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorageUtil.set("usr_items_photo", res.user.photo);
       if (res.user.email)
         localStorageUtil.set("usr_items_correo", res.user.email);
-      setIsLoggedIn(true); // Establecer como logueado
-      console.log("authorized, items in storage", localStorageUtil.get('usr_items_token'));
-
-      
+      setIsLoggedIn(true); // Establecer como logueado      
 
       // Actualizar estado de autenticación
       setAuth({

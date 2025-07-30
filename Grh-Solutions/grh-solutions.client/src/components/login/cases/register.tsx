@@ -131,7 +131,6 @@ export default function Register({ onLogin }: RegisterProps) {
         values,
         handleChange,
         handleSubmit,
-        resetForm,
         // errors,
         // touched,
         isValid,

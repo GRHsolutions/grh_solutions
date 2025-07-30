@@ -1,6 +1,6 @@
 import express from 'express';
-import { signatureController } from '../controllers/signature.controller';
 import { validateToken } from '../middleware/tokens.middlewares';
+import { signatureController } from '../controllers/Signatures.controller';
 
 const router = express.Router();
 

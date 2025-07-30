@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { signatureService } from "../services/signature.service";
 import { signatureFilter } from "../filters/signature.filter";
+import { signatureService } from "../services/signatures.service";
 
 export const signatureController = {
   // Crear firma

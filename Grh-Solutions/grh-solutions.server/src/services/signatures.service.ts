@@ -1,5 +1,5 @@
-import { signatureModel } from "../models/signature.model";
 import { signatureFilter } from "../filters/signature.filter";
+import { signatureModel } from "../models/signatures.model";
 
 export const signatureService = {
   create: async (entity: {
