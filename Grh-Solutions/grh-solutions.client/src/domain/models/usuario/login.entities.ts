@@ -9,6 +9,7 @@ export type ReturnableLogin = {
   user: {
     email: string;
     photo: string;
+    profile: string
   };
   token: string;
   warnings?: any;

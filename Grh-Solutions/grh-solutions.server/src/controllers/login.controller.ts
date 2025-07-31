@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import { userService } from '../services/users.service';
 import { cvService } from '../services/cv.service';
+import { profileService } from '../services/profile.service';
 
 type RegisterForm = {
   'firstName': string,
@@ -54,12 +55,21 @@ export const loginController = {
       } = await userService.login(email, password);
 
       const countCVs = await cvService.verifyMyCvs(user._id);
+      // BUSCA EL PERFIL DEL USUARIO
+      const findMyProfil = await profileService.getByUserId(user._id)
+      // RETURNA UN ERROR EN CASO DE QUE NO ENCUENTRE NINGUN PERFIL.
+      if(!findMyProfil){
+        return res.status(400).json({
+          message: "Usuario no tiene un perfil especificado",
+        })
+      }
 
       return res.status(200).json({
         user: {
           email: user.email,
           photo: user.photo,
-          rol: user.rol
+          rol: user.rol,
+          profile: findMyProfil._id
         },
         token: token,
         warnings: countCVs <= 0 ? {

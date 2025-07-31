@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PersonIcon from "@mui/icons-material/Person";
@@ -14,28 +14,18 @@ import { SideBar2 } from "../sidebar/sideBar";
 import { useNavigate } from "react-router-dom";
 import { RendererModl } from "../../components/login/RendererModl";
 import { useAuth } from "../../hooks/auth";
-import { getProfileByUserId } from "../../domain/services/profile/profile.service";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
   const [switchValue, setSwitchValue] = React.useState(parametros.dark);
   const [search, setSearch] = React.useState("");
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [perfil, setPerfil] = React.useState("");
   const open = Boolean(anchorEl);
   const Styles = NavBarStyles();
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   const theme = useTheme();
   const { logout, auth } = useAuth();
-
-  useEffect(() => {
-    if (auth.token) {
-      getProfileByUserId(auth.token).then((res) => {
-        setPerfil(res.data._id);
-      });
-    }
-  }, [isLoggedIn]);
 
   const handleSearchSubmit = () => {
     if (search == "") return;
@@ -143,7 +133,8 @@ export const NavBar: React.FC = () => {
                       <label>Opciones</label>
                       <MenuItem
                         sx={{ marginTop: "10px" }}
-                        onClick={() => handleNavigate(`user/${perfil}`)}
+                        disabled={!auth.user.profile}
+                        onClick={() => handleNavigate(`user/${auth.user.profile}`)}
                       >
                         <PersonIcon sx={{ marginRight: "20px" }} />
                         <label>Informacion de perfil</label>

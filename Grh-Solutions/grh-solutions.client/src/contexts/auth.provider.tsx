@@ -30,6 +30,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     user: {
       email: localStorageUtil.get("usr_items_correo") || "",
       photo: localStorageUtil.get("usr_items_photo") || "",
+      profile: localStorageUtil.get("usr_items_profile_id") || ""
     },
     token: localStorageUtil.get("usr_items_token") || "",
   } as ReturnableLogin;
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       // Guardar los datos en localStorage
       localStorageUtil.set("usr_items_token", res.token);
       localStorageUtil.set("usr_items_correo", res.user.email); // Aquí, si es necesario puedes usar un campo diferente
+      localStorageUtil.set("usr_items_profile_id", res.user.profile)
       if (res.user.photo)
         localStorageUtil.set("usr_items_photo", res.user.photo);
       if (res.user.email)
@@ -62,11 +64,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         user: {
           email: res.user.email,
           photo: res.user.photo,
+          profile: res.user.profile
         },
         token: res.token,
       });
 
-      if(res.warnings === undefined ){
+      if (res.warnings === undefined) {
         //await sleep(2000);
         return {
           t: "SUCCESS",
@@ -86,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         t: "ERROR",
         m: "aa"
       }
-      
+
     } catch (err: any) {
       if (err["message"] && typeof err["message"] === "string") {
         setIsLoggedIn(false); // Establecer como no logueado en caso de error
@@ -108,7 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorageUtil.deleteExclude(["theme"]);
     setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
     setAuth({
-      user: { email: "", photo: "" },
+      user: { email: "", photo: "", profile: "" },
       token: "",
     }); // Limpiar auth
     window.location.href = "/";
