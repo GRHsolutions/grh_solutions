@@ -27,7 +27,6 @@ export const validateToken = async(req: Request, res: Response, next: NextFuncti
     // Check if this is a public route
     const validationAccess = await permissionUtl.verifyPublicAccess(method, originalUrl);
     req.isPublic = validationAccess;
-    console.log(validationAccess)
 
     if(validationAccess) {
       return next();

@@ -25,6 +25,7 @@ import module from "./module";
 import FollowUp from "./followUpType";
 import history from "./history"
 import cv from './cv';
+import signatures from './signatures';
 
 const routes = Router();
 // Apply middlewares globally to all routes
@@ -56,5 +57,6 @@ routes.use('/modules', module);
 routes.use("followUpType", FollowUp)
 routes.use("history", history)
 routes.use("/cv", cv)
+routes.use("/signatures", signatures);
 
 export default routes;
