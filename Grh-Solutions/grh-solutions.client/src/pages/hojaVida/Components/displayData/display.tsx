@@ -160,8 +160,7 @@ export const DisplayData = ({
                            onChange={(value: Dayjs | null) => {
                             handleItemChange(index, field.name, value);
                           }}
-                          disabled={(field.name == "endDate" && item["finished"])}                      
-
+                          disabled={(field.name == "endDate" && item["finished"])}
                         />
                       )} 
                       {(field.type == "option" && field.options) && (
