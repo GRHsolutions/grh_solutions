@@ -9,6 +9,7 @@ import * as Yup from "yup";
 import { JustImages } from "./parts/justImages";
 import { DragNDropVariables } from "../../../../../generics/grh-generics/DragNDrop";
 import { Survey } from "./parts/survey";
+import React from "react";
 
 interface TabsFormProps {
   initialValue: News | null;
@@ -68,9 +69,16 @@ const validationSchema = Yup.object({
 });
 
 export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
+  const [loading, setLoading] = React.useState(false);
+
   const handleSubmit = (nw: NewForm) => {
-    console.log(edit);
-    console.log(nw);
+    setLoading(true);
+    if(edit){
+      console.log("Editing", nw)
+    } else {
+      console.log("Creating", nw)
+    }
+    setLoading(false);
   };
 
   return (
@@ -128,7 +136,7 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
                   padding: "5rem",
                   width: "5.5rem",
                 }}
-                disabled={!isValid}
+                disabled={!isValid || loading}
               />
             </Form>
           );

@@ -28,7 +28,7 @@ import cv from './cv';
 import signatures from './signatures';
 
 const routes = Router();
-// Apply middlewares globally to all routes
+//Apply middlewares globally to all routes
 routes.use(validateToken);
 // routes.use(verifyPermissionHandler);
 

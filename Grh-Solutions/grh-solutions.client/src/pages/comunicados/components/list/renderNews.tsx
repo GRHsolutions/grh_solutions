@@ -13,13 +13,11 @@ const RenderNews: React.FC = () => {
   return (
     <Box
       sx={{
-        paddingTop: "15px",
         gap: "13px",
         display: 'flex',
         flexDirection: 'column',
         overflowY: "hidden",
         overflowX: "hidden",
-        padding: 3,
         '&::-webkit-scrollbar': {
           display: 'none',
         },
