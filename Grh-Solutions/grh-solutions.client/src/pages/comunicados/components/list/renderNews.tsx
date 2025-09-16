@@ -13,7 +13,6 @@ const RenderNews: React.FC = () => {
   return (
     <Box
       sx={{
-        paddingTop: "15px",
         gap: "13px",
         display: "flex",
         flexDirection: "column",

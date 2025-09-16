@@ -135,7 +135,7 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
                   padding: "5rem",
                   width: "5.5rem",
                 }}
-                disabled={!isValid}
+                disabled={!isValid || loading}
               />
             </Form>
           );

@@ -56,6 +56,7 @@ const Screen: React.FC = () => {
           "&::-webkit-scrollbar-thumb:hover": {
             background: "#555", // Color cuando se pasa el mouse
           },
+          padding: '10px'
         }}
       >
         <RenderNews />

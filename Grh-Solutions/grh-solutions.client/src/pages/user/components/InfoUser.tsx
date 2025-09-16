@@ -44,12 +44,17 @@ export default function InfoUser({ id, documentType }: InfoUserProps) {
   const sendHvc = () => {
     navigate("/hv-user")
   }
-  console.log(profile)
+
   useEffect(() => {
+    if(!id){
+      return;
+    };
+    
     getProfileById(id, auth.token).then((res) => {
       setProfile(res.data)
     })
   }, [id]);
+
   return (
     <>
       <Box
