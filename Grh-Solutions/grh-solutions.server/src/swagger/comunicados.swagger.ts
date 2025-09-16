@@ -15,36 +15,28 @@ export const newPaths: Record<string, PathItem> = {
           description: "ID del grupo para filtrar",
         },
         {
-          name: "currentPage",
+          name: "page",
           in: "query",
           required: false,
           schema: { type: "integer", minimum: 1 },
           description: "Página actual para paginación",
         },
         {
-          name: "rowsPerPage",
+          name: "limit",
           in: "query",
           required: false,
           schema: { type: "integer", minimum: 1 },
           description: "Cantidad de elementos por página",
         },
-        {
-          name: "useGetAllNoPage",
-          in: "query",
-          required: false,
-          schema: { type: "boolean" },
-          description:
-            "Si es true, ignora la paginación y trae todos los elementos",
-        },
       ],
       responses: {
         200: {
-          description: "Lista de comunicados",
+          description: "Lista de comunicados y total de paginas",
           content: {
             "application/json": {
               schema: {
                 type: "array",
-                items: { $ref: "#/components/schemas/News" },
+                items: { $ref: "#/components/schemas/NewsResponse" },
               },
             },
           },
@@ -188,6 +180,67 @@ export const NewsSchema: { [schema: string]: Schema } = {
         description: "Preguntas de la encuesta (solo si aplica)",
         items: { type: "string", example: "¿Qué te pareció el contenido?" },
         example: [],
+      },
+    },
+  },
+  News: {
+    type: "object",
+    properties: {
+      title: { type: "string" },
+      description: { type: "string" },
+      images: {
+        type: "array",
+        items: { type: "string", format: "uri" },
+      },
+      formulary: {
+        type: "object",
+        properties: {
+          id: { type: "integer" },
+          form: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                description: { type: "string" },
+                marked: { type: "boolean" },
+              },
+            },
+          },
+        },
+      },
+      status: {
+        type: "string",
+        enum: ["deleted", "shown"],
+      },
+      type: {
+        type: "string",
+        enum: [
+          "simple-publication",
+          "publication-with-images",
+          "publication-with-survey",
+        ],
+      },
+      numberLikes: { type: "integer", default: 0 },
+      numberDisLikes: { type: "integer", default: 0 },
+      date: { type: "string", format: "date-time" },
+      madeBy: { type: "string" },
+      createdAt: { type: "string", format: "date-time" },
+      updatedAt: { type: "string", format: "date-time" },
+    },
+  },
+
+  NewsResponse: {
+    type: "object",
+    properties: {
+      data: {
+        type: "array",
+        items: { $ref: "#/components/schemas/News" },
+        description: "Lista de noticias",
+      },
+      totalPages: {
+        type: "integer",
+        description: "Número total de páginas calculado",
+        example: 5,
       },
     },
   },

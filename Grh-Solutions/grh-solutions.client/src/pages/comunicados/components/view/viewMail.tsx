@@ -1,10 +1,19 @@
-import { Avatar, Backdrop, Box, Divider, Grid2, Typography, useTheme, IconButton } from "@mui/material";
+import {
+  Avatar,
+  Backdrop,
+  Box,
+  Divider,
+  Grid2,
+  Typography,
+  useTheme,
+  IconButton,
+} from "@mui/material";
 import { useNews } from "../../../../hooks/news";
 import formatearFecha from "../../../../utils/formatearFecha";
 import TextField from "../../../../generics/grh-generics/textField";
 import React, { useEffect } from "react";
-import SendIcon from '@mui/icons-material/Send';
-import CloseIcon from '@mui/icons-material/Close';
+import SendIcon from "@mui/icons-material/Send";
+import CloseIcon from "@mui/icons-material/Close";
 import { ImageCarousel } from "../../../../generics/grh-generics/imageCarousel";
 
 interface ViewMailProps {}
@@ -53,60 +62,70 @@ export const ViewMail = ({}: ViewMailProps) => {
         container
         width={"100%"}
         display={"flex"}
+        justifyContent={ current.item?.type == "publication-with-images" ? undefined : 'center'}
+        alignItems={ current.item?.type == "publication-with-images" ? undefined : 'center'}
         spacing={5}
-        sx={{ height: "100%" }}
+        sx={{ 
+          height: "100%" 
+        }}
       >
         {/* Grid de la izquierda para mostrar imágenes */}
-        <Grid2
-          size={9}
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            height: "100%", // Asegura que ocupe todo el alto disponible
-            backgroundColor: theme.palette.primary.main,
-            color: theme.palette.primary.contrastText,
-            //boxShadow: theme.palette.primary.boxShadow,
-            overflow: "hidden", // Oculta el contenido que se salga del grid
-            //padding: 2,
-            borderRight: `1px solid ${theme.palette.divider}`, // Añadimos un borde para separar los dos grids
-          }}
-          onClick={(e) => e.stopPropagation()} // Stop click event propagation
-        >
-          {/* Aquí irán las imágenes */}
-          {current.item && 
-            <ImageCarousel 
-              height={'100%'}
-              images={current.item.images}
-            />
-          }
-          
-        </Grid2>
+        {current.item?.type == "publication-with-images" && (
+          <Grid2
+            size={9}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%", // Asegura que ocupe todo el alto disponible
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.primary.contrastText,
+              //boxShadow: theme.palette.primary.boxShadow,
+              overflow: "hidden", // Oculta el contenido que se salga del grid
+              //padding: 2,
+              borderRight: `1px solid ${theme.palette.divider}`, // Añadimos un borde para separar los dos grids
+            }}
+            onClick={(e) => e.stopPropagation()} // Stop click event propagation
+          >
+            {/* Aquí irán las imágenes */}
+            {current.item && (
+              <ImageCarousel height={"100%"} images={current.item.images} />
+            )}
+          </Grid2>
+        )}
 
         {/* Grid de la derecha para mostrar la información del mail */}
         <Grid2
-          size={3}
+          size={current.item?.type == "publication-with-images" ? 3 : 12}
           sx={{
-            height: "100vh",
+            height: current.item?.type == "publication-with-images" ?  "100vh" : "80vh",
             backgroundColor: theme.palette.primary.main,
             color: theme.palette.primary.contrastText,
             boxShadow: theme.palette.primary.boxShadow,
+            width: current.item?.type == "publication-with-images" ? undefined : '50%',
+            display: 'flex',
+            flexDirection: 'column',
             padding: 2,
             overflowY: "auto", // Permite el desplazamiento si el contenido es largo
           }}
           onClick={(e) => e.stopPropagation()} // Stop click event propagation
         >
           <Box position={"absolute"} right={0} top={0} p={1}>
-            <IconButton onClick={handleClose} sx={{ color: theme.palette.primary.contrastText }}>
+            <IconButton
+              onClick={handleClose}
+              sx={{ color: theme.palette.primary.contrastText }}
+            >
               <CloseIcon />
             </IconButton>
           </Box>
           {/* Aquí va la información del mail */}
           <Box display={"flex"} gap={1.3} mb={2}>
-            <Avatar>PS</Avatar>
+            <Avatar>{""}</Avatar>
             <Box>
-              <Typography>{current.item?.madeBy}</Typography>
-              <Typography mt={"-5px"}>{formatearFecha(current.item?.date)}</Typography>
+              <Typography>{current.item?.madeBy.email}</Typography>
+              <Typography mt={"-5px"}>
+                {formatearFecha(current.item?.createdAt)}
+              </Typography>
             </Box>
           </Box>
           <Box
@@ -130,13 +149,11 @@ export const ViewMail = ({}: ViewMailProps) => {
               },
             }}
           >
-            <Typography 
-              variant="body1"
-            >
+            <Typography variant="body1">
               {current.item && current.item.description}
             </Typography>
           </Box>
-          <Divider 
+          <Divider
             variant="middle"
             sx={{
               backgroundColor: theme.palette.primary.divider,
@@ -167,13 +184,16 @@ export const ViewMail = ({}: ViewMailProps) => {
               component={"form"}
               onSubmit={(e) => {
                 e.preventDefault();
-                if(newCommentRef.current?.value != null && newCommentRef.current?.value != "") {
-                  console.log("valor: ", newCommentRef.current.value)
+                if (
+                  newCommentRef.current?.value != null &&
+                  newCommentRef.current?.value != ""
+                ) {
+                  console.log("valor: ", newCommentRef.current.value);
                 }
               }}
               p={1}
             >
-              <TextField 
+              <TextField
                 label={"Nuevo comentario"}
                 ref={newCommentRef}
                 multirows
@@ -183,14 +203,20 @@ export const ViewMail = ({}: ViewMailProps) => {
                 }}
                 clickableAdornment={{
                   end: () => {
-                    if(newCommentRef.current?.value != null && newCommentRef.current?.value != "") {
-                      console.log("enviando jajaj", newCommentRef.current?.value);
+                    if (
+                      newCommentRef.current?.value != null &&
+                      newCommentRef.current?.value != ""
+                    ) {
+                      console.log(
+                        "enviando jajaj",
+                        newCommentRef.current?.value
+                      );
                     }
-                  }
+                  },
                 }}
                 endIcon={<SendIcon />}
               />
-            </Box>            
+            </Box>
           </Box>
         </Grid2>
       </Grid2>

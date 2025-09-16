@@ -1,8 +1,8 @@
-import { News, NewsFilter } from "../../../domain/models/news/news.entities";
+import { NewForm, News, NewsFilter } from "../../../domain/models/news/news.entities";
 import { Pagination } from "../../../domain/models/pagination/pagination";
 
 export interface INewRepository {
-    get(filter: NewsFilter): Promise<News[]>;
+    get(filter: NewsFilter): Promise<{data: News[], totalPages: number}>;
     getPagination(filter: any): Promise<Pagination>;
-    create(object: any): Promise<any>;
+    create(object: NewForm): Promise<News>;
 }

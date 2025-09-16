@@ -3,15 +3,15 @@ import { Commentary, News } from "../../../../domain/models/news/news.entities";
 import { Avatar, Box, Typography, useTheme } from "@mui/material";
 import formatearFecha from "../../../../utils/formatearFecha";
 import CommentIcon from "@mui/icons-material/Comment";
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+// import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+// import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import GrhButton from "../../../../generics/grh-generics/button";
 import ImageGrid from "../../../../components/comunicados/gridImages";
 
 interface NewItemProps {
   item: News;
   comments: Commentary[];
-  onClick: (item: number) => void;
+  onClick: (item: string) => void;
   key: string;
 }
 
@@ -22,6 +22,7 @@ const NewItem: React.FC<NewItemProps> = ({
   comments
 }: NewItemProps) => {
   const theme = useTheme();
+
   const Description = ({ description }: { description: string | undefined }) => {
     const maxLength = 100;
     const truncatedDescription =
@@ -47,7 +48,7 @@ const NewItem: React.FC<NewItemProps> = ({
   return (
     <Box
       key={key}
-      onClick={() => onClick(item.id)}
+      onClick={() => onClick(item._id)}
       sx={{
         width: '100%',
         marginBottom: '16px',
@@ -68,14 +69,14 @@ const NewItem: React.FC<NewItemProps> = ({
       >
         <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
           <Avatar sx={{ marginRight: '8px' }}>
-            {item.madeBy[0]}
+            {""}
           </Avatar>
           <Box sx={{ display: 'flex', flexDirection: 'column' }}>
             <Typography variant="subtitle1" fontWeight="bold">
-              {item.madeBy}
+              {item.madeBy.email}
             </Typography>
             <Typography variant="caption" color="textSecondary" mt={'-6px'}>
-              {formatearFecha(item.date)}
+              {formatearFecha(item.createdAt)}
             </Typography>
           </Box>
         </Box>
@@ -107,16 +108,16 @@ const NewItem: React.FC<NewItemProps> = ({
             marginTop: '5px'
           }}
         >
-            <GrhButton 
+            {/* <GrhButton 
               startIcon={<ThumbUpOffAltIcon />}
               label={item.numberLikes.toString()}
               id={"like"}
-            />
+            /> 
             <GrhButton 
               startIcon={<ThumbDownOffAltIcon />}
               label={item.numberDisLikes.toString()}
               id={"dislike"}
-            />
+            /> */}
             <GrhButton 
               startIcon={<CommentIcon />}
               label={comments.length.toString()}

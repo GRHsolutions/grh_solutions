@@ -7,45 +7,41 @@ import { ViewMail } from "../view/viewMail";
 import { UseQueryParams } from "../../../../hooks/queryParams";
 import { useNews } from "../../../../hooks/news";
 import { FloatingButton } from "../../../../generics/floatingButton/floatingButton";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add";
 import { CreateEditNew } from "../form/createEditNew";
 
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
   const theme = useTheme();
-  const { usePhoneScreen } = parametros; 
+  const { usePhoneScreen } = parametros;
   const { queryParams } = UseQueryParams();
   const { selectItem, noCurrnt } = useNews();
 
-  React.useEffect(()=>{
-    const id = parseInt(queryParams["id"]) || undefined;
+  React.useEffect(() => {
+    const id = queryParams["id"] || undefined;
     //const type = queryParams["type"];
-    if(id == undefined || id <= 0){
+    if (id == undefined || id == "") {
       //console.error("ID LLEGO COMO INDEFINIDO")
       return;
     }
     selectItem(id);
-  }, [queryParams])
+  }, [queryParams]);
 
   return (
-    <Grid2 
-      container 
-      spacing={1.5} 
-      width={"80vw"} 
-      height={"93vh"}
-    >
+    <Grid2 container spacing={1.5} width={"80vw"} height={"93vh"}>
       {/* Se expande al 100% en móviles, al 10/12 en pantallas grandes */}
-      <Grid2 
+      <Grid2
         size={{
           xs: 12,
-          sm: 9
+          sm: 9,
         }}
-        sx={{ 
+        sx={{
           boxShadow: `${theme.palette.primary.boxShadow}`,
           backgroundColor: `${theme.palette.primary.light}`,
-          height: '100%',
-          width: '100%',
-          overflowY: 'auto',
+          height: "100%",
+          width: "100%",
+          overflowY: "auto",
+          overflowX: 'none',
           "&::-webkit-scrollbar": {
             width: "8px", // Ancho de la barra
           },
@@ -68,17 +64,17 @@ const Screen: React.FC = () => {
 
       {/* Se esconde en móviles */}
       {!usePhoneScreen && (
-        <Grid2 
+        <Grid2
           size={{
-            sm: 3
+            sm: 3,
           }}
-          sx={{ 
+          sx={{
             boxShadow: `${theme.palette.primary.boxShadow}`,
             backgroundColor: `${theme.palette.primary.light}`,
             height: "100%",
-            maxHeight: '60vh',
+            maxHeight: "60vh",
             marginTop: "25px",
-            overflowY: 'auto',
+            overflowY: "auto",
             "&::-webkit-scrollbar": {
               width: "8px", // Ancho de la barra
             },
@@ -95,9 +91,9 @@ const Screen: React.FC = () => {
             },
           }}
         >
-          <Typography 
-            variant="h5" 
-            display={"flex"} 
+          <Typography
+            variant="h5"
+            display={"flex"}
             justifyContent={"center"}
             mt={2}
           >
@@ -107,16 +103,16 @@ const Screen: React.FC = () => {
         </Grid2>
       )}
       <ViewMail />
-      <FloatingButton 
-        icon={<AddIcon />} 
-        onClick={()=> {
-          noCurrnt('create');
+      <FloatingButton
+        icon={<AddIcon />}
+        onClick={() => {
+          noCurrnt("create");
         }}
         label="Crear correo"
         bgColor={theme.palette.secondary.main}
         positions={{
-          bottom: '2.2rem',
-          left: '2rem'
+          bottom: "2.2rem",
+          left: "2rem",
         }}
         borderColor={theme.palette.secondary.hover}
       />

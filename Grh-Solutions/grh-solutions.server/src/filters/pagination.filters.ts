@@ -6,3 +6,8 @@ export type Pagination = {
     method?: string,
     url?: string,
 };
+
+export type PaginationNews = {
+    page: number,
+    limit: number
+}

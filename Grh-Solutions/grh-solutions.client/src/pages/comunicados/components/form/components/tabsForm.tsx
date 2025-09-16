@@ -10,6 +10,7 @@ import { JustImages } from "./parts/justImages";
 import { DragNDropVariables } from "../../../../../generics/grh-generics/DragNDrop";
 import { Survey } from "./parts/survey";
 import React from "react";
+import { useNews } from "../../../../../hooks/news";
 
 interface TabsFormProps {
   initialValue: News | null;
@@ -69,15 +70,13 @@ const validationSchema = Yup.object({
 });
 
 export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading]= React.useState(false);
+  const { handleCreate } = useNews();
 
   const handleSubmit = (nw: NewForm) => {
+    console.info("USING FORM FROM = ", edit);
     setLoading(true);
-    if(edit){
-      console.log("Editing", nw)
-    } else {
-      console.log("Creating", nw)
-    }
+    handleCreate(nw);
     setLoading(false);
   };
 
@@ -104,21 +103,21 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
             {
               value: "1",
               label: "Inicializacion",
-              content: <MainInfo value={values} handleChange={handleChange} />,
+              content: <MainInfo value={values} handleChange={handleChange} loading={loading}/>,
               disabled: false,
             },
             {
               value: "2",
               label: "Carusel de imagenes",
               content: (
-                <JustImages values={values} changeImages={changeImages} />
+                <JustImages values={values} changeImages={changeImages} loading={loading}/>
               ),
               disabled: values.type !== "publication-with-images",
             },
             {
               value: "3",
               label: "Encuesta",
-              content: <Survey />,
+              content: <Survey loading={loading}/>,
               disabled: values.type !== "publication-with-survey",
             },
           ];

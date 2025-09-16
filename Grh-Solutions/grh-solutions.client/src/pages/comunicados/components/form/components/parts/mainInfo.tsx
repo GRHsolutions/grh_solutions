@@ -13,11 +13,13 @@ interface MainInfoProps {
       ? void
       : (e: string | React.ChangeEvent<any>) => void;
   };
+  loading: boolean;
 }
 
 export const MainInfo = ({
   handleChange,
-  value
+  value,
+  loading
 }: MainInfoProps) => {
   const select = [{
     value:  "simple-publication",
@@ -58,7 +60,8 @@ export const MainInfo = ({
           value={value.type}
           name="type" 
           onChange={handleChange}   
-          fullWidth     
+          fullWidth 
+          disabled={loading}    
         />
       </Grid2>
       <Grid2
@@ -70,6 +73,7 @@ export const MainInfo = ({
           value={value.title}
           onChange={handleChange}
           fullWidth
+          disabled={loading}    
         />
       </Grid2>
       <Grid2
@@ -82,6 +86,7 @@ export const MainInfo = ({
           onChange={handleChange}
           multirows
           fullWidth
+          disabled={loading}    
           rows={6}
         />
       </Grid2>
