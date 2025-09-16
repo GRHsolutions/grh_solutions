@@ -4,3 +4,8 @@ export interface Pagination {
     rowsPerPage?: number;
     useGetAllNoPage?: boolean;
 }
+
+export interface NewsPagination {
+    page: number;
+    limit: number;
+}

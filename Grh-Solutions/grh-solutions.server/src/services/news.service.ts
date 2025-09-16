@@ -1,7 +1,5 @@
-import { get } from "http";
 import { NewsModel } from "../models/new.model";
 import { newsFilter } from "../filters/news.filter";
-import { Pagination } from "../filters/pagination.filters";
 
 export const newsService = {
   getAll: async (filter: newsFilter) => {
@@ -9,50 +7,44 @@ export const newsService = {
       status: "shown",
     };
 
+    if(filter.page == 0){
+      throw new Error("Se desconoce la pagina a la que se intenta acceder");
+    }
+
+    if(filter.limit == 0){
+      throw new Error("No hay limite presente por lo que no se procede");
+    }
+
     if (filter.search && filter.search.trim() !== "") {
       const regex = new RegExp(filter.search, "i"); // Usamos filter.search, no filter.name
       query.$or = [{ title: regex }, { description: regex }];
     }
 
-    // Si NO se requiere paginación
-    if (filter.useGetAllNoPage) {
-      return await NewsModel.find(query);
-    }
+    const skip = (filter.page - 1) * filter.limit;
 
-    // Si se requiere paginación
-    if (!filter.currentPage || !filter.rowsPerPage) return;
-
-    const skip = (filter.currentPage - 1) * filter.rowsPerPage;
-
-    const data = await NewsModel.find(query)
+    const data = await NewsModel.find(query) // TRAE TODOS LOS ITEMS
+      .populate("madeBy", "name email") // aquí seleccionas qué campos del usuario mostrar
+      .sort({ date: -1 }) // 🔹 orden descendente (más recientes primero)
       .skip(skip)
-      .limit(filter.rowsPerPage);
+      .limit(filter.limit);
 
-    return data;
-  },
-  create: async (entity: object) => {
-    return NewsModel.create(entity);
-  },
-  getPagination: async (filter: newsFilter) => {
-    const query: any = {
-      status: "shown",
-    };
-
-    if (filter.search && filter.search.trim() !== "") {
-      const regex = new RegExp(filter.search, "i"); // Usamos filter.search, no filter.name
-      query.$or = [{ title: regex }, { description: regex }];
-    }
-
-    const totalItems = await NewsModel.countDocuments(query);
-    const totalPages = Math.ceil(totalItems / (filter.rowsPerPage || 1));
+    const totalItems = await NewsModel.countDocuments(query) // CUENTA TODOS LOS DOCUMENTOS DE ACUERDO AL FILTRO APLICADO.
+      .populate("madeBy", "name email") // aquí seleccionas qué campos del usuario mostrar
+      .sort({ date: -1 }) // 🔹 orden descendente (más recientes primero)
 
     return {
-      currentPage: filter.currentPage || 1,
-      rowsPerPage: filter.rowsPerPage || 10,
-      totalPages,
-      totalItems,
-    } as Pagination;
+      data,
+      totalPages: Math.ceil(totalItems / filter.limit) // DEVUELVE EL TOTAL DE PAGINAS, ESTO SE USARA EN EL FEED DE NEWS
+    };
   },
+
+  create: async (entity: object) => {
+    const newNew = new NewsModel(entity);
+    console.log(newNew);
+
+    return NewsModel.create(newNew);
+  },
+
   delete: async (id: number) => {
     const conf = await NewsModel.findByIdAndUpdate(
       id,

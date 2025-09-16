@@ -31,6 +31,7 @@ export interface DragDropInputProps {
   onFileSelect: (files: DragNDropVariables[]) => void;
   selectedFiles: DragNDropVariables[];
   inputProps?: InputProps;
+  disabled?: boolean;
 }
 
 interface InputProps {
@@ -43,7 +44,8 @@ export function DragDropInput({
   maxFiles,
   onFileSelect,
   selectedFiles,
-  inputProps  
+  inputProps,
+  disabled = false
 }: DragDropInputProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string>('');
@@ -143,6 +145,7 @@ export function DragDropInput({
           style={{ display: 'none' }}
           id="fileInput"
           multiple
+          disabled={disabled}
         />
         <label htmlFor="fileInput" style={{ cursor: 'pointer', width: '100%', height: '100%' }}>
           <Box sx={{ textAlign: 'center' }}>

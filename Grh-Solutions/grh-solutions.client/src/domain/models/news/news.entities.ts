@@ -1,9 +1,9 @@
 import { Dayjs } from "dayjs";
 import { DragNDropVariables } from "../../../generics/grh-generics/DragNDrop";
-import { Pagination } from "../pagination/pagination";
+import { NewsPagination, Pagination } from "../pagination/pagination";
 
 export type News = {
-    id: number;
+    _id: string;
     title: string;
     description: string;
     images: DragNDropVariables[];
@@ -13,7 +13,15 @@ export type News = {
     numberLikes: number;
     numberDisLikes: number;
     date: Dayjs;
-    madeBy: string;
+    madeBy: MadeBy; // SI NO SE POPULIZA LLEGA COMO UN STRING
+    [key: string] : any;
+}
+
+export type MadeBy = {
+    _id: string,
+    email: string,
+    nombre: string,
+    foto: string
 }
 
 export type Formulary = {
@@ -32,7 +40,7 @@ export type Commentary = {
     madeBy: number,
 }
 
-export interface NewsFilter extends Pagination {
+export interface NewsFilter extends NewsPagination {
     status?: string | undefined;
 }
 

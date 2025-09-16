@@ -36,12 +36,13 @@ export const newsController = {
       });
     }
   },
+
   get: async (req: Request, res: Response) => {
     try {
       const filter = req.query as newsFilter;
-      const items = await newsService.getAll(filter);
+      const rs = await newsService.getAll(filter);
 
-      return res.status(200).json(items);
+      return res.status(200).json(rs);
     } catch (Error: any) {
       return res.status(500).json({
         message: "Error en al momento de traer los objetos",
@@ -50,20 +51,7 @@ export const newsController = {
       });
     }
   },
-  getPages: async (req: Request, res: Response) => {
-    try {
-      const filter = req.query as newsFilter;
-      const pag = await newsService.getPagination(filter);
 
-      return res.status(200).json(pag);
-    } catch (Error: any) {
-      return res.status(500).json({
-        message: "Error en al momento de traer los objetos",
-        inner: Error.innerExpression || "Nan",
-        fromService: Error.message || "Nan",
-      });
-    }
-  },
   delete: async (req: Request, resp: Response) => {
     try {
       const id = req.query;

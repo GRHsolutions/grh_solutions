@@ -1,7 +1,15 @@
 import { Box, Grid2, Typography, useTheme } from "@mui/material"
 
-export const Survey = () => {
+interface SurveyProps {
+  loading: boolean;
+}
+
+export const Survey = ({
+  
+} : SurveyProps) => {
   const theme = useTheme()
+
+
   return (
     <Box>
       <Grid2
@@ -18,7 +26,7 @@ export const Survey = () => {
               color: theme.palette.secondary.main,
             }}
           >
-            Encuesta
+            Encuesta 
           </Typography>
         </Grid2>
       </Grid2>
