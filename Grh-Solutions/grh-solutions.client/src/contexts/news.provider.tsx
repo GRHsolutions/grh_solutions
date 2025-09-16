@@ -4,7 +4,6 @@ import {
   Commentary,
   NewForm,
   News,
-  NewsFilter,
 } from "../domain/models/news/news.entities";
 import { Errors } from "../domain/models/error/error.entities";
 import dayjs from "dayjs";
@@ -150,6 +149,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
             if (page >= e.totalPages) setHasMore(false); // verifica la cantidad de elementos si hay mas por mostrar
           })
           .catch((e) => {
+            console.error(e);
             setStatus({
               message: "Error al cargar el objeto",
             });
