@@ -6,8 +6,8 @@ import { NewsFilter, News, NewForm } from '../../models/news/news.entities';
 export class NewsService {
     constructor(private readonly repo: INewRepository) {}
 
-    async get(filter: NewsFilter): Promise<{data: News[], totalPages: number}> {
-        return this.repo.get(filter);
+    async get(filter: NewsFilter, signal?: AbortSignal): Promise<{data: News[], totalPages: number}> {
+        return this.repo.get(filter, signal);
     }
 
     async getPagination(filter: NewsFilter): Promise<Pagination> {

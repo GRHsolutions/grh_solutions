@@ -2,7 +2,7 @@ import { NewForm, News, NewsFilter } from "../../../domain/models/news/news.enti
 import { Pagination } from "../../../domain/models/pagination/pagination";
 
 export interface INewRepository {
-    get(filter: NewsFilter): Promise<{data: News[], totalPages: number}>;
+    get(filter: NewsFilter, signal?: AbortSignal): Promise<{data: News[], totalPages: number}>;
     getPagination(filter: any): Promise<Pagination>;
     create(object: NewForm): Promise<News>;
 }

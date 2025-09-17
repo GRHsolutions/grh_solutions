@@ -7,8 +7,8 @@ import { INewRepository } from "../../interfaces/news/INews";
 const ApiConnection = "/api/news";
 
 export class NewRepository implements INewRepository {
-  async get(filter: NewsFilter): Promise<{data: News[], totalPages: number}> {
-    const response = await http.get<{data: News[], totalPages: number}>(ApiConnection + "/", filter);
+  async get(filter: NewsFilter, signal: AbortSignal): Promise<{data: News[], totalPages: number}> {
+    const response = await http.get<{data: News[], totalPages: number}>(ApiConnection + "/", filter, signal);
     return response;
   }
   async getPagination(filter: any): Promise<Pagination> {

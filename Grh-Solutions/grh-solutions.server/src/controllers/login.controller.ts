@@ -66,6 +66,7 @@ export const loginController = {
 
       return res.status(200).json({
         user: {
+          id: user._id,
           email: user.email,
           photo: user.photo,
           rol: user.rol,

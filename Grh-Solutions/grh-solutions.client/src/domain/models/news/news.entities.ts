@@ -1,6 +1,6 @@
 import { Dayjs } from "dayjs";
 import { DragNDropVariables } from "../../../generics/grh-generics/DragNDrop";
-import { NewsPagination, Pagination } from "../pagination/pagination";
+import { NewsPagination } from "../pagination/pagination";
 
 export type News = {
     _id: string;

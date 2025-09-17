@@ -137,6 +137,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   React.useEffect(() => {
     setLoading(true);
+
+    const controller = new AbortController(); // 👈 nuevo
+    const { signal } = controller;
+
     const fetchNews = async () => {
       try {
         await service
