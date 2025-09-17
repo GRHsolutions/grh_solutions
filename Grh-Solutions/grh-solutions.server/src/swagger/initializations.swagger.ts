@@ -190,16 +190,16 @@ export const swaggerComponents: Components = {
       },
       required: ["vacante", "user"],
     },
-PostulanteUpdate: {
-  type: "object",
-  properties: {
-    status: {
-      type: "string",
-      description: "Nuevo estado del postulante",
-      example: "contratado"
-    }
-  }
-},
+    PostulanteUpdate: {
+      type: "object",
+      properties: {
+        status: {
+          type: "string",
+          description: "Nuevo estado del postulante",
+          example: "contratado",
+        },
+      },
+    },
     User1: {
       type: "object",
       properties: {
@@ -1682,6 +1682,44 @@ export const swaggerPaths: Paths = {
         },
         400: {
           description: "ID de vacante inválido",
+        },
+        500: {
+          description: "Error interno",
+        },
+      },
+    },
+  },
+  "/api/postulante/getAllByVacanteByUser/{userId}": {
+    get: {
+      summary: "Obtener postulantes por usuario",
+      tags: ["Postulante"],
+      parameters: [
+        {
+          name: "userId",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del usuario",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de postulantes",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Postulante",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "ID de usuario inválido",
         },
         500: {
           description: "Error interno",

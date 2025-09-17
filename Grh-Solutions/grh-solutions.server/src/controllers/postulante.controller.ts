@@ -61,6 +61,20 @@ export const postulanteController = {
       res.status(500).json({ message: error.message });
     }
   },
+  getAllByVacanteByUser: async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
+
+      if (!userId) {
+        return res.status(400).json({ message: "userId es requerido" });
+      }
+
+      const postulantes = await postulanteService.getAllByVacanteByUser(userId);
+      res.status(200).json(postulantes);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
   update: async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -77,14 +91,21 @@ export const postulanteController = {
 
       const updatedPostulante = await postulanteService.update(id, updates);
 
-      if (updates.status === "contratado" && postulante.status !== "contratado") {
-        const empleadoExistente = await empleadosModel.findOne({ user: postulante.user });
+      if (
+        updates.status === "contratado" &&
+        postulante.status !== "contratado"
+      ) {
+        const empleadoExistente = await empleadosModel.findOne({
+          user: postulante.user,
+        });
 
         if (!empleadoExistente) {
           const vacante = await VacanciesModel.findById(postulante.vacante);
 
           if (!vacante) {
-            return res.status(400).json({ message: "Vacante no encontrada para el postulante." });
+            return res
+              .status(400)
+              .json({ message: "Vacante no encontrada para el postulante." });
           }
 
           await empleadosModel.create({
