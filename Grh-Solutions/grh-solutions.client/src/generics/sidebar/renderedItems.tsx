@@ -44,7 +44,7 @@ export const useRenderedItems = (): Returnable => {
         active: location.pathname === "/comunicados",
         label: "Comunicados",
         icon: <MailIcon />,
-      },      
+      },
       {
         visible: isLoggedIn,
         to: "/horarios?type=horarios",
@@ -60,26 +60,6 @@ export const useRenderedItems = (): Returnable => {
         active: location.pathname === "/solicitudes",
         label: 'Solictudes',
         icon: <AssignmentLateIcon />,
-        subItems: [{
-            visible: true,
-            to: '/solicitudes?type=pendientes',
-            disabled: false,
-            active: location.pathname === "/solicitudes?type=pendientes",
-            label: 'Pendientes',
-          },{
-            visible: true,
-            to: '/solicitudes?type=respondidas',
-            disabled: false,
-            active: location.pathname === "/solicitudes?type=respondidas",
-            label: 'Respondidas',
-          },{
-            visible: true,
-            to: '/solicitudes?type=asignadas',
-            disabled: false,
-            active: location.pathname === "/solicitudes?type=asignadas",
-            label: 'Asignadas',
-          }
-        ]
       },
       // {
       //   visible: true,
@@ -92,93 +72,19 @@ export const useRenderedItems = (): Returnable => {
 
       {
         visible: isLoggedIn,
-        to: "/vacantes",
+        to: "/postulate",
         disabled: false,
-        active: location.pathname === "/vacantes",
+        active: location.pathname === "/postulate",
         label: "Vacantes",
-        icon: <PersonAddIcon />,
-        subItems: [
-          {
-            visible: true,
-            to: "/postulate",
-            disabled: false,
-            active: location.pathname === "/vacantes?type=vacante",
-            label: "Vacante",
-          },
-          {
-            visible: true,
-            to: "/vacantes?type=finalizados",
-            disabled: false,
-            active: location.pathname === "/vacantes?type=finalizados",
-            label: "Finalizados",
-          },
-          {
-            visible: true,
-            to: "/vacantes?type=por-firmar",
-            disabled: false,
-            active: location.pathname === "/vacantes?type=por-firmar",
-            label: "Por Firmar",
-          },
-          {
-            visible: true,
-            to: "/vacantes?type=en-proceso",
-            disabled: false,
-            active: location.pathname === "/vacantes?type=en-proceso",
-            label: "En Proceso",
-          },
-        ],
-        },
+        icon: <PersonAddIcon />
+      },
       {
         visible: isLoggedIn,
         to: "/contratos",
         disabled: false,
         active: location.pathname === "/contratos",
         label: "Contratos",
-        icon: <DescriptionIcon />,
-        subItems: [
-          {
-            visible: true,
-            to: "/contratos?type=creados",
-            disabled: false,
-            active: location.pathname === "/contratos?type=creados",
-            label: "Creados",
-          },
-          {
-            visible: true,
-            to: "/contratos?type=por-validar",
-            disabled: false,
-            active: location.pathname === "/contratos?type=por-validar",
-            label: "Por Validar",
-          },
-          {
-            visible: true,
-            to: "/contratos?type=rechazados",
-            disabled: false,
-            active: location.pathname === "/contratos?type=rechazados",
-            label: "Rechazados",
-          },
-          {
-            visible: true,
-            to: "/contratos?type=aprobados",
-            disabled: false,
-            active: location.pathname === "/contratos?type=aprobados",
-            label: "Aprobados",
-          },
-          {
-            visible: true,
-            to: "/contratos?type=firmados",
-            disabled: false,
-            active: location.pathname === "/contratos?type=firmados",
-            label: "Firmados",
-          },
-          {
-            visible: true,
-            to: "/contratos?type=por-firmar",
-            disabled: false,
-            active: location.pathname === "/contratos?type=por-firmar",
-            label: "En Espera de Firma",
-          },
-        ],
+        icon: <DescriptionIcon />
       },
       {
         visible: isLoggedIn,
@@ -187,25 +93,9 @@ export const useRenderedItems = (): Returnable => {
         active: location.pathname === "/empleados",
         label: "Empleados",
         icon: <EngineeringIcon />,
-        subItems: [
-          {
-            visible: true,
-            to: "/empleados?type=todos",
-            disabled: false,
-            active: location.pathname === "/contratos?type=todos",
-            label: "Todos",
-          },
-          {
-            visible: true,
-            to: "/empleados?type=finalizado",
-            disabled: false,
-            active: location.pathname === "/contratos?type=finalizado",
-            label: "Contratos finalizados",
-          },
-        ]
       },
     ];
-    
+
     return allItems;
   }, [location.pathname, isLoggedIn]);
 
