@@ -1,6 +1,7 @@
 import { Response, Request } from 'express';
 import { userService } from '../services/users.service';
 import { cvService } from '../services/cv.service';
+import { profileService } from '../services/profile.service';
 
 type RegisterForm = {
   'firstName': string,
@@ -44,8 +45,6 @@ export const loginController = {
         password
       } = req.body;
 
-      console.log("Login attempt with email:", email);
-
       if (!email || !password) {
         return res.status(400).json({ message: 'Email and password are required' });
       }
@@ -55,17 +54,26 @@ export const loginController = {
         token
       } = await userService.login(email, password);
 
-      const countCVs = await cvService.verifyMyCvs(user.id);
+      const countCVs = await cvService.verifyMyCvs(user._id);
+      // BUSCA EL PERFIL DEL USUARIO
+      const findMyProfil = await profileService.getByUserId(user._id)
+      // RETURNA UN ERROR EN CASO DE QUE NO ENCUENTRE NINGUN PERFIL.
+      if(!findMyProfil){
+        return res.status(400).json({
+          message: "Usuario no tiene un perfil especificado",
+        })
+      }
 
       return res.status(200).json({
         user: {
+          id: user._id,
           email: user.email,
           photo: user.photo,
-          rol: user.rol
+          rol: user.rol,
+          profile: findMyProfil._id
         },
         token: token,
         warnings: countCVs <= 0 ? {
-          code: 100,
           message: "Debe crear su hoja de vida"
         } : undefined
       });

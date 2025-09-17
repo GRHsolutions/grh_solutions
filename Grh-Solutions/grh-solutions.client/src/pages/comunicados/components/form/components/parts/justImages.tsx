@@ -8,9 +8,14 @@ import { NewForm, News } from "../../../../../../domain/models/news/news.entitie
 interface JustImagesProps {
   values: News | NewForm;
   changeImages: (name: string, image: DragNDropVariables[]) => void;
+  loading: boolean;
 }
 
-export const JustImages = ({ values, changeImages }: JustImagesProps) => {
+export const JustImages = ({ 
+  values, 
+  changeImages,
+  loading
+}: JustImagesProps) => {
   const theme = useTheme();
   return (
     <Grid2 container spacing={2}>
@@ -33,6 +38,7 @@ export const JustImages = ({ values, changeImages }: JustImagesProps) => {
           changeImages("images", files);
         }}
         selectedFiles={values.images ?? []}
+        disabled={loading}
       />
     </Grid2>
   );

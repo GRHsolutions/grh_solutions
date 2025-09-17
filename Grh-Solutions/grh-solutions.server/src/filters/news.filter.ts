@@ -1,6 +1,6 @@
-import { Pagination } from "./pagination.filters";
+import { PaginationNews } from "./pagination.filters";
 
-export interface newsFilter extends Pagination {
+export interface newsFilter extends PaginationNews {
     search: string | undefined,
     [key: string]: any
 }

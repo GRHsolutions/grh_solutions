@@ -838,34 +838,28 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-  "/api/user/getById": {
-    get: {
-      summary: "Obtener usuario por ID",
-      tags: ["User"],
-      security: [{ bearerAuth: [] }],
-      parameters: [
-        {
-          name: "id",
-          in: "path",
-          required: true,
-          schema: { type: "string" },
-          description: "ID del usuario a consultar",
+"/api/user/getById/{id}": {
+  get: {
+    summary: "Obtener usuario por ID",
+    tags: ["User"],
+    parameters: [
+      {
+        name: "id",
+        in: "path",
+        required: true,
+        schema: {
+          type: "string"
         },
-      ],
-      responses: {
-        200: {
-          description: "Usuario encontrado",
-          content: {
-            "application/json": {
-              schema: { $ref: "#/components/schemas/User1" },
-            },
-          },
-        },
-        400: { description: "ID inválido" },
-        404: { description: "Usuario no encontrado" },
-      },
-    },
-  },
+        description: "ID del usuario"
+      }
+    ],
+    responses: {
+      "200": { description: "Usuario encontrado" },
+      "400": { description: "ID inválido" },
+      "404": { description: "Usuario no encontrado" }
+    }
+  }
+},
   "/api/user/updateUser": {
     put: {
       summary: "Actualizar cualquier usuario por ID",

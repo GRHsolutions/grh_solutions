@@ -2,7 +2,7 @@ import { Box, Typography, Avatar, Divider, List, ListItem, ListItemText, Alert, 
 import { useEffect, useState } from "react";
 import { getMyCv } from "../../../domain/services/cv/cv.service";
 import { useAuth } from "../../../hooks/auth";
-import { ICv } from "../../../domain/models/Cv/cv.entities";
+import { Cv } from "../../../domain/models/Cv/cv.entities";
 
 const userInfo = {
   name: "Roberto Gómez Bolaños",
@@ -38,7 +38,7 @@ interface props {
   id?: string
 }
 export default function ResumeUser({ id }: props) {
-  const [dataCv, setDataCv] = useState<ICv | null>(null);
+  const [dataCv, setDataCv] = useState<Cv | null>(null);
   const { auth } = useAuth();
   const hasResume = dataCv !== null
   const theme = useTheme();

@@ -12,6 +12,7 @@ import GrhCustomSelect from "../../../generics/grh-generics/inputSelect";
 import { getTypeDocuments } from "../../../domain/services/typeDocument/typeDocument.service";
 import dayjs, { Dayjs } from "dayjs";
 import GenericDatePicker from "../../comunicados/datePicker";
+import { useNotifications } from "../../../contexts/NotificationContext";
 
 interface RegisterProps {
   onLogin: () => void;
@@ -44,6 +45,7 @@ export default function Register({ onLogin }: RegisterProps) {
   const [loading, setLoading] = React.useState(false);
   const [documentTypes, setDocumentTypes] = React.useState([]);
   const [birthDate, setBitchDate] = React.useState<Dayjs | null>(dayjs());
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     getTypeDocuments()
@@ -59,19 +61,31 @@ export default function Register({ onLogin }: RegisterProps) {
       });
   }, []);
 
-  const handleSubmit = (values: RegisterForm) => {
-    console.log("Valores enviados:", values); // Debug
+  const handleSubmit = async(values: RegisterForm) => {
     setLoading(true);
-    lgnService
+    await lgnService
       .register(values)
       .then((e) => {
-        console.log("Respuesta del servidor:", e); // Debug
         if (e) {
           onLogin();
+          addNotification({
+            title: "Cuenta creada excitosamente",
+            color: "success",
+            position: "top-right",
+            duration: 4000
+          })
+          setLoading(false);
+
         }
       })
       .catch((ex) => {
-        console.error("Error en catch:", ex);
+        console.error(ex)
+        addNotification({
+          title: "Error al intentar crear la cuenta",
+          color: "error",
+          position: "top-right",
+          duration: 4000
+        })
         setLoading(false);
       });
   };
@@ -117,7 +131,6 @@ export default function Register({ onLogin }: RegisterProps) {
         values,
         handleChange,
         handleSubmit,
-        // resetForm,
         // errors,
         // touched,
         isValid,
@@ -280,9 +293,6 @@ export default function Register({ onLogin }: RegisterProps) {
                 variant="principal"
                 label={loading ? "Registrando..." : "Registrar"}
                 disabled={!isValid || loading}
-                onClick={() => {
-                  //resetForm();
-                }}
               />
             </Box>
           </Form>

@@ -9,6 +9,8 @@ import * as Yup from "yup";
 import { JustImages } from "./parts/justImages";
 import { DragNDropVariables } from "../../../../../generics/grh-generics/DragNDrop";
 import { Survey } from "./parts/survey";
+import React from "react";
+import { useNews } from "../../../../../hooks/news";
 
 interface TabsFormProps {
   initialValue: News | null;
@@ -68,9 +70,14 @@ const validationSchema = Yup.object({
 });
 
 export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
+  const [loading, setLoading]= React.useState(false);
+  const { handleCreate } = useNews();
+
   const handleSubmit = (nw: NewForm) => {
-    console.log(edit);
-    console.log(nw);
+    console.info("USING FORM FROM = ", edit);
+    setLoading(true);
+    handleCreate(nw);
+    setLoading(false);
   };
 
   return (
@@ -96,21 +103,21 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
             {
               value: "1",
               label: "Inicializacion",
-              content: <MainInfo value={values} handleChange={handleChange} />,
+              content: <MainInfo value={values} handleChange={handleChange} loading={loading}/>,
               disabled: false,
             },
             {
               value: "2",
               label: "Carusel de imagenes",
               content: (
-                <JustImages values={values} changeImages={changeImages} />
+                <JustImages values={values} changeImages={changeImages} loading={loading}/>
               ),
               disabled: values.type !== "publication-with-images",
             },
             {
               value: "3",
               label: "Encuesta",
-              content: <Survey />,
+              content: <Survey loading={loading}/>,
               disabled: values.type !== "publication-with-survey",
             },
           ];
@@ -128,7 +135,7 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
                   padding: "5rem",
                   width: "5.5rem",
                 }}
-                disabled={!isValid}
+                disabled={!isValid || loading}
               />
             </Form>
           );

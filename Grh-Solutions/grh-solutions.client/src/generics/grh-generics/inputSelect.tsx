@@ -194,6 +194,7 @@ const GrhCustomSelect = <T extends string | number>({
         }}>{label}</InputLabel>
 
         <Select
+          key={name}
           value={value === null ? "" : value}
           onChange={handleChange}
           displayEmpty

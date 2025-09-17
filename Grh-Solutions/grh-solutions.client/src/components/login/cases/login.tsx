@@ -6,6 +6,7 @@ import GrhButton from "../../../generics/grh-generics/button";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { useNotifications } from "../../../contexts/NotificationContext";
 
 interface LoginProps {
   onRegister: () => void;
@@ -16,20 +17,44 @@ const initialValues = {
   password: "",
 };
 
-export default function Login({ /*onRegister*/ }: LoginProps) {
+export default function Login({}: /*onRegister*/ LoginProps) {
   const theme = useTheme();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const { addNotification } = useNotifications();
 
   const handleSubmit = async (values: { email: string; password: string }) => {
-    await login(values.email, values.password).then((res) => {
-      if (res) {
-        navigate("/comunicados?action=none");
-      }
-    })
-    .catch((error) => {
-      console.error("Error en el inicio de sesión:", error);
-    })
+    await login(values.email, values.password)
+      .then(async (res) => {
+        if (res.t == "SUCCESS-CRAETE-CV") {
+          // addNotification({
+          //   title: res.m,
+          //   color: "info",
+          //   position: "top-right",
+          //   duration: 4000,
+          // });
+          //navigate('/hv-user')
+          navigate('/')
+        } else if (res.t == "SUCCESS") {
+          // addNotification({
+          //   title: res.m,
+          //   color: "success",
+          //   position: "top-right",
+          //   duration: 4000,
+          // });
+          navigate('/')
+        } else {
+          addNotification({
+            title: res.m,
+            color: "error",
+            position: "top-right",
+            duration: 4000,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error en el inicio de sesión:", error);
+      });
   };
 
   const validationSchema = Yup.object({
@@ -62,11 +87,11 @@ export default function Login({ /*onRegister*/ }: LoginProps) {
     >
       {({ values, handleChange, isValid, errors, touched }) => {
         return (
-          <Form style={{ width: '100%' }}>
+          <Form style={{ width: "100%" }}>
             <Box
               sx={{
                 display: "flex",
-                flexDirection: 'column',
+                flexDirection: "column",
                 width: "100%",
                 gap: 3,
                 fontFamily: theme.typography.fontFamily,
@@ -99,18 +124,18 @@ export default function Login({ /*onRegister*/ }: LoginProps) {
                   label="Correo electrónico"
                   placeholder="ejemplo@correo.com"
                   value={values.email}
-                  variant='standard'
+                  variant="standard"
                   onChange={handleChange}
                   autoComplete="email"
                   error={touched.email && Boolean(errors.email)}
                   fullWidth
                 />
-                
+
                 <GrhTextField
                   name="password"
                   label="Contraseña"
                   placeholder="••••••••"
-                  variant='standard'
+                  variant="standard"
                   value={values.password}
                   onChange={handleChange}
                   autoComplete="current-password"

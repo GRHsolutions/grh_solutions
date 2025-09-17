@@ -1,11 +1,14 @@
-import {Schema, model} from 'mongoose';
+import { Schema, model } from "mongoose";
 
-const areaSchema = new Schema({
+const areaSchema = new Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
-}, {timestamps: true});
+  },
+  { timestamps: true }
+);
 
-export const areaModel = model('area', areaSchema);
+export const areaModel = model("area", areaSchema);

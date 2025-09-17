@@ -59,7 +59,7 @@ export const userController = {
     }
   },
   getById: async (req: Request, res: Response) => {
-    const { id } = req.query;
+    const { id } = req.params;
     if (!id || typeof id !== "string") {
       return res.status(400).json({ message: "ID inválido" });
     }
