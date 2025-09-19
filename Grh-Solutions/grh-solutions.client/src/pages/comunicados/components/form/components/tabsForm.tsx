@@ -71,12 +71,13 @@ const validationSchema = Yup.object({
 
 export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
   const [loading, setLoading]= React.useState(false);
-  const { handleCreate } = useNews();
+  const { handleCreate, handleBruteReload } = useNews();
 
   const handleSubmit = (nw: NewForm) => {
     console.info("USING FORM FROM = ", edit);
     setLoading(true);
     handleCreate(nw);
+    handleBruteReload
     setLoading(false);
   };
 

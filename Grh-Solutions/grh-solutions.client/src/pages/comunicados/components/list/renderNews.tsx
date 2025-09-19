@@ -1,9 +1,17 @@
 import React from "react";
 import { useNews } from "../../../../hooks/news";
-import { Alert, Box, Button, CircularProgress, Typography } from "@mui/material";
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import NewItem from "./newItem";
 
 const RenderNews: React.FC = () => {
+  const theme = useTheme();
   const { news, selectItem, comments, hasMore, fechMore, loading } = useNews();
 
   const handleSelect = (id: string) => {
@@ -46,19 +54,16 @@ const RenderNews: React.FC = () => {
         </Box>
       )}
       {hasMore && (
-        <Box
-          width={"auto"}
-          border={"1px solid red"}
-          display={"flex"}
-          justifyContent={"center"}
-          p={2}
-        >
+        <Box width={"auto"} display={"flex"} justifyContent={"center"} p={2}>
           {loading ? (
-            <Button onClick={fechMore} variant="contained">
+            <CircularProgress color="info"/>
+          ) : (
+            <Button
+              onClick={fechMore}
+              variant="contained"
+            >
               Bring More
             </Button>
-          ) : (
-            <CircularProgress color="info"/>
           )}
         </Box>
       )}

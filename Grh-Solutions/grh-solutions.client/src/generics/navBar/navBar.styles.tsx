@@ -12,13 +12,14 @@ interface ReturnableCss {
 
 export const NavBarStyles = () => {
     const theme = useTheme();
+
     return ({
         navBar: {
             height: "30px",
             display: "flex",
             alignItems: "center", 
             justifyContent: "space-between", 
-            backgroundColor: theme.palette.primary.main, // Using the primary color from the theme
+            backgroundColor: theme.palette.secondary.main, // Using the primary color from the theme
             borderBottom: `1px solid ${theme.palette.primary.divider}`,
             padding: "10px",
             position: 'relative',
@@ -47,17 +48,20 @@ export const NavBarStyles = () => {
         icon: {
             display: "flex",
             alignItems: "center",
-            paddingRight: "5px"
+            paddingRight: "5px",
+            color: theme.palette.primary.dark
+
         },
         search: {
             display: "flex",
             color: "white",
             borderRadius: "5px",
-            justifyContent: "space-between"
+            justifyContent: "space-between",
         },
         menu: {
             alignItems: "center",
-            textAlign: "center"
+            textAlign: "center",
+            color: theme.palette.primary.contrastText
         }
     } as ReturnableCss)
 }

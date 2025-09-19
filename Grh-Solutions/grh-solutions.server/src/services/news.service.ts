@@ -40,7 +40,6 @@ export const newsService = {
 
   create: async (entity: object) => {
     const newNew = new NewsModel(entity);
-    console.log(newNew);
 
     return NewsModel.create(newNew);
   },

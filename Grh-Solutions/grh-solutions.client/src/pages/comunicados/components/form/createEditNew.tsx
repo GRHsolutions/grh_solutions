@@ -31,7 +31,7 @@ const modalStyle = {
 export const CreateEditNew = () => {
   const { 
     current, 
-    noCurrnt 
+    noCurrnt,
   } = useNews();
   
   const theme = useTheme();

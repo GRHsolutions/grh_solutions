@@ -17,6 +17,7 @@ export const JustImages = ({
   loading
 }: JustImagesProps) => {
   const theme = useTheme();
+  
   return (
     <Grid2 container spacing={2}>
       <Grid2 size={12}>

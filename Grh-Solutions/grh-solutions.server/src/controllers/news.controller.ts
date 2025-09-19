@@ -18,6 +18,7 @@ export const newsController = {
         type,
         title,
         description,
+        images
       } = req.body;
 
       const cre = await newsService.create({
@@ -25,7 +26,8 @@ export const newsController = {
         title: title,
         description: description,
         status: "shown",
-        madeBy: user
+        madeBy: user,
+        images: images
       });
 
       return res.status(200).json(cre);

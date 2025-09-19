@@ -15,7 +15,10 @@ const Screen: React.FC = () => {
   const theme = useTheme();
   const { usePhoneScreen } = parametros;
   const { queryParams } = UseQueryParams();
-  const { selectItem, noCurrnt } = useNews();
+  const { 
+    selectItem,
+    noCurrnt,
+  } = useNews();
 
   React.useEffect(() => {
     const id = queryParams["id"] || undefined;

@@ -118,7 +118,7 @@ const GrhCustomSelect = <T extends string | number>({
           color: theme.palette.primary.contrastText,
           
           '&.Mui-focused': {
-            color: theme.palette.secondary.main,
+            color: theme.palette.primary.contrastText,
           },
           
           '&.Mui-error': {

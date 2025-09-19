@@ -9,7 +9,7 @@ export const useStyles = () => {
       color: theme.palette.primary.contrastText,
       transition: "background-color 0.3s ease",
       "&:hover":{
-        backgroundColor:  theme.palette.primary.hover,
+        backgroundColor:  theme.palette.primary.boxShadow,
       }
     } as SxProps,
     sidebar: {

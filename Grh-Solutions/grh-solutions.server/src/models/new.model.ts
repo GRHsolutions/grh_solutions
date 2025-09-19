@@ -1,5 +1,13 @@
 import { model, Schema, Types } from "mongoose";
 
+const dragNDropSchema = new Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  size: { type: Number, required: true },
+  base64: { type: String, required: true }
+}, { _id: false });
+
 const rawFormularySchema = new Schema(
   {
     description: { type: String, required: true },
@@ -20,11 +28,7 @@ const newsSchema = new Schema(
   {
     title: { type: String, required: true },
     description: { type: String },
-    images: [
-      {
-        type: String,
-      },
-    ],
+    images: [dragNDropSchema],
     formulary: formularySchema,
     status: {
       type: String,

@@ -71,10 +71,10 @@ const GrhButton: React.FC<GrhButtonProps> = ({
         return {
           ...baseStyles,
           backgroundColor: "transparent",
-          color: theme.palette.secondary.main,
+          color: theme.palette.primary.contrastText,
           textDecoration: "outlined",
           "&:hover": {
-            backgroundColor: theme.palette.primary.hover,
+            backgroundColor: theme.palette.primary.boxShadow,
           },
         };
       case "tertiary":

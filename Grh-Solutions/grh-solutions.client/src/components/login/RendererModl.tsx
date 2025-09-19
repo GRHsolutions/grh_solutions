@@ -15,7 +15,7 @@ export const RendererModl = () => {
         onClick={() => {
           setOpen(true);
         }}
-        startIcon={<AccountCircleOutlinedIcon sx={{color: theme.palette.secondary.main }}/>}
+        startIcon={<AccountCircleOutlinedIcon sx={{color: theme.palette.primary.contrastText }}/>}
         p={1.3}
         label={"Acceder"}
       />

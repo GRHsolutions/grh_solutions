@@ -32,6 +32,7 @@ interface NewsItems {
   hasMore: boolean;
 
   handleCreate: (n: NewForm) => void;
+  handleBruteReload: () => void;
 }
 
 export const NewsContext = React.createContext<NewsItems | undefined>(
@@ -136,34 +137,55 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [current.item]);
 
   React.useEffect(() => {
-    setLoading(true);
+  setLoading(true);
 
-    const controller = new AbortController(); // 👈 nuevo
-    const { signal } = controller;
+  const controller = new AbortController();
+  const { signal } = controller;
 
-    const fetchNews = async () => {
-      try {
-        await service
-          .get({
-            page,
-            limit: 10,
-          })
-          .then((e) => {
-            setNews((prev) => [...prev, ...e.data]); // agrega al listado los nuevos elementos
-            if (page >= e.totalPages) setHasMore(false); // verifica la cantidad de elementos si hay mas por mostrar
-          })
-          .catch((e) => {
-            console.error(e);
-            setStatus({
-              message: "Error al cargar el objeto",
-            });
-          });
-      } catch (error) {
-        setStatus({ statusCode: 500, message: "Error al cargar las noticias" });
-      }
-    };
-    fetchNews();
-  }, [useReload, page]);
+  const fetchNews = async () => {
+    try {
+      const response = await service.get(
+        {
+          page,
+          limit: 10,
+        },
+        signal
+      );
+      console.log(response);
+
+      // Unir prev con nuevos pero evitando duplicados por id
+      setNews((prev) => {
+        // Crear un mapa para evitar duplicados
+        const newsMap = new Map();
+
+        // Agregamos primero el estado anterior
+        prev.forEach((item) => newsMap.set(item._id, item));
+
+        // Agregamos los nuevos items, reemplazando si hay id igual
+        response.data.forEach((item) => newsMap.set(item._id, item));
+
+        // Convertir de vuelta a array
+        const merged = Array.from(newsMap.values());
+
+        return merged;
+      });
+
+      if (page >= response.totalPages) setHasMore(false);
+    } catch (e) {
+      console.error(e);
+      setStatus({
+        message: "Error al cargar el objeto",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchNews();
+
+  // Cleanup para abortar fetch si el componente se desmonta o cambia page
+  return () => controller.abort();
+}, [useReload, page]);
 
   const newComment = (comment: Commentary) => {
     console.log("ajusar servicio para subir: ", comment);
@@ -229,6 +251,11 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     setPage(page + 1);
   };
 
+  const handleBruteReload = () => {
+    setNews([]);
+    setPage(1);
+  }
+
   const value: NewsItems = {
     news,
     status,
@@ -244,7 +271,8 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     hasMore,
 
     // FORMULARIOS
-    handleCreate
+    handleCreate,
+    handleBruteReload
   };
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;
