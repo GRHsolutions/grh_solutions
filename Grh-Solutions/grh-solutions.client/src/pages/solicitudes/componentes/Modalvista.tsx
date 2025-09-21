@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
-import { Solicitud } from "../../../domain/models/solicitudes/solicitudes.entities";
+import { Request } from "../../../domain/models/request/request.entities";
 import GrhBasicMenu from "../../../generics/grh-generics/menu";
 import { TabConfig, TabsCompo } from "../../../generics/tabs/tabs";
 import { AsignarUsuario } from "./modales/asignarUsuario";
@@ -19,10 +19,10 @@ import StopCircleIcon from "@mui/icons-material/StopCircle";
 import { AprobarSolicitud } from "./modales/aprobarSolicitud";
 import GppGoodIcon from "@mui/icons-material/GppGood";
 import { RechazarSolicitud } from "./modales/rechazarSolicitud";
-import GppBadIcon from '@mui/icons-material/GppBad';
+import GppBadIcon from "@mui/icons-material/GppBad";
 
 const style = {
-  position: "absolute",
+  position: "absolute" as const,
   top: 0,
   right: 0,
   width: "45%",
@@ -37,9 +37,10 @@ const style = {
 };
 
 interface BasicModalProps {
-  current: Solicitud | null;
+  current: Request | null;
   handleClose: () => void;
 }
+
 export default function BasicModal({ current, handleClose }: BasicModalProps) {
   const theme = useTheme();
   const [mdo, setMdo] = useState("");
@@ -78,14 +79,20 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
               minHeight: 350,
             }}
           >
-            <Typography variant="body1">{current?.titulo}</Typography>
-            <Typography variant="body1">Tipo: {current?.tipo}</Typography>
+            {/* Radicado = _id */}
+            <Typography variant="body1">
+              Radicado: {current?._id ?? "No disponible"}
+            </Typography>
+
+            {/* Otros campos */}
+            <Typography variant="body1">
+              Tipo: {current?.type_request ?? "General"}
+            </Typography>
             <Typography variant="body2">
               Texto de la petición, si quiere invéntese algo aquí Juan
             </Typography>
           </Box>
         </Box>
-
       ),
     },
     {
@@ -93,70 +100,68 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
       label: "involucadros",
       content: (
         <Box sx={{ color: theme.palette.text.primary, width: "100%" }}>
-  <Box
-    sx={{
-      display: "flex",
-      alignItems: "center",
-      p: 2,
-      mt: 3,
-      borderRadius: "5px 5px 0 0",
-      bgcolor: theme.palette.background.paper,
-      border: `2px solid ${theme.palette.primary.contrastText}`,
-      borderBottom: "none",
-    }}
-  >
-    <Typography variant="h6" fontWeight="bold">
-      Usuarios involucrados a la solicitud
-    </Typography>
-  </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 2,
+              mt: 3,
+              borderRadius: "5px 5px 0 0",
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderBottom: "none",
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Usuarios involucrados a la solicitud
+            </Typography>
+          </Box>
 
-  <Box
-    sx={{
-      p: 2,
-      bgcolor: theme.palette.background.paper,
-      border: `2px solid ${theme.palette.primary.contrastText}`,
-      borderRadius: "0 0 5px 5px",
-    }}
-  >
-    {[
-      ["User1", "Pedro Gomez", "Creador de la solicitud"],
-      ["User2", "Mario Mendosa", "Interesado"],
-      ["User3", "Luisa Aldana", "Interesada"],
-    ].map(([id, nombre, rol], index, array) => (
-      <Box
-        key={id}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mb: index !== array.length - 1 ? 2 : 0, // margen solo entre usuarios
-          p: 2,
-          border: `1px solid ${theme.palette.primary.contrastText}`,
-          borderRadius: 2,
-          gap: 2,
-        }}
-      >
-        <label
-          htmlFor={id}
-          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
-        >
-          <input
-            type="checkbox"
-            id={id}
-            name={id}
-            style={{ marginRight: 8, cursor: "pointer" }}
-          />
-          <AccountCircleIcon sx={{ fontSize: 40 }} />
-        </label>
-        <Box>
-          <Typography variant="subtitle1">{nombre}</Typography>
-          <Typography variant="body1">{rol}</Typography>
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderRadius: "0 0 5px 5px",
+            }}
+          >
+            {[
+              ["User1", "Pedro Gomez", "Creador de la solicitud"],
+              ["User2", "Mario Mendosa", "Interesado"],
+              ["User3", "Luisa Aldana", "Interesada"],
+            ].map(([id, nombre, rol], index, array) => (
+              <Box
+                key={id}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  mb: index !== array.length - 1 ? 2 : 0,
+                  p: 2,
+                  border: `1px solid ${theme.palette.primary.contrastText}`,
+                  borderRadius: 2,
+                  gap: 2,
+                }}
+              >
+                <label
+                  htmlFor={id}
+                  style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+                >
+                  <input
+                    type="checkbox"
+                    id={id}
+                    name={id}
+                    style={{ marginRight: 8, cursor: "pointer" }}
+                  />
+                  <AccountCircleIcon sx={{ fontSize: 40 }} />
+                </label>
+                <Box>
+                  <Typography variant="subtitle1">{nombre}</Typography>
+                  <Typography variant="body1">{rol}</Typography>
+                </Box>
+              </Box>
+            ))}
+          </Box>
         </Box>
-      </Box>
-    ))}
-  </Box>
-</Box>
-
-
       ),
     },
     {
@@ -164,56 +169,55 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
       label: "seguimientos",
       content: (
         <Box sx={{ color: theme.palette.text.primary, width: "100%" }}>
-        <Box
-          sx={{
-            p: 2,
-            mt: 3,
-            borderRadius: "5px 5px 0 0",
-            bgcolor: theme.palette.background.paper,
-            border: `2px solid ${theme.palette.primary.contrastText}`,
-            borderBottom: "none",
-          }}
-        >
-          <Typography variant="h6" fontWeight="bold">
-            Seguimientos creados por un asignado a la solicitud
-          </Typography>
+          <Box
+            sx={{
+              p: 2,
+              mt: 3,
+              borderRadius: "5px 5px 0 0",
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderBottom: "none",
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Seguimientos creados por un asignado a la solicitud
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderRadius: "0 0 5px 5px",
+            }}
+          >
+            {[
+              ["Se ha vuelto a pendiente", "Carlos Mario"],
+              ["Se ha asignado a Carlos Mario", "Mario Juda"],
+              ["Ha asignado a Mario Juda, es el primer asignado", "Mario Castañeda"],
+            ].map(([accion, autor], idx) => (
+              <Box
+                key={idx}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 2,
+                  p: 2,
+                  mb: 2,
+                  border: `1px solid ${theme.palette.primary.contrastText}`,
+                  borderRadius: 2,
+                }}
+              >
+                <InsertDriveFileIcon sx={{ fontSize: 40 }} />
+                <div>
+                  <Typography variant="subtitle1">{accion}</Typography>
+                  <Typography variant="body1">Por: {autor}</Typography>
+                </div>
+              </Box>
+            ))}
+          </Box>
         </Box>
-      
-        <Box
-          sx={{
-            p: 2,
-            bgcolor: theme.palette.background.paper,
-            border: `2px solid ${theme.palette.primary.contrastText}`,
-            borderRadius: "0 0 5px 5px",
-          }}
-        >
-          {[
-            ["Se ha vuelto a pendiente", "Carlos Mario"],
-            ["Se ha asignado a Carlos Mario", "Mario Juda"],
-            ["Ha asignado a Mario Juda, es el primer asignado", "Mario Castañeda"],
-          ].map(([accion, autor], idx) => (
-            <Box
-              key={idx}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 2,
-                p: 2,
-                mb: 2,
-                border: `1px solid ${theme.palette.primary.contrastText}`,
-                borderRadius: 2,
-              }}
-            >
-              <InsertDriveFileIcon sx={{ fontSize: 40 }} />
-              <div>
-                <Typography variant="subtitle1">{accion}</Typography>
-                <Typography variant="body1">Por: {autor}</Typography>
-              </div>
-            </Box>
-          ))}
-        </Box>
-      </Box>
-      
       ),
     },
   ];
@@ -240,7 +244,7 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
               alignItems: "center",
               justifyContent: "space-between",
               borderBottom: `1px solid ${(theme.palette.primary.hover, 0.1)}`,
-              color: theme.palette.text.primary
+              color: theme.palette.text.primary,
             }}
           >
             <Stack direction="row" spacing={1} alignItems="center">
@@ -252,7 +256,7 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
               />
               <Box display={"flex"} flexDirection={"column"}>
                 <Typography variant="h6" fontWeight={"bold"} mt={"3"}>
-                  Ver solicitud {current?.radicado}
+                  Ver solicitud {current?._id ?? "Sin radicado"}
                 </Typography>
                 <Typography variant="body1" mt={"-6"}>
                   Vea la información actual de su solicitud
@@ -302,21 +306,11 @@ export default function BasicModal({ current, handleClose }: BasicModalProps) {
         </Box>
       </Modal>
       {mdo == "asigna-usuario" && <AsignarUsuario handleClose={handleCls} />}
-      {mdo == "history-solicitudes" && (
-        <HistorialSolicitudes handleClose={handleHistoy} />
-      )}
-      {mdo == "documentos-solicitudes" && (
-        <DocumentosSolicitudes handleClose={handleHistoy} />
-      )}
-      {mdo == "Finalizar-solicitudes" && (
-        <FinalizarSolicitud handleClose={handleHistoy} />
-      )}
-      {mdo == "Aprobar-solicitudes" && (
-        <AprobarSolicitud handleClose={handleHistoy} />
-      )}
-      {mdo == "Rechazar-solicitudes" && (
-        <RechazarSolicitud handleClose={handleHistoy} />
-      )}
+      {mdo == "history-solicitudes" && <HistorialSolicitudes handleClose={handleHistoy} />}
+      {mdo == "documentos-solicitudes" && <DocumentosSolicitudes handleClose={handleHistoy} />}
+      {mdo == "Finalizar-solicitudes" && <FinalizarSolicitud handleClose={handleHistoy} />}
+      {mdo == "Aprobar-solicitudes" && <AprobarSolicitud handleClose={handleHistoy} />}
+      {mdo == "Rechazar-solicitudes" && <RechazarSolicitud handleClose={handleHistoy} />}
     </div>
   );
 }
