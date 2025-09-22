@@ -6,8 +6,8 @@ const router = Router();
 
 router.post("/create", validateToken, requestsController.create);
 router.get("/getAll", validateToken, requestsController.getAll);
-router.get("/getById/:id", validateToken, requestsController.getById);   
-router.put("/update/:id", validateToken, requestsController.update);     
-router.delete("/delete/:id", validateToken, requestsController.delete);  
+router.get("/getById", validateToken, requestsController.getById);
+router.put("/update", validateToken, requestsController.update);
+router.delete("/delete", validateToken, requestsController.delete);
 
 export default router;

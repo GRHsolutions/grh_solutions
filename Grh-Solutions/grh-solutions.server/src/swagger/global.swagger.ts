@@ -5,7 +5,7 @@ import { swaggerComponents, swaggerPaths } from "./initializations.swagger";
 import { ModulePaths, ModuleSchema } from "./module.swagger";
 import { cvPaths, cvSchemas } from "./cv.swagger";
 import { RequestPaths, RequestSchema } from "./request.swagger";
-import { FollowUpTypePaths, FollowUpTypeSchema } from "./followUpType.swagger";
+import { InvolvedPaths, InvolvedSchemas } from "./involved.swagger";
 import { HistoryPaths, HistorySchema } from "./history.swagger";
 import { newPaths, NewsSchema } from "./comunicados.swagger";
 import { BadRequestErrorSchemas } from "./error.swagger";
@@ -18,17 +18,14 @@ export const globalPaths: Paths = {
   ...ModulePaths,
   ...cvPaths,
   ...RequestPaths,
-  ...FollowUpTypePaths,
+  ...InvolvedPaths,
   ...HistoryPaths,
-  ...newPaths
+  ...newPaths,
 };
 
-// Combinar todos los componentes
+// Combinar todos los components/schemas
 export const globalComponents: Components = {
-  // Mantener securitySchemes de la configuración base
   securitySchemes: swaggerComponents.securitySchemes,
-
-  // Combinar todos los schemas
   schemas: {
     // Schemas base
     ...(swaggerComponents.schemas || {}),
@@ -47,16 +44,17 @@ export const globalComponents: Components = {
 
     // Schemas de CV
     ...(cvSchemas.schemas || {}),
-    // Schemas de tipos de seguimiento
-    ...(FollowUpTypeSchema.schemas || {}),
+
+    // Schemas de involucrados (IMPORTANTE: debe estar antes de cualquier $ref a Involved)
+    ...InvolvedSchemas,
 
     // Schemas de historial
     ...(HistorySchema.schemas || {}),
 
-    // Schema error 
+    // Schema error
     ...(BadRequestErrorSchemas.schemas || {}),
 
-    // new
+    // Schemas de comunicados
     ...NewsSchema,
   },
 };

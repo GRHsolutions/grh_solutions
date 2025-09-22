@@ -5,14 +5,13 @@ import { requestTypeFilter } from "../filters/requests.filter";
 export const requestsController = {
   create: async (req: Request, res: Response) => {
     try {
-      const userId = req.userId; 
+      const userId = req.userId;
       const { title, status, type_request, infoDx } = req.body;
 
       if (!userId) return res.status(401).json({ message: "Token inválido" });
       if (!title) return res.status(400).json({ message: "Título requerido" });
       if (!status) return res.status(400).json({ message: "Estado requerido" });
-      if (!type_request)
-        return res.status(400).json({ message: "Tipo requerido" });
+      if (!type_request) return res.status(400).json({ message: "Tipo requerido" });
 
       const newReq = await requestsService.create({
         createdBy: userId,
@@ -40,7 +39,11 @@ export const requestsController = {
 
   getById: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
+      const { id } = req.query;
+      if (!id || typeof id !== "string") {
+        return res.status(400).json({ message: "ID requerido" });
+      }
+
       const data = await requestsService.getById(id);
       if (!data) return res.status(404).json({ message: "No encontrada" });
       res.status(200).json(data);
@@ -51,8 +54,20 @@ export const requestsController = {
 
   update: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      const updated = await requestsService.update(id, req.body);
+      const { id } = req.query;
+      if (!id || typeof id !== "string") {
+        return res.status(400).json({ message: "ID requerido" });
+      }
+
+      const profileId = req.userId; 
+      if (!profileId) return res.status(401).json({ message: "Token inválido" });
+
+      const { title, status, type_request, infoDx } = req.body;
+      const body = { title, status, type_request, infoDx };
+
+      const updated = await requestsService.update(id, body, profileId);
+      if (!updated) return res.status(404).json({ message: "Solicitud no encontrada" });
+
       res.status(200).json(updated);
     } catch (e: any) {
       res.status(500).json({ message: e.message });
@@ -61,8 +76,17 @@ export const requestsController = {
 
   delete: async (req: Request, res: Response) => {
     try {
-      const { id } = req.params;
-      await requestsService.delete(id);
+      const { id } = req.query;
+      if (!id || typeof id !== "string") {
+        return res.status(400).json({ message: "ID requerido" });
+      }
+
+      const profileId = req.userId;
+      if (!profileId) return res.status(401).json({ message: "Token inválido" });
+
+      const deleted = await requestsService.delete(id, profileId);
+      if (!deleted) return res.status(404).json({ message: "Solicitud no encontrada" });
+
       res.status(200).json({ message: "Solicitud desactivada" });
     } catch (e: any) {
       res.status(500).json({ message: e.message });
