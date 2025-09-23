@@ -79,32 +79,19 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [current, setSearchParams]);
 
   React.useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
     const fetchBirthdays = async () => {
       try {
-        setBirthdays([
-          {
-            id: 1,
-            name: "Persona 1",
-            date: dayjs(),
-            photo: "data:image/png;base64,...",
-          },
-          {
-            id: 2,
-            name: "Persona 2",
-            date: dayjs(),
-            photo: "data:image/png;base64,...",
-          },
-          {
-            id: 3,
-            name: "Persona 3",
-            date: dayjs(),
-            photo: "data:image/png;base64,...",
-          },
-        ]);
-      } catch (error) {
+        const response = await service.getBirths(
+          signal
+        );
+        setBirthdays(response);
+      } catch (e) {
+        console.error(e);
         setStatus({
-          statusCode: 500,
-          message: "Error al cargar los cumpleaños",
+          message: "Error al cargar el objeto",
         });
       }
     };
@@ -137,55 +124,54 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [current.item]);
 
   React.useEffect(() => {
-  setLoading(true);
+    setLoading(true);
 
-  const controller = new AbortController();
-  const { signal } = controller;
+    const controller = new AbortController();
+    const { signal } = controller;
 
-  const fetchNews = async () => {
-    try {
-      const response = await service.get(
-        {
-          page,
-          limit: 10,
-        },
-        signal
-      );
-      console.log(response);
+    const fetchNews = async () => {
+      try {
+        const response = await service.get(
+          {
+            page,
+            limit: 10,
+          },
+          signal
+        );
 
-      // Unir prev con nuevos pero evitando duplicados por id
-      setNews((prev) => {
-        // Crear un mapa para evitar duplicados
-        const newsMap = new Map();
+        // Unir prev con nuevos pero evitando duplicados por id
+        setNews((prev) => {
+          // Crear un mapa para evitar duplicados
+          const newsMap = new Map();
 
-        // Agregamos primero el estado anterior
-        prev.forEach((item) => newsMap.set(item._id, item));
+          // Agregamos primero el estado anterior
+          prev.forEach((item) => newsMap.set(item._id, item));
 
-        // Agregamos los nuevos items, reemplazando si hay id igual
-        response.data.forEach((item) => newsMap.set(item._id, item));
+          // Agregamos los nuevos items, reemplazando si hay id igual
+          response.data.forEach((item) => newsMap.set(item._id, item));
 
-        // Convertir de vuelta a array
-        const merged = Array.from(newsMap.values());
+          // Convertir de vuelta a array
+          const merged = Array.from(newsMap.values());
 
-        return merged;
-      });
+          return merged;
+        });
 
-      if (page >= response.totalPages) setHasMore(false);
-    } catch (e) {
-      console.error(e);
-      setStatus({
-        message: "Error al cargar el objeto",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+        if (page >= response.totalPages) setHasMore(false);
+      } catch (e) {
+        console.error(e);
+        setStatus({
+          message: "Error al cargar el objeto",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  fetchNews();
+    fetchNews();
 
-  // Cleanup para abortar fetch si el componente se desmonta o cambia page
-  return () => controller.abort();
-}, [useReload, page]);
+    // Cleanup para abortar fetch si el componente se desmonta o cambia page
+    return () => controller.abort();
+  }, [useReload, page]);
 
   const newComment = (comment: Commentary) => {
     console.log("ajusar servicio para subir: ", comment);
@@ -254,7 +240,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   const handleBruteReload = () => {
     setNews([]);
     setPage(1);
-  }
+  };
 
   const value: NewsItems = {
     news,
@@ -272,7 +258,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // FORMULARIOS
     handleCreate,
-    handleBruteReload
+    handleBruteReload,
   };
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;

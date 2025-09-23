@@ -1,6 +1,6 @@
 import { Pagination } from "../../../../../grh-solutions.server/src/filters/pagination.filters";
 import { INewRepository } from "../../../infrastructure/interfaces/news/INews";
-import { NewsFilter, News, NewForm } from '../../models/news/news.entities';
+import { NewsFilter, News, NewForm, Birthday } from '../../models/news/news.entities';
 
 
 export class NewsService {
@@ -16,5 +16,10 @@ export class NewsService {
 
     async create(object: NewForm) : Promise<News>{
         return this.repo.create(object)
+    }
+
+    
+    async getBirths(signal: AbortSignal) : Promise<Birthday[]> {
+        return this.repo.getBirths(signal);
     }
 }
