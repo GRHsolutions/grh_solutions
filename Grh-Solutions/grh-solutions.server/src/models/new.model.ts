@@ -1,6 +1,6 @@
 import { model, Schema, Types } from "mongoose";
 
-const dragNDropSchema = new Schema({
+export const dragNDropSchema = new Schema({
   id: { type: String, required: true },
   name: { type: String, required: true },
   type: { type: String, required: true },

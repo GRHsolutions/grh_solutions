@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { RequestModel } from "../models/requests.model";
 import { requestTypeFilter } from "../filters/requests.filter";
 import { historyService } from "./history.service";
+import { RequestUtil } from "../utls/request.utl";
 
 type RequestUpdateDto = {
   title?: string;
@@ -12,7 +13,21 @@ type RequestUpdateDto = {
 
 export const requestsService = {
   // Crear solicitud
-  create: (data: object) => RequestModel.create(data),
+  create: async (data: object, by: string) => {
+    // Esperar la resolución de la promesa
+    const createdObject = await RequestModel.create(data);
+
+    if (createdObject._id) {
+      // Si se ha creado el objeto correctamente, generamos el historial
+      await RequestUtil.generateHistory(
+        "Se ha creado la solicitud",
+        createdObject._id,
+        by
+      );
+    }
+
+    return createdObject;
+  },
 
   // Obtener todas con filtros
   getAll: (filter: requestTypeFilter) => {
@@ -44,16 +59,23 @@ export const requestsService = {
       }
 
       const allowedFields: Partial<RequestUpdateDto> = {};
-      (["title", "status", "type_request", "infoDx"] as (keyof RequestUpdateDto)[]).forEach(
-        (key) => {
-          if ((body as any)[key] !== undefined) {
-            allowedFields[key] = (body as any)[key];
-          }
+      (
+        [
+          "title",
+          "status",
+          "type_request",
+          "infoDx",
+        ] as (keyof RequestUpdateDto)[]
+      ).forEach((key) => {
+        if ((body as any)[key] !== undefined) {
+          allowedFields[key] = (body as any)[key];
         }
-      );
+      });
 
       if (Object.keys(allowedFields).length === 0) {
-        console.info("[requestsService.update] No hay campos permitidos para actualizar");
+        console.info(
+          "[requestsService.update] No hay campos permitidos para actualizar"
+        );
         return existingRequest;
       }
 
@@ -64,30 +86,11 @@ export const requestsService = {
       ).lean();
 
       if (updatedRequest) {
-        const changes: string[] = [];
-        for (const key of Object.keys(allowedFields)) {
-          const oldVal = (existingRequest as any)[key];
-          const newVal = (updatedRequest as any)[key];
-          if (String(oldVal) !== String(newVal)) {
-            changes.push(`${key}: "${oldVal}" → "${newVal}"`);
-          }
-        }
-
-        if (changes.length > 0) {
-          const description = `Se modificó la solicitud. Cambios: ${changes.join(", ")}`;
-          try {
-            const hist = await historyService.create({
-              requestId: id,
-              profileId,
-              description,
-            });
-            console.log("[requestsService.update] History creado:", hist._id?.toString());
-          } catch (err) {
-            console.error("[requestsService.update] Error al crear historial:", err);
-          }
-        } else {
-          console.log("[requestsService.update] No se detectaron cambios reales");
-        }
+        await RequestUtil.generateHistory(
+          "Se ha actualizado la solicitud",
+          id,
+          profileId
+        );
       }
 
       return updatedRequest;
@@ -107,14 +110,18 @@ export const requestsService = {
 
     if (deletedRequest) {
       try {
-        await historyService.create({
-          requestId: id,
-          profileId,
-          description: "Se eliminó la solicitud (baja lógica)",
-        });
+        await RequestUtil.generateHistory(
+          "Se ha eliminado la solicitud",
+          id,
+          profileId
+        );
+
         console.log("[requestsService.delete] History registrado");
       } catch (err) {
-        console.error("[requestsService.delete] Error al crear historial:", err);
+        console.error(
+          "[requestsService.delete] Error al crear historial:",
+          err
+        );
       }
     }
 

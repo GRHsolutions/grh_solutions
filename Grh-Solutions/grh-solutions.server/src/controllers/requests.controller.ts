@@ -6,20 +6,19 @@ export const requestsController = {
   create: async (req: Request, res: Response) => {
     try {
       const userId = req.userId;
-      const { title, status, type_request, infoDx } = req.body;
+      const { title, type_request, infoDx, file, email } = req.body;
 
       if (!userId) return res.status(401).json({ message: "Token inválido" });
       if (!title) return res.status(400).json({ message: "Título requerido" });
-      if (!status) return res.status(400).json({ message: "Estado requerido" });
       if (!type_request) return res.status(400).json({ message: "Tipo requerido" });
 
       const newReq = await requestsService.create({
         createdBy: userId,
         title,
-        status,
+        status: "pendiente",
         type_request,
         infoDx,
-      });
+      }, userId);
 
       res.status(201).json(newReq);
     } catch (e: any) {

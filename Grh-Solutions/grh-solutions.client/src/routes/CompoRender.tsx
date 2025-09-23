@@ -17,7 +17,7 @@ export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) =
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.blue[900], // theme.palette.primary.main
+        backgroundColor: theme.palette.primary.main, // theme.palette.primary.main
         color: theme.palette.primary.contrastText,
         borderBottom: `1px solid ${theme.palette.primary.divider}`,
         p: 1,

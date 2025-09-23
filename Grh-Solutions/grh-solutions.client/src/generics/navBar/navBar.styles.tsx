@@ -19,7 +19,7 @@ export const NavBarStyles = () => {
             display: "flex",
             alignItems: "center", 
             justifyContent: "space-between", 
-            backgroundColor: theme.palette.secondary.main, // Using the primary color from the theme
+            backgroundColor: theme.palette.blue[500], // Using the primary color from the theme
             borderBottom: `1px solid ${theme.palette.primary.divider}`,
             padding: "10px",
             position: 'relative',
