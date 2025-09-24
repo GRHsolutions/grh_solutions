@@ -3,19 +3,15 @@ import MultipleSelect from "../../../../generics/grh-generics/multipleSelect";
 import GrhButton from '../../../../generics/grh-generics/button';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SendIcon from '@mui/icons-material/Send';
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { http } from "../../../../infrastructure/axios/axios";
+import { InvolvedProfile } from "../../../../domain/models/request/involved.entities";
 
 interface AsignarUsuarioProps {
-    handleClose : () => void
+  handleClose: () => void;
+  requestId: string;
+  currentUserId: string;
 }
-
-const options = [
-  { id: 1, name: "Mario" },
-  { id: 2, name: "Migel" },
-  { id: 3, name: "Jose" },
-  { id: 4, name: "Alguien" },
-  { id: 5, name: "Juan" }
-];
 
 const styleasig = {
   position: 'absolute',
@@ -25,12 +21,47 @@ const styleasig = {
   width: '50%',
 };
 
-export const AsignarUsuario = ({ handleClose }: AsignarUsuarioProps) => {
-  const [mult, setMult] = React.useState<number[]>([]);
+export const AsignarUsuario = ({ handleClose, requestId, currentUserId }: AsignarUsuarioProps) => {
+  const [profiles, setProfiles] = useState<InvolvedProfile[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
 
-  const setFieldValue = (_field: string, value: number[]) => {
-    setMult(value);
+  // 🔹 Cargar todos los perfiles
+  useEffect(() => {
+    const fetchProfiles = async () => {
+      try {
+        setLoading(true);
+        const res = await http.get<InvolvedProfile[]>("/api/profiles/getAll");
+        // En tu backend, la respuesta directa es un array
+        setProfiles(res);
+      } catch (error) {
+        console.error("Error al obtener perfiles", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfiles();
+  }, []);
+
+  const handleSave = async () => {
+    if (!requestId || selectedIds.length === 0) return;
+
+    try {
+      const payload = selectedIds.map((profileId) => ({
+        requestId,         // 🔹 Asegúrate de que es un string válido
+        profileId,
+        assignedBy: currentUserId, // 🔹 Usuario que asigna
+        role: "editor",            // Puedes cambiar el rol según la lógica
+      }));
+
+      // Enviar cada asignación al backend
+      await Promise.all(payload.map(p => http.post("/api/involved/create", p)));
+
+      handleClose();
+    } catch (error) {
+      console.error("Error al asignar usuarios", error);
+    }
   };
 
   return (
@@ -57,12 +88,12 @@ export const AsignarUsuario = ({ handleClose }: AsignarUsuarioProps) => {
             <MultipleSelect
               label={'Lista de Usuarios'}
               name={'input'}
-              options={options.map(item => ({
-                id: item.id,
-                nombre: item.name
+              options={profiles.map(item => ({
+                id: Number(item._id), // 🔹 MultipleSelect espera números
+                nombre: `${item.name} ${item.lastname}`
               }))}
-              value={mult}
-              setFieldValue={setFieldValue}
+              value={selectedIds.map(id => Number(id))} // 🔹 Convertimos string a number
+              setFieldValue={(field, value: number[]) => setSelectedIds(value.map(v => v.toString()))} // 🔹 Guardamos como string
             />
             <Divider sx={{ my: 2, backgroundColor: theme.palette.divider, height: 2 }} />
           </Box>
@@ -73,18 +104,15 @@ export const AsignarUsuario = ({ handleClose }: AsignarUsuarioProps) => {
               variant="secondary"
               startIcon={<ArrowBackIcon />}
               onClick={handleClose}
-              sx={{
-                width: '20%'
-              }}
+              sx={{ width: '20%' }}
             />
             <GrhButton
               label="Guardar"
               variant="principal"
               startIcon={<SendIcon />}
-              onClick={handleClose}
-              sx={{
-                width: '20%'
-              }}
+              onClick={handleSave}
+              sx={{ width: '20%' }}
+              disabled={selectedIds.length === 0 || loading}
             />
           </Box>
         </Box>

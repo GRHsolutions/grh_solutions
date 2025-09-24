@@ -6,6 +6,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useRenderedItems } from "./renderedItems";
 import { useStyles } from "./sideBar.styles";
+import { hexToRGBA } from "./../../theme/hex.overwrite";
 
 export const SideBar2: React.FC = () => {
   const styles = useStyles();
@@ -81,10 +82,10 @@ export const SideBar2: React.FC = () => {
                       width: "100%",
                       textTransform: "none",
                       padding: "10px",
-                      backgroundColor: item.active ? theme.palette.primary.hover : "transparent",
+                      backgroundColor: item.active ? theme.palette.blue[800] : "transparent",
                       color: item.disabled ? "gray" : "inherit",
                       "&:hover":{
-                        backgroundColor:  theme.palette.primary.hover,
+                        backgroundColor:  hexToRGBA(theme.palette.blue[600] as string, 1),
                       }
                     }}
                   >
@@ -138,7 +139,7 @@ export const SideBar2: React.FC = () => {
                               padding: "8px",
                               color: subItem.disabled ? "gray" : "inherit",
                               "&:hover":{
-                                backgroundColor:  theme.palette.primary.hover,
+                                backgroundColor:  hexToRGBA(theme.palette.blue[700] as string, 0.9),
                               }
                             }}
                           >

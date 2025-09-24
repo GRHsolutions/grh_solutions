@@ -1,13 +1,18 @@
 import CloseIcon from "@mui/icons-material/Close";
 import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile";
 import { Box, IconButton, Modal, Typography, useTheme } from "@mui/material";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
+import { History } from "../../../../domain/models/request/history.entities";
+import { http } from "../../../../infrastructure/axios/axios";
 
 interface HistorialSolicitudesProps {
   handleClose: () => void;
+  requestId: string;
 }
 
 const stylehis = {
-  position: "fixed",
+  position: "fixed" as const,
   top: 0,
   right: 0,
   width: "25%",
@@ -20,12 +25,40 @@ const stylehis = {
   borderRadius: "10px",
 };
 
-export const HistorialSolicitudes = ({ handleClose }: HistorialSolicitudesProps) => {
+export const HistorialSolicitudes = ({
+  handleClose,
+  requestId,
+}: HistorialSolicitudesProps) => {
   const theme = useTheme();
+  const [history, setHistory] = useState<History[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        setLoading(true);
+
+        // ✅ Request usando query param
+        const response = await http.get<History[]>(
+          `/api/history/getByRequestId`,
+          { requestId }
+        );
+
+        setHistory(response); // response ya es History[]
+      } catch (err) {
+        console.error("Error cargando historial:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (requestId) fetchHistory();
+  }, [requestId]);
 
   return (
     <Modal open={true} onClose={handleClose}>
       <Box sx={stylehis} onClick={(e) => e.stopPropagation()}>
+        {/* Header */}
         <Box
           sx={{
             display: "flex",
@@ -45,23 +78,46 @@ export const HistorialSolicitudes = ({ handleClose }: HistorialSolicitudesProps)
           </IconButton>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            border: "2px solid black",
-            borderRadius: "10px",
-            p: 2,
-            m: 3,
-            color: theme.palette.text.primary,
-          }}
-        >
-          <InsertDriveFileIcon sx={{ fontSize: 40, mr: 2 }} />
-          <Box>
-            <Typography>Se ha creado la solicitud</Typography>
-            <Typography>Por: Carlos Mario</Typography>
-            <Typography>El día 28/12/2025</Typography>
-          </Box>
+        {/* Listado del historial */}
+        <Box sx={{ overflowY: "auto", flex: 1, p: 2 }}>
+          {loading ? (
+            <Typography sx={{ textAlign: "center", mt: 2 }}>
+              Cargando historial...
+            </Typography>
+          ) : history.length === 0 ? (
+            <Typography sx={{ textAlign: "center", mt: 2 }}>
+              No hay historial para esta solicitud
+            </Typography>
+          ) : (
+            history.map((h) => (
+              <Box
+                key={h._id}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  border: "2px solid black",
+                  borderRadius: "10px",
+                  p: 2,
+                  mb: 2,
+                  color: theme.palette.text.primary,
+                }}
+              >
+                <InsertDriveFileIcon sx={{ fontSize: 40, mr: 2 }} />
+                <Box>
+                  <Typography>{h.description}</Typography>
+                  <Typography>
+                    Perfil:{" "}
+                    {typeof h.profileId === "string"
+                      ? h.profileId
+                      : h.profileId?.nombre ?? "Desconocido"}
+                  </Typography>
+                  <Typography>
+                    El día {dayjs(h.createdAt).format("DD/MM/YYYY HH:mm")}
+                  </Typography>
+                </Box>
+              </Box>
+            ))
+          )}
         </Box>
       </Box>
     </Modal>

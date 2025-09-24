@@ -1,4 +1,5 @@
 import { SxProps, useTheme } from "@mui/material";
+import { hexToRGBA } from "../../theme/hex.overwrite";
 
 export const useStyles = () => {
   const theme = useTheme();
@@ -13,7 +14,7 @@ export const useStyles = () => {
       }
     } as SxProps,
     sidebar: {
-      backgroundColor: theme.palette.background.default,
+      backgroundColor: hexToRGBA(theme.palette.blue[700], 1),
       color: theme.palette.primary.contrastText,
       display: "flex",
       flexDirection: "column",
@@ -29,19 +30,17 @@ export const useStyles = () => {
     },
     // pertenecientes al header junto al boton de cerrar
     header: {
-      padding: "7px",
       display: 'flex',
       justifyContent: 'center',
       textAlign: "center",
-      backgroundColor: theme.palette.background.default,
       color: theme.palette.primary.contrastText,
       "*": {
         fontWeight: "bold",
-        fontSize: "1.6rem",
+        fontSize: "1.8rem",
       },
     },
     buttonCloseDiv: {
-      backgroundColor:  theme.palette.primary.main,
+      backgroundColor:  theme.palette.blue[700],
       position: 'absolute',
       right: -100,
       borderRadius: '50%',

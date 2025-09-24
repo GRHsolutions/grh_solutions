@@ -49,7 +49,7 @@ export const useRenderedItems = (): Returnable => {
         visible: isLoggedIn,
         to: "/horarios?type=horarios",
         disabled: false,
-        active: location.pathname === "/horarios?type=horarios",
+        active: location.pathname === "/horarios",
         label: "Horarios",
         icon: <CalendarMonthIcon />
       },

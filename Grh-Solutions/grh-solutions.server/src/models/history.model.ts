@@ -2,28 +2,28 @@ import { Schema, model, Types } from "mongoose";
 
 const historySchema = new Schema(
   {
-    id_history: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    event: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    user_fk: {
+    requestId: {
       type: Types.ObjectId,
-      ref: "users",
+      ref: "solicitudes",
       required: true,
+      index: true,
+    },
+    profileId: {
+      type: Types.ObjectId,
+      ref: "profile",
+      required: true,
+    },
+    description: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      immutable: true,
     },
   },
-  {
-    timestamps: {
-      createdAt: "created_at",
-      updatedAt: "updated_at",
-    },
-  }
+  { timestamps: false }
 );
 
 export const historyModel = model("history", historySchema);

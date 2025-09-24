@@ -22,7 +22,7 @@ import contract from "./contract"
 import requests from './requests';
 import report from "./report";
 import module from "./module";
-import FollowUp from "./followUpType";
+import Involved from "./involved";
 import history from "./history"
 import cv from './cv';
 import signatures from './signatures';
@@ -54,8 +54,8 @@ routes.use("/contract", contract);
 routes.use('/request', requests);
 routes.use('/report', report);
 routes.use('/modules', module);
-routes.use("followUpType", FollowUp)
-routes.use("history", history)
+routes.use("/involved", Involved)
+routes.use("/history", history)
 routes.use("/cv", cv)
 routes.use("/signatures", signatures);
 

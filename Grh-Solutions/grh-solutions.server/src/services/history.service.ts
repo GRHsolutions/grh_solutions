@@ -1,19 +1,20 @@
+// services/history.service.ts
 import { historyModel } from "../models/history.model";
 
 export const historyService = {
-  create: async (entity: object) => {
-    return await historyModel.create(entity);
+  create: async (data: object) => {
+    try {
+      const doc = await historyModel.create(data);
+      console.log("[historyService] create OK:", doc._id?.toString());
+      return doc;
+    } catch (err) {
+      console.error("[historyService] create ERROR:", err);
+      throw err; // re-lanzar para que el calling code lo pueda ver
+    }
   },
 
-  getAll: async () => {
-    return await historyModel.find().populate("user_fk");
-  },
+  getAllByRequestId: async (requestId: string) =>
+    historyModel.find({ requestId }).populate("profileId").sort({ createdAt: -1 }),
 
-  getById: async (id: string) => {
-    return await historyModel.findById(id).populate("user_fk");
-  },
-
-  delete: async (id: string) => {
-    return await historyModel.findByIdAndDelete(id);
-  }
+  getById: async (id: string) => historyModel.findById(id).populate("profileId"),
 };

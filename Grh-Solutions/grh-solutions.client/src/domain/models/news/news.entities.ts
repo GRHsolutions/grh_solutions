@@ -45,10 +45,11 @@ export interface NewsFilter extends NewsPagination {
 }
 
 export type Birthday = {
-    id: number;
+    _id: number;
     photo: string;
-    name: string;               
-    date: Dayjs;
+    name: string;
+    lastname: string;
+    email: Dayjs;
 }
 
 export type NewForm = {

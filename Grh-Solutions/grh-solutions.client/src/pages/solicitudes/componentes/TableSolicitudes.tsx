@@ -4,7 +4,7 @@ import BasicModal from "./Modalvista";
 import { Box, CircularProgress } from "@mui/material";
 import { Request } from "../../../domain/models/request/request.entities";
 import dayjs from "dayjs";
-import { http } from "../../../infrastructure/axios/axios"; // ✅ usa tu cliente axios con token
+import { http } from "../../../infrastructure/axios/axios";
 
 export default function TableSolicitudes() {
   const [current, setCurrent] = useState<Request | null>(null);
@@ -77,7 +77,7 @@ export default function TableSolicitudes() {
           }}
         />
       )}
-      <BasicModal current={current} handleClose={handleClose} />
+      <BasicModal current={current} handleClose={handleClose} userId={""} />
     </Box>
   );
 }

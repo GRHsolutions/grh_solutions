@@ -1,4 +1,5 @@
 import { Schema, model, Types } from "mongoose";
+import { dragNDropSchema } from "./new.model";
 
 const profileSchema = new Schema({
   user: {
@@ -53,7 +54,8 @@ const profileSchema = new Schema({
     type: String,
     required: true,
     unique: true
-  }
+  },
+  signature: dragNDropSchema
 }, { timestamps: true });
 
 export const ProfileModel = model("profile", profileSchema);
