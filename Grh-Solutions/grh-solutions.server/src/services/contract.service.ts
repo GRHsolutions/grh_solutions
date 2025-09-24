@@ -10,7 +10,7 @@ export const contractService = {
     content: string;
     type_contract: string;
     status: string;
-    signatures?: string;
+    signatures?: boolean; // ahora es boolean
   }) => {
     return await contractModel.create(entity);
   },
@@ -20,8 +20,7 @@ export const contractService = {
     return await contractModel
       .find()
       .populate("empleados")
-      .populate("type_contract")
-      .populate("signatures");
+      .populate("type_contract"); // se quitó signatures
   },
 
   // Obtener por ID
@@ -29,8 +28,7 @@ export const contractService = {
     return await contractModel
       .findById(id)
       .populate("empleados")
-      .populate("type_contract")
-      .populate("signatures");
+      .populate("type_contract"); // se quitó signatures
   },
 
   // Actualizar contrato
@@ -43,7 +41,7 @@ export const contractService = {
       content: string;
       type_contract: string;
       status: string;
-      signatures?: string;
+      signatures?: boolean; // ahora es boolean
     }>
   ) => {
     return await contractModel.findByIdAndUpdate(id, entity, { new: true });
@@ -59,14 +57,16 @@ export const contractService = {
     const query: any = {};
 
     if (filters.tittle) query.tittle = { $regex: filters.tittle, $options: "i" };
-    if (filters.description) query.description = { $regex: filters.description, $options: "i" };
-    if (filters.content) query.content = { $regex: filters.content, $options: "i" };
+    if (filters.description)
+      query.description = { $regex: filters.description, $options: "i" };
+    if (filters.content)
+      query.content = { $regex: filters.content, $options: "i" };
     if (filters.status) query.status = filters.status;
+    if (filters.signatures !== undefined) query.signatures = filters.signatures; // permite filtrar por firmado o no
 
     return await contractModel
       .find(query)
       .populate("empleados")
-      .populate("type_contract")
-      .populate("signatures");
+      .populate("type_contract"); // se quitó signatures
   },
 };

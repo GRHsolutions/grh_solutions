@@ -1,7 +1,7 @@
 import { PathItem, Schema } from "swagger-jsdoc";
 
 export const ContractPaths: Record<string, PathItem> = {
-  "/api/contracts/create": {
+  "/api/contract/create": {
     post: {
       summary: "Crear contrato",
       tags: ["Contract"],
@@ -20,7 +20,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
-  "/api/contracts/getAll": {
+  "/api/contract/getAll": {
     get: {
       summary: "Listar todos los contratos",
       tags: ["Contract"],
@@ -31,7 +31,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
-  "/api/contracts/getById": {
+  "/api/contract/getById": {
     get: {
       summary: "Obtener contrato por ID",
       tags: ["Contract"],
@@ -52,7 +52,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
-  "/api/contracts/update": {
+  "/api/contract/update": {
     put: {
       summary: "Actualizar contrato",
       tags: ["Contract"],
@@ -80,7 +80,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
-  "/api/contracts/delete": {
+  "/api/contract/delete": {
     delete: {
       summary: "Eliminar contrato",
       tags: ["Contract"],

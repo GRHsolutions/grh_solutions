@@ -18,7 +18,7 @@ export const contractController = {
         content: content.trim(),
         type_contract: type_contract.trim(),
         status: status.trim(),
-        signatures: signatures?.trim(),
+        signatures: typeof signatures === "boolean" ? signatures : false, // ahora es boolean
       });
 
       return res.status(201).json(data);
@@ -71,7 +71,7 @@ export const contractController = {
       if (content) body.content = content.trim();
       if (type_contract) body.type_contract = type_contract.trim();
       if (status) body.status = status.trim();
-      if (signatures) body.signatures = signatures.trim();
+      if (typeof signatures === "boolean") body.signatures = signatures;
 
       if (Object.keys(body).length === 0) {
         return res.status(400).json({ message: "No hay campos para actualizar" });
