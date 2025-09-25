@@ -26,38 +26,46 @@ export const userService = {
     return user;
   },
 
-  create: async (entity: any) => {
-    const rol = await rolService.getBasicRol("Administrador");
+create: async (entity: any) => {
+  const rol = await rolService.getBasicRol("Administrador");
 
-    if (!rol) {
-      throw Error("No se encontro el id del rol cliente"); // en el servicio debe cambiarse para que se cree si no existe :P
-    }
+  if (!rol) {
+    throw Error("No se encontró el id del rol cliente"); 
+  }
 
-    const obj = new UserModel({
-      email: entity['email'],
-      password: entity['password'],
-      rol: rol._id,
-    });
+  const obj = new UserModel({
+    email: entity["email"],
+    password: entity["password"],
+    rol: rol._id,
+  });
 
-    const createdUsr = await UserModel.create(obj);
-    const craeteProfile = new ProfileModel({
-      name: entity['firstName'] + entity['middleName'],
-      lastname: entity['lastName'] + entity['secondLastName'],
-      type_document: entity['typeDocument'],
-      document: entity['document'],
-      email: entity['email'],
-      date_of_birth: entity['birthDate'],
-      user: createdUsr._id,
-      rh: false, // se activa por el usuario
-      status: "enabled",
-      number_phone: null,
-      address: null
-    })
-    
-    await ProfileModel.create(craeteProfile);
+  // primero creamos el usuario
+  const createdUsr = await UserModel.create(obj);
 
-    return createdUsr;
-  },
+  const createProfile = new ProfileModel({
+    name: entity["firstName"] + " " + entity["middleName"],
+    lastname: entity["lastName"] + " " + entity["secondLastName"],
+    type_document: entity["typeDocument"],
+    document: entity["document"],
+    email: entity["email"],
+    date_of_birth: entity["birthDate"],
+    user: createdUsr._id,
+    rh: false,
+    status: "enabled",
+    number_phone: null,
+    address: null,
+  });
+
+  try {
+    await ProfileModel.create(createProfile);
+  } catch (error: any) {
+    // 👇 si falla el profile, eliminamos el user recién creado
+    await UserModel.deleteOne({ _id: createdUsr._id });
+    throw error;
+  }
+
+  return createdUsr;
+},
 
   update: async (id: string, body: object) => {
     return await UserModel.findByIdAndUpdate(id, body, { new: true });

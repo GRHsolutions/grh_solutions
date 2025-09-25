@@ -49,7 +49,7 @@ export type Birthday = {
     photo: string;
     name: string;
     lastname: string;
-    email: Dayjs;
+    email: string;
 }
 
 export type NewForm = {

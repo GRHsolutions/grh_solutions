@@ -27,6 +27,7 @@ interface TextFieldProps {
     start?: () => void;
     end?: () => void;
   }; // Prop para indicar si el adornment es clickable
+  numeric?: boolean;
 }
 
 const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
@@ -49,7 +50,7 @@ const GrhTextField = forwardRef<HTMLInputElement, TextFieldProps>((
     helperText, // Recibimos el mensaje de error
     clickableAdornment, // Recibimos la prop para adornos clickeables
     multirows,
-    rows
+    rows,
   },
   ref
 ) => {

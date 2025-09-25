@@ -19,7 +19,7 @@ export class NewsService {
     }
 
     
-    async getBirths(signal: AbortSignal) : Promise<Birthday[]> {
+    async getBirths(signal?: AbortSignal) : Promise<Birthday[]> {
         return this.repo.getBirths(signal);
     }
 }

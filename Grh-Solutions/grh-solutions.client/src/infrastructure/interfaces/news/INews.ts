@@ -5,5 +5,5 @@ export interface INewRepository {
     get(filter: NewsFilter, signal?: AbortSignal): Promise<{data: News[], totalPages: number}>;
     getPagination(filter: any): Promise<Pagination>;
     create(object: NewForm): Promise<News>;
-    getBirths(signal: AbortSignal): Promise<Birthday[]>
+    getBirths(signal?: AbortSignal): Promise<Birthday[]>
 }

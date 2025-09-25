@@ -34,7 +34,7 @@ export class NewRepository implements INewRepository {
     return response;
   }
   async getBirths(
-    signal: AbortSignal
+    signal?: AbortSignal
   ): Promise<Birthday[]> {
     const reponse = await http.get<Birthday[]>(ApiConnection + "/births", signal);
     return reponse;

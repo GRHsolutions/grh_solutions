@@ -6,7 +6,6 @@ import {
   News,
 } from "../domain/models/news/news.entities";
 import { Errors } from "../domain/models/error/error.entities";
-import dayjs from "dayjs";
 import { useSearchParams } from "react-router-dom";
 import { NewRepository } from "../infrastructure/repositories/news/news";
 import { NewsService } from "../domain/services/news/news.service";
@@ -15,6 +14,12 @@ interface CurrentProps {
   item: News | null;
   action: "create" | "view" | "delete" | "none" | string;
   id?: string;
+}
+
+interface LoadingStates {
+  list: boolean;
+  fetch_more: boolean;
+  fetch_comments: boolean;
 }
 
 interface NewsItems {
@@ -27,7 +32,7 @@ interface NewsItems {
   selectItem: (select: string) => void;
   noCurrnt: (change?: string) => void;
   newComment: (comment: Commentary) => void;
-  loading: boolean;
+  loading: LoadingStates;
   fechMore: () => void;
   hasMore: boolean;
 
@@ -43,8 +48,11 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [news, setNews] = React.useState<News[]>([]);
-
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState<LoadingStates>({
+    list: false,
+    fetch_more: false,
+    fetch_comments: false,
+  });
   const [status, setStatus] = React.useState<Errors | null>(null);
   const [useReload, setReload] = React.useState(false);
   const [birthdays, setBirthdays] = React.useState<Birthday[]>([]);
@@ -79,14 +87,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [current, setSearchParams]);
 
   React.useEffect(() => {
-    const controller = new AbortController();
-    const { signal } = controller;
-
     const fetchBirthdays = async () => {
       try {
-        const response = await service.getBirths(
-          signal
-        );
+        const response = await service.getBirths();
+
         setBirthdays(response);
       } catch (e) {
         console.error(e);
@@ -124,7 +128,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [current.item]);
 
   React.useEffect(() => {
-    setLoading(true);
+    setLoading({
+      ...loading,
+      list: true,
+    });
 
     const controller = new AbortController();
     const { signal } = controller;
@@ -163,7 +170,11 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
           message: "Error al cargar el objeto",
         });
       } finally {
-        setLoading(false);
+        setLoading({
+          list: false,
+          fetch_more: false,
+          fetch_comments: false,
+        });
       }
     };
 
@@ -234,6 +245,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const fechMore = () => {
+    setLoading({
+      ...loading,
+      fetch_more: true,
+    });
     setPage(page + 1);
   };
 

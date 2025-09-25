@@ -6,12 +6,10 @@ import {
   Button,
   CircularProgress,
   Typography,
-  useTheme,
 } from "@mui/material";
 import NewItem from "./newItem";
 
 const RenderNews: React.FC = () => {
-  const theme = useTheme();
   const { news, selectItem, comments, hasMore, fechMore, loading } = useNews();
 
   const handleSelect = (id: string) => {
@@ -32,7 +30,9 @@ const RenderNews: React.FC = () => {
         },
       }}
     >
-      {news.length === 0 ? (
+      {loading.list == true ? (
+        <CircularProgress color="info" />
+      ) : news.length === 0 ? (
         <Alert
           severity="warning"
           sx={{
@@ -55,16 +55,13 @@ const RenderNews: React.FC = () => {
       )}
       {hasMore && (
         <Box width={"auto"} display={"flex"} justifyContent={"center"} p={2}>
-          {loading ? (
-            <CircularProgress color="info"/>
-          ) : (
-            <Button
-              onClick={fechMore}
-              variant="contained"
-            >
-              Bring More
-            </Button>
-          )}
+          <Button onClick={fechMore} variant="contained">
+            {loading.fetch_more ? (
+              <CircularProgress color="info" />
+            ) : (
+              "Bring More"
+            )}
+          </Button>
         </Box>
       )}
     </Box>

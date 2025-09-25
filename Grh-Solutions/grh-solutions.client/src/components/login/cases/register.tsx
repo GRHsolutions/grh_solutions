@@ -13,6 +13,7 @@ import { getTypeDocuments } from "../../../domain/services/typeDocument/typeDocu
 import dayjs, { Dayjs } from "dayjs";
 import GenericDatePicker from "../../comunicados/datePicker";
 import { useNotifications } from "../../../contexts/NotificationContext";
+import PublishIcon from "@mui/icons-material/Publish";
 
 interface RegisterProps {
   onLogin: () => void;
@@ -56,12 +57,12 @@ export default function Register({ onLogin }: RegisterProps) {
         }));
         setDocumentTypes(optionMap);
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error("Error al obtener los tipos de documentos:", error);
       });
   }, []);
 
-  const handleSubmit = async(values: RegisterForm) => {
+  const handleSubmit = async (values: RegisterForm) => {
     setLoading(true);
     await lgnService
       .register(values)
@@ -72,20 +73,30 @@ export default function Register({ onLogin }: RegisterProps) {
             title: "Cuenta creada excitosamente",
             color: "success",
             position: "top-right",
-            duration: 4000
-          })
+            duration: 4000,
+          });
           setLoading(false);
-
         }
       })
       .catch((ex) => {
-        console.error(ex)
+        console.error(ex);
+        if (ex.duplicate) {
+          addNotification({
+            title: ex.message,
+            color: "error",
+            position: "top-right",
+            duration: 4000,
+          });
+          setLoading(false);
+          return;
+        }
+
         addNotification({
           title: "Error al intentar crear la cuenta",
           color: "error",
           position: "top-right",
-          duration: 4000
-        })
+          duration: 4000,
+        });
         setLoading(false);
       });
   };
@@ -126,6 +137,7 @@ export default function Register({ onLogin }: RegisterProps) {
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
       enableReinitialize={true}
+      validateOnMount={true}
     >
       {({
         values,
@@ -135,6 +147,7 @@ export default function Register({ onLogin }: RegisterProps) {
         // touched,
         isValid,
         setFieldValue,
+        dirty,
       }) => {
         const setValue = (fieldName: string, newVal: Dayjs | null) => {
           setFieldValue(fieldName, newVal);
@@ -176,7 +189,12 @@ export default function Register({ onLogin }: RegisterProps) {
                   name="firstName"
                   label="Primer Nombre"
                   value={values.firstName}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    // eliminamos todos los espacios
+                    const noSpaces = e.target.value.replace(/\s/g, "");
+                    // enviamos a formik el valor limpio
+                    setFieldValue("firstName", noSpaces);
+                  }}
                   fullWidth
                 />
                 <GrhTextField
@@ -184,7 +202,12 @@ export default function Register({ onLogin }: RegisterProps) {
                   name="middleName"
                   label="Segundo Nombre"
                   value={values.middleName}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    // eliminamos todos los espacios
+                    const noSpaces = e.target.value.replace(/\s/g, "");
+                    // enviamos a formik el valor limpio
+                    setFieldValue("middleName", noSpaces);
+                  }}
                   fullWidth
                 />
               </Box>
@@ -195,7 +218,12 @@ export default function Register({ onLogin }: RegisterProps) {
                   name="lastName"
                   label="Primer Apellido"
                   value={values.lastName}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    // eliminamos todos los espacios
+                    const noSpaces = e.target.value.replace(/\s/g, "");
+                    // enviamos a formik el valor limpio
+                    setFieldValue("lastName", noSpaces);
+                  }}
                   fullWidth
                 />
                 <GrhTextField
@@ -203,7 +231,12 @@ export default function Register({ onLogin }: RegisterProps) {
                   name="secondLastName"
                   label="Segundo Apellido"
                   value={values.secondLastName}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    // eliminamos todos los espacios
+                    const noSpaces = e.target.value.replace(/\s/g, "");
+                    // enviamos a formik el valor limpio
+                    setFieldValue("secondLastName", noSpaces);
+                  }}
                   fullWidth
                 />
               </Box>
@@ -213,7 +246,12 @@ export default function Register({ onLogin }: RegisterProps) {
                 label="Correo Electrónico"
                 variant="standard"
                 value={values.email}
-                onChange={handleChange}
+                onChange={(e) => {
+                  // eliminamos todos los espacios
+                  const noSpaces = e.target.value.replace(/\s/g, "");
+                  // enviamos a formik el valor limpio
+                  setFieldValue("email", noSpaces);
+                }}
                 fullWidth
               />
 
@@ -254,7 +292,13 @@ export default function Register({ onLogin }: RegisterProps) {
                 label="Numero de documento"
                 variant="standard"
                 value={values.document}
-                onChange={handleChange}
+                numeric={true}
+                onChange={(e) => {
+                  // eliminamos todos los espacios
+                  const onlyNumbers = e.target.value.replace(/[^0-9]/g, ""); // filtra todo menos 0-9
+                  // enviamos a formik el valor limpio
+                  setFieldValue("document", onlyNumbers);
+                }}
                 fullWidth
               />
 
@@ -292,7 +336,8 @@ export default function Register({ onLogin }: RegisterProps) {
                 type="submit"
                 variant="principal"
                 label={loading ? "Registrando..." : "Registrar"}
-                disabled={!isValid || loading}
+                disabled={!isValid || !dirty || loading}
+                startIcon={<PublishIcon />}
               />
             </Box>
           </Form>
