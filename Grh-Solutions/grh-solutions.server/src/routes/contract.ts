@@ -14,7 +14,7 @@ const validationSchema = [
 ];
 
 router.post('/create', validateToken, contractController.create);
-router.get('/getAllNoPage', validateToken, contractController.getAll); 
+router.get('/getAll', validateToken, contractController.getAll); 
 router.put('/update', validateToken, contractController.update);
 router.delete('/delete', validateToken, contractController.delete);
 router.get('/getById', validateToken, contractController.getById); 
