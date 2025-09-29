@@ -21,11 +21,10 @@ import { http } from "../../../infrastructure/axios/axios";
 import { AsignarUsuario } from "./modales/asignarUsuario";
 import { DocumentosSolicitudes } from "./modales/documentosSolicitudes";
 import { HistorialSolicitudes } from "./modales/historialSolicitudes";
-import { FinalizarSolicitud } from "./modales/finalizarSolicitud";
+import { EliminarSolicitud } from "./modales/finalizarSolicitud";
 import { AprobarSolicitud } from "./modales/aprobarSolicitud";
 import { RechazarSolicitud } from "./modales/rechazarSolicitud";
 
-// 🔹 Tipo para profile
 interface Profile {
   _id: string;
   user: string;
@@ -60,67 +59,72 @@ const style = {
 interface BasicModalProps {
   current: Request | null;
   handleClose: () => void;
-  userId: string; // id del usuario actual
+  profile: Profile | null;
 }
-
-export default function BasicModal({ current, handleClose, userId }: BasicModalProps) {
+const rawUserId = localStorage.getItem("usr_items_profile_id");
+const currentProfileId = rawUserId ? JSON.parse(rawUserId) : null;
+export default function BasicModal({
+  current,
+  handleClose,
+}: BasicModalProps) {
   const theme = useTheme();
+
   const [mdo, setMdo] = useState("");
   const [involved, setInvolved] = useState<Involved[]>([]);
   const [loadingInvolved, setLoadingInvolved] = useState(false);
-  const [currentUser, setCurrentUser] = useState<Profile | null>(null);
+  const [currentRequest, setCurrentRequest] = useState<Request | null>(current);
 
-  // 🔹 Traer usuario actual
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await http.get<Profile>(`/api/profiles/getByUserId?userId=${userId}`);
-        setCurrentUser(response); // 🔹 Aquí ya es el objeto Profile
-      } catch (error) {
-        console.error("Error al obtener usuario actual", error);
-      }
-    };
-  
-    if (userId) fetchCurrentUser();
-  }, [userId]);
-  
+    setCurrentRequest(current);
+  }, [current]);
 
   // 🔹 Cargar involucrados
+  const fetchInvolved = async (requestId: string) => {
+    try {
+      setLoadingInvolved(true);
+      const response = await http.get<Involved[]>(
+        `/api/involved/getByRequestId?requestId=${requestId}`
+      );
+      const data = (response as any)?.data ?? response;
+      const arr = Array.isArray(data) ? data : [];
+      const mapped = arr.map((i: any) => ({
+        ...i,
+        createdAt: dayjs(i.createdAt),
+        updatedAt: dayjs(i.updatedAt),
+        profileId:
+          i.profileId && typeof i.profileId === "object"
+            ? {
+              ...i.profileId,
+              createdAt: dayjs(i.profileId.createdAt),
+              updatedAt: dayjs(i.profileId.updatedAt),
+            }
+            : i.profileId,
+        requestId:
+          i.requestId && typeof i.requestId === "object"
+            ? {
+              ...i.requestId,
+              createdAt: dayjs(i.requestId.createdAt),
+              updatedAt: dayjs(i.requestId.updatedAt),
+            }
+            : i.requestId,
+      }));
+      setInvolved(mapped as Involved[]);
+    } catch (error) {
+      console.error("Error al obtener involucrados", error);
+      setInvolved([]);
+    } finally {
+      setLoadingInvolved(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchInvolved = async (requestId: string) => {
-      try {
-        setLoadingInvolved(true);
-        const response = await http.get<Involved[]>(`/api/involved/getByRequestId?requestId=${requestId}`);
-        // 🔹 response ya es un array de Involved
-        const mapped = response.map((i) => ({
-          ...i,
-          createdAt: dayjs(i.createdAt),
-          updatedAt: dayjs(i.updatedAt),
-          profileId:
-            i.profileId && typeof i.profileId === "object"
-              ? { ...i.profileId, createdAt: dayjs(i.profileId.createdAt), updatedAt: dayjs(i.profileId.updatedAt) }
-              : i.profileId,
-          requestId:
-            i.requestId && typeof i.requestId === "object"
-              ? { ...i.requestId, createdAt: dayjs(i.requestId.createdAt), updatedAt: dayjs(i.requestId.updatedAt) }
-              : i.requestId,
-        }));
-        setInvolved(mapped);
-      } catch (error) {
-        console.error("Error al obtener involucrados", error);
-        setInvolved([]);
-      } finally {
-        setLoadingInvolved(false);
-      }
-    };
-  
-    if (current?._id) fetchInvolved(current._id);
-  }, [current?._id]);
-  
+    if (currentRequest?._id) fetchInvolved(currentRequest._id);
+  }, [currentRequest?._id]);
 
   const handleCloseModal = () => handleClose();
   const handleCls = () => setMdo("");
 
+  // Tabs
   const tabs: TabConfig[] = [
     {
       value: "1",
@@ -139,7 +143,9 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
               borderBottom: "none",
             }}
           >
-            <Typography variant="h6" fontWeight="bold">Información básica</Typography>
+            <Typography variant="h6" fontWeight="bold">
+              Información básica
+            </Typography>
           </Box>
           <Box
             sx={{
@@ -153,14 +159,55 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={6}><Typography variant="body1"><strong>Título:</strong> {current?.title ?? "Sin título"}</Typography></Grid>
-              <Grid item xs={6}><Typography variant="body1"><strong>Estado:</strong> {current?.status ?? "Sin estado"}</Typography></Grid>
-              <Grid item xs={6}><Typography variant="body1"><strong>Tipo:</strong> {current?.type_request ?? "General"}</Typography></Grid>
-              <Grid item xs={6}><Typography variant="body1"><strong>Radicado:</strong> {current?._id ?? "No disponible"}</Typography></Grid>
-              <Grid item xs={6}><Typography variant="body1"><strong>Creado:</strong> {current ? dayjs(current.createdAt).format("DD/MM/YYYY HH:mm") : "No disponible"}</Typography></Grid>
-              <Grid item xs={6}><Typography variant="body1"><strong>Actualizado:</strong> {current ? dayjs(current.updatedAt).format("DD/MM/YYYY HH:mm") : "No disponible"}</Typography></Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  <strong>Título:</strong>{" "}
+                  {currentRequest?.title ?? "Sin título"}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  <strong>Estado:</strong>{" "}
+                  {currentRequest?.status ?? "Sin estado"}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  <strong>Tipo:</strong>{" "}
+                  {currentRequest?.type_request ?? "General"}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  <strong>Radicado:</strong>{" "}
+                  {currentRequest?._id ?? "No disponible"}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  <strong>Creado:</strong>{" "}
+                  {currentRequest
+                    ? dayjs(currentRequest.createdAt).format(
+                      "DD/MM/YYYY HH:mm"
+                    )
+                    : "No disponible"}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1">
+                  <strong>Actualizado:</strong>{" "}
+                  {currentRequest
+                    ? dayjs(currentRequest.updatedAt).format(
+                      "DD/MM/YYYY HH:mm"
+                    )
+                    : "No disponible"}
+                </Typography>
+              </Grid>
             </Grid>
-            <Typography variant="body2" sx={{ mt: 2 }}><strong>Descripción:</strong> {current?.infoDx ?? "Sin descripción"}</Typography>
+            <Typography variant="body2" sx={{ mt: 2 }}>
+              <strong>Descripción:</strong>{" "}
+              {currentRequest?.infoDx ?? "Sin descripción"}
+            </Typography>
           </Box>
         </Box>
       ),
@@ -170,17 +217,48 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
       label: "involucrados",
       content: (
         <Box sx={{ color: theme.palette.text.primary, width: "100%" }}>
-          <Box sx={{ display: "flex", alignItems: "center", p: 2, mt: 3, borderRadius: "5px 5px 0 0", bgcolor: theme.palette.background.paper, border: `2px solid ${theme.palette.primary.contrastText}`, borderBottom: "none" }}>
-            <Typography variant="h6" fontWeight="bold">Usuarios involucrados a la solicitud</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              p: 2,
+              mt: 3,
+              borderRadius: "5px 5px 0 0",
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderBottom: "none",
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Usuarios involucrados a la solicitud
+            </Typography>
           </Box>
-          <Box sx={{ p: 2, bgcolor: theme.palette.background.paper, border: `2px solid ${theme.palette.primary.contrastText}`, borderRadius: "0 0 5px 5px" }}>
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderRadius: "0 0 5px 5px",
+            }}
+          >
             {loadingInvolved ? (
               <Typography>Cargando involucrados...</Typography>
             ) : involved.length === 0 ? (
               <Typography>No hay usuarios involucrados</Typography>
             ) : (
               involved.map((i) => (
-                <Box key={i._id} sx={{ display: "flex", alignItems: "center", mb: 2, p: 2, border: `1px solid ${theme.palette.primary.contrastText}`, borderRadius: 2, gap: 2 }}>
+                <Box
+                  key={i._id}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    mb: 2,
+                    p: 2,
+                    border: `1px solid ${theme.palette.primary.contrastText}`,
+                    borderRadius: 2,
+                    gap: 2,
+                  }}
+                >
                   <AccountCircleIcon sx={{ fontSize: 40 }} />
                   <Box>
                     <Typography variant="subtitle1">
@@ -188,7 +266,9 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
                         ? `${i.profileId.name} ${i.profileId.lastname}`
                         : "Desconocido"}
                     </Typography>
-                    <Typography variant="body2">Rol: {i.role ?? "Sin rol"}</Typography>
+                    <Typography variant="body2">
+                      Rol: {i.role ?? "Sin rol"}
+                    </Typography>
                   </Box>
                 </Box>
               ))
@@ -202,24 +282,58 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
       label: "seguimientos",
       content: (
         <Box sx={{ color: theme.palette.text.primary, width: "100%" }}>
-          <Box sx={{ p: 2, mt: 3, borderRadius: "5px 5px 0 0", bgcolor: theme.palette.background.paper, border: `2px solid ${theme.palette.primary.contrastText}`, borderBottom: "none" }}>
-            <Typography variant="h6" fontWeight="bold">Seguimientos creados por los involucrados</Typography>
+          <Box
+            sx={{
+              p: 2,
+              mt: 3,
+              borderRadius: "5px 5px 0 0",
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderBottom: "none",
+            }}
+          >
+            <Typography variant="h6" fontWeight="bold">
+              Seguimientos creados por los involucrados
+            </Typography>
           </Box>
-          <Box sx={{ p: 2, bgcolor: theme.palette.background.paper, border: `2px solid ${theme.palette.primary.contrastText}`, borderRadius: "0 0 5px 5px" }}>
+          <Box
+            sx={{
+              p: 2,
+              bgcolor: theme.palette.background.paper,
+              border: `2px solid ${theme.palette.primary.contrastText}`,
+              borderRadius: "0 0 5px 5px",
+            }}
+          >
             {loadingInvolved ? (
               <Typography>Cargando seguimientos...</Typography>
             ) : involved.length === 0 ? (
               <Typography>No hay seguimientos</Typography>
             ) : (
               involved.map((i) => (
-                <Box key={i._id} sx={{ display: "flex", alignItems: "center", gap: 2, p: 2, mb: 2, border: `1px solid ${theme.palette.primary.contrastText}`, borderRadius: 2 }}>
+                <Box
+                  key={i._id}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 2,
+                    p: 2,
+                    mb: 2,
+                    border: `1px solid ${theme.palette.primary.contrastText}`,
+                    borderRadius: 2,
+                  }}
+                >
                   <InsertDriveFileIcon sx={{ fontSize: 40 }} />
                   <Box>
                     <Typography variant="subtitle1">
-                      {i.profileId ? `${i.profileId.name} ${i.profileId.lastname}` : "Desconocido"}
+                      {i.profileId && typeof i.profileId === "object"
+                        ? `${i.profileId.name} ${i.profileId.lastname}`
+                        : "Desconocido"}
                     </Typography>
                     <Typography variant="body2">
-                      Involucrado por: {i.assignedBy ? `${i.assignedBy.name} ${i.assignedBy.lastname}` : "Desconocido"}
+                      Involucrado por:{" "}
+                      {i.assignedBy
+                        ? `${i.assignedBy.name} ${i.assignedBy.lastname}`
+                        : "Desconocido"}
                     </Typography>
                   </Box>
                 </Box>
@@ -233,25 +347,64 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
 
   return (
     <div>
-      <Modal open={current != null} onClose={handleCloseModal}>
+      <Modal open={!!currentRequest} onClose={handleCloseModal}>
         <Box sx={style}>
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: `1px solid rgba(0,0,0,0.1)`, color: theme.palette.text.primary }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderBottom: `1px solid rgba(0,0,0,0.1)`,
+              color: theme.palette.text.primary,
+            }}
+          >
             <Stack direction="row" spacing={1} alignItems="center">
-              <NoteAltIcon fontSize="large" sx={{ color: theme.palette.primary.contrastText }} />
+              <NoteAltIcon
+                fontSize="large"
+                sx={{ color: theme.palette.primary.contrastText }}
+              />
               <Box display={"flex"} flexDirection={"column"}>
-                <Typography variant="h6" fontWeight={"bold"} mt={1}>Ver solicitud {current?._id ?? "Sin radicado"}</Typography>
-                <Typography variant="body1" mt={-0.5}>Vea la información actual de su solicitud</Typography>
+                <Typography variant="h6" fontWeight={"bold"} mt={1}>
+                  Ver solicitud {currentRequest?._id ?? "Sin radicado"}
+                </Typography>
+                <Typography variant="body1" mt={-0.5}>
+                  Vea la información actual de su solicitud
+                </Typography>
               </Box>
             </Stack>
             <GrhBasicMenu
               optionsPosition={{ top: "2px", left: "10px" }}
               items={[
-                { icon: <PersonIcon />, label: "Asignar usuario", onClick: () => setMdo("asigna-usuario") },
-                { icon: <HistoryIcon />, label: "Historial usuario", onClick: () => setMdo("history-solicitudes") },
-                { icon: <InsertDriveFileIcon />, label: "Documentos usuario", onClick: () => setMdo("documentos-solicitudes") },
-                { icon: <StopCircleIcon />, label: "Finalizar solicitud", onClick: () => setMdo("Finalizar-solicitudes") },
-                { icon: <GppGoodIcon />, label: "Aprobar solicitud", onClick: () => setMdo("Aprobar-solicitudes") },
-                { icon: <GppBadIcon />, label: "Rechazar solicitud", onClick: () => setMdo("Rechazar-solicitudes") },
+                {
+                  icon: <PersonIcon />,
+                  label: "Asignar usuario",
+                  onClick: () => setMdo("asigna-usuario"),
+                },
+                {
+                  icon: <HistoryIcon />,
+                  label: "Historial usuario",
+                  onClick: () => setMdo("history-solicitudes"),
+                },
+                {
+                  icon: <InsertDriveFileIcon />,
+                  label: "Documentos usuario",
+                  onClick: () => setMdo("documentos-solicitudes"),
+                },
+                {
+                  icon: <StopCircleIcon />,
+                  label: "Finalizar solicitud",
+                  onClick: () => setMdo("Finalizar-solicitudes"),
+                },
+                {
+                  icon: <GppGoodIcon />,
+                  label: "Aprobar solicitud",
+                  onClick: () => setMdo("Aprobar-solicitudes"),
+                },
+                {
+                  icon: <GppBadIcon />,
+                  label: "Rechazar solicitud",
+                  onClick: () => setMdo("Rechazar-solicitudes"),
+                },
               ]}
             />
           </Box>
@@ -260,17 +413,73 @@ export default function BasicModal({ current, handleClose, userId }: BasicModalP
         </Box>
       </Modal>
 
-      {/* 🔹 Renderizado seguro de los modales */}
-      {mdo === "asigna-usuario" && current?._id && currentUser?._id && (
-  <AsignarUsuario handleClose={handleCls} requestId={current._id} currentUserId={currentUser._id} />
-)}
-      {mdo === "history-solicitudes" && current?._id && (
-        <HistorialSolicitudes handleClose={handleCls} requestId={current._id} />
+      {/* Modales controlados por "open" */}
+      <AsignarUsuario
+        open={mdo === "asigna-usuario"}
+        handleClose={handleCls}
+        requestId={currentRequest?._id ?? ""}
+        onSaved={() =>
+          currentRequest?._id && fetchInvolved(currentRequest._id)
+        }
+      />
+
+      {mdo === "history-solicitudes" && currentRequest?._id && (
+        <HistorialSolicitudes
+          handleClose={handleCls}
+          requestId={currentRequest._id}
+        />
       )}
-      {mdo === "documentos-solicitudes" && <DocumentosSolicitudes handleClose={handleCls} />}
-      {mdo === "Finalizar-solicitudes" && <FinalizarSolicitud handleClose={handleCls} />}
-      {mdo === "Aprobar-solicitudes" && <AprobarSolicitud handleClose={handleCls} />}
-      {mdo === "Rechazar-solicitudes" && <RechazarSolicitud handleClose={handleCls} />}
+
+
+{mdo === "documentos-solicitudes" && currentRequest && (
+  <DocumentosSolicitudes 
+    handleClose={handleCls} 
+    request={currentRequest} 
+  />
+)}
+
+      <EliminarSolicitud
+        open={mdo === "Finalizar-solicitudes"}
+        handleClose={handleCls}
+        requestId={currentRequest?._id ?? ""}
+        profileId={currentProfileId ?? ""}
+        onDeleted={() => {
+          setCurrentRequest((prev) =>
+            prev ? { ...prev, status: "eliminada" } : prev
+          );
+          if (currentRequest?._id) fetchInvolved(currentRequest._id);
+        }}
+      />
+
+
+      <AprobarSolicitud
+        open={mdo === "Aprobar-solicitudes"}
+        handleClose={handleCls}
+        requestId={currentRequest?._id ?? ""}
+        profileId={currentProfileId ?? ""} // ✅ garantizamos que siempre haya ID
+        onApproved={() => {
+          setCurrentRequest((prev) =>
+            prev ? { ...prev, status: "aprobada" } : prev
+          );
+          if (currentRequest?._id) fetchInvolved(currentRequest._id);
+        }}
+      />
+
+
+
+      <RechazarSolicitud
+        open={mdo === "Rechazar-solicitudes"}
+        handleClose={handleCls}
+        requestId={currentRequest?._id ?? ""}
+        profileId={currentProfileId ?? ""} // ✅ garantizamos que siempre haya ID
+        onRejected={() => {
+          setCurrentRequest((prev) =>
+            prev ? { ...prev, status: "rechazada" } : prev
+          );
+          if (currentRequest?._id) fetchInvolved(currentRequest._id);
+        }}
+      />
+
     </div>
   );
 }

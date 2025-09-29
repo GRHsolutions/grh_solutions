@@ -25,34 +25,34 @@ const stylehis = {
   borderRadius: "10px",
 };
 
-export const HistorialSolicitudes = ({
-  handleClose,
-  requestId,
-}: HistorialSolicitudesProps) => {
+export const HistorialSolicitudes = ({ handleClose, requestId }: HistorialSolicitudesProps) => {
   const theme = useTheme();
   const [history, setHistory] = useState<History[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchHistory = async () => {
+      if (!requestId) return;
+  
+      setLoading(true);
       try {
-        setLoading(true);
-
-        // ✅ Request usando query param
+        console.log("[HistorialSolicitudes] requestId enviado:", requestId);
+  
         const response = await http.get<History[]>(
-          `/api/history/getByRequestId`,
-          { requestId }
+          `/api/history/getByRequestId?requestId=${requestId}`
         );
-
-        setHistory(response); // response ya es History[]
+  
+        console.log("[HistorialSolicitudes] response recibido:", response);
+  
+        setHistory(response); // Si el backend devuelve directamente History[]
       } catch (err) {
         console.error("Error cargando historial:", err);
       } finally {
         setLoading(false);
       }
     };
-
-    if (requestId) fetchHistory();
+  
+    fetchHistory();
   }, [requestId]);
 
   return (
@@ -81,13 +81,9 @@ export const HistorialSolicitudes = ({
         {/* Listado del historial */}
         <Box sx={{ overflowY: "auto", flex: 1, p: 2 }}>
           {loading ? (
-            <Typography sx={{ textAlign: "center", mt: 2 }}>
-              Cargando historial...
-            </Typography>
+            <Typography sx={{ textAlign: "center", mt: 2 }}>Cargando historial...</Typography>
           ) : history.length === 0 ? (
-            <Typography sx={{ textAlign: "center", mt: 2 }}>
-              No hay historial para esta solicitud
-            </Typography>
+            <Typography sx={{ textAlign: "center", mt: 2 }}>No hay historial para esta solicitud</Typography>
           ) : (
             history.map((h) => (
               <Box
@@ -107,9 +103,9 @@ export const HistorialSolicitudes = ({
                   <Typography>{h.description}</Typography>
                   <Typography>
                     Perfil:{" "}
-                    {typeof h.profileId === "string"
-                      ? h.profileId
-                      : h.profileId?.nombre ?? "Desconocido"}
+                    {h.profileId && typeof h.profileId === "object"
+                      ? `${h.profileId.name ?? "Desconocido"} ${h.profileId.lastname ?? ""}`.trim()
+                      : "Desconocido"}
                   </Typography>
                   <Typography>
                     El día {dayjs(h.createdAt).format("DD/MM/YYYY HH:mm")}

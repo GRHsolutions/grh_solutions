@@ -17,6 +17,8 @@ import {
 } from '@mui/icons-material';
 
 export type DragNDropVariables = {
+  file: any;
+  file(arg0: string, file: any): unknown;
   id: string;
   name: string,
   type: string, 

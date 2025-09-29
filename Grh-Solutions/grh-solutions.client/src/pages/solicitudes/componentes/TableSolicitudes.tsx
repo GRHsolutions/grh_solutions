@@ -13,13 +13,11 @@ export default function TableSolicitudes() {
 
   const handleClose = () => setCurrent(null);
 
-  // 🔹 Cargar solicitudes desde la API
   useEffect(() => {
     const fetchSolicitudes = async () => {
       try {
         setLoading(true);
 
-        // ✅ con http no necesitas meter headers ni token manual
         const response = await http.get<Request[]>("/api/request/getAll");
 
         const mapped = response.map((sol) => ({
@@ -77,7 +75,7 @@ export default function TableSolicitudes() {
           }}
         />
       )}
-      <BasicModal current={current} handleClose={handleClose} userId={""} />
+      <BasicModal current={current} handleClose={handleClose} profile={null}/>
     </Box>
   );
 }

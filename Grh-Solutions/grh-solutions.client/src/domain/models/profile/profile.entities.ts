@@ -16,6 +16,7 @@ export interface CreateProfileDto {
 }
 
 export interface Profile {
+  data: any;
   _id: string;
   user: string;
   name: string;

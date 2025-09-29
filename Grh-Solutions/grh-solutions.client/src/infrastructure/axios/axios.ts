@@ -102,7 +102,7 @@ const get = async <T>(
   return await makeRequest<T>(config, signal);
 };
 
-const post = async <T>(url: string, body: any) => {
+const post = async <T>(url: string, body: any, p0: { headers: { "Content-Type": string; }; }) => {
   const headers = await getHeaderItems();
 
   const config: AxiosRequestConfig = {

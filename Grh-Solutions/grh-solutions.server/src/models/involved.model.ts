@@ -21,7 +21,7 @@ const involvedSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["editor", "lector"],
+      enum: ["editor", "lector", "peticionante"],
       required: true,
     },
   },
