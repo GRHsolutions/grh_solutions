@@ -1683,6 +1683,44 @@ export const swaggerPaths: Paths = {
       },
     },
   },
+  "/api/postulante/getAllByVacanteByUser/{userId}": {
+    get: {
+      summary: "Obtener postulantes por usuario",
+      tags: ["Postulante"],
+      parameters: [
+        {
+          name: "userId",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del usuario",
+        },
+      ],
+      responses: {
+        200: {
+          description: "Lista de postulantes",
+          content: {
+            "application/json": {
+              schema: {
+                type: "array",
+                items: {
+                  $ref: "#/components/schemas/Postulante",
+                },
+              },
+            },
+          },
+        },
+        400: {
+          description: "ID de usuario inválido",
+        },
+        500: {
+          description: "Error interno",
+        },
+      },
+    },
+  },
 
   "/api/postulante/update/{id}": {
     put: {

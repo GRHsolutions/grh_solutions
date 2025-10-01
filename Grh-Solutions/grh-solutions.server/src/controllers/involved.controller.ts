@@ -5,15 +5,27 @@ import mongoose from "mongoose";
 export const involvedController = {
   create: async (req: Request, res: Response) => {
     try {
-      const { requestId, profileId, role, assignedBy } = req.body;
+      let { requestId, profileId, role, assignedBy } = req.body;
 
       if (!requestId) return res.status(400).json({ message: "requestId requerido" });
       if (!profileId) return res.status(400).json({ message: "profileId requerido" });
       if (!role) return res.status(400).json({ message: "role requerido" });
 
-      const newInvolved = await involvedService.create({ requestId, profileId, role, assignedBy });
+      // 🔹 Convertir a ObjectId
+      requestId = new mongoose.Types.ObjectId(requestId);
+      profileId = new mongoose.Types.ObjectId(profileId);
+      assignedBy = assignedBy ? new mongoose.Types.ObjectId(assignedBy) : null;
+
+      const newInvolved = await involvedService.create({
+        requestId,
+        profileId,
+        role,
+        assignedBy,
+      });
+
       res.status(201).json(newInvolved);
     } catch (e: any) {
+      console.error("❌ Error en involvedController.create:", e);
       res.status(500).json({ message: e.message });
     }
   },
@@ -27,6 +39,7 @@ export const involvedController = {
       const data = await involvedService.getAll(Object.keys(filter).length ? filter : {});
       res.status(200).json(data);
     } catch (e: any) {
+      console.error("❌ Error en involvedController.getAll:", e);
       res.status(500).json({ message: e.message });
     }
   },
@@ -41,21 +54,24 @@ export const involvedController = {
 
       res.status(200).json(data);
     } catch (e: any) {
+      console.error("❌ Error en involvedController.getById:", e);
       res.status(500).json({ message: e.message });
     }
   },
 
-  // ✅ Nuevo método para traer todos los involucrados de una solicitud
   getByRequestId: async (req: Request, res: Response) => {
     try {
       const requestId = req.query.requestId as string;
       if (!requestId) return res.status(400).json({ message: "requestId requerido" });
 
       const data = await involvedService.getAll({ requestId });
-      if (!data || data.length === 0) return res.status(404).json({ message: "No se encontraron involucrados" });
+      if (!data || data.length === 0) {
+        return res.status(404).json({ message: "No se encontraron involucrados" });
+      }
 
       res.status(200).json(data);
     } catch (e: any) {
+      console.error("❌ Error en involvedController.getByRequestId:", e);
       res.status(500).json({ message: e.message });
     }
   },
@@ -72,6 +88,7 @@ export const involvedController = {
 
       res.status(200).json(updated);
     } catch (e: any) {
+      console.error("❌ Error en involvedController.update:", e);
       res.status(500).json({ message: e.message });
     }
   },
@@ -86,6 +103,7 @@ export const involvedController = {
 
       res.status(200).json({ message: "Involucrado eliminado" });
     } catch (e: any) {
+      console.error("❌ Error en involvedController.delete:", e);
       res.status(500).json({ message: e.message });
     }
   },

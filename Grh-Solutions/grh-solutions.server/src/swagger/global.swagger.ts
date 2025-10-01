@@ -49,7 +49,7 @@ export const globalComponents: Components = {
     ...InvolvedSchemas,
 
     // Schemas de historial
-    ...(HistorySchema.schemas || {}),
+    History: HistorySchema,
 
     // Schema error
     ...(BadRequestErrorSchemas.schemas || {}),

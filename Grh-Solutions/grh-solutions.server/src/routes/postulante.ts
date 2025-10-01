@@ -24,6 +24,7 @@ const validationSchemaUpdate = [
 ]
 router.post("/create", validationSchemaHandler({ schema: validationSchema }), postulanteController.create);
 router.get("/getAllByVacante/:vacanteId", postulanteController.getAllByVacante);
+router.get("/getAllByVacanteByUser/:userId", postulanteController.getAllByVacanteByUser);
 router.put("/update/:id", validationSchemaHandler({ schema: validationSchemaUpdate }), postulanteController.update);
 router.delete("/delete/:id", postulanteController.delete);
 

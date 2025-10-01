@@ -1,5 +1,14 @@
 import { Schema,  Types, model } from "mongoose";
-//import { dragNDropSchema } from "./new.model";
+
+
+export const dragNDropSchema = new Schema({
+  id: { type: String, required: true },
+  name: { type: String, required: true },
+  type: { type: String, required: true },
+  size: { type: Number, required: true },
+  base64: { type: String, required: true }
+}, { _id: false });
+
 
 const solicitudSchema = new Schema({
     /* 
@@ -36,7 +45,7 @@ const solicitudSchema = new Schema({
       type: String,
       trim: true,
     },
-    //file: [dragNDropSchema] // guardar documentos 
+    file: [dragNDropSchema]
 }, { timestamps: true }
 );
 
