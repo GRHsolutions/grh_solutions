@@ -6,7 +6,6 @@ interface EliminarSolicitudProps {
   open: boolean;
   handleClose: () => void;
   requestId: string;
-  profileId: string;
   onDeleted?: () => void;
 }
 
@@ -14,32 +13,16 @@ export const EliminarSolicitud = ({
   open,
   handleClose,
   requestId,
-  profileId,
   onDeleted,
 }: EliminarSolicitudProps) => {
-
   const handleConfirm = async () => {
     if (!requestId) {
       window.alert("No hay una solicitud seleccionada.");
       return;
     }
-    if (!profileId) {
-      window.alert("No hay perfil para notificar.");
-      return;
-    }
-
     try {
-      // 1️⃣ Actualizar el estado de la solicitud a 'eliminada'
       await http.put(`/api/request/update?id=${requestId}`, {
         status: "eliminada",
-      });
-
-      // 2️⃣ Crear historial
-      await http.post("/api/history", {
-        requestId,
-        profileId,
-        description: "Se cambió el estado de la solicitud a 'eliminada'",
-        createdAt: new Date().toISOString(),
       });
 
       if (onDeleted) onDeleted();

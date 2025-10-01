@@ -6,7 +6,6 @@ interface RechazarSolicitudProps {
   open: boolean;
   handleClose: () => void;
   requestId: string;
-  profileId: string;
   onRejected?: () => void;
 }
 
@@ -14,32 +13,17 @@ export const RechazarSolicitud = ({
   open,
   handleClose,
   requestId,
-  profileId,
   onRejected,
 }: RechazarSolicitudProps) => {
-
   const handleConfirm = async () => {
     if (!requestId) {
       window.alert("No hay una solicitud seleccionada.");
       return;
     }
-    if (!profileId) {
-      window.alert("No hay perfil para notificar.");
-      return;
-    }
 
     try {
-      // 1️⃣ Actualizar el estado de la solicitud
       await http.put(`/api/request/update?id=${requestId}`, {
         status: "rechazada",
-      });
-
-      // 2️⃣ Crear historial
-      await http.post("/api/history", {
-        requestId,
-        profileId,
-        description: "Se cambió el estado de 'pendiente' a 'rechazada'",
-        createdAt: new Date().toISOString(),
       });
 
       if (onRejected) onRejected();

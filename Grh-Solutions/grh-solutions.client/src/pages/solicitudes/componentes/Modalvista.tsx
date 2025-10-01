@@ -25,24 +25,6 @@ import { EliminarSolicitud } from "./modales/finalizarSolicitud";
 import { AprobarSolicitud } from "./modales/aprobarSolicitud";
 import { RechazarSolicitud } from "./modales/rechazarSolicitud";
 
-interface Profile {
-  _id: string;
-  user: string;
-  name: string;
-  lastname: string;
-  date_of_birth: string;
-  email: string;
-  address: string | null;
-  number_phone: string | null;
-  rh: string;
-  status: string;
-  type_document: string;
-  document: string;
-  createdAt: string;
-  updatedAt: string;
-  __v: number;
-}
-
 const style = {
   position: "absolute" as const,
   top: 0,
@@ -59,14 +41,9 @@ const style = {
 interface BasicModalProps {
   current: Request | null;
   handleClose: () => void;
-  profile: Profile | null;
 }
-const rawUserId = localStorage.getItem("usr_items_profile_id");
-const currentProfileId = rawUserId ? JSON.parse(rawUserId) : null;
-export default function BasicModal({
-  current,
-  handleClose,
-}: BasicModalProps) {
+
+export default function BasicModal({ current, handleClose }: BasicModalProps) {
   const theme = useTheme();
 
   const [mdo, setMdo] = useState("");
@@ -78,7 +55,6 @@ export default function BasicModal({
     setCurrentRequest(current);
   }, [current]);
 
-  // 🔹 Cargar involucrados
   const fetchInvolved = async (requestId: string) => {
     try {
       setLoadingInvolved(true);
@@ -94,18 +70,18 @@ export default function BasicModal({
         profileId:
           i.profileId && typeof i.profileId === "object"
             ? {
-              ...i.profileId,
-              createdAt: dayjs(i.profileId.createdAt),
-              updatedAt: dayjs(i.profileId.updatedAt),
-            }
+                ...i.profileId,
+                createdAt: dayjs(i.profileId.createdAt),
+                updatedAt: dayjs(i.profileId.updatedAt),
+              }
             : i.profileId,
         requestId:
           i.requestId && typeof i.requestId === "object"
             ? {
-              ...i.requestId,
-              createdAt: dayjs(i.requestId.createdAt),
-              updatedAt: dayjs(i.requestId.updatedAt),
-            }
+                ...i.requestId,
+                createdAt: dayjs(i.requestId.createdAt),
+                updatedAt: dayjs(i.requestId.updatedAt),
+              }
             : i.requestId,
       }));
       setInvolved(mapped as Involved[]);
@@ -188,8 +164,8 @@ export default function BasicModal({
                   <strong>Creado:</strong>{" "}
                   {currentRequest
                     ? dayjs(currentRequest.createdAt).format(
-                      "DD/MM/YYYY HH:mm"
-                    )
+                        "DD/MM/YYYY HH:mm"
+                      )
                     : "No disponible"}
                 </Typography>
               </Grid>
@@ -198,8 +174,8 @@ export default function BasicModal({
                   <strong>Actualizado:</strong>{" "}
                   {currentRequest
                     ? dayjs(currentRequest.updatedAt).format(
-                      "DD/MM/YYYY HH:mm"
-                    )
+                        "DD/MM/YYYY HH:mm"
+                      )
                     : "No disponible"}
                 </Typography>
               </Grid>
@@ -331,7 +307,7 @@ export default function BasicModal({
                     </Typography>
                     <Typography variant="body2">
                       Involucrado por:{" "}
-                      {i.assignedBy
+                      {i.assignedBy && typeof i.assignedBy === "object"
                         ? `${i.assignedBy.name} ${i.assignedBy.lastname}`
                         : "Desconocido"}
                     </Typography>
@@ -430,19 +406,17 @@ export default function BasicModal({
         />
       )}
 
-
-{mdo === "documentos-solicitudes" && currentRequest && (
-  <DocumentosSolicitudes 
-    handleClose={handleCls} 
-    request={currentRequest} 
-  />
-)}
+      {mdo === "documentos-solicitudes" && currentRequest && (
+        <DocumentosSolicitudes
+          handleClose={handleCls}
+          request={currentRequest}
+        />
+      )}
 
       <EliminarSolicitud
         open={mdo === "Finalizar-solicitudes"}
         handleClose={handleCls}
         requestId={currentRequest?._id ?? ""}
-        profileId={currentProfileId ?? ""}
         onDeleted={() => {
           setCurrentRequest((prev) =>
             prev ? { ...prev, status: "eliminada" } : prev
@@ -451,12 +425,10 @@ export default function BasicModal({
         }}
       />
 
-
       <AprobarSolicitud
         open={mdo === "Aprobar-solicitudes"}
         handleClose={handleCls}
         requestId={currentRequest?._id ?? ""}
-        profileId={currentProfileId ?? ""} // ✅ garantizamos que siempre haya ID
         onApproved={() => {
           setCurrentRequest((prev) =>
             prev ? { ...prev, status: "aprobada" } : prev
@@ -465,13 +437,10 @@ export default function BasicModal({
         }}
       />
 
-
-
       <RechazarSolicitud
         open={mdo === "Rechazar-solicitudes"}
         handleClose={handleCls}
         requestId={currentRequest?._id ?? ""}
-        profileId={currentProfileId ?? ""} // ✅ garantizamos que siempre haya ID
         onRejected={() => {
           setCurrentRequest((prev) =>
             prev ? { ...prev, status: "rechazada" } : prev
@@ -479,7 +448,6 @@ export default function BasicModal({
           if (currentRequest?._id) fetchInvolved(currentRequest._id);
         }}
       />
-
     </div>
   );
 }

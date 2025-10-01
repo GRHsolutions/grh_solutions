@@ -6,7 +6,6 @@ interface AprobarSolicitudProps {
   open: boolean;
   handleClose: () => void;
   requestId: string;
-  profileId: string;
   onApproved?: () => void;
 }
 
@@ -14,32 +13,17 @@ export const AprobarSolicitud = ({
   open,
   handleClose,
   requestId,
-  profileId,
   onApproved,
 }: AprobarSolicitudProps) => {
-
   const handleConfirm = async () => {
     if (!requestId) {
       window.alert("No hay una solicitud seleccionada.");
       return;
     }
-    if (!profileId) {
-      window.alert("No hay perfil para notificar.");
-      return;
-    }
 
     try {
-      // 1️⃣ Actualizar el estado de la solicitud
       await http.put(`/api/request/update?id=${requestId}`, {
         status: "aprobada",
-      });
-
-      // 2️⃣ Crear historial
-      await http.post("/api/history", {
-        requestId,
-        profileId,
-        description: "Se cambió el estado de 'pendiente' a 'aprobada'",
-        createdAt: new Date().toISOString(),
       });
 
       if (onApproved) onApproved();
