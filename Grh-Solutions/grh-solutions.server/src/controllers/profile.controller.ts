@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { profileService } from "../services/profile.service";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
+import { pdf } from "../utls/pdf.utl";
 
 export const profileController = {
   create: async (req: Request, res: Response) => {
@@ -18,7 +19,7 @@ export const profileController = {
         status,
         type_document,
         document,
-        vacancy_name
+        vacancy_name,
       } = req.body;
 
       if (
@@ -51,7 +52,7 @@ export const profileController = {
         status,
         type_document,
         document,
-        vacancy_name
+        vacancy_name,
       });
 
       return res.status(201).json(data);
@@ -163,5 +164,51 @@ export const profileController = {
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }
+  },
+
+  getCertificado: async (req: Request, res: Response) => {
+    const { 
+      id 
+    } = req.query;
+    if (!id || typeof id !== "string") {
+      return res
+        .status(400)
+        .json({ message: "El parámetro `id` es requerido" });
+    }
+    const data = await profileService.getById(id);
+    const drivenData = {
+      nombre: `${data?.name}`,
+      apellido: `${data?.lastname}`,
+      identificacion: `${data?.document}`,
+      fechaIngreso: data?.createdAt?.toISOString().split("T")[0] || "---",
+      cargo: `desarrollador`,
+    };
+    const content = `
+    CERTIFICADO LABORAL
+
+      Quien suscribe en calidad de representante legal de {{empresa}}, certifica que:
+
+      {{nombre}} {{apellido}}, identificado(a) con Cédula No. {{identificacion}}, labora desde {{fechaIngreso}}, desempeñando el cargo de {{cargo}}.
+
+      Este certificado se expide a solicitud del interesado.
+    `;
+    const buffer = await pdf.renderFromObjectToTemplate(
+      drivenData, 
+      content, 
+      {
+        title: `Certificado de ${drivenData.nombre}`,
+        author: `${drivenData.nombre}`,
+        keywords: `certificado, importante, chamba`,
+        subject: `Certificado laboral ${Date.now()}`
+      });
+
+
+    // ejemplo Express
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename=Certificado de ${drivenData.nombre}.pdf`
+    );
+    res.send(buffer);
   },
 };

@@ -838,28 +838,28 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-"/api/user/getById/{id}": {
-  get: {
-    summary: "Obtener usuario por ID",
-    tags: ["User"],
-    parameters: [
-      {
-        name: "id",
-        in: "path",
-        required: true,
-        schema: {
-          type: "string"
+  "/api/user/getById/{id}": {
+    get: {
+      summary: "Obtener usuario por ID",
+      tags: ["User"],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del usuario",
         },
-        description: "ID del usuario"
-      }
-    ],
-    responses: {
-      "200": { description: "Usuario encontrado" },
-      "400": { description: "ID inválido" },
-      "404": { description: "Usuario no encontrado" }
-    }
-  }
-},
+      ],
+      responses: {
+        "200": { description: "Usuario encontrado" },
+        "400": { description: "ID inválido" },
+        "404": { description: "Usuario no encontrado" },
+      },
+    },
+  },
   "/api/user/updateUser": {
     put: {
       summary: "Actualizar cualquier usuario por ID",
@@ -3178,6 +3178,30 @@ export const swaggerPaths: Paths = {
         },
         "400": {
           description: "Solicitud inválida",
+        },
+      },
+    },
+  },
+  "/api/profiles/lab-cert": {
+    get: {
+      summary: "Generar ceritificado por id profile",
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del perfil",
+        },
+      ],
+      tags: ["Profiles"],
+
+      responses: {
+        "200": {
+          description: "Perfil encontrado",
+        },
+        "400": {
+          description: "Error al buscar perfil",
         },
       },
     },
