@@ -1,7 +1,6 @@
 import express from 'express';
 import { validationSchemaHandler } from '../middleware/validationSquema';
 import { profileController } from '../controllers/profile.controller';
-import { validateToken } from '../middleware/tokens.middlewares';
 
 const router = express.Router();
 
@@ -32,8 +31,5 @@ router.delete('/delete',  profileController.delete);
 
 router.get('/getPaginated',  profileController.getPaginated);
 router.get('/getTotalPages',  profileController.getTotalPages);
-
-router.get('/lab-cert', validateToken, profileController.getCertificado)
-
 
 export default router;
