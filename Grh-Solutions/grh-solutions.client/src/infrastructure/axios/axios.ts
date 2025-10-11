@@ -33,7 +33,7 @@ axios.interceptors.response.use(
           break;
         case 401:
           if (globalLogout) {
-            console.log("loggin out")
+            console.log("loggin out");
             globalLogout(); 
           }
           console.error(`Error 401: Unauthorized. URL: ${url}`, data);
@@ -102,7 +102,7 @@ const get = async <T>(
   return await makeRequest<T>(config, signal);
 };
 
-const post = async <T>(url: string, body: any, p0: { headers: { "Content-Type": string; }; }) => {
+const post = async <T>(url: string, body: any) => {
   const headers = await getHeaderItems();
 
   const config: AxiosRequestConfig = {

@@ -145,20 +145,32 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
           },
           signal
         );
-
-        // Unir prev con nuevos pero evitando duplicados por id
         setNews((prev) => {
-          // Crear un mapa para evitar duplicados
           const newsMap = new Map();
 
           // Agregamos primero el estado anterior
-          prev.forEach((item) => newsMap.set(item._id, item));
+          prev.forEach((item) => {
+            newsMap.set(item._id, item);
+          });
 
-          // Agregamos los nuevos items, reemplazando si hay id igual
-          response.data.forEach((item) => newsMap.set(item._id, item));
+          // Agregamos los nuevos items
+          response.data.forEach((item) => {
+            const existing = newsMap.get(item._id);
+
+            if (
+              !existing ||
+              new Date(item.createdAt) > new Date(existing.createdAt)
+            ) {
+              // Solo lo reemplaza si es más reciente
+              newsMap.set(item._id, item);
+            }
+          });
 
           // Convertir de vuelta a array
           const merged = Array.from(newsMap.values());
+
+          // Ordenar por fecha descendente (más reciente primero)
+          merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
           return merged;
         });

@@ -7,7 +7,7 @@ import Vacancies from "./vacancies";
 import TypeContract from "./typeContract";
 import postulante from "./postulante";
 import { validateToken } from '../middleware/tokens.middlewares';
-// import { verifyPermissionHandler } from '../middleware/verifyPermission.middleware';
+import { verifyPermissionHandler } from '../middleware/verifyPermission.middleware';
 import permission from "./permission";
 import schedules from "./schedules";
 import area from "./area";
@@ -30,7 +30,7 @@ import signatures from './signatures';
 const routes = Router();
 //Apply middlewares globally to all routes
 routes.use(validateToken);
-// routes.use(verifyPermissionHandler);
+routes.use(verifyPermissionHandler);
 
 //Define routes
 routes.use("/login", Login);
