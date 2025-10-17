@@ -1,44 +1,37 @@
 import { NextFunction, Request, Response } from "express";
 import { rolModel } from "../models/rol.model";
+import { permissionModel } from "../models/permission.model";
+import { ModuleModel } from "../models/module.model";
+import { Types } from "mongoose";
+import { permissionUtl } from "../utls/permission.utl";
 
-export const verifyPermissionHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyPermissionHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { method, originalUrl, currentRol, isPublic } = req;
-    
-    // console.log("=== PERMISSION VALIDATION START ===");
-    // console.log("Method:", method, "URL:", originalUrl);
-    // console.log("isPublic:", isPublic);
-    // console.log("currentRol:", currentRol);
 
-    // If it's a public route, skip permission check
-    if(isPublic) {
-      //console.log("Public route, skipping permission check.");
-      //console.log("=== PERMISSION VALIDATION END (PUBLIC) ===");
-      return next();
-    }
-
-    //console.log("Private route, checking permissions...");
+    if (isPublic) return next();
 
     if (!currentRol) {
-      console.log("No role found in request");
       return res.status(401).json({
         success: false,
         message: "User role not found in request.",
       });
     }
 
-    // Find role with populated permissions - FIXED: Proper population
-    const rol = await rolModel.findById(currentRol).populate('permissions');
-
-    //console.log("Role found:", rol ? "Yes" : "No");
-    if (rol) {
-      // console.log("Role name:", rol.name);
-      // console.log("Role isActive:", rol.isActive);
-      // console.log("Number of permissions:", rol.permissions?.length || 0);
-    }
+    // Buscar el rol con permisos
+    const rol = await rolModel.findById(currentRol).populate({
+      path: "permissions",
+      populate: {
+        path: "ident.module",
+        model: "module",
+      },
+    });
 
     if (!rol) {
-      //console.log("Role not found in database");
       return res.status(403).json({
         success: false,
         message: "Role does not exist.",
@@ -46,57 +39,88 @@ export const verifyPermissionHandler = async (req: Request, res: Response, next:
     }
 
     if (!rol.isActive) {
-      //console.log("Role is not active");
       return res.status(403).json({
         success: false,
         message: "Role is not active.",
       });
     }
+    let foundPermission: any | null = null;
+    // Verificar si el rol tiene el permiso correspondiente
+    foundPermission = rol.permissions?.find(
+      (perm: any) =>
+        perm.ident?.method === method.toUpperCase() &&
+        perm.ident?.originalUrl === originalUrl
+    );
 
-    // FIXED: Improved permission checking logic
-    // console.log("Checking permissions...");
-    // console.log("Looking for permission with method:", method.toUpperCase(), "and URL:", originalUrl);
+    let hasPermission = !!foundPermission;
 
-    let hasPermission = false;
-    
-    if (rol.permissions && rol.permissions.length > 0) {
-      for (let i = 0; i < rol.permissions.length; i++) {
-        const permission = rol.permissions[i] as any;
+    if (typeof rol.name != "string") {
+      return res.status(500).json({
+        success: false,
+        message: "Role is not found",
+      });
+    }
 
-        // Check if permission matches
-        if (permission.ident?.method === method.toUpperCase() && 
-            permission.ident?.originalUrl === originalUrl) {
-          //console.log("Permission match found!");
-          hasPermission = true;
-          break;
-        }
+    // ⚙️ Si no lo tiene y es admin, crear y asignar automáticamente
+    if (!hasPermission && rol.name?.toLowerCase() === "admin") {
+      console.log(
+        `🧩 Asignando permiso automático a rol admin -> ${method} ${originalUrl}`
+      );
+
+      const permissionId: Types.ObjectId =
+        await permissionUtl.getOrCreatePermission(
+          method,
+          originalUrl,
+          null,
+          `Auto-created permission for ${method} ${originalUrl}`
+        );
+
+      // Agregarlo al rol si no existe
+      if (
+        !rol.permissions.some(
+          (p: any) => p._id?.toString() === permissionId.toString()
+        )
+      ) {
+        rol.permissions.push(permissionId);
+        await rol.save();
+        console.log("✅ Permiso agregado automáticamente al rol admin");
       }
-    } else {
-      console.log("No permissions found for this role");
+
+      // Obtener el permiso completo con módulo
+      foundPermission = (await permissionModel
+        .findById(permissionId)
+        .populate("ident.module")) as any;
+
+      hasPermission = true;
+    }
+
+    // 🧱 Si el permiso existe y tiene un módulo, verificar si está deshabilitado
+    if (foundPermission && foundPermission.ident?.module) {
+      const moduleData = foundPermission.ident.module as any;
+
+      if (moduleData?.disabled) {
+        return res.status(403).json({
+          success: false,
+          message: "El módulo que intentas ingresar está desactivado.",
+          module: moduleData.name,
+        });
+      }
     }
 
     if (!hasPermission) {
-      if (rol.permissions) {
-        rol.permissions.forEach((perm: any, index: number) => {
-          console.log(`  ${index + 1}. ${perm.ident?.method} ${perm.ident?.originalUrl}`);
-        });
-      }
-      
       return res.status(403).json({
         success: false,
         message: "Access denied: insufficient permissions.",
         requested: {
           method: method.toUpperCase(),
           originalUrl,
-        }
+        },
       });
     }
 
-    // console.log("Permission granted");
-    // console.log("=== PERMISSION VALIDATION END (SUCCESS) ===");
     return next();
   } catch (error: any) {
-    //console.error("Permission validation error:", error);
+    console.error("Permission validation error:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error validating permissions.",

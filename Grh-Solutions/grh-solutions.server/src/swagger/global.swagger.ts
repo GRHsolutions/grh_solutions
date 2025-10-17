@@ -8,10 +8,12 @@ import { RequestPaths, RequestSchema } from "./request.swagger";
 import { InvolvedPaths, InvolvedSchemas } from "./involved.swagger";
 import { HistoryPaths, HistorySchema } from "./history.swagger";
 import { newPaths, NewsSchema } from "./comunicados.swagger";
-import { BadRequestErrorSchemas } from "./error.swagger";
+//import { BadRequestErrorSchemas } from "./error.swagger";
+import { permissionPaths, permissionSchemas } from "./permission.swagger";
 
 // Combinar todos los paths
 export const globalPaths: Paths = {
+  ...permissionPaths,
   ...swaggerPaths,
   ...ContractPaths,
   ...ReportPaths,
@@ -52,9 +54,12 @@ export const globalComponents: Components = {
     History: HistorySchema,
 
     // Schema error
-    ...(BadRequestErrorSchemas.schemas || {}),
+    //...(BadRequestErrorSchemas.schemas || {}),
 
     // Schemas de comunicados
     ...NewsSchema,
+
+    // Schema permission
+    ...permissionSchemas.schemas
   },
 };
