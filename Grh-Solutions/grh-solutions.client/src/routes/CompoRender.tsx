@@ -12,8 +12,9 @@ interface CompoRenderProps {
 enum TypesModule {
   "comunicados" = "COMUNICADOS",
   "postulate" = "VACANTES",
-  "solicitudes" = "SOLICITUDES"
-
+  "solicitudes" = "SOLICITUDES",
+  "horarios" = "HORARIOS",
+  "empleados" = "EMPLEADOS"
 }
 
 export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) => {
@@ -23,9 +24,21 @@ export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) =
   } = usePermissions("post-login-renderer");
   const location = useLocation();
 
-  React.useEffect(()=>{
-    console.log("Ruta no identificada?" + (isBoundary ? "si" : "no"));
-  }, [isBoundary]);
+  // Función para obtener el módulo según la ruta
+  const getModuleFromPath = (path: string): TypesModule | undefined => {
+    // Puedes personalizar esta lógica según tu estructura de rutas
+    if (path.includes("/comunicados")) return TypesModule.comunicados;
+    if (path.includes("/postulate")) return TypesModule.postulate;
+    if (path.includes("/solicitudes")) return TypesModule.solicitudes;
+    return undefined;
+  };
+
+  const currentModule = getModuleFromPath(location.pathname);
+
+  React.useEffect(() => {
+    console.log("Ruta no identificada? " + (isBoundary ? "si" : "no"));
+    console.log("Módulo actual:", currentModule);
+  }, [isBoundary, currentModule]);
 
   return (
     <Box
