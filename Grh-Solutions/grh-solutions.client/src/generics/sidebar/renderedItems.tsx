@@ -8,6 +8,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import DescriptionIcon from '@mui/icons-material/Description';
 import EngineeringIcon from '@mui/icons-material/Engineering';
 import { useAuth } from "../../hooks/auth";
+import { usePermissions } from "../../contexts/permissions.provider";
 
 export interface Item {
   visible: boolean;
@@ -26,6 +27,9 @@ export interface Returnable {
 export const useRenderedItems = (): Returnable => {
   const location = useLocation();
   const { isLoggedIn } = useAuth();
+  const {
+    hasPermission
+  } = usePermissions("post-login-renderer");
 
   const items = useMemo(() => {
     const allItems: Item[] = [
@@ -38,7 +42,7 @@ export const useRenderedItems = (): Returnable => {
         icon: <HomeIcon />,
       },
       {
-        visible: isLoggedIn,
+        visible: isLoggedIn && hasPermission("MODULO", "COMUNICADOS"),
         to: "/comunicados",
         disabled: false,
         active: location.pathname === "/comunicados",
@@ -46,15 +50,15 @@ export const useRenderedItems = (): Returnable => {
         icon: <MailIcon />,
       },
       {
-        visible: isLoggedIn,
+        visible: isLoggedIn && hasPermission("MODULO", "HORARIOS"),
         to: "/horarios?type=horarios",
         disabled: false,
         active: location.pathname === "/horarios",
         label: "Horarios",
-        icon: <CalendarMonthIcon />
+        icon: <CalendarMonthIcon />,
       },
       {
-        visible: isLoggedIn,
+        visible: isLoggedIn && hasPermission("MODULO", "SOLICITUDES"),
         to: '/solicitudes',
         disabled: false,
         active: location.pathname === "/solicitudes",
@@ -71,23 +75,23 @@ export const useRenderedItems = (): Returnable => {
       // },
 
       {
-        visible: isLoggedIn,
+        visible: isLoggedIn && hasPermission("MODULO", "VACANTES"),
         to: "/postulate",
         disabled: false,
         active: location.pathname === "/postulate",
         label: "Vacantes",
-        icon: <PersonAddIcon />
+        icon: <PersonAddIcon />,
       },
       {
-        visible: isLoggedIn,
+        visible: isLoggedIn && hasPermission("MODULO", "CONTRATOS"),
         to: "/contratos",
         disabled: false,
         active: location.pathname === "/contratos",
         label: "Contratos",
-        icon: <DescriptionIcon />
+        icon: <DescriptionIcon />,
       },
       {
-        visible: isLoggedIn,
+        visible: isLoggedIn && hasPermission("MODULO", "EMPLEADOS"),
         to: "/empleados",
         disabled: false,
         active: location.pathname === "/empleados",

@@ -16,7 +16,7 @@ const validationSchema = [
 
 router.post('/create',  validationSchemaHandler({ schema: validationSchema }), rolController.create);
 router.get('/getAllNoPage',  rolController.getAll); // Usar sin paginado por el momento :V
-router.put('/update',  validationSchemaHandler({ schema: validationSchema }), rolController.update);
+router.put('/update', rolController.update);
 router.delete('/delete',  rolController.delete);
 router.get('/getById',  rolController.getById); // Obtener por ID
 

@@ -48,10 +48,13 @@ export const rolController = {
   update: async (req: Request, res: Response) => {
     try {
       const { id } = req.query;
-      const { name, isActive, addPermissions, removePermissions } = req.body;
-      console.log("-------------------------------------ROL UPDATE-------------------------------------");  
-      console.log("Updating rol with ID:", id);
-      console.log("With body:", req.body);
+      const { 
+        name, 
+        isActive, 
+        addPermissions, 
+        removePermissions 
+      } = req.body;
+      console.log("AGREGANDO", req.body, " A ", id);
 
       const updates: any = {};
 

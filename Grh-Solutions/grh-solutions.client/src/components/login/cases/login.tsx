@@ -7,6 +7,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../../../contexts/NotificationContext";
+import { usePermissions } from "../../../contexts/permissions.provider";
+import { PermisosPostLoginRender } from "../../../const/permisos";
+import React from "react";
 
 interface LoginProps {
   onRegister: () => void;
@@ -17,15 +20,19 @@ const initialValues = {
   password: "",
 };
 
-export default function Login({}: /*onRegister*/ LoginProps) {
+export default function Login({ onRegister }: LoginProps) {
   const theme = useTheme();
   const { login } = useAuth();
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
+  const [loginIN, setLoginIn] = React.useState(false);
+  const { loading, fetchPermissions } = usePermissions("post-login-renderer");
 
   const handleSubmit = async (values: { email: string; password: string }) => {
+    setLoginIn(true);
     await login(values.email, values.password)
       .then(async (res) => {
+        await fetchPermissions(PermisosPostLoginRender);
         if (res.t == "SUCCESS-CRAETE-CV") {
           // addNotification({
           //   title: res.m,
@@ -34,7 +41,7 @@ export default function Login({}: /*onRegister*/ LoginProps) {
           //   duration: 4000,
           // });
           //navigate('/hv-user')
-          navigate('/')
+          navigate("/");
         } else if (res.t == "SUCCESS") {
           // addNotification({
           //   title: res.m,
@@ -42,7 +49,7 @@ export default function Login({}: /*onRegister*/ LoginProps) {
           //   position: "top-right",
           //   duration: 4000,
           // });
-          navigate('/')
+          navigate("/");
         } else {
           addNotification({
             title: res.m,
@@ -54,6 +61,9 @@ export default function Login({}: /*onRegister*/ LoginProps) {
       })
       .catch((error) => {
         console.error("Error en el inicio de sesión:", error);
+      })
+      .finally(() => {
+        setLoginIn(false);
       });
   };
 
@@ -127,6 +137,7 @@ export default function Login({}: /*onRegister*/ LoginProps) {
                   variant="standard"
                   onChange={handleChange}
                   autoComplete="email"
+                  disabled={loading || loginIN}
                   error={touched.email && Boolean(errors.email)}
                   fullWidth
                 />
@@ -140,6 +151,7 @@ export default function Login({}: /*onRegister*/ LoginProps) {
                   onChange={handleChange}
                   autoComplete="current-password"
                   type="password"
+                  disabled={loading || loginIN}
                   error={touched.password && Boolean(errors.password)}
                   fullWidth
                 />
@@ -152,7 +164,7 @@ export default function Login({}: /*onRegister*/ LoginProps) {
                     component="button"
                     type="button"
                     onClick={() => {
-                      // Aquí puedes agregar la lógica para recuperar contraseña
+                      onRegister();
                       console.log("Recuperar contraseña");
                     }}
                     sx={{
@@ -173,7 +185,13 @@ export default function Login({}: /*onRegister*/ LoginProps) {
                 type="submit"
                 variant="principal"
                 label="Iniciar Sesión"
-                disabled={!isValid || !values.email || !values.password}
+                disabled={
+                  !isValid ||
+                  !values.email ||
+                  !values.password ||
+                  loading ||
+                  loginIN
+                }
                 fullWidth
                 sx={{ mt: 2, py: 1.5 }}
               />

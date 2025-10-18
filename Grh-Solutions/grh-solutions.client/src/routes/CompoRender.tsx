@@ -1,14 +1,27 @@
 import { Box, useTheme } from "@mui/material";
 import useSuspenseLoader from "../hooks/suspenseLoader";
 import React from "react";
+import { usePermissions } from "../contexts/permissions.provider";
+import { Route, useLocation } from "react-router-dom";
 
 interface CompoRenderProps {
   element: React.LazyExoticComponent<React.FC<object>>;
   isBoundary?: boolean;
 }
 
+enum TypesModule {
+  "comunicados" = "COMUNICADOS",
+  "postulate" = "VACANTES",
+  "solicitudes" = "SOLICITUDES"
+
+}
+
 export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) => {
   const theme = useTheme();
+  const {
+    hasPermission
+  } = usePermissions("post-login-renderer");
+  const location = useLocation();
 
   React.useEffect(()=>{
     console.log("Ruta no identificada?" + (isBoundary ? "si" : "no"));

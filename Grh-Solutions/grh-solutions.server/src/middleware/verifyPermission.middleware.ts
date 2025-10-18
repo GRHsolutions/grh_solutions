@@ -44,6 +44,7 @@ export const verifyPermissionHandler = async (
         message: "Role is not active.",
       });
     }
+    
     let foundPermission: any | null = null;
     // Verificar si el rol tiene el permiso correspondiente
     foundPermission = rol.permissions?.find(
@@ -62,7 +63,7 @@ export const verifyPermissionHandler = async (
     }
 
     // ⚙️ Si no lo tiene y es admin, crear y asignar automáticamente
-    if (!hasPermission && rol.name?.toLowerCase() === "admin") {
+    if (!hasPermission && rol.name?.toLowerCase() === "administrador") {
       console.log(
         `🧩 Asignando permiso automático a rol admin -> ${method} ${originalUrl}`
       );

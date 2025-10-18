@@ -4,7 +4,7 @@ export type Permission = {
 };
 
 export type Ident = {
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "MODULO";
   originalUrl: string;
   module: null | Module;
 };

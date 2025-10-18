@@ -1,12 +1,12 @@
 import { PathItem, Schema } from "swagger-jsdoc";
 
 export const permissionPaths: Record<string, PathItem> = {
-  "/api/permissions/getUrsPermissions": {
+  "/api/permission/getPermissions": {
     post: {
       summary: "Verificar permisos de un rol sobre una lista de endpoints",
       description:
         "Recibe un rol actual y un listado de objetos `ident` (método y URL), y devuelve si el rol tiene acceso o no. También considera si el módulo asociado al permiso está desactivado.",
-      tags: ["Permissions"],
+      tags: ["Permission"],
       requestBody: {
         required: true,
         content: {

@@ -5,7 +5,7 @@ import { Types } from "mongoose";
 
 export const permissionUtl = {
   verifyPublicAccess: async (method: string, url: string): Promise<boolean> => {
-    console.log("request to ", method, " - ", url);
+    //console.log("request to ", method, " - ", url);
     // Ruta absoluta y segura al archivo JSON
     const filePath = path.join(__dirname, "../data/appSettings.json");
 

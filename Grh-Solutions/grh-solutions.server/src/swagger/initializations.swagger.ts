@@ -265,7 +265,7 @@ export const swaggerComponents: Components = {
           properties: {
             method: {
               type: "string",
-              enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+              enum: ["GET", "POST", "PUT", "DELETE", "PATCH", "MODULE"],
               example: "GET",
             },
             originalUrl: {

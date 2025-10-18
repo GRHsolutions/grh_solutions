@@ -6,7 +6,7 @@ const permissionSchema = new Schema(
       method: {
         type: String,
         required: [true, "HTTP method is required"],
-        enum: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+        enum: ["GET", "POST", "PUT", "DELETE", "PATCH", "MODULO"],
         uppercase: true,
       },
       originalUrl: {
