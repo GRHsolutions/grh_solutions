@@ -2,7 +2,8 @@ import { Box, useTheme } from "@mui/material";
 import useSuspenseLoader from "../hooks/suspenseLoader";
 import React from "react";
 import { usePermissions } from "../contexts/permissions.provider";
-import { Route, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { NoGrantedAcces } from "./noGrantedAccess";
 
 interface CompoRenderProps {
   element: React.LazyExoticComponent<React.FC<object>>;
@@ -19,40 +20,57 @@ enum TypesModule {
 
 export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) => {
   const theme = useTheme();
-  const {
-    hasPermission
-  } = usePermissions("post-login-renderer");
+  const { hasPermission } = usePermissions("post-login-renderer");
   const location = useLocation();
+  const [granted, setGranted] = React.useState(false);
 
-  // Función para obtener el módulo según la ruta
+  // === Determinar módulo según la ruta ===
   const getModuleFromPath = (path: string): TypesModule | undefined => {
-    // Puedes personalizar esta lógica según tu estructura de rutas
     if (path.includes("/comunicados")) return TypesModule.comunicados;
     if (path.includes("/postulate")) return TypesModule.postulate;
     if (path.includes("/solicitudes")) return TypesModule.solicitudes;
+    if (path.includes("/horarios")) return TypesModule.horarios;
+    if (path.includes("/empleados")) return TypesModule.empleados;
     return undefined;
   };
 
   const currentModule = getModuleFromPath(location.pathname);
 
   React.useEffect(() => {
-    console.log("Ruta no identificada? " + (isBoundary ? "si" : "no"));
-    console.log("Módulo actual:", currentModule);
+    if (!currentModule) {
+      // Si la ruta no corresponde a un módulo, se considera libre
+      setGranted(true);
+      return;
+    }
+
+    const grantAccess = hasPermission("MODULE", currentModule);
+    setGranted(grantAccess);
+    console.log(`Módulo actual: ${currentModule} → Permiso: ${grantAccess}`);
   }, [isBoundary, currentModule]);
+
+  // === Redirección por defecto si no tiene acceso ===
+  const redirectPath = "/";
 
   return (
     <Box
       sx={{
-        backgroundColor: theme.palette.primary.main, // theme.palette.primary.main
-        color: theme.palette.primary.contrastText,
-        borderBottom: `1px solid ${theme.palette.primary.divider}`,
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.text.primary,
+        borderBottom: `1px solid ${theme.palette.divider}`,
         p: 1,
         display: "flex",
         height: "100%",
-        overflowY: "hidden", // El desplazamiento debe ser por el componente a renderizar, IMBECIL
+        overflowY: "hidden",
       }}
     >
-      {useSuspenseLoader(element)}
+      {granted ? (
+        <>{useSuspenseLoader(element)}</>
+      ) : (
+        <NoGrantedAcces
+          redirect={redirectPath}
+          noGrantedTo={currentModule ?? "este módulo"}
+        />
+      )}
     </Box>
   );
 };
