@@ -7,7 +7,7 @@ import { CompoRender } from "./CompoRender";
 const Comunicados = lazy(() => import("../pages/comunicados/Comunicados"));
 const Index = lazy(() => import("../pages/index"));
 const Postulate = lazy(() => import("../pages/postulate/postulate"));
-const BoundaryRoute = lazy(() => import("../pages/boundaryRoute/BoundaryRoute"));
+const BoundaryRoute = lazy(() => import("./boundaryCompo"));
 const SolicitudesPage = lazy(()=> import("../pages/solicitudes/SolicitudesPages"))
 const TryColorsAndGenerics = lazy(() => import("./../pages/TryColorsAndGenerics/TryColorsAndGenerics"))
 const UserPage = lazy(() => import("../pages/user/UserPage"));

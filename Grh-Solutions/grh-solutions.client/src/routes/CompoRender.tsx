@@ -8,6 +8,7 @@ import { NoGrantedAcces } from "./noGrantedAccess";
 interface CompoRenderProps {
   element: React.LazyExoticComponent<React.FC<object>>;
   isBoundary?: boolean;
+  skipValidation?: boolean;
 }
 
 enum TypesModule {
@@ -18,7 +19,7 @@ enum TypesModule {
   "empleados" = "EMPLEADOS"
 }
 
-export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) => {
+export const CompoRender = ({ element, isBoundary = false, skipValidation = false }: CompoRenderProps) => {
   const theme = useTheme();
   const { hasPermission } = usePermissions("post-login-renderer");
   const location = useLocation();
@@ -37,13 +38,18 @@ export const CompoRender = ({ element, isBoundary = false }: CompoRenderProps) =
   const currentModule = getModuleFromPath(location.pathname);
 
   React.useEffect(() => {
+    if (skipValidation) {
+      setGranted(true);
+      return;
+    }
+
     if (!currentModule) {
       // Si la ruta no corresponde a un módulo, se considera libre
       setGranted(true);
       return;
     }
 
-    const grantAccess = hasPermission("MODULE", currentModule);
+    const grantAccess = hasPermission("MODULO", currentModule);
     setGranted(grantAccess);
     console.log(`Módulo actual: ${currentModule} → Permiso: ${grantAccess}`);
   }, [isBoundary, currentModule]);

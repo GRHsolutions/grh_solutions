@@ -7,8 +7,6 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useNotifications } from "../../../contexts/NotificationContext";
-import { usePermissions } from "../../../contexts/permissions.provider";
-import { PermisosPostLoginRender } from "../../../const/permisos";
 import React from "react";
 
 interface LoginProps {
@@ -26,29 +24,27 @@ export default function Login({ onRegister }: LoginProps) {
   const navigate = useNavigate();
   const { addNotification } = useNotifications();
   const [loginIN, setLoginIn] = React.useState(false);
-  const { loading, fetchPermissions } = usePermissions("post-login-renderer");
 
   const handleSubmit = async (values: { email: string; password: string }) => {
     setLoginIn(true);
     await login(values.email, values.password)
       .then(async (res) => {
-        await fetchPermissions(PermisosPostLoginRender);
         if (res.t == "SUCCESS-CRAETE-CV") {
-          // addNotification({
-          //   title: res.m,
-          //   color: "info",
-          //   position: "top-right",
-          //   duration: 4000,
-          // });
-          //navigate('/hv-user')
-          navigate("/");
+          addNotification({
+            title: res.m,
+            color: "info",
+            position: "top-right",
+            duration: 4000,
+          });
+          navigate("/hv-user");
+          //navigate("/");
         } else if (res.t == "SUCCESS") {
-          // addNotification({
-          //   title: res.m,
-          //   color: "success",
-          //   position: "top-right",
-          //   duration: 4000,
-          // });
+          addNotification({
+            title: res.m,
+            color: "success",
+            position: "top-right",
+            duration: 4000,
+          });
           navigate("/");
         } else {
           addNotification({
@@ -137,7 +133,7 @@ export default function Login({ onRegister }: LoginProps) {
                   variant="standard"
                   onChange={handleChange}
                   autoComplete="email"
-                  disabled={loading || loginIN}
+                  disabled={loginIN}
                   error={touched.email && Boolean(errors.email)}
                   fullWidth
                 />
@@ -151,7 +147,7 @@ export default function Login({ onRegister }: LoginProps) {
                   onChange={handleChange}
                   autoComplete="current-password"
                   type="password"
-                  disabled={loading || loginIN}
+                  disabled={loginIN}
                   error={touched.password && Boolean(errors.password)}
                   fullWidth
                 />
@@ -186,11 +182,7 @@ export default function Login({ onRegister }: LoginProps) {
                 variant="principal"
                 label="Iniciar Sesión"
                 disabled={
-                  !isValid ||
-                  !values.email ||
-                  !values.password ||
-                  loading ||
-                  loginIN
+                  !isValid || !values.email || !values.password || loginIN
                 }
                 fullWidth
                 sx={{ mt: 2, py: 1.5 }}

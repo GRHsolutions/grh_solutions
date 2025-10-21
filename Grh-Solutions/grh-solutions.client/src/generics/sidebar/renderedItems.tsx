@@ -22,12 +22,14 @@ export interface Item {
 
 export interface Returnable {
   items: Item[];
+  loading: boolean; // CARGADO LOS PERMISOS 
 }
 
 export const useRenderedItems = (): Returnable => {
   const location = useLocation();
   const { isLoggedIn } = useAuth();
   const {
+    loading,
     hasPermission
   } = usePermissions("post-login-renderer");
 
@@ -101,7 +103,7 @@ export const useRenderedItems = (): Returnable => {
     ];
 
     return allItems;
-  }, [location.pathname, isLoggedIn]);
+  }, [location.pathname, isLoggedIn, loading]);
 
-  return { items };
+  return { items, loading };
 };

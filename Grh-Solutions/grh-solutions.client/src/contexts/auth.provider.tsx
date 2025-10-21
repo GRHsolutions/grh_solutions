@@ -3,6 +3,8 @@ import { localStorageUtil } from "../utils/localStorage";
 import { LoginRepository } from "../infrastructure/repositories/usuario";
 import { LoginService } from "../domain/services/login/login.service";
 import { ReturnableLogin } from "../domain/models/usuario/login.entities";
+import { usePermissions } from "./permissions.provider";
+import { PermisosPostLoginRender } from "../const/permisos";
 
 interface AuthContextType {
   auth: ReturnableLogin;
@@ -40,6 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     !!initialAuthState.token
   );
   const service = new LoginService(new LoginRepository());
+  const { fetchPermissions } = usePermissions("post-login-renderer");
 
   // Maneja el login de manera asíncrona
   const login = async (
@@ -57,6 +60,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         localStorageUtil.set("usr_items_photo", res.user.photo);
       if (res.user.email)
         localStorageUtil.set("usr_items_correo", res.user.email);
+
+      // CARGA LOS PERMISOS CON EL TOKEN RECIEN TRAIDO
+      await fetchPermissions(PermisosPostLoginRender);
+
       setIsLoggedIn(true); // Establecer como logueado      
 
       // Actualizar estado de autenticación
@@ -68,6 +75,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         token: res.token,
       });
+
+
 
       if (res.warnings === undefined) {
         //await sleep(2000);

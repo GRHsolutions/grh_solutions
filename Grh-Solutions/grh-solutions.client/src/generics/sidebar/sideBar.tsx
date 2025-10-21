@@ -12,7 +12,7 @@ export const SideBar2: React.FC = () => {
   const styles = useStyles();
   const [collapse, setCollapse] = React.useState(false);
   const [openSubmenus, setOpenSubmenus] = React.useState<{ [key: string]: boolean }>({});
-  const { items } = useRenderedItems();
+  const { items, loading } = useRenderedItems();
   const location = useLocation();
   const navigate = useNavigate();
   const theme = useTheme();
@@ -66,7 +66,9 @@ export const SideBar2: React.FC = () => {
           </Box>
 
           <Box sx={styles.render}>
-            {items.map((item) =>
+            {loading ? (
+              <Typography>Cargando...</Typography>
+            ) : items.map((item) =>
               item.visible ? (
                 <Box key={item.to}>
                   <Button

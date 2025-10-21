@@ -3,6 +3,11 @@ import path from "path";
 import { permissionModel } from "../models/permission.model";
 import { Types } from "mongoose";
 
+function normalizeUrlForPermission(url: string) {
+  if (!url) return url;
+  return url.split("?")[0]; // o lógica más compleja si lo deseas
+}
+
 export const permissionUtl = {
   verifyPublicAccess: async (method: string, url: string): Promise<boolean> => {
     //console.log("request to ", method, " - ", url);
@@ -27,24 +32,21 @@ export const permissionUtl = {
     description?: string
   ): Promise<Types.ObjectId> => {
     const normalizedMethod = method.toUpperCase();
+    const normalizedUrl = normalizeUrlForPermission(originalUrl);
 
     try {
-      // Buscar si ya existe
       const existingPermission = await permissionModel.findOne({
         "ident.method": normalizedMethod,
-        "ident.originalUrl": originalUrl,
+        "ident.originalUrl": normalizedUrl,
         "ident.module": module,
       });
 
-      if (existingPermission) {
-        return existingPermission._id;
-      }
+      if (existingPermission) return existingPermission._id;
 
-      // Crear nuevo permiso
       const newPermission = await permissionModel.create({
         ident: {
           method: normalizedMethod,
-          originalUrl,
+          originalUrl: normalizedUrl,
           module,
         },
         description,

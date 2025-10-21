@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { rolModel } from "../models/rol.model";
 import { permissionModel } from "../models/permission.model";
-import { ModuleModel } from "../models/module.model";
 import { Types } from "mongoose";
 import { permissionUtl } from "../utls/permission.utl";
+import { getCanonicalMethod, getCanonicalUrl } from "../utls/router.utl";
 
 export const verifyPermissionHandler = async (
   req: Request,
@@ -11,7 +11,16 @@ export const verifyPermissionHandler = async (
   next: NextFunction
 ) => {
   try {
-    const { method, originalUrl, currentRol, isPublic } = req;
+    const {
+      currentRol, 
+      isPublic 
+    } = req;
+
+    // usar canonicals
+    const method = getCanonicalMethod(req);
+    const originalUrl = getCanonicalUrl(req);
+
+    console.log("method y url canónicas:", { method, originalUrl });
 
     if (isPublic) return next();
 
@@ -76,6 +85,7 @@ export const verifyPermissionHandler = async (
           `Auto-created permission for ${method} ${originalUrl}`
         );
 
+        
       // Agregarlo al rol si no existe
       if (
         !rol.permissions.some(
