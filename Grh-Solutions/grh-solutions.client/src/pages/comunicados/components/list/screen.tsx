@@ -9,6 +9,7 @@ import { useNews } from "../../../../hooks/news";
 import { FloatingButton } from "../../../../generics/floatingButton/floatingButton";
 import AddIcon from "@mui/icons-material/Add";
 import { CreateEditNew } from "../form/createEditNew";
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
@@ -106,6 +107,19 @@ const Screen: React.FC = () => {
         </Grid2>
       )}
       <ViewMail />
+      <FloatingButton
+        icon={<FilterAltIcon />}
+        onClick={() => {
+          noCurrnt("create");
+        }}
+        label="Filtro"
+        bgColor={theme.palette.green['500']}
+        positions={{
+          bottom: "6.2rem",
+          left: "2rem",
+        }}
+        borderColor={theme.palette.green['800']}
+      />
       <FloatingButton
         icon={<AddIcon />}
         onClick={() => {

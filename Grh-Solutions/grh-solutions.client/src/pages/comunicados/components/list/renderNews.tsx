@@ -10,7 +10,14 @@ import {
 import NewItem from "./newItem";
 
 const RenderNews: React.FC = () => {
-  const { news, selectItem, comments, hasMore, fechMore, loading } = useNews();
+  const { 
+    news, 
+    selectItem, 
+    comments, 
+    hasMore, 
+    fechMore, 
+    loading 
+  } = useNews();
 
   const handleSelect = (id: string) => {
     selectItem(id);

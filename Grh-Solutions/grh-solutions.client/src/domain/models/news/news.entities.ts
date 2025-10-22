@@ -1,6 +1,7 @@
 import { Dayjs } from "dayjs";
 import { DragNDropVariables } from "../../../generics/grh-generics/DragNDrop";
 import { NewsPagination } from "../pagination/pagination";
+import { User } from "../request/request.entities";
 
 export type News = {
     _id: string;
@@ -12,6 +13,7 @@ export type News = {
     type: "simple-publication" | "publication-with-images" | "publication-with-survey"
     numberLikes: number;
     numberDisLikes: number;
+    comms: number;
     date: Dayjs;
     madeBy: MadeBy; // SI NO SE POPULIZA LLEGA COMO UN STRING
     [key: string] : any;
@@ -35,13 +37,24 @@ export type RawFormulary = {
 }
 
 export type Commentary = {
-    id: number,
+    _id: string,
     comment: string,
-    madeBy: number,
+    madeBy: User,
+    createdAt: string,
+    updatedAt: string,
+    fromNew: News,
+    [key: string]: any
+}
+
+export type CommentaryFrom = {
+    comment: string,
+    fromNew: string,
+    [key: string]: any
 }
 
 export interface NewsFilter extends NewsPagination {
     status?: string | undefined;
+    search?: string;
 }
 
 export type Birthday = {
@@ -59,4 +72,9 @@ export type NewForm = {
     description: string;
     images: DragNDropVariables[];
     form: object // todavia no decidido
+}
+
+export interface CommentaryFilter extends NewsPagination {
+    search?: string,
+    new?: string
 }

@@ -39,12 +39,12 @@ export default function Login({ onRegister }: LoginProps) {
           navigate("/hv-user");
           //navigate("/");
         } else if (res.t == "SUCCESS") {
-          addNotification({
-            title: res.m,
-            color: "success",
-            position: "top-right",
-            duration: 4000,
-          });
+          // addNotification({
+          //   title: res.m,
+          //   color: "success",
+          //   position: "top-right",
+          //   duration: 4000,
+          // });
           navigate("/");
         } else {
           addNotification({

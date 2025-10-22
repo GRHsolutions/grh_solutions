@@ -24,10 +24,20 @@ interface BasicMenuProps {
   icon?: React.ReactNode;
 }
 
-const BasicMenu = ({ items, optionsPosition, icon }: BasicMenuProps) => {
+const BasicMenu = ({ 
+  items, 
+  optionsPosition,
+  icon
+}: BasicMenuProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const theme = useTheme();
+
+  // Filtrar items visibles
+  const visibleItems = items.filter((item) => item.visible !== false);
+  
+  // Deshabilitar el botón si no hay items visibles
+  const hasVisibleItems = visibleItems.length > 0;
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -45,6 +55,7 @@ const BasicMenu = ({ items, optionsPosition, icon }: BasicMenuProps) => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
+        disabled={!hasVisibleItems}
         sx={{
           backgroundColor: 'transparent', //theme.palette.primary.main,
           color: theme.palette.primary.contrastText,

@@ -9,6 +9,7 @@ import { Errors } from "../domain/models/error/error.entities";
 import { useSearchParams } from "react-router-dom";
 import { NewRepository } from "../infrastructure/repositories/news/news";
 import { NewsService } from "../domain/services/news/news.service";
+import { useSyncedLocalStorage } from "../hooks/synclocalstorage";
 
 interface CurrentProps {
   item: News | null;
@@ -31,10 +32,12 @@ interface NewsItems {
   current: CurrentProps;
   selectItem: (select: string) => void;
   noCurrnt: (change?: string) => void;
-  newComment: (comment: Commentary) => void;
+  newComment: (comment: string) => void;
   loading: LoadingStates;
   fechMore: () => void;
+  fechMoreComments: () => void;
   hasMore: boolean;
+  hasMoreC: boolean;
 
   handleCreate: (n: NewForm) => void;
   handleBruteReload: () => void;
@@ -63,11 +66,97 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   });
   const [comments, setComments] = React.useState<Commentary[]>([]);
   const [_searchParams, setSearchParams] = useSearchParams();
+  const search = useSyncedLocalStorage<string>("search", "");
+
 
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
 
+  const [pageC, setPageC] = React.useState(1);
+  const [hasMoreC, setHasMoreC] = React.useState(false);
+
+  const [userReloadC, setUseReloadC] = React.useState(false);
+
   const service = new NewsService(new NewRepository());
+
+  React.useEffect(() => {
+    if (current.item == null) {
+      setComments([]);
+      return;
+    }
+
+    setLoading({
+      ...loading,
+      fetch_comments: true,
+    });
+
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    const fetchComm = async () => {
+      try {
+        console.log("trayendo commentarios");
+        const response = await service.getComments(
+          {
+            page: pageC,
+            limit: 10,
+            new: current.item?._id,
+          },
+          signal
+        );
+
+        setComments((prev) => {
+          const newsMap = new Map();
+
+          // Agregamos primero el estado anterior
+          prev.forEach((item) => {
+            newsMap.set(item._id, item);
+          });
+
+          // Agregamos los nuevos items
+          response.data.forEach((item: Commentary) => {
+            const existing = newsMap.get(item);
+
+            if (
+              !existing ||
+              new Date(item.createdAt) > new Date(existing.createdAt)
+            ) {
+              // Solo lo reemplaza si es más reciente
+              newsMap.set(item._id, item);
+            }
+          });
+
+          // Convertir de vuelta a array
+          const merged = Array.from(newsMap.values());
+
+          // Ordenar por fecha descendente (más reciente primero)
+          merged.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+
+          return merged;
+        });
+        setHasMoreC(pageC < response.totalPages);
+      } catch (e) {
+        console.error(e);
+        setStatus({
+          message: "Error al cargar el objeto",
+        });
+      } finally {
+        setLoading({
+          list: false,
+          fetch_more: false,
+          fetch_comments: false,
+        });
+      }
+    };
+
+    fetchComm();
+
+    // Cleanup para abortar fetch si el componente se desmonta o cambia page
+    return () => controller.abort();
+  }, [current.item, pageC, userReloadC]);
 
   // Sincronizar current con los parámetros de búsqueda
   React.useEffect(() => {
@@ -104,30 +193,6 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   React.useEffect(() => {
-    if (current.item) {
-      setComments([
-        {
-          id: 1,
-          comment: "Comentario 1",
-          madeBy: 1,
-        },
-        {
-          id: 2,
-          comment: "Comentario 2",
-          madeBy: 1,
-        },
-        {
-          id: 3,
-          comment: "Comentario 3",
-          madeBy: 1,
-        },
-      ]);
-    } else {
-      setComments([]);
-    }
-  }, [current.item]);
-
-  React.useEffect(() => {
     setLoading({
       ...loading,
       list: true,
@@ -142,6 +207,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
           {
             page,
             limit: 10,
+            search: search
           },
           signal
         );
@@ -170,7 +236,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
           const merged = Array.from(newsMap.values());
 
           // Ordenar por fecha descendente (más reciente primero)
-          merged.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          merged.sort(
+            (a, b) =>
+              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
 
           return merged;
         });
@@ -196,8 +265,31 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => controller.abort();
   }, [useReload, page]);
 
-  const newComment = (comment: Commentary) => {
-    console.log("ajusar servicio para subir: ", comment);
+  React.useEffect(() => {
+    setNews([]);
+    setPage(1);
+    handleReload();
+  }, [search]);
+
+  const newComment = async (comment: string) => {
+    if (current.item == null) {
+      return;
+    }
+
+    await service
+      .createComment({
+        comment: comment,
+        fromNew: current.item._id,
+      })
+      .then((e) => {
+        console.log(e);
+        if (e) {
+          handleReloadComms();
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
   const handleCreate = async (n: NewForm) => {
@@ -224,6 +316,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     setReload(!useReload);
   };
 
+  const handleReloadComms = () => {
+    setUseReloadC(!userReloadC);
+  };
+
   const SelectItem = (id: string) => {
     if (id == "") {
       return;
@@ -248,7 +344,9 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const noCurrnt = (lash?: string) => {
-    console.log(lash);
+    setComments([]);
+    setPageC(1);
+
     setCurrent({
       action: lash != undefined ? lash : "none",
       id: undefined,
@@ -262,6 +360,14 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
       fetch_more: true,
     });
     setPage(page + 1);
+  };
+
+  const fechMoreComments = () => {
+    setLoading({
+      ...loading,
+      fetch_more: true,
+    });
+    setPageC(pageC + 1);
   };
 
   const handleBruteReload = () => {
@@ -281,7 +387,9 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     noCurrnt: noCurrnt,
     loading, // ✅ Add this
     fechMore, // ✅ And this
+    fechMoreComments,
     hasMore,
+    hasMoreC,
 
     // FORMULARIOS
     handleCreate,

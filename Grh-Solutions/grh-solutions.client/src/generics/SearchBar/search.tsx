@@ -7,7 +7,7 @@ import SearchIcon from "@mui/icons-material/Search"
 interface SearchBarProps {
   value: string;
   onChange: (newValue: string) => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
 }
 export default function SearchBar({
   value,
@@ -19,7 +19,9 @@ export default function SearchBar({
       component="form"
       onSubmit={(e: any) => {
         e.preventDefault();
-        onSubmit();
+        if(onSubmit){
+          onSubmit();
+        }
       }}
       sx={{ 
         p: "1px 2px", 

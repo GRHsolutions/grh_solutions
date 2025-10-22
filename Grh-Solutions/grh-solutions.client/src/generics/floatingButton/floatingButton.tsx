@@ -15,7 +15,7 @@ interface FloatingButtonProps {
   hoverEffect?: "scale" | "elevate" | "rotate";
 }
 
-interface Positions {
+export interface Positions {
   top?: string | number;
   bottom?: string | number;
   right?: string | number;

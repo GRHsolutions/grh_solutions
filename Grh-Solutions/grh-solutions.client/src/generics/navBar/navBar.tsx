@@ -14,11 +14,31 @@ import { SideBar2 } from "../sidebar/sideBar";
 import { useNavigate } from "react-router-dom";
 import { RendererModl } from "../../components/login/RendererModl";
 import { useAuth } from "../../hooks/auth";
+import { useDebounce } from "../../utils/debouncedValue";
+import { localStorageUtil } from "../../utils/localStorage";
 
 export const NavBar: React.FC = () => {
   const { parametros, toggleTheme } = useParametros();
   const [switchValue, setSwitchValue] = React.useState(parametros.dark);
-  const [search, setSearch] = React.useState("");
+
+  // Estado local inicial desde localStorage
+  const [searchValue, setSearchValue] = React.useState<string>(() => {
+    return localStorageUtil.get("search") || "";
+  });
+
+  // Delay de 500ms
+  const debouncedSearch = useDebounce(searchValue, 500);
+
+  React.useEffect(() => {
+    localStorageUtil.set("search", debouncedSearch);
+    window.dispatchEvent(new Event("local-storage-sync")); // 👈 Notifica cambio interno
+  }, [debouncedSearch]);
+
+  // Solo guardar en localStorage con delay
+  React.useEffect(() => {
+    localStorageUtil.set("search", debouncedSearch);
+  }, [debouncedSearch]);
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const Styles = NavBarStyles();
@@ -26,11 +46,6 @@ export const NavBar: React.FC = () => {
   const { isLoggedIn } = useAuth();
   const theme = useTheme();
   const { logout, auth } = useAuth();
-
-  const handleSearchSubmit = () => {
-    if (search == "") return;
-    setSearch("");
-  };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -41,7 +56,7 @@ export const NavBar: React.FC = () => {
   };
 
   const handleSearchChange = (newValue: string) => {
-    setSearch(newValue);
+    setSearchValue(newValue);
   };
 
   const handlePostulate = () => {
@@ -86,9 +101,9 @@ export const NavBar: React.FC = () => {
             {isLoggedIn && (
               <>
                 <SearchBar
-                  value={search}
+                  value={searchValue}
                   onChange={handleSearchChange}
-                  onSubmit={handleSearchSubmit}
+                  //onSubmit={handleSearchSubmit} el submit es practicamente automatico
                 />
                 <div>
                   <Box

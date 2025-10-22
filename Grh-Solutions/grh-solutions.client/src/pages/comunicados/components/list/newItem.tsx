@@ -7,6 +7,8 @@ import CommentIcon from "@mui/icons-material/Comment";
 // import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import GrhButton from "../../../../generics/grh-generics/button";
 import ImageGrid from "../../../../components/comunicados/gridImages";
+import GrhBasicMenu from "../../../../generics/grh-generics/menu";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 interface NewItemProps {
   item: News;
@@ -19,7 +21,6 @@ const NewItem: React.FC<NewItemProps> = ({
   item, 
   onClick, 
   key,
-  comments
 }: NewItemProps) => {
   const theme = useTheme();
 
@@ -67,17 +68,31 @@ const NewItem: React.FC<NewItemProps> = ({
           padding: '16px' 
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px' }}>
-          <Avatar sx={{ marginRight: '8px' }}>
-            {""}
-          </Avatar>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography variant="subtitle1" fontWeight="bold">
-              {item.madeBy.email}
-            </Typography>
-            <Typography variant="caption" color="textSecondary" mt={'-6px'}>
-              {formatearFecha(item.createdAt)}
-            </Typography>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
+          <Box
+            display={'flex'}
+          >
+            <Avatar sx={{ marginRight: '8px' }}>
+              {""}
+            </Avatar>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Typography variant="subtitle1" fontWeight="bold">
+                {item.madeBy.email}
+              </Typography>
+              <Typography variant="caption" color="textSecondary" mt={'-6px'}>
+                {formatearFecha(item.createdAt)}
+              </Typography>
+            </Box>
+          </Box>
+          <Box
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <GrhBasicMenu 
+              icon={<MoreVertIcon />}
+              items={[]} 
+            />
           </Box>
         </Box>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
@@ -120,7 +135,7 @@ const NewItem: React.FC<NewItemProps> = ({
             /> */}
             <GrhButton 
               startIcon={<CommentIcon />}
-              label={comments.length.toString()}
+              label={`${item.comms}`}
               id={"comment"}
             />
         </Box>

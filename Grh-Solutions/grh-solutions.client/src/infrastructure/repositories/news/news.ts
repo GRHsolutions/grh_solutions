@@ -3,12 +3,16 @@ import {
   News,
   NewForm,
   Birthday,
+  CommentaryFilter,
+  Commentary,
+  CommentaryFrom,
 } from "../../../domain/models/news/news.entities";
 import { Pagination } from "../../../domain/models/pagination/pagination";
 import { http } from "../../axios/axios";
 import { INewRepository } from "../../interfaces/news/INews";
 
-const ApiConnection = "/api/news";
+const ApiNewsConnection = "/api/news";
+const ApiCommConnection = "/api/commentary";
 
 export class NewRepository implements INewRepository {
   async get(
@@ -16,27 +20,50 @@ export class NewRepository implements INewRepository {
     signal: AbortSignal
   ): Promise<{ data: News[]; totalPages: number }> {
     const response = await http.get<{ data: News[]; totalPages: number }>(
-      ApiConnection + "/",
+      ApiNewsConnection + "/",
       filter,
       signal
     );
     return response;
   }
+
   async getPagination(filter: any): Promise<Pagination> {
     const response = await http.get<Pagination>(
-      ApiConnection + "/getPagination",
+      ApiNewsConnection + "/getPagination",
       filter
     );
     return response;
   }
+
   async create(object: NewForm): Promise<News> {
-    const response = await http.post<News>(ApiConnection + "/", object);
+    const response = await http.post<News>(ApiNewsConnection + "/", object);
     return response;
   }
-  async getBirths(
-    signal?: AbortSignal
-  ): Promise<Birthday[]> {
-    const reponse = await http.get<Birthday[]>(ApiConnection + "/births", signal);
+
+  async getBirths(signal?: AbortSignal): Promise<Birthday[]> {
+    const reponse = await http.get<Birthday[]>(
+      ApiNewsConnection + "/births",
+      signal
+    );
     return reponse;
+  }
+
+  async getComments(
+    filter: CommentaryFilter,
+    signal?: AbortSignal
+  ): Promise<{
+    data: Commentary[];
+    totalPages: number;
+  }> {
+    const response = await http.get<{
+      data: Commentary[];
+      totalPages: number;
+    }>(ApiCommConnection + "/", filter, signal);
+    return response;
+  }
+
+  async createComment(comm: CommentaryFrom): Promise<Commentary> {
+    const response = await http.post<Commentary>(ApiCommConnection + "/", comm);
+    return response;
   }
 }
