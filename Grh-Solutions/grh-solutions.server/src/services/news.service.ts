@@ -1,6 +1,7 @@
 import { NewsModel } from "../models/new.model";
 import { newsFilter } from "../filters/news.filter";
 import { CommentaryModel } from "../models/comentary.model";
+import { Types } from "mongoose";
 
 export const newsService = {
   getAll: async (filter: newsFilter) => {
@@ -64,9 +65,10 @@ export const newsService = {
     return NewsModel.create(newNew);
   },
 
-  delete: async (id: number) => {
+  delete: async (id: string) => {
+    
     const conf = await NewsModel.findByIdAndUpdate(
-      id,
+      new Types.ObjectId(id),
       { status: "deleted" }, // cambia el estado
       { new: true } // devuelve el documento actualizado
     );
@@ -75,4 +77,10 @@ export const newsService = {
       return conf;
     }
   },
+
+  getId: async(id: string) => {
+    const d = await NewsModel.findById(new Types.ObjectId(id)).lean();
+
+    return d;
+  }
 };

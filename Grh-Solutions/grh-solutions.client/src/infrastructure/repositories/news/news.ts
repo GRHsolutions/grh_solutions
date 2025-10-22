@@ -15,6 +15,14 @@ const ApiNewsConnection = "/api/news";
 const ApiCommConnection = "/api/commentary";
 
 export class NewRepository implements INewRepository {
+  async getById(id: string): Promise<News> {
+    const response = await http.get<News>(
+      ApiNewsConnection + "/getById",
+      id
+    );
+    return response;
+  }
+  
   async get(
     filter: NewsFilter,
     signal: AbortSignal

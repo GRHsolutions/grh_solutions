@@ -43,6 +43,7 @@ export const CreateEditNew = () => {
   };
 
   React.useEffect(() => {
+    console.log("entrando a formulario : ", current);
     if (current.action === "create" || current.action === "edit") {
       setInitial(current.item);
     }

@@ -19,16 +19,23 @@ const Screen: React.FC = () => {
   const { 
     selectItem,
     noCurrnt,
+    selectItemToUpdate
   } = useNews();
 
   React.useEffect(() => {
     const id = queryParams["id"] || undefined;
+    const action = queryParams["action"] || undefined;
+
     //const type = queryParams["type"];
-    if (id == undefined || id == "") {
+    if (id == undefined || id == "" || action == undefined || action == undefined) {
       //console.error("ID LLEGO COMO INDEFINIDO")
       return;
     }
-    selectItem(id);
+    if(action == "view"){
+      selectItem(id);
+    } else if(action == "edit"){
+      selectItemToUpdate(id);
+    }
   }, [queryParams]);
 
   return (

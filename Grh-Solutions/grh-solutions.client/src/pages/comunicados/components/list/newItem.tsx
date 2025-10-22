@@ -9,6 +9,9 @@ import GrhButton from "../../../../generics/grh-generics/button";
 import ImageGrid from "../../../../components/comunicados/gridImages";
 import GrhBasicMenu from "../../../../generics/grh-generics/menu";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useNews } from "../../../../hooks/news";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface NewItemProps {
   item: News;
@@ -23,6 +26,9 @@ const NewItem: React.FC<NewItemProps> = ({
   key,
 }: NewItemProps) => {
   const theme = useTheme();
+  const {
+    selectItemToUpdate
+  } = useNews();
 
   const Description = ({ description }: { description: string | undefined }) => {
     const maxLength = 100;
@@ -91,7 +97,21 @@ const NewItem: React.FC<NewItemProps> = ({
           >
             <GrhBasicMenu 
               icon={<MoreVertIcon />}
-              items={[]} 
+              items={[
+                {
+                  label: "Editar",
+                  onClick: () => {
+                    selectItemToUpdate(item._id);
+                  },
+                  icon: <EditIcon/>
+                },{
+                  label: "Eliminar",
+                  onClick: () => {
+                    
+                  },
+                  icon: <DeleteIcon />
+                }
+              ]} 
             />
           </Box>
         </Box>

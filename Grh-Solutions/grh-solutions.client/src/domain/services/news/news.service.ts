@@ -42,4 +42,8 @@ export class NewsService {
   async createComment(comm: CommentaryFrom): Promise<Commentary> {
     return this.repo.createComment(comm);
   }
+
+  async getById(id: string): Promise<News> {
+    return this.repo.getById(id);
+  }
 }

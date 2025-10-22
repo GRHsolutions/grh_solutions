@@ -14,7 +14,7 @@ interface ItemProps {
 }
 
 interface BasicMenuProps {
-  items: ItemProps[];
+   items: ItemProps[];
   optionsPosition?: {
     top?: number | string;
     bottom?: number | string;

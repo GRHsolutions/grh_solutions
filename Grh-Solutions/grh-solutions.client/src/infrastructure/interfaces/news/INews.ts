@@ -25,4 +25,5 @@ export interface INewRepository {
     totalPages: number;
   }>;
   createComment(comm: CommentaryFrom): Promise<Commentary>;
+  getById(id: string): Promise<News>;
 }

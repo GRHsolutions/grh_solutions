@@ -61,7 +61,7 @@ export const ViewMail = ({}: ViewMailProps) => {
 
   return (
     <Backdrop
-      open={current.item !== null}
+      open={current.item !== null && current.action == "view"}
       onClick={handleClose}
       sx={{
         backgroundColor: theme.palette.primary.light,

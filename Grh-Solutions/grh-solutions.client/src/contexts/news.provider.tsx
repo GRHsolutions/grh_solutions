@@ -13,7 +13,7 @@ import { useSyncedLocalStorage } from "../hooks/synclocalstorage";
 
 interface CurrentProps {
   item: News | null;
-  action: "create" | "view" | "delete" | "none" | string;
+  action: "create" | "view" | "delete" | "edit"| "none" | string;
   id?: string;
 }
 
@@ -41,6 +41,8 @@ interface NewsItems {
 
   handleCreate: (n: NewForm) => void;
   handleBruteReload: () => void;
+  
+  selectItemToUpdate: (id: string) => void;
 }
 
 export const NewsContext = React.createContext<NewsItems | undefined>(
@@ -68,7 +70,6 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [_searchParams, setSearchParams] = useSearchParams();
   const search = useSyncedLocalStorage<string>("search", "");
 
-
   const [page, setPage] = React.useState(1);
   const [hasMore, setHasMore] = React.useState(true);
 
@@ -80,7 +81,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   const service = new NewsService(new NewRepository());
 
   React.useEffect(() => {
-    if (current.item == null) {
+    if (current.item == null && current.action != "view") {
       setComments([]);
       return;
     }
@@ -207,7 +208,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
           {
             page,
             limit: 10,
-            search: search
+            search: search,
           },
           signal
         );
@@ -320,24 +321,36 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     setUseReloadC(!userReloadC);
   };
 
-  const SelectItem = (id: string) => {
+  const SelectItem = async(id: string) => {
     if (id == "") {
       return;
     }
 
-    // get from endpoint
-    const selected = news.find((x) => x._id === id);
+    let selected = news.find((x) => x._id === id);
     if (selected == undefined) {
-      console.log("NO SE ENCONTRO EL OBJETO");
-      setCurrent({
-        action: "none",
-        id: undefined,
-        item: null,
-      });
-      return;
+      // ejecutar busqueda 
+      selected = await service.getById(id);
+
     }
     setCurrent({
       action: "view",
+      id: id,
+      item: selected,
+    });
+  };
+
+  const selectItemToUpdate = async(id: string) => {
+    if (id == "") {
+      return;
+    }
+
+    let selected = news.find((x) => x._id === id);
+    if (selected == undefined) {
+      selected = await service.getById(id);
+    }
+
+    setCurrent({
+      action: "edit",
       id: id,
       item: selected,
     });
@@ -394,6 +407,9 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     // FORMULARIOS
     handleCreate,
     handleBruteReload,
+    
+    // select to update
+    selectItemToUpdate
   };
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;

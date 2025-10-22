@@ -148,6 +148,34 @@ export const newPaths: Record<string, PathItem> = {
       },
     },
   },
+  "/api/news/getById": {
+    get: {
+      summary: "Obtener el comunicado por ID",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: true,
+          schema: { type: "string" },
+          description: "ID del comunicado a buscar",
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Comunicado encontrado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/News" },
+            },
+          },
+        },
+        "400": { description: "ID inválido" },
+        "404": { description: "Historial no encontrado" },
+        "500": { description: "Error del servidor" },
+      },
+    },
+  },
 };
 export const NewsSchema: { [schema: string]: Schema } = {
   NewsForm: {
@@ -228,7 +256,6 @@ export const NewsSchema: { [schema: string]: Schema } = {
       updatedAt: { type: "string", format: "date-time" },
     },
   },
-
   NewsResponse: {
     type: "object",
     properties: {

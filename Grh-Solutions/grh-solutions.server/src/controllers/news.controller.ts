@@ -4,6 +4,7 @@ import { newsFilter } from "../filters/news.filter";
 import { newsService } from "../services/news.service";
 import { profileService } from "../services/profile.service";
 import { ProfileModel } from "../models/profile.model";
+import { get } from "http";
 
 export const newsController = {
   create: async (req: Request, res: Response) => {
@@ -55,7 +56,7 @@ export const newsController = {
     try {
       const id = req.query;
 
-      if (!id || typeof id != "number" || id <= 0) {
+      if (!id || typeof id != "string" || id == "") {
         return resp.status(400).json({
           message: "Id no puede ser null o menor e igual a 0",
         });
@@ -100,4 +101,28 @@ export const newsController = {
       });
     }
   },
+
+  getById: async(req: Request, res: Response) => {
+    try{
+      const {
+        id
+      } = req.query;
+
+      if (!id || typeof id != "string" || id == "") {
+        return res.status(400).json({
+          message: "Id no puede ser null o vacio",
+        });
+      }
+
+      const r = await newsService.getId(id);
+
+      return res.status(200).json(r);
+
+    } catch(Error: any){
+      return res.status(500).json({
+        message: Error.message,
+        inner: Error.innerExpression
+      })
+    }
+  }
 };
