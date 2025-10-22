@@ -2,6 +2,8 @@ import { NewsModel } from "../models/new.model";
 import { newsFilter } from "../filters/news.filter";
 import { CommentaryModel } from "../models/comentary.model";
 import { Types } from "mongoose";
+import { ObjectEncodingOptions } from "fs";
+import { commentaryController } from "../controllers/commentary.controller";
 
 export const newsService = {
   getAll: async (filter: newsFilter) => {
@@ -19,11 +21,13 @@ export const newsService = {
 
     if (filter.search && filter.search.trim() !== "") {
       const regex = new RegExp(filter.search, "i"); // Usamos filter.search, no filter.name
-      query.$or = [{ 
-          title: regex 
-        }, { 
-          description: regex 
-        }
+      query.$or = [
+        {
+          title: regex,
+        },
+        {
+          description: regex,
+        },
       ];
     }
 
@@ -66,21 +70,40 @@ export const newsService = {
   },
 
   delete: async (id: string) => {
-    
     const conf = await NewsModel.findByIdAndUpdate(
       new Types.ObjectId(id),
       { status: "deleted" }, // cambia el estado
       { new: true } // devuelve el documento actualizado
-    );
+    ).populate("madeBy", "name email") // aquí seleccionas qué campos del usuario mostrar;
 
     if (conf) {
       return conf;
     }
   },
 
-  getId: async(id: string) => {
+  getId: async (id: string) => {
     const d = await NewsModel.findById(new Types.ObjectId(id)).lean();
 
     return d;
-  }
+  },
+
+  edit: async (id: string, d: object) => {
+    // el { new: true } hace que devuelva el documento actualizado
+    const updatedNews = await NewsModel.findByIdAndUpdate(id, d, { new: true });
+
+    if (!updatedNews) {
+      throw new Error("Noticia no encontrada");
+    }
+
+    const commsCount = await CommentaryModel.countDocuments({
+          fromNew: updatedNews._id,
+    })
+
+    const re = {
+      ...updatedNews,
+      comms: commsCount
+    }
+
+    return re;
+  },
 };

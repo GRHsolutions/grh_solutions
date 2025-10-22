@@ -13,7 +13,7 @@ import { useSyncedLocalStorage } from "../hooks/synclocalstorage";
 
 interface CurrentProps {
   item: News | null;
-  action: "create" | "view" | "delete" | "edit"| "none" | string;
+  action: "create" | "view" | "delete" | "edit" | "none" | string;
   id?: string;
 }
 
@@ -40,9 +40,17 @@ interface NewsItems {
   hasMoreC: boolean;
 
   handleCreate: (n: NewForm) => void;
-  handleBruteReload: () => void;
-  
+  handleBruteReload: ({
+    reseturl,
+    resetList,
+  }: {
+    reseturl: boolean;
+    resetList?: boolean;
+  }) => void;
+
   selectItemToUpdate: (id: string) => void;
+
+  handleEdit: (id: string, n: NewForm) => void;
 }
 
 export const NewsContext = React.createContext<NewsItems | undefined>(
@@ -293,6 +301,33 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
       });
   };
 
+  React.useEffect(() => {
+    console.log(news);
+  }, [news]);
+
+  const handleEdit = async (id: string, n: NewForm) => {
+    try {
+      const updated = await service.edit(id, n);
+
+      if (updated) {
+        setNews((prev) => {
+          console.log("Prev before update:", prev);
+          const updatedList = prev.map((item) =>
+            item._id === id ? updated : item
+          );
+          console.log("Updated list:", updatedList);
+          return updatedList;
+        });
+      }
+    } catch (error: any) {
+      console.error(error.toString());
+      setStatus({
+        message: "Error al actualizar la noticia",
+        statusCode: 500,
+      });
+    }
+  };
+
   const handleCreate = async (n: NewForm) => {
     try {
       await service
@@ -321,16 +356,15 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     setUseReloadC(!userReloadC);
   };
 
-  const SelectItem = async(id: string) => {
+  const SelectItem = async (id: string) => {
     if (id == "") {
       return;
     }
 
     let selected = news.find((x) => x._id === id);
     if (selected == undefined) {
-      // ejecutar busqueda 
+      // ejecutar busqueda
       selected = await service.getById(id);
-
     }
     setCurrent({
       action: "view",
@@ -339,7 +373,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const selectItemToUpdate = async(id: string) => {
+  const selectItemToUpdate = async (id: string) => {
     if (id == "") {
       return;
     }
@@ -383,9 +417,24 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     setPageC(pageC + 1);
   };
 
-  const handleBruteReload = () => {
-    setNews([]);
-    setPage(1);
+  const handleBruteReload = ({
+    reseturl,
+    resetList = true,
+  }: {
+    reseturl: boolean;
+    resetList?: boolean;
+  }) => {
+    if (reseturl) {
+      setCurrent({
+        action: "none",
+        id: undefined,
+        item: null,
+      });
+    }
+    if (resetList) {
+      setNews([]);
+      setPage(1);
+    }
   };
 
   const value: NewsItems = {
@@ -407,9 +456,12 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     // FORMULARIOS
     handleCreate,
     handleBruteReload,
-    
+
     // select to update
-    selectItemToUpdate
+    selectItemToUpdate,
+
+    // update data
+    handleEdit,
   };
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;

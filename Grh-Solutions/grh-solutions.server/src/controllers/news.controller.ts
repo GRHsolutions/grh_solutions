@@ -17,7 +17,12 @@ export const newsController = {
         });
       }
 
-      const { type, title, description, images } = req.body;
+      const { 
+        type, 
+        title, 
+        description, 
+        images 
+      } = req.body;
 
       const cre = await newsService.create({
         type: type,
@@ -75,6 +80,42 @@ export const newsController = {
     }
   },
 
+  edit: async (req: Request, res: Response) => {
+    try {
+      const {
+        id
+      } = req.query;
+      const { 
+        type, 
+        title, 
+        description, 
+        images 
+      } = req.body;
+
+      if (!id || typeof id != "string" || id == "") {
+        return res.status(400).json({
+          message: "Id no puede ser null o vacio",
+        });
+      }
+
+      const ed = await newsService.edit(id, {
+        type: type,
+        title: title,
+        description: description,
+        //status: "shown",
+        //madeBy: user,
+        images: images,
+      })
+
+      return res.status(200).json(ed);
+    } catch(error: any){
+      return res.status(500).json({
+        message: error.message,
+        innerExpression: error.innerExpression,
+      });
+    }
+  },
+ 
   getBirthDays: async (req: Request, res: Response) => {
     try {
       // Obtener la fecha actual

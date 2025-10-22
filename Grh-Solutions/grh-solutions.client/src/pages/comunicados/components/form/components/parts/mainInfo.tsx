@@ -73,7 +73,8 @@ export const MainInfo = ({
           value={value.title}
           onChange={handleChange}
           fullWidth
-          disabled={loading}    
+          disabled={loading}
+          lenght={100}   
         />
       </Grid2>
       <Grid2
@@ -88,6 +89,7 @@ export const MainInfo = ({
           fullWidth
           disabled={loading}    
           rows={6}
+          lenght={499}   
         />
       </Grid2>
     </Grid2>

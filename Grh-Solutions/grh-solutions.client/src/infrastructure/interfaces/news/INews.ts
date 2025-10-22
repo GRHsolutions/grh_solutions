@@ -26,4 +26,9 @@ export interface INewRepository {
   }>;
   createComment(comm: CommentaryFrom): Promise<Commentary>;
   getById(id: string): Promise<News>;
+  edit(id: string, n: NewForm): Promise<News>;
+  delete(id: string): Promise<{
+    conf: News,
+    message: string
+  }>
 }

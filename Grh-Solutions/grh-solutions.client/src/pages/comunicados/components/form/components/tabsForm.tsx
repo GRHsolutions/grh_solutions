@@ -70,14 +70,27 @@ const validationSchema = Yup.object({
 });
 
 export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
-  const [loading, setLoading]= React.useState(false);
-  const { handleCreate, handleBruteReload } = useNews();
+  const [loading, setLoading] = React.useState(false);
+  const { handleCreate, handleBruteReload, handleEdit } = useNews();
 
-  const handleSubmit = (nw: NewForm) => {
-    console.info("USING FORM FROM = ", edit);
+  const handleSubmit = async (nw: NewForm) => {
     setLoading(true);
-    handleCreate(nw);
-    handleBruteReload
+
+    if (edit) {
+      if (initialValue != null) {
+        await handleEdit(initialValue._id, nw);
+        handleBruteReload({
+          reseturl: true,
+          resetList: false,
+        });
+      }
+    } else {
+      await handleCreate(nw);
+      handleBruteReload({
+        reseturl: true,
+        resetList: false,
+      });
+    }
     setLoading(false);
   };
 
@@ -94,8 +107,19 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
         }
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
+        isInitialValid={false} // Fuerza que comience como inválido
       >
         {({ values, handleChange, isValid, setFieldValue }) => {
+          // Verificar si realmente hay cambios en modo edición
+          const hasRealChanges = edit
+            ? JSON.stringify(values) !== JSON.stringify(initialValue)
+            : true;
+          // El botón debe estar deshabilitado si:
+          // - Está cargando
+          // - El formulario no es válido
+          // - En modo edición: no hay cambios reales
+          const isButtonDisabled =
+            loading || !isValid || (edit && !hasRealChanges);
           const changeImages = (name: string, image: DragNDropVariables[]) => {
             setFieldValue(name, image);
           };
@@ -104,21 +128,31 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
             {
               value: "1",
               label: "Inicializacion",
-              content: <MainInfo value={values} handleChange={handleChange} loading={loading}/>,
+              content: (
+                <MainInfo
+                  value={values}
+                  handleChange={handleChange}
+                  loading={loading}
+                />
+              ),
               disabled: false,
             },
             {
               value: "2",
               label: "Carusel de imagenes",
               content: (
-                <JustImages values={values} changeImages={changeImages} loading={loading}/>
+                <JustImages
+                  values={values}
+                  changeImages={changeImages}
+                  loading={loading}
+                />
               ),
               disabled: values.type !== "publication-with-images",
             },
             {
               value: "3",
               label: "Encuesta",
-              content: <Survey loading={loading}/>,
+              content: <Survey loading={loading} />,
               disabled: values.type !== "publication-with-survey",
             },
           ];
@@ -136,7 +170,7 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
                   padding: "5rem",
                   width: "5.5rem",
                 }}
-                disabled={!isValid || loading}
+                disabled={isButtonDisabled}
               />
             </Form>
           );

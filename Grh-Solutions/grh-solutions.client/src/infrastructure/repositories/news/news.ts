@@ -15,6 +15,21 @@ const ApiNewsConnection = "/api/news";
 const ApiCommConnection = "/api/commentary";
 
 export class NewRepository implements INewRepository {
+  async edit(id: string, n: NewForm): Promise<News> {
+    const response = await http.put<News>(`${ApiNewsConnection}/?id=${id}`, n)
+    return response;
+  }
+
+  async delete(id: string): Promise<{ conf: News; message: string; }> {
+    const response = await http.delete<{
+      conf: News,
+      message: string
+    }>(
+      `${ApiNewsConnection}/?id=${id}`,
+    );
+    return response;
+  }
+  
   async getById(id: string): Promise<News> {
     const response = await http.get<News>(
       ApiNewsConnection + "/getById",
