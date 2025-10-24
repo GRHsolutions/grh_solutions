@@ -27,7 +27,8 @@ const NewItem: React.FC<NewItemProps> = ({
 }: NewItemProps) => {
   const theme = useTheme();
   const {
-    selectItemToUpdate
+    selectItemToUpdate,
+    selectItemToDelete
   } = useNews();
 
   const Description = ({ description }: { description: string | undefined }) => {
@@ -107,7 +108,7 @@ const NewItem: React.FC<NewItemProps> = ({
                 },{
                   label: "Eliminar",
                   onClick: () => {
-                    
+                    selectItemToDelete(item._id);
                   },
                   icon: <DeleteIcon />
                 }

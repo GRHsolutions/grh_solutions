@@ -10,10 +10,11 @@ import { useSearchParams } from "react-router-dom";
 import { NewRepository } from "../infrastructure/repositories/news/news";
 import { NewsService } from "../domain/services/news/news.service";
 import { useSyncedLocalStorage } from "../hooks/synclocalstorage";
+import { useNotifications } from "./NotificationContext";
 
 interface CurrentProps {
   item: News | null;
-  action: "create" | "view" | "delete" | "edit" | "none" | string;
+  action: "create" | "view" | "edit" | "none" | string;
   id?: string;
 }
 
@@ -21,6 +22,7 @@ interface LoadingStates {
   list: boolean;
   fetch_more: boolean;
   fetch_comments: boolean;
+  deleting_new: boolean;
 }
 
 interface NewsItems {
@@ -51,6 +53,11 @@ interface NewsItems {
   selectItemToUpdate: (id: string) => void;
 
   handleEdit: (id: string, n: NewForm) => void;
+
+  // delete items
+  selectItemToDelete: (id: string) => void;
+  selectedToDelecte: string;
+  handleDelete: () => void;
 }
 
 export const NewsContext = React.createContext<NewsItems | undefined>(
@@ -61,10 +68,12 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [news, setNews] = React.useState<News[]>([]);
+  const { addNotification } = useNotifications();
   const [loading, setLoading] = React.useState<LoadingStates>({
     list: false,
     fetch_more: false,
     fetch_comments: false,
+    deleting_new: false,
   });
   const [status, setStatus] = React.useState<Errors | null>(null);
   const [useReload, setReload] = React.useState(false);
@@ -85,6 +94,8 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [hasMoreC, setHasMoreC] = React.useState(false);
 
   const [userReloadC, setUseReloadC] = React.useState(false);
+
+  const [selectedToDelecte, setSelectedToDelete] = React.useState("");
 
   const service = new NewsService(new NewRepository());
 
@@ -154,8 +165,7 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
         });
       } finally {
         setLoading({
-          list: false,
-          fetch_more: false,
+          ...loading,
           fetch_comments: false,
         });
       }
@@ -261,9 +271,8 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
         });
       } finally {
         setLoading({
+          ...loading,
           list: false,
-          fetch_more: false,
-          fetch_comments: false,
         });
       }
     };
@@ -304,6 +313,10 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
   React.useEffect(() => {
     console.log(news);
   }, [news]);
+
+  const selectItemToDelete = (id: string) => {
+    setSelectedToDelete(id);
+  };
 
   const handleEdit = async (id: string, n: NewForm) => {
     try {
@@ -437,6 +450,50 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const handleDelete = async () => {
+    if (selectedToDelecte == "") {
+      return;
+    }
+
+    setLoading({
+      ...loading,
+      deleting_new: true,
+    });
+
+    await service
+      .delete(selectedToDelecte)
+      .then((e) => {
+        console.log("deleted: ", selectedToDelecte);
+        setNews((prev) =>
+          prev.filter((item) => item._id !== selectedToDelecte)
+        ); // se excluye el borrado recientemente
+        addNotification({
+          color: "success",
+          duration: 2000,
+          title: e.message,
+          subtitle: "",
+          position: "top-right",
+        });
+
+        setSelectedToDelete("");
+      })
+      .catch((e) => {
+        addNotification({
+          color: "success",
+          duration: 2000,
+          title: e.message,
+          subtitle: "",
+          position: "top-right",
+        });
+      })
+      .finally(() => {
+        setLoading({
+          ...loading,
+          deleting_new: false,
+        });
+      });
+  };
+
   const value: NewsItems = {
     news,
     status,
@@ -462,6 +519,11 @@ export const NewsProvider: React.FC<{ children: React.ReactNode }> = ({
 
     // update data
     handleEdit,
+
+    // select id to delete
+    selectItemToDelete,
+    selectedToDelecte,
+    handleDelete,
   };
 
   return <NewsContext.Provider value={value}>{children}</NewsContext.Provider>;

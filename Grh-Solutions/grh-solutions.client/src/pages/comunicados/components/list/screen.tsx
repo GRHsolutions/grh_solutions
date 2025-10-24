@@ -10,6 +10,7 @@ import { FloatingButton } from "../../../../generics/floatingButton/floatingButt
 import AddIcon from "@mui/icons-material/Add";
 import { CreateEditNew } from "../form/createEditNew";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import SimpleDialog from "../../../../generics/dialogGeneric/dialogo";
 
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
@@ -19,7 +20,10 @@ const Screen: React.FC = () => {
   const { 
     selectItem,
     noCurrnt,
-    selectItemToUpdate
+    selectItemToUpdate,
+    selectedToDelecte,
+    selectItemToDelete,
+    handleDelete
   } = useNews();
 
   React.useEffect(() => {
@@ -141,6 +145,13 @@ const Screen: React.FC = () => {
         borderColor={theme.palette.secondary.hover}
       />
       <CreateEditNew />
+      <SimpleDialog 
+        open={selectedToDelecte != ""} 
+        onClose={() => {
+          selectItemToDelete("");
+        }} 
+        onConfirm={handleDelete}      
+      />
     </Grid2>
   );
 };

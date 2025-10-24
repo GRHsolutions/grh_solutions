@@ -59,11 +59,13 @@ export const newsController = {
 
   delete: async (req: Request, resp: Response) => {
     try {
-      const id = req.query;
+      const {
+        id
+      } = req.query;
 
       if (!id || typeof id != "string" || id == "") {
         return resp.status(400).json({
-          message: "Id no puede ser null o menor e igual a 0",
+          message: "Id no puede ser null o vacio",
         });
       }
       const conf = await newsService.delete(id);
