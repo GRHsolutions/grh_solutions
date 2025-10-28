@@ -9,8 +9,8 @@ import { useNews } from "../../../../hooks/news";
 import { FloatingButton } from "../../../../generics/floatingButton/floatingButton";
 import AddIcon from "@mui/icons-material/Add";
 import { CreateEditNew } from "../form/createEditNew";
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SimpleDialog from "../../../../generics/dialogGeneric/dialogo";
+import { useNewsSecurity } from "../../../../contexts/news.security.provider";
 
 const Screen: React.FC = () => {
   const { parametros } = useParametros();
@@ -25,6 +25,9 @@ const Screen: React.FC = () => {
     selectItemToDelete,
     handleDelete
   } = useNews();
+  const {
+    hasPermission
+  } = useNewsSecurity();
 
   React.useEffect(() => {
     const id = queryParams["id"] || undefined;
@@ -118,7 +121,7 @@ const Screen: React.FC = () => {
         </Grid2>
       )}
       <ViewMail />
-      <FloatingButton
+      {/* <FloatingButton
         icon={<FilterAltIcon />}
         onClick={() => {
           noCurrnt("create");
@@ -130,20 +133,22 @@ const Screen: React.FC = () => {
           left: "2rem",
         }}
         borderColor={theme.palette.green['800']}
-      />
-      <FloatingButton
-        icon={<AddIcon />}
-        onClick={() => {
-          noCurrnt("create");
-        }}
-        label="Crear correo"
-        bgColor={theme.palette.secondary.main}
-        positions={{
-          bottom: "2.2rem",
-          left: "2rem",
-        }}
-        borderColor={theme.palette.secondary.hover}
-      />
+      /> */}
+      {hasPermission("POST", "/api/news/") && (
+        <FloatingButton
+          icon={<AddIcon />}
+          onClick={() => {
+            noCurrnt("create");
+          }}
+          label="Crear correo"
+          bgColor={theme.palette.secondary.main}
+          positions={{
+            bottom: "2.2rem",
+            left: "2rem",
+          }}
+          borderColor={theme.palette.secondary.hover}
+        />
+      )}
       <CreateEditNew />
       <SimpleDialog 
         open={selectedToDelecte != ""} 

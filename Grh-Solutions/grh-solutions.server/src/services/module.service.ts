@@ -79,4 +79,14 @@ export const moduleService = {
 
     return updated;
   },
+
+  getByTerm: async (name: string) => {
+    const module = await ModuleModel.findOne({ 
+      name 
+    })
+    .select("_id")
+    .lean();
+
+    return module ? module._id : null;
+  },
 };

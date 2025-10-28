@@ -14,6 +14,7 @@ declare global {
       userId?: string;
       currentRol?: string;
       isPublic?: boolean;
+      //"x-module"?: string
     }
   }
 }
@@ -23,6 +24,7 @@ export const validateToken = async(req: Request, res: Response, next: NextFuncti
     const token = req.headers.authorization;
     const method = req.method;
     const originalUrl = req.originalUrl;
+    //console.log(req.headers["x-module"]);
 
     // Check if this is a public route
     const validationAccess = await permissionUtl.verifyPublicAccess(method, originalUrl);

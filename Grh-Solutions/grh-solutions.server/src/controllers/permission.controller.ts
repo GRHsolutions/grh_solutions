@@ -43,6 +43,8 @@ export const permissionController = {
       const { currentRol } = req; // viene del middleware o JWT
       const { idents } = req.body; // [{ method, originalUrl }]
 
+      //console.log(`${currentRol} y sus ${idents}`)
+
       if (!currentRol || !Array.isArray(idents)) {
         return res.status(400).json({
           success: false,
@@ -88,12 +90,12 @@ export const permissionController = {
       });
 
       // 3️⃣ Devolver resultado
-      return res.json({
+      return res.status(200).json({
         success: true,
         permissions: results,
       });
     } catch (error) {
-      console.error("Error en getUrsPermissions:", error);
+      //console.error("Error en getUrsPermissions:", error);
       return res.status(500).json({
         success: false,
         message: "Error al obtener permisos del rol.",

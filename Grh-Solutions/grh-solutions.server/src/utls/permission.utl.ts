@@ -28,7 +28,7 @@ export const permissionUtl = {
   getOrCreatePermission: async (
     method: string,
     originalUrl: string,
-    module: string | null,
+    module: string | Types.ObjectId | null,
     description?: string
   ): Promise<Types.ObjectId> => {
     const normalizedMethod = method.toUpperCase();

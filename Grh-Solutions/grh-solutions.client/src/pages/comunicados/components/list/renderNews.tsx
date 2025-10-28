@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import NewItem from "./newItem";
+import { useNewsSecurity } from "../../../../contexts/news.security.provider";
 
 const RenderNews: React.FC = () => {
   const { 
@@ -18,6 +19,10 @@ const RenderNews: React.FC = () => {
     fechMore, 
     loading 
   } = useNews();
+
+  const { 
+    hasPermission 
+  } = useNewsSecurity();
 
   const handleSelect = (id: string) => {
     selectItem(id);
@@ -37,28 +42,39 @@ const RenderNews: React.FC = () => {
         },
       }}
     >
-      {loading.list == true ? (
-        <CircularProgress color="info" />
-      ) : news.length === 0 ? (
+      {hasPermission("GET", "/api/news/") ? (
+        loading.list == true ? (
+          <CircularProgress color="info" />
+        ) : news.length === 0 ? (
+          <Alert
+            severity="warning"
+            sx={{
+              width: "auto",
+            }}
+          >
+            <Typography>No hay comunicados actualmente</Typography>
+          </Alert>
+        ) : (
+          <Box>
+            {news.map((item) => (
+              <NewItem
+                key={item._id}
+                item={item}
+                onClick={handleSelect}
+                comments={comments}
+              />
+            ))}
+          </Box>
+        )
+      ) : (
         <Alert
-          severity="warning"
+          severity="error"
           sx={{
             width: "auto",
           }}
         >
-          <Typography>No hay comunicados actualmente</Typography>
+          <Typography>No tienes permiso para esta funcionalidad</Typography>
         </Alert>
-      ) : (
-        <Box>
-          {news.map((item) => (
-            <NewItem
-              key={item._id}
-              item={item}
-              onClick={handleSelect}
-              comments={comments}
-            />
-          ))}
-        </Box>
       )}
       {hasMore && (
         <Box width={"auto"} display={"flex"} justifyContent={"center"} p={2}>

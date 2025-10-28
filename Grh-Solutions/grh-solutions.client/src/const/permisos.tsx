@@ -32,3 +32,27 @@ export const PermisosPostLoginRender : Ident[] = [ // PERMISOS A CONSULTAR
         module: null
     }
 ]
+
+export const PermisosNews: Ident[] = [
+    {
+        method: 'GET',
+        originalUrl: "/api/news/births",
+        module: null
+    },{
+        method: "GET",
+        originalUrl: "/api/news/",
+        module: null
+    },{
+        method: 'POST',
+        originalUrl: "/api/news/",
+        module: null
+    },{
+        method: 'DELETE',
+        originalUrl: "/api/news/",
+        module: null
+    },{
+        method: 'PUT',
+        originalUrl: "/api/news/",
+        module: null
+    },
+]

@@ -4,6 +4,7 @@ import { permissionModel } from "../models/permission.model";
 import { Types } from "mongoose";
 import { permissionUtl } from "../utls/permission.utl";
 import { getCanonicalMethod, getCanonicalUrl } from "../utls/router.utl";
+import { moduleService } from "../services/module.service";
 
 export const verifyPermissionHandler = async (
   req: Request,
@@ -11,16 +12,19 @@ export const verifyPermissionHandler = async (
   next: NextFunction
 ) => {
   try {
-    const {
-      currentRol, 
-      isPublic 
+    const useAdmin = parseInt(process.env.USE_ADMIN_PERMISSIONS_RECEIVER || "0", 0);
+    const { 
+      currentRol,
+      isPublic, 
+      headers     
     } = req;
+    const Module = headers['x-module'] as string;
 
     // usar canonicals
     const method = getCanonicalMethod(req);
     const originalUrl = getCanonicalUrl(req);
 
-    console.log("method y url canónicas:", { method, originalUrl });
+    //console.log(`method y url canónicas, mas modulo solicitante: ${method} - ${originalUrl} from ${headers['x-module']}`);
 
     if (isPublic) return next();
 
@@ -53,7 +57,7 @@ export const verifyPermissionHandler = async (
         message: "Role is not active.",
       });
     }
-    
+
     let foundPermission: any | null = null;
     // Verificar si el rol tiene el permiso correspondiente
     foundPermission = rol.permissions?.find(
@@ -72,20 +76,20 @@ export const verifyPermissionHandler = async (
     }
 
     // ⚙️ Si no lo tiene y es admin, crear y asignar automáticamente
-    if (!hasPermission && rol.name?.toLowerCase() === "administrador") {
-      console.log(
-        `🧩 Asignando permiso automático a rol admin -> ${method} ${originalUrl}`
-      );
-
+    if (!hasPermission && rol.name?.toLowerCase() === "administrador" && useAdmin == 1) {
+      let currModule: Types.ObjectId | null = null;
+      if (Module) {
+        currModule = await moduleService.getByTerm(Module);
+      }
+      
       const permissionId: Types.ObjectId =
         await permissionUtl.getOrCreatePermission(
           method,
           originalUrl,
-          null,
-          `Auto-created permission for ${method} ${originalUrl}`
+          currModule,
+          `Auto-created permission for ${method} ${originalUrl} to the module ${module}`
         );
 
-        
       // Agregarlo al rol si no existe
       if (
         !rol.permissions.some(
@@ -94,7 +98,7 @@ export const verifyPermissionHandler = async (
       ) {
         rol.permissions.push(permissionId);
         await rol.save();
-        console.log("✅ Permiso agregado automáticamente al rol admin");
+        //console.log("✅ Permiso agregado automáticamente al rol admin");
       }
 
       // Obtener el permiso completo con módulo
@@ -131,7 +135,7 @@ export const verifyPermissionHandler = async (
 
     return next();
   } catch (error: any) {
-    console.error("Permission validation error:", error);
+    //console.error("Permission validation error:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error validating permissions.",

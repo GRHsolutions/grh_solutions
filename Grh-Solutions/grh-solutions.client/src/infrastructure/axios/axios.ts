@@ -3,10 +3,13 @@ import { localStorageUtil } from "../../utils/localStorage";
 
 
 const getHeaderItems = async() => {
-  const token = await localStorageUtil.get("usr_items_token")
+  const token = await localStorageUtil.get("usr_items_token");
+  const module = localStorageUtil.get<string>("current_module");
+
   return {
     "Content-Type": "application/json;charset=utf-8", // especificar el content-type
-     Authorization: token != null ? `Bearer ${token}` : null, // entregar el token a authorization
+     Authorization: token != null ? `Bearer ${token}` : null, // entregar el token a authorization,
+     "x-module": module // prefijo de x para indicar que es uno personalizado
   }
 }
 
@@ -66,7 +69,7 @@ axios.interceptors.response.use(
 
 const makeRequest = async <T>(
   config: AxiosRequestConfig,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<T> => {
   try {
     // Añadir el signal al config si está presente
@@ -89,50 +92,79 @@ const makeRequest = async <T>(
 
 const get = async <T>(
   url: string,
-  params: Object = {},
-  signal?: AbortSignal
+  params: Record<string, any> = {},
+  signal?: AbortSignal,
+  overWriteHeader: Record<string, any> = {}
 ) => {
   const headers = await getHeaderItems();
+
+  const mergedHeaders = {
+    ...headers,
+    ...overWriteHeader, // <- estos sobrescriben los originales si hay duplicados
+  };
+
   const config: AxiosRequestConfig = {
     method: "GET",
     url,
-    headers: headers,
+    headers: mergedHeaders,
     params,
+    signal,
   };
+
   return await makeRequest<T>(config, signal);
 };
 
-const post = async <T>(url: string, body: any) => {
+const post = async <T>(
+  url: string, 
+  body: any,
+  overWriteHeader: Record<string, any> = {}
+) => {
   const headers = await getHeaderItems();
 
   const config: AxiosRequestConfig = {
     method: "POST",
     url,
-    headers: headers,
+    headers: {
+      ...headers,
+      ...overWriteHeader
+    },
     data: body,
   };
   return await makeRequest<T>(config);
 };
 
-const put = async <T>(url: string, body: any) => {
+const put = async <T>(
+  url: string, 
+  body: any,
+  overWriteHeader: Record<string, any> = {}
+) => {
   const headers = await getHeaderItems();
 
   const config: AxiosRequestConfig = {
     method: "PUT",
     url,
-    headers: headers,
+    headers: {
+      ...headers,
+      ...overWriteHeader
+    },
     data: body,
   };
   return await makeRequest<T>(config);
 };
 
-const _delete = async <T>(url: string) => {
+const _delete = async <T>(
+  url: string,
+  overWriteHeader: Record<string, any> = {}
+) => {
   const headers = await getHeaderItems();
 
   const config: AxiosRequestConfig = {
     method: "DELETE",
     url,
-    headers: headers,
+    headers: {
+      ...headers,
+      ...overWriteHeader
+    },
   };
   return await makeRequest<T>(config);
 };

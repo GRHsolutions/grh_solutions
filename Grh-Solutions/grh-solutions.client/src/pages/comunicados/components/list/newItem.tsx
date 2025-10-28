@@ -12,6 +12,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useNews } from "../../../../hooks/news";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNewsSecurity } from "../../../../contexts/news.security.provider";
 
 interface NewItemProps {
   item: News;
@@ -30,6 +31,9 @@ const NewItem: React.FC<NewItemProps> = ({
     selectItemToUpdate,
     selectItemToDelete
   } = useNews();
+  const {
+  hasPermission
+} = useNewsSecurity();
 
   const Description = ({ description }: { description: string | undefined }) => {
     const maxLength = 100;
@@ -104,15 +108,17 @@ const NewItem: React.FC<NewItemProps> = ({
                   onClick: () => {
                     selectItemToUpdate(item._id);
                   },
-                  icon: <EditIcon/>
+                  icon: <EditIcon/>,
+                  visible: hasPermission("PUT", "/api/news/")
                 },{
                   label: "Eliminar",
                   onClick: () => {
                     selectItemToDelete(item._id);
                   },
-                  icon: <DeleteIcon />
+                  icon: <DeleteIcon />,
+                  visible: hasPermission("DELETE", "/api/news/")
                 }
-              ]} 
+              ]}
             />
           </Box>
         </Box>

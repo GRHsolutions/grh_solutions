@@ -20,7 +20,7 @@ export function usePermissions(
   const fetchPermissions = useCallback(async (idents: Ident[]) =>{
     if (!idents || idents.length === 0) {
       setError("No idents provided");
-      return;
+      throw ("NO IDENTS PROVIDED")
     }
 
     setLoading(true);

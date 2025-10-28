@@ -30,6 +30,7 @@ export const ViewMail = ({}: ViewMailProps) => {
     fechMoreComments,
     comments,
   } = useNews();
+
   const theme = useTheme();
   const newCommentRef = React.useRef<HTMLInputElement | null>(null);
 

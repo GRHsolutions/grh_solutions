@@ -2,6 +2,7 @@ import React from "react";
 import { Birthday } from "../../../../domain/models/news/news.entities";
 import { useNews } from "../../../../hooks/news";
 import {
+  Alert,
   Avatar,
   Box,
   Container,
@@ -9,12 +10,17 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
+import { useNewsSecurity } from "../../../../contexts/news.security.provider";
 
 interface RenderBirthsProps {}
 
 const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
   const { birthdays } = useNews();
+
+  const { hasPermission } = useNewsSecurity();
+
   const theme = useTheme();
+
   return (
     <Container
       sx={{
@@ -25,50 +31,57 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
         overflowY: "auto",
       }}
     >
-      {birthdays.length <= 0 ? (
-        <Typography 
-          variant="body1"
-        >
-          Hoy no cumple naiden
-        </Typography>
+      {hasPermission("GET", "/api/news/births") ? (
+        birthdays.length <= 0 ? (
+          <Typography variant="body1">Hoy no cumple naiden</Typography>
+        ) : (
+          birthdays.map((birthday: Birthday) => (
+            <Grid2
+              container
+              display="flex"
+              key={birthday._id}
+              spacing={3}
+              alignItems={"center"}
+              padding={"5px"}
+              sx={{
+                "&:hover": {
+                  backgroundColor: `${theme.palette.primary.hover}`,
+                },
+              }}
+            >
+              <Grid2 size={3}>
+                <Box
+                  sx={{
+                    borderRadius: "50%",
+                    overflow: "hidden",
+                    width: "42px",
+                    height: "42px",
+                  }}
+                >
+                  <Avatar
+                    src={birthday.photo}
+                    alt={birthday.name + birthday._id}
+                  />
+                </Box>
+              </Grid2>
+              <Grid2 size={9}>
+                <Typography variant="body1">
+                  {birthday.name + birthday.lastname}
+                </Typography>
+                <Typography variant="body1">{birthday.email}</Typography>
+              </Grid2>
+            </Grid2>
+          ))
+        )
       ) : (
-        birthdays.map((birthday: Birthday) => (
-          <Grid2
-            container
-            display="flex"
-            key={birthday._id}
-            spacing={3}
-            alignItems={"center"}
-            padding={"5px"}
-            sx={{
-              "&:hover": {
-                backgroundColor: `${theme.palette.primary.hover}`,
-              },
-            }}
-          >
-            <Grid2 size={3}>
-              <Box
-                sx={{
-                  borderRadius: "50%",
-                  overflow: "hidden",
-                  width: "42px",
-                  height: "42px",
-                }}
-              >
-                <Avatar
-                  src={birthday.photo}
-                  alt={birthday.name + birthday._id}
-                />
-              </Box>
-            </Grid2>
-            <Grid2 size={9}>
-              <Typography variant="body1">
-                {birthday.name + birthday.lastname}
-              </Typography>
-              <Typography variant="body1">{birthday.email}</Typography>
-            </Grid2>
-          </Grid2>
-        ))
+        <Alert
+          severity="error"
+          sx={{
+            width: "auto",
+          }}
+        >
+          <Typography>No tienes permiso para esta funcionalidad</Typography>
+        </Alert>
       )}
     </Container>
   );
