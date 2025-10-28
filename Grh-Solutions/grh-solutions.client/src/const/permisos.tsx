@@ -54,5 +54,13 @@ export const PermisosNews: Ident[] = [
         method: 'PUT',
         originalUrl: "/api/news/",
         module: null
-    },
+    },{
+        method: "GET",
+        originalUrl: "/api/commentary/",
+        module: null
+    },{
+        method: "POST",
+        originalUrl: "/api/commentary/",
+        module: null
+    }
 ]

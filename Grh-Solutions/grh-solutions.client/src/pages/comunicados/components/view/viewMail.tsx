@@ -9,6 +9,7 @@ import {
   IconButton,
   Button,
   CircularProgress,
+  Alert,
 } from "@mui/material";
 import { useNews } from "../../../../hooks/news";
 import formatearFecha from "../../../../utils/formatearFecha";
@@ -17,6 +18,7 @@ import React, { useEffect } from "react";
 import SendIcon from "@mui/icons-material/Send";
 import CloseIcon from "@mui/icons-material/Close";
 import { ImageCarousel } from "../../../../generics/grh-generics/imageCarousel";
+import { useNewsSecurity } from "../../../../contexts/news.security.provider";
 
 interface ViewMailProps {}
 
@@ -30,6 +32,8 @@ export const ViewMail = ({}: ViewMailProps) => {
     fechMoreComments,
     comments,
   } = useNews();
+
+  const { hasPermission } = useNewsSecurity();
 
   const theme = useTheme();
   const newCommentRef = React.useRef<HTMLInputElement | null>(null);
@@ -214,7 +218,7 @@ export const ViewMail = ({}: ViewMailProps) => {
                 multirows
                 rows={3}
                 lenght={400}
-                disabled={loading.fetch_comments}
+                disabled={loading.fetch_comments || !hasPermission('POST', "/api/commentary/")}
                 sx={{
                   width: "100%",
                 }}
@@ -256,8 +260,8 @@ export const ViewMail = ({}: ViewMailProps) => {
                 </Typography>
                 <Box
                   flex={1}
-                  display={'flex'}
-                  flexDirection={'column'}
+                  display={"flex"}
+                  flexDirection={"column"}
                   gap={3}
                   sx={{
                     overflowY: "auto",
@@ -274,54 +278,70 @@ export const ViewMail = ({}: ViewMailProps) => {
                     "&::-webkit-scrollbar-thumb:hover": { background: "#555" },
                   }}
                 >
-                  {loading.fetch_comments ? (
-                    <Box display={"flex"} justifyContent={"center"}>
-                      <CircularProgress color="error" />
-                    </Box>
-                  ) : comments.length == 0 ? (
-                    <Typography display={"flex"} justifyContent={"center"}>No hay comentarios</Typography>
-                  ) : (
-                    <>
-                      {comments.map((item) => {
-                        return (
-                          <Box
-                            borderLeft={"2px solid red"}
-                            sx={{
-                              backgroundColor: theme.palette.background.default,
-                              p: 2,
-                            }}
-                          >
-                            <Box display={"flex"} gap={2} ml={2}>
-                              <Avatar>{""}</Avatar>
-                              <Box>
-                                <Typography>{item?.madeBy.email}</Typography>
-                                <Typography mt={"-5px"}>
-                                  {formatearFecha(item?.createdAt)}
-                                </Typography>
+                  {hasPermission("GET", "/api/commentary/") ? (
+                    loading.fetch_comments ? (
+                      <Box display={"flex"} justifyContent={"center"}>
+                        <CircularProgress color="error" />
+                      </Box>
+                    ) : comments.length == 0 ? (
+                      <Typography display={"flex"} justifyContent={"center"}>
+                        No hay comentarios
+                      </Typography>
+                    ) : (
+                      <>
+                        {comments.map((item) => {
+                          return (
+                            <Box
+                              borderLeft={"2px solid red"}
+                              sx={{
+                                backgroundColor:
+                                  theme.palette.background.default,
+                                p: 2,
+                              }}
+                            >
+                              <Box display={"flex"} gap={2} ml={2}>
+                                <Avatar>{""}</Avatar>
+                                <Box>
+                                  <Typography>{item?.madeBy.email}</Typography>
+                                  <Typography mt={"-5px"}>
+                                    {formatearFecha(item?.createdAt)}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                              <Box ml={2}>
+                                <Typography p={2}>{item.comment}</Typography>
                               </Box>
                             </Box>
-                            <Box ml={2}>
-                              <Typography p={2}>{item.comment}</Typography>
-                            </Box>
-                          </Box>
-                        );
-                      })}
-                      {hasMoreC && (
-                        <Box
-                          width={"auto"}
-                          display={"flex"}
-                          justifyContent={"center"}
-                          p={2}
-                        >
-                          <Button
-                            onClick={fechMoreComments}
-                            variant="contained"
+                          );
+                        })}
+                        {hasMoreC && (
+                          <Box
+                            width={"auto"}
+                            display={"flex"}
+                            justifyContent={"center"}
+                            p={2}
                           >
-                            {"Bring More"}
-                          </Button>
-                        </Box>
-                      )}
-                    </>
+                            <Button
+                              onClick={fechMoreComments}
+                              variant="contained"
+                            >
+                              {"Bring More"}
+                            </Button>
+                          </Box>
+                        )}
+                      </>
+                    )
+                  ) : (
+                    <Alert
+                      severity="error"
+                      sx={{
+                        width: "auto",
+                      }}
+                    >
+                      <Typography>
+                        No tienes permiso para esta funcionalidad
+                      </Typography>
+                    </Alert>
                   )}
                 </Box>
               </Box>
