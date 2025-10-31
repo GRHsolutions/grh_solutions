@@ -44,7 +44,6 @@ const [profiles, setProfiles] = useState<{ data: string[] }>({
       getPostulantes(vacantData._id, auth.token).then(res => setvacantes(res.data));
     }
   }, [vacantData]);
-  console.log(profiles);
   // Obtener todos los perfiles para cruzar luego
   useEffect(() => {
     getProfiles(auth.token).then(res => setProfiles(res.data));

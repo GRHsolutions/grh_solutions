@@ -4,9 +4,8 @@ import { HorariosProvider } from "../../contexts/horarios.provider";
 import { ListHorario } from "./components/list/list";
 import PositionedMenu from "./components/list/MenuGroup";
 
-interface HorarioProps {}
 
-const Horarios: React.FC = ({}: HorarioProps) => {
+const Horarios: React.FC = () => {
   return (
     <HorariosProvider>
       <Box
@@ -22,8 +21,12 @@ const Horarios: React.FC = ({}: HorarioProps) => {
           fontSize: "2rem",
         }}
       >
-        <Typography variant={"h6"}>Bienvenidos al portal de horarios</Typography>
-        <PositionedMenu />
+          <div
+           style={{ display: "flex", justifyContent: "space-between", width: "100%" }}
+           >
+          <Typography variant={"h5"}>Bienvenidos al portal de horarios</Typography>
+          <PositionedMenu />
+          </div>
         <ListHorario />
       </Box>
     </HorariosProvider>
