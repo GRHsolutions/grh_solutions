@@ -1,5 +1,4 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Box } from "@mui/material";
@@ -7,6 +6,8 @@ import ModalGroup from "./ModalGroup";
 import ModalHorario from "./ModalHorario";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import GrhButton from "../../../../generics/grh-generics/button";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 
 export default function PositionedMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -28,20 +29,13 @@ export default function PositionedMenu() {
   };
   return (
     <div>
-      <Button
-        sx={{
-          backgroundColor: "#ff5722",
-          color: "white",
-        }}
-        id="demo-positioned-button"
-        aria-controls={open ? "demo-positioned-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+      <GrhButton
+        label="Crear"
+        variant="principal"
+        startIcon={<AddCircleOutlineIcon />}
         onClick={handleClick}
-        color="primary"
-      >
-        Crear
-      </Button>
+        sx={{ width: "100%" }}
+      />
       <Menu
         sx={{ mt: 5.5 }}
         id="demo-positioned-menu"
@@ -61,7 +55,7 @@ export default function PositionedMenu() {
         <Box sx={{ textAlign: "center" }}>Opciones</Box>
         <MenuItem
           onClick={() => handleOpenModal("Group")}
-          sx={{           
+          sx={{
             gap: 1,
             border: "1px solid #ccc",
             borderRadius: "4px",
