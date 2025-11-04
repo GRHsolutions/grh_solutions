@@ -1,6 +1,4 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
@@ -8,15 +6,15 @@ import Groups3Icon from "@mui/icons-material/Groups3";
 import GrhTextField from "../../../../generics/grh-generics/textField";
 import GrhButton from "../../../../generics/grh-generics/button";
 import LogoutIcon from "@mui/icons-material/Logout";
-import {
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-  useTheme,
-} from "@mui/material";
-import MultipleSelect from "../../../../generics/grh-generics/multipleSelect";
-import GrhCustomSelect from "../../../../generics/grh-generics/inputSelect";
+import { Alert, Grid2, IconButton, Snackbar, useTheme } from "@mui/material";
+import { putGroup } from "../../../../domain/services/grupos/grupos.service";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useAuth } from "../../../../hooks/auth";
+import { UpdateGroupDto } from "../../../../domain/models/group/group.entities";
+import { Profile } from "../../../../domain/models/profile/profile.entities";
+import MultipleSelectString from "../../../../generics/grh-generics/multipleSelectString";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -28,46 +26,63 @@ const style = {
   boxShadow: 24,
   p: 4,
   overflowY: "auto",
-  "&:focus": {
-    outline: "none",
-  },
+  "&:focus": { outline: "none" },
 };
+
 interface VincularProps {
   open: boolean;
   handleClose: () => void;
+  users: Profile[];
+  groupId: string;
+  areaId: string;
+  groupName: string;
+  setReload?: React.Dispatch<React.SetStateAction<boolean>>; 
 }
-export default function Vincular({ open, handleClose }: VincularProps) {
-  const theme = useTheme();
-  const [mult, setMult] = React.useState<number[]>([]);
-  const [text, setText] = React.useState("");
 
-  const options = [
-    {
-      id: 1,
-      name: "Martin Rodriguez",
+export default function Vincular({
+  open,
+  handleClose,
+  users,
+  groupId,
+  areaId,
+  groupName,
+  setReload
+}: VincularProps) {
+  const theme = useTheme();
+  const { auth } = useAuth();
+  const [openAlert, setOpenAlert] = useState(false);
+  const formik = useFormik({
+    initialValues: {
+      userIds: [] as string[],
+      observaciones: "",
     },
-    {
-      id: 2,
-      name: "Rosalba Salazar",
+    validationSchema: Yup.object({
+      userIds: Yup.array().min(1, "Debes seleccionar al menos un usuario"),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        await Promise.all(
+          values.userIds.map((userId) => {
+            const payload: UpdateGroupDto = {
+              name: groupName,
+              userId,
+              area: areaId,
+            };
+            return putGroup(groupId, payload, auth.token);
+          })
+        );
+        setOpenAlert(true);
+        if (setReload) setReload(prev => !prev);
+        resetForm();
+        handleClose();
+      } catch (error) {
+        console.error(error);
+        alert("Error al vincular los usuarios ❌");
+      }
     },
-    {
-      id: 3,
-      name: "Gemita Mendez",
-    },
-    {
-      id: 4,
-      name: "Miguel Ballesteros",
-    },
-    {
-      id: 5,
-      name: "Juan Diaz",
-    },
-  ];
-  const setFieldValue = (_field: string, value: number[]) => {
-    setMult(value);
-  };
+  });
   return (
-    <div>
+    <>
       <Modal
         open={open}
         onClose={handleClose}
@@ -75,27 +90,15 @@ export default function Vincular({ open, handleClose }: VincularProps) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Groups3Icon
-                sx={{ fontSize: 40, color: theme.palette.text.primary }}
-              />
+              <Groups3Icon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
               <Box>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  color={theme.palette.text.primary}
-                >
-                  Vincular nuevo usuario.
+                <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
+                  Vincular nuevo usuario
                 </Typography>
                 <Typography variant="body2" color={theme.palette.text.primary}>
-                  Al vincular un nuevo usuario, se le notificara a los empleados{" "}
+                  Al vincular un nuevo usuario, se notificará a los empleados.
                 </Typography>
               </Box>
             </Box>
@@ -103,33 +106,40 @@ export default function Vincular({ open, handleClose }: VincularProps) {
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box sx={{ mt: 1 }}>
-            <MultipleSelect
-              sx={{ mt: 4 }}
-              label={"listado de usuarios"}
-              name={"input"}
-              options={options.map((item) => ({
-                id: item.id,
-                nombre: item.name,
+
+          <Box sx={{ mt: 4 }}>
+            <MultipleSelectString
+              sx={{ mt: 2 }}
+              label="Listado de usuarios"
+              name="userIds"
+              options={users.map((item, index) => ({
+                id: item.user,
+                nombre: `${item.name || ""} ${item.lastname || ""} (${item.email})`,
               }))}
-              value={mult}
-              setFieldValue={setFieldValue}
+              value={formik.values.userIds}
+              setFieldValue={formik.setFieldValue}
+              error={formik.errors.userIds as string}
+              touched={formik.touched.userIds}
             />
           </Box>
-          <Box sx={{ mt: 2, display: "flex", gap: 2, alignItems: "center" }}>
-            <GrhTextField
-              label="justificacxion de la asignacion"
-              value={text}
-              onChange={(e) => {
-                setText(e.target.value || "");
-              }}
-              sx={{
-                width: "100%",
-                "& .MuiInputBase-root": {
-                  height: "100%",
-                },
-              }}
-            />
+
+          <Box sx={{ mt: 4, width: "100%" }}>
+            <Grid2 size={12}>
+              <GrhTextField
+                label="Observaciones"
+                name="observaciones"
+                value={formik.values.observaciones}
+                rows={4}
+                multirows
+                onChange={formik.handleChange}
+                sx={{
+                  width: "100%",
+                  "& .MuiInputBase-root": {
+                    height: "100%",
+                  },
+                }}
+              />
+            </Grid2>
           </Box>
 
           <Box
@@ -142,18 +152,26 @@ export default function Vincular({ open, handleClose }: VincularProps) {
             }}
           >
             <GrhButton
-              onClick={handleClose}
+              onClick={formik.handleSubmit}
               startIcon={<LogoutIcon />}
-              label={"Enviar solicitud"}
+              label="Enviar solicitud"
               variant="principal"
-              sx={{
-                width: "30%",
-              }}
-              id={"solicitud"}
+              sx={{ width: "30%" }}
+              id="solicitud"
             />
           </Box>
         </Box>
       </Modal>
-    </div>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
+          Usuarios vinculados correctamente.
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import formatearFecha from "../../../../utils/formatearFecha";
-import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
+import { Horarios } from "../../../../domain/models/horarios/Horarios.entities";
 import CloseIcon from "@mui/icons-material/Close";
 
 interface PeticionesDetalle {

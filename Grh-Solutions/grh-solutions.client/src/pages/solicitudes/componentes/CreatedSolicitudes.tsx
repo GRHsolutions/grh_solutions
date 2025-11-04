@@ -6,10 +6,11 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import CloseIcon from "@mui/icons-material/Close";
 import GrhTextField from "../../../generics/grh-generics/textField";
 import GrhButton from "../../../generics/grh-generics/button";
-import { DragDropInput, DragNDropVariables } from "../../../generics/grh-generics/DragNDrop";
+import {DragDropInput,DragNDropVariables,} from "../../../generics/grh-generics/DragNDrop";
 import { Formik } from "formik";
-import { RequestForm } from "./../../../domain/models/request/request.entities";
+import { RequestForm } from "../../../domain/models/request/request.entities";
 import { http } from "../../../infrastructure/axios/axios";
+
 import "../stiles.scss";
 
 const style = {
@@ -50,6 +51,7 @@ export default function CreatedSolicitudes() {
         onClick={() => setOpen(true)}
         sx={{ width: "100%" }}
       />
+
       <CreatedSolicitudesModal
         open={open}
         handleClose={() => setOpen(false)}
@@ -79,19 +81,42 @@ const CreatedSolicitudesModal = ({
     try {
       setLoading?.(true);
 
-      const mappedFiles = (values.files || []).map((f) => ({
-        id: f.id,
-        name: f.name,
-        type: f.type,
-        size: f.size,
-        base64: f.base64,
-      }));
+      if (!values.title || !values.type_request) {
+        alert("Por favor, completa el título y el tipo de solicitud.");
+        setLoading?.(false);
+        return;
+      }
+
+      const convertFileToBase64 = (file: File) =>
+        new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = (error) => reject(error);
+          reader.readAsDataURL(file);
+        });
+
+      const mappedFiles =
+        values.files && values.files.length > 0
+          ? await Promise.all(
+              values.files.map(async (f: any) => ({
+                id: f.id || undefined,
+                name: f.name,
+                type: f.type,
+                size: f.size,
+                base64: f.base64
+                  ? f.base64
+                  : f.file
+                  ? await convertFileToBase64(f.file)
+                  : null,
+              }))
+            )
+          : [];
 
       const payload = {
         title: values.title,
         type_request: values.type_request,
         infoDx: values.infoDx,
-        file: mappedFiles,
+        file: mappedFiles.filter((f) => f.base64),
       };
 
       await http.post("/api/request/create", payload, {
@@ -103,21 +128,28 @@ const CreatedSolicitudesModal = ({
       window.location.reload();
     } catch (err: any) {
       console.error("Error al crear solicitud:", err);
-      alert(err?.message || "Error al crear la solicitud");
+      const message =
+        err?.response?.data?.message ||
+        err?.message ||
+        "Error al crear la solicitud";
+      alert(message);
     } finally {
       setLoading?.(false);
     }
   };
-
   return (
     <Modal open={open} onClose={handleClose}>
       <Box sx={{ ...style }}>
-        {/* Header */}
+        {/* HEADER */}
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
           <Box display="flex" alignItems="center" gap={2}>
             <SaveAltIcon sx={{ color: theme.palette.text.primary }} />
             <Box>
-              <Typography variant="h6" fontWeight="bold" sx={{ color: theme.palette.text.primary }}>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ color: theme.palette.text.primary }}
+              >
                 Crear Solicitud
               </Typography>
               <Typography variant="body2" color="text.secondary">
@@ -125,16 +157,22 @@ const CreatedSolicitudesModal = ({
               </Typography>
             </Box>
           </Box>
-          <CloseIcon sx={{ cursor: "pointer", color: "gray" }} onClick={handleClose} />
+
+          <CloseIcon
+            sx={{ cursor: "pointer", color: "gray" }}
+            onClick={handleClose}
+          />
         </Box>
 
         <Formik
-          initialValues={{
-            title: "",
-            type_request: "",
-            infoDx: "",
-            files: [],
-          } as unknown as RequestForm}
+          initialValues={
+            {
+              title: "",
+              type_request: "",
+              infoDx: "",
+              files: [],
+            } as unknown as RequestForm
+          }
           onSubmit={handleSubmitForm}
         >
           {({ values, setFieldValue, handleSubmit }) => (
@@ -154,15 +192,18 @@ const CreatedSolicitudesModal = ({
                     fullWidth
                   />
                 </Grid>
-
                 <Grid item xs={12}>
                   <FormControl fullWidth>
-                    <InputLabel id="type_request_label">Tipo de solicitud</InputLabel>
+                    <InputLabel id="type_request_label">
+                      Tipo de solicitud
+                    </InputLabel>
                     <Select
                       labelId="type_request_label"
                       id="type_request"
                       value={values.type_request}
-                      onChange={(e) => setFieldValue("type_request", e.target.value)}
+                      onChange={(e) =>
+                        setFieldValue("type_request", e.target.value)
+                      }
                     >
                       {requestTypes.map((type) => (
                         <MenuItem key={type} value={type}>
@@ -187,20 +228,21 @@ const CreatedSolicitudesModal = ({
 
                 <Grid item xs={12}>
                   <DragDropInput
-                    acceptedMimeTypes={[
-                      "image/jpeg",
-                      "image/png",
-                      "image/gif",
-                      "application/pdf",
-                    ]}
+                    acceptedMimeTypes={["application/pdf"]}
                     maxSizeInKB={4000}
-                    onFileSelect={(files: DragNDropVariables[]) => setFieldValue("files", files)}
+                    onFileSelect={(files: DragNDropVariables[]) =>
+                      setFieldValue("files", files || [])
+                    }
                     selectedFiles={values.files}
-                    maxFiles={4}
+                    maxFiles={2}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Stack direction="row" spacing={2} justifyContent="flex-end">
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    justifyContent="flex-end"
+                  >
                     <GrhButton
                       label="Cancelar"
                       variant="secondary"

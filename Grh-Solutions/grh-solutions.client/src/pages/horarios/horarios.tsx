@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { HorariosProvider } from "../../contexts/horarios.provider";
 import { ListHorario } from "./components/list/list";
 import PositionedMenu from "./components/list/MenuGroup";
 
-interface HorarioProps {}
 
-const Horarios: React.FC = ({}: HorarioProps) => {
+const Horarios: React.FC = () => {
+    const [reload, setReload] = useState<boolean>(false);
   return (
     <HorariosProvider>
       <Box
@@ -22,9 +22,13 @@ const Horarios: React.FC = ({}: HorarioProps) => {
           fontSize: "2rem",
         }}
       >
-        <Typography variant={"h6"}>Bienvenidos al portal de horarios</Typography>
-        <PositionedMenu />
-        <ListHorario />
+          <div
+           style={{ display: "flex", justifyContent: "space-between", width: "100%" }}
+           >
+          <Typography variant={"h5"}>Bienvenidos al portal de horarios</Typography>
+          <PositionedMenu reload={reload}  setReload={setReload} />
+          </div>
+        <ListHorario  reload={reload} setReload={setReload}  />
       </Box>
     </HorariosProvider>
   );
