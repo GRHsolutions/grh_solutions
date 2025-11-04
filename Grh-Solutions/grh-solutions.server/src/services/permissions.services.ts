@@ -25,6 +25,7 @@ export const permissionService = {
 
   getAll: async (filter: PermissionsFilter) => {
     const query: any = {};
+    console.log(filter);
 
     // Filtros dinámicos
     if (filter.method) {
@@ -35,9 +36,16 @@ export const permissionService = {
       query["ident.originalUrl"] = { $regex: filter.url, $options: "i" };
     }
 
+    // Nuevo filtro: module (id del módulo)
+    if (filter.module != undefined && filter.module != "" && filter.module != "undefined") {
+      query["ident.module"] = filter.module; // Debe ser un ObjectId válido
+    }
+
     // Si NO se requiere paginación
     if (filter.useGetAllNoPage) {
-      return await permissionModel.find(query);
+      return await permissionModel
+        .find(query)
+        .populate("ident.module");
     }
 
     // Si se requiere paginación
@@ -50,7 +58,6 @@ export const permissionService = {
       .skip(skip)
       .limit(filter.rowsPerPage);
 
-
     return data;
   },
 
@@ -60,12 +67,18 @@ export const permissionService = {
     if (filter.method) {
       query["ident.method"] = filter.method.toUpperCase();
     }
+    // Nuevo filtro: module (id del módulo)
+    if (filter.module != undefined && filter.module != "" && filter.module != "undefined") {
+      query["ident.module"] = filter.module; // Debe ser un ObjectId válido
+    }
 
     if (filter.url) {
       query["ident.originalUrl"] = { $regex: filter.url, $options: "i" };
     }
 
-    const totalItems = await permissionModel.countDocuments(query);
+    const totalItems = await permissionModel
+      .countDocuments(query)
+      .populate("ident.module");
     const totalPages = Math.ceil(totalItems / (filter.rowsPerPage || 1));
 
     return {

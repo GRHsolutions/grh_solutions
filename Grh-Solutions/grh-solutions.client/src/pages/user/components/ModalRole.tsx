@@ -17,6 +17,7 @@ import ModalCreateRol from "./ModalCreateRol";
 import { Rol, UpdateRolDto } from "../../../domain/models/role/role.entities";
 import {
   getAllRoles,
+  getModules,
   getPermissions,
   getPermissionsPagination,
   getPermsFromRol,
@@ -40,6 +41,7 @@ interface IModalRoleProps {
 export default function ModalRole({ open, handleClose }: IModalRoleProps) {
   const theme = useTheme();
   const [roles, setRoles] = useState<{ value: string; name: string }[]>([]);
+  const [modules, setModules] = useState<{ value: string; name: string }[]>([]);
   const [selectedRoleId, setSelectedRoleId] = useState("");
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [currentRol, setCurrentRol] = useState<Rol | undefined>(undefined);
@@ -50,10 +52,12 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
     loading_roles: boolean;
     loading_update_rol: boolean;
     loading_permissions: boolean;
+    loading_modules: boolean;
   }>({
     loading_roles: false,
     loading_update_rol: false,
     loading_permissions: false,
+    loading_modules: false,
   });
   const [filter, setFilter] = useState<PermissionsFilter>({
     currentPage: 1,
@@ -61,9 +65,55 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
     useGetAllNoPage: false,
   });
   const [isActive, setIsActive] = useState(false);
-  const {
-    addNotification
-  } = useNotifications();
+  const { addNotification } = useNotifications();
+  const [searchUrl, setSearchUrl] = useState("");
+
+  useEffect(() => {
+    const delayDebounceFn = setTimeout(() => {
+      setFilter((prev) => ({
+        ...prev,
+        url: searchUrl || undefined,
+        currentPage: 1,
+      }));
+    }, 500); // Espera 500ms después de que el usuario termine de escribir
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchUrl]);
+
+  useEffect(() => {
+    setLoading((prev) => ({
+      ...prev,
+      loading_modules: true,
+    }));
+
+    getModules()
+      .then((res) => {
+        const excludedName = "Admin-Interface";
+        const formatted = res
+          .filter(
+            (role: { _id: string; name: string }) => role.name !== excludedName
+          )
+          .map((role: { _id: string; name: string }) => ({
+            value: role._id,
+            name: role.name,
+          }));
+
+        // Agregar el elemento "Ninguno" al inicio
+        const finalModules = [
+          { value: "undefined", name: "Ninguno" },
+          ...formatted,
+        ];
+
+        setModules(finalModules);
+      })
+      .catch((e) => console.error(e))
+      .finally(() =>
+        setLoading((prev) => ({
+          ...prev,
+          loading_modules: false,
+        }))
+      );
+  }, []);
 
   // Fetch de roles
   useEffect(() => {
@@ -134,7 +184,14 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
     };
 
     fetchData();
-  }, [selectedRoleId, filter.currentPage, filter.rowsPerPage, filter.method, filter.url]);
+  }, [
+    selectedRoleId,
+    filter.currentPage,
+    filter.rowsPerPage,
+    filter.method,
+    filter.url,
+    filter.module,
+  ]);
 
   useEffect(() => {
     setAssignedPermissions(currentRol ? currentRol.permissions : []);
@@ -205,8 +262,8 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
         color: "success",
         title: "Se ha actualizado el rol",
         position: "top-right",
-        duration: 2000
-      })
+        duration: 2000,
+      });
     } catch (error) {
       console.error("❌ Error al actualizar el rol", error);
     } finally {
@@ -316,41 +373,49 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
             >
               {/* BÚSQUEDA */}
               <Grid2 sx={{ mb: 2 }} container gap={2}>
-                <Grid2 size={8}>
+                <Grid2 size={7}>
                   <GrhTextField
                     fullWidth
                     variant="standard"
                     disabled={loading.loading_permissions || !selectedRoleId}
                     label="Buscar permiso"
-                    value={filter.url}
-                    onChange={(e) =>
-                      setFilter((prev) => ({ ...prev, url: e.target.value }))
-                    }
+                    value={searchUrl}
+                    onChange={(e) => setSearchUrl(e.target.value)}
                   />
                 </Grid2>
-                <Grid2 size={3}>
+                <Grid2 size={4} display={"flex"} gap={2}>
                   <GrhCustomSelect<string>
                     variant={"standard"}
                     label={"Seleccionar metodo"}
                     options={[
                       {
+                        name: "Ninguno",
+                        value: "undefined",
+                      },
+                      {
                         name: "OBTENER/GET",
-                        value: "GET"
-                      },{
+                        value: "GET",
+                      },
+                      {
                         name: "SUBIR/PUT",
-                        value: "POST"
-                      },{
+                        value: "POST",
+                      },
+                      {
                         name: "ACTUALIZAR/PUT",
-                        value: "PUT"
-                      },{
+                        value: "PUT",
+                      },
+                      {
                         name: "ELIMINAR/DELETE",
-                        value: "DELETE"
-                      },{
+                        value: "DELETE",
+                      },
+                      {
                         name: "MODULOS",
-                        value: "MODULO"
-                      }
+                        value: "MODULO",
+                      },
                     ]}
                     disabled={
+                      selectedRoleId == "" ||
+                      loading.loading_modules ||
                       loading.loading_permissions ||
                       loading.loading_roles ||
                       loading.loading_update_rol ||
@@ -358,16 +423,41 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
                     }
                     fullWidth
                     value={(filter.method as string) || ""}
+                    onChange={(e) => {
+                      const cvlau =
+                        e.target.value == "undefined"
+                          ? undefined
+                          : (e.target.value as
+                              | "GET"
+                              | "POST"
+                              | "PUT"
+                              | "DELETE"
+                              | "PATCH"
+                              | "MODULO");
+                      setFilter((prev) => ({
+                        ...prev,
+                        method: cvlau,
+                      }));
+                    }}
+                  />
+                  <GrhCustomSelect<string>
+                    variant={"standard"}
+                    label={"Seleccionar module"}
+                    options={modules}
+                    disabled={
+                      selectedRoleId == "" ||
+                      loading.loading_modules ||
+                      loading.loading_permissions ||
+                      loading.loading_roles ||
+                      loading.loading_update_rol ||
+                      roles.length <= 0
+                    }
+                    fullWidth
+                    value={(filter.module as string) || ""}
                     onChange={(e) =>
                       setFilter((prev) => ({
                         ...prev,
-                        method: e.target.value as
-                          | "GET"
-                          | "POST"
-                          | "PUT"
-                          | "DELETE"
-                          | "PATCH"
-                          | "MODULO",
+                        module: e.target.value,
                       }))
                     }
                   />

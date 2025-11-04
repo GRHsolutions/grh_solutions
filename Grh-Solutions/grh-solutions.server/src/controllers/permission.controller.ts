@@ -1,19 +1,17 @@
 import { Response, Request } from "express";
 import { permissionService } from "../services/permissions.services";
-import { Pagination } from "../filters/pagination.filters";
 import { rolModel } from "../models/rol.model";
-import { PermissionsFilter } from "../filters/permissions.filter";
 
 export const permissionController = {
   get: async (req: Request, res: Response) => {
     const filter = req.query;
-    console.log(filter);
     const list = await permissionService.getAll({
       currentPage: Number(filter.currentPage),
       rowsPerPage: Number(filter.rowsPerPage),
       useGetAllNoPage: filter.useGetAllNoPage == "true" ? true : false,
       method: filter.method ? String(filter.method) : undefined,
-      url: filter.url ? String(filter.url): undefined
+      url: filter.url ? String(filter.url): undefined,
+      module: filter.module ? String(filter.module) : undefined
     });
 
     return res.status(200).json(list);
@@ -26,7 +24,8 @@ export const permissionController = {
       rowsPerPage: Number(filter.rowsPerPage),
       useGetAllNoPage: filter.useGetAllNoPage == "true" ? true : false,
       method: filter.method ? String(filter.method) : undefined,
-      url: filter.url ? String(filter.url): undefined
+      url: filter.url ? String(filter.url): undefined,
+      module: filter.module ? String(filter.module) : undefined
     });
 
     return res.status(200).json(pagination);

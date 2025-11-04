@@ -8,7 +8,6 @@ import AddIcon from "@mui/icons-material/Add";
 import * as Yup from "yup";
 import { JustImages } from "./parts/justImages";
 import { DragNDropVariables } from "../../../../../generics/grh-generics/DragNDrop";
-import { Survey } from "./parts/survey";
 import React from "react";
 import { useNews } from "../../../../../hooks/news";
 
@@ -148,12 +147,6 @@ export const TabsForm = ({ initialValue, edit }: TabsFormProps) => {
                 />
               ),
               disabled: values.type !== "publication-with-images",
-            },
-            {
-              value: "3",
-              label: "Encuesta",
-              content: <Survey loading={loading} />,
-              disabled: values.type !== "publication-with-survey",
             },
           ];
 

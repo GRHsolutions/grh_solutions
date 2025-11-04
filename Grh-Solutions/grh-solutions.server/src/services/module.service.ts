@@ -34,7 +34,10 @@ export const moduleService = {
     query.disabled = options.includeDisabled;
   }
 
-    return await ModuleModel.find(query).sort({ createdAt: -1 });
+    return await ModuleModel
+      .find(query)
+      .sort({ createdAt: -1 })
+      .lean();
   },
 
   getById: async (id: string) => {

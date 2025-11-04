@@ -11,6 +11,7 @@ import {
 
 const LOGINMAINAPI = "/api/rol";
 const PERMISSIONSAPI = "/api/permission";
+const MODULESAPI = "/api/modules";
 
 // ESTOS METODOS SON PROPIOS PARA ACCEDER A UN USUARIO CON
 // PERMISOS DE ALTO RANGO POR ESO SE HACE UN OVERWRITE PARA ASI
@@ -80,4 +81,19 @@ export const getPermsFromRol = async (id: string): Promise<Rol> => {
     undefined,
     overWrite
   );
+};
+
+export const getModules = async (): Promise<
+  {
+    name: string;
+    _id: string;
+  }[]
+> => {
+  const url = `${MODULESAPI}/getAll`;
+  return await http.get<
+    {
+      name: string;
+      _id: string;
+    }[]
+  >(url);
 };

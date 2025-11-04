@@ -28,5 +28,6 @@ export type VerifiedPermission = {
 
 export interface PermissionsFilter extends Pagination {
   method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "MODULO",
-  url?: string
+  url?: string,
+  module?: string
 }

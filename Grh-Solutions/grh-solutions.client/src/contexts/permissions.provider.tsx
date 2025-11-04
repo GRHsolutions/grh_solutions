@@ -17,10 +17,10 @@ export function usePermissions(
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchPermissions = useCallback(async (idents: Ident[]) =>{
+  const fetchPermissions = useCallback(async (idents: Ident[]): Promise<boolean> =>{
     if (!idents || idents.length === 0) {
       setError("No idents provided");
-      throw ("NO IDENTS PROVIDED")
+      return false;
     }
 
     setLoading(true);
@@ -39,6 +39,7 @@ export function usePermissions(
       localStorage.setItem(`permissions-${route}`, JSON.stringify(response.permissions));
 
       setError(null);
+
     } catch (err: unknown) {
       console.error("Error fetching permissions:", err);
       const errorMessage = err && typeof err === 'object' && 'response' in err && 
@@ -47,8 +48,10 @@ export function usePermissions(
         ? String(err.response.data.message)
         : "Error al obtener permisos";
       setError(errorMessage);
+      return false;
     } finally {
       setLoading(false);
+      return true
     }
   }, []);
 

@@ -27,9 +27,6 @@ export const MainInfo = ({
   },{
     value:  "publication-with-images",
     name: "Publicacion con imagenes"
-  },{
-    value:  "publication-with-survey",
-    name: "Publicacion de una encuesta"
   }];
   const theme = useTheme();
 

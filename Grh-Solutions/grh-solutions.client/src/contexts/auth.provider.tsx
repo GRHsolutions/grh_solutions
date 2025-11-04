@@ -22,7 +22,8 @@ export const AuthContext = React.createContext<AuthContextType | undefined>(
   undefined
 );
 
-export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -32,7 +33,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     user: {
       email: localStorageUtil.get("usr_items_correo") || "",
       photo: localStorageUtil.get("usr_items_photo") || "",
-      profile: localStorageUtil.get("usr_items_profile_id") || ""
+      profile: localStorageUtil.get("usr_items_profile_id") || "",
     },
     token: localStorageUtil.get("usr_items_token") || "",
   } as ReturnableLogin;
@@ -44,7 +45,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const service = new LoginService(new LoginRepository());
   const { fetchPermissions } = usePermissions("post-login-renderer");
 
-  // Maneja el login de manera asíncrona
   const login = async (
     email: string,
     password: string
@@ -52,65 +52,59 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const res = await service.login({ email, password });
 
-      // Guardar los datos en localStorage
+      // 1️⃣ Guardar datos en localStorage
       localStorageUtil.set("usr_items_token", res.token);
-      localStorageUtil.set("usr_items_correo", res.user.email); // Aquí, si es necesario puedes usar un campo diferente
-      localStorageUtil.set("usr_items_profile_id", res.user.profile)
+      localStorageUtil.set("usr_items_correo", res.user.email);
+      localStorageUtil.set("usr_items_profile_id", res.user.profile);
       if (res.user.photo)
         localStorageUtil.set("usr_items_photo", res.user.photo);
-      if (res.user.email)
-        localStorageUtil.set("usr_items_correo", res.user.email);
 
-      // CARGA LOS PERMISOS CON EL TOKEN RECIEN TRAIDO
-      await fetchPermissions(PermisosPostLoginRender);
+      // 3️⃣ Asegurarse de que el token esté listo antes de llamar fetchPermissions
+      console.log("Token listo:", localStorageUtil.get("usr_items_token"));
 
-      setIsLoggedIn(true); // Establecer como logueado      
+      // 4️⃣ Ejecutar permisos y esperar correctamente
+      const r = await fetchPermissions(PermisosPostLoginRender);
 
-      // Actualizar estado de autenticación
-      setAuth({
-        user: {
-          email: res.user.email,
-          photo: res.user.photo,
-          profile: res.user.profile
-        },
-        token: res.token,
-      });
+      if(r){
+        // 2️⃣ Actualizar estado de autenticación antes de pedir permisos
+        setAuth({
+          user: {
+            email: res.user.email,
+            photo: res.user.photo,
+            profile: res.user.profile,
+          },
+          token: res.token,
+        });
+        setIsLoggedIn(true);
 
+        // 5️⃣ Respuesta final según warnings
+        if (!res.warnings) {
+          return {
+            t: "SUCCESS",
+            m: "Acceso concedido",
+          };
+        }
 
-
-      if (res.warnings === undefined) {
-        //await sleep(2000);
-        return {
-          t: "SUCCESS",
-          m: "Acceso concedido",
-        };
+        if (res.warnings.message === "Debe crear su hoja de vida") {
+          return {
+            t: "SUCCESS-CRAETE-CV",
+            m: res.warnings.message,
+          };
+        }
       }
 
-      if (res.warnings.message === "Debe crear su hoja de vida") {
-        await sleep(2000);
-        return {
-          t: "SUCCESS-CRAETE-CV",
-          m: res.warnings.message,
-        };
-      }
-
+      setIsLoggedIn(false);
+      
       return {
         t: "ERROR",
-        m: "aa"
-      }
-
+        m: "aa",
+      };
     } catch (err: any) {
-      if (err["message"] && typeof err["message"] === "string") {
-        setIsLoggedIn(false); // Establecer como no logueado en caso de error
-        return {
-          t: "ERROR",
-          m: err["message"],
-        };
-      }
-      setIsLoggedIn(false); // Establecer como no logueado en caso de error
+      setIsLoggedIn(false);
+
       return {
         t: "ERROR",
-        m: "Error en el endpoint del login",
+        m: err?.message || "Error en el endpoint del login",
       };
     }
   };
