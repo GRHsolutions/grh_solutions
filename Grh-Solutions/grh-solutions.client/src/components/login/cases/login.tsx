@@ -30,14 +30,14 @@ export default function Login({ onRegister }: LoginProps) {
     await login(values.email, values.password)
       .then(async (res) => {
         if (res.t == "SUCCESS-CRAETE-CV") {
-          addNotification({
-            title: res.m,
-            color: "info",
-            position: "top-right",
-            duration: 4000,
-          });
-          navigate("/hv-user");
-          //navigate("/");
+          // addNotification({
+          //   title: res.m,
+          //   color: "info",
+          //   position: "top-right",
+          //   duration: 4000,
+          // });
+          //navigate("/hv-user");
+          navigate("/");
         } else if (res.t == "SUCCESS") {
           // addNotification({
           //   title: res.m,

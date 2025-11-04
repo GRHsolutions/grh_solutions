@@ -1,8 +1,19 @@
-import { Box, Typography, Modal, IconButton, TextField, Button, Switch, FormControlLabel, useTheme } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Modal,
+  IconButton,
+  useTheme,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { useState } from "react";
+import GrhTextField from "../../../generics/grh-generics/textField";
+import GrhButton from "../../../generics/grh-generics/button";
+import { Rol } from "../../../domain/models/role/role.entities";
+import { Formik } from "formik";
+import { createRol } from "../../../domain/services/Roles/Roles.service";
+import React from "react";
 
 const style = {
   position: "absolute",
@@ -17,27 +28,68 @@ const style = {
   display: "flex",
   flexDirection: "column",
   gap: 3,
-  border: '2px solid #000',
+  border: "2px solid #000",
 };
 interface IModalCreateRolProps {
   open: boolean;
   handleClose: () => void;
+  onJustCreated: (obj: Rol) => void;
 }
 
-export default function ModalCreateRol({ open, handleClose }: IModalCreateRolProps) {
+export default function ModalCreateRol({
+  open,
+  handleClose,
+  onJustCreated,
+}: IModalCreateRolProps) {
   const theme = useTheme();
-  const [isActive, setIsActive] = useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleSubmit = async (v: { name: string }) => {
+    setLoading(true);
+    await createRol({
+      name: v.name,
+      permissions: [],
+      isActive: true,
+      _id: "",
+    })
+      .then((e) => {
+        onJustCreated(e);
+        handleClose();
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
   return (
     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title">
       <Box sx={style}>
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <AddCircleOutlineIcon sx={{ fontSize: 30, color: theme.palette.text.primary }} />
+            <AddCircleOutlineIcon
+              sx={{ fontSize: 30, color: theme.palette.primary.contrastText }}
+            />
             <Box>
-              <Typography variant="h6" fontWeight="bold">
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ color: theme.palette.primary.contrastText }}
+              >
                 Crear un nuevo Rol.
               </Typography>
-              <Typography variant="body2" color={theme.palette.text.secondary}>
+              <Typography
+                variant="caption"
+                color={theme.palette.primary.contrastText}
+              >
                 Crea un nuevo rol sin permisos para luego asignarle.
               </Typography>
             </Box>
@@ -46,23 +98,51 @@ export default function ModalCreateRol({ open, handleClose }: IModalCreateRolPro
             <CloseIcon />
           </IconButton>
         </Box>
-        <Box sx={{ display: "flex", gap: 2 }}>
-          <TextField label="Nombre" fullWidth variant="standard" />
-          <TextField label="Código" fullWidth variant="standard" />
-        </Box>
-        <TextField label="Descripción" fullWidth multiline rows={3} variant="standard" />
-        <FormControlLabel
-          control={<Switch checked={isActive} onChange={() => setIsActive(!isActive)} color="secondary" />}
-          label="Activo"
-        />
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}>
-          <Button variant="outlined" startIcon={<ArrowBackIcon />} onClick={handleClose}>
-            Cancelar
-          </Button>
-          <Button variant="contained" startIcon={<AddCircleOutlineIcon />} sx={{ backgroundColor: "#90CAF9", color: "black" }}>
-            Guardar
-          </Button>
-        </Box>
+        <Formik
+          initialValues={{
+            name: "",
+          }}
+          onSubmit={handleSubmit}
+        >
+          {({ values, setFieldValue, handleSubmit }) => (
+            <form onSubmit={handleSubmit}>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <GrhTextField
+                  disabled={loading}
+                  label="Nombre"
+                  fullWidth
+                  variant="standard"
+                  value={values.name}
+                  onChange={(e) => {
+                    setFieldValue("name", e.target.value);
+                  }}
+                />
+              </Box>
+              <Box
+                sx={{ display: "flex", justifyContent: "space-between", mt: 2 }}
+              >
+                <GrhButton
+                  variant="tertiary"
+                  startIcon={<ArrowBackIcon />}
+                  onClick={handleClose}
+                  disabled={loading}
+                  label="Cancelar"
+                />
+                <GrhButton
+                  variant="principal"
+                  startIcon={<AddCircleOutlineIcon />}
+                  sx={{
+                    backgroundColor: "#90CAF9",
+                    color: "black",
+                  }}
+                  disabled={loading}
+                  label="Guardar"
+                  type="submit"
+                />
+              </Box>
+            </form>
+          )}
+        </Formik>
       </Box>
     </Modal>
   );

@@ -2,18 +2,32 @@ import { Response, Request } from "express";
 import { permissionService } from "../services/permissions.services";
 import { Pagination } from "../filters/pagination.filters";
 import { rolModel } from "../models/rol.model";
+import { PermissionsFilter } from "../filters/permissions.filter";
 
 export const permissionController = {
   get: async (req: Request, res: Response) => {
-    const filter = req.query as Pagination;
-    const list = await permissionService.getAll(filter);
+    const filter = req.query;
+    console.log(filter);
+    const list = await permissionService.getAll({
+      currentPage: Number(filter.currentPage),
+      rowsPerPage: Number(filter.rowsPerPage),
+      useGetAllNoPage: filter.useGetAllNoPage == "true" ? true : false,
+      method: filter.method ? String(filter.method) : undefined,
+      url: filter.url ? String(filter.url): undefined
+    });
 
     return res.status(200).json(list);
   },
 
   getPagination: async (req: Request, res: Response) => {
-    const filter = req.query as Pagination;
-    const pagination = await permissionService.getPaginated(filter);
+    const filter = req.query;
+    const pagination = await permissionService.getPaginated({
+      currentPage: Number(filter.currentPage),
+      rowsPerPage: Number(filter.rowsPerPage),
+      useGetAllNoPage: filter.useGetAllNoPage == "true" ? true : false,
+      method: filter.method ? String(filter.method) : undefined,
+      url: filter.url ? String(filter.url): undefined
+    });
 
     return res.status(200).json(pagination);
   },
@@ -100,6 +114,39 @@ export const permissionController = {
         success: false,
         message: "Error al obtener permisos del rol.",
         error: error instanceof Error ? error.message : error,
+      });
+    }
+  },
+
+  getPermsFromRol: async (req: Request, res: Response) => {
+    try {
+      const {
+        id, //ROL QUE SE REQUIEREN LOS PERMISOS
+      } = req.query;
+
+      if (typeof id != "string" || id == "") {
+        return res.status(400).json({
+          success: false,
+          message: "Debe enviar el rol",
+        });
+      }
+
+      // 1️⃣ Obtener permisos del rol con módulos poblados
+      const role = await rolModel.findById(id);
+
+      if (!role) {
+        return res.status(404).json({
+          success: false,
+          message: "Rol no encontrado.",
+        });
+      }
+
+      return res.status(200).json(role);
+    } catch (e: any) {
+      return res.status(500).json({
+        success: false,
+        message: "Error al obtener permisos del rol.",
+        error: e instanceof Error ? e.message : e,
       });
     }
   },

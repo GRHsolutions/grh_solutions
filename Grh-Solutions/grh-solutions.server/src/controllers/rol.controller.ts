@@ -28,13 +28,13 @@ export const rolController = {
   getAll: async (req: Request, res: Response) => {
     try {
       const {
-        name
+        name,
+        id
       } = req.query;
 
-      console.log(name)
-
       const data = await rolService.getAll({
-        name: name as string | undefined
+        name: name as string | undefined,
+        id: id as string | undefined
       });
 
       return res.status(200).json(data);
@@ -54,7 +54,6 @@ export const rolController = {
         addPermissions, 
         removePermissions 
       } = req.body;
-      console.log("AGREGANDO", req.body, " A ", id);
 
       const updates: any = {};
 

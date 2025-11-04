@@ -1,4 +1,7 @@
+import { Pagination } from "../pagination/pagination";
+
 export type Permission = {
+  _id: string;
   ident: Ident;
   description: string;
 };
@@ -21,4 +24,9 @@ export type VerifiedPermission = {
     ident: Ident,
     granted: boolean
   }[]
+}
+
+export interface PermissionsFilter extends Pagination {
+  method?: "GET" | "POST" | "PUT" | "DELETE" | "PATCH" | "MODULO",
+  url?: string
 }
