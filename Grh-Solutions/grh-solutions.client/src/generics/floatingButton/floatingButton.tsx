@@ -13,6 +13,7 @@ interface FloatingButtonProps {
   ariaLabel?: string;
   disabled?: boolean;
   hoverEffect?: "scale" | "elevate" | "rotate";
+  labelP?: "left" | "right"
 }
 
 export interface Positions {
@@ -35,7 +36,8 @@ export const FloatingButton = ({
   tooltip,
   ariaLabel,
   disabled = false,
-  hoverEffect = "scale"
+  hoverEffect = "scale",
+  labelP = "left"
 }: FloatingButtonProps) => {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -91,8 +93,10 @@ export const FloatingButton = ({
             sx={{
               position: "absolute",
               whiteSpace: "nowrap",
-              left: "100%",
+              left: labelP == "left" ? "100%" : undefined,
+              right: labelP == "right" ? "100%" : undefined,
               ml: 1,
+              mr: 1,
               opacity: isHovered ? 1 : 0,
               fontSize: "0.875rem",
               transition: "opacity 0.2s ease",

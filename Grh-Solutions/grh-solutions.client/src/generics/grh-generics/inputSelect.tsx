@@ -58,7 +58,6 @@ const GrhCustomSelect = <T extends string | number>({
   return (
     <Box 
       sx={{ 
-        paddingTop: "10px",
         position: "relative", 
         width: '100%', 
         display: 'block',

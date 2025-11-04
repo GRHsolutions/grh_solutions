@@ -6,8 +6,12 @@ export interface CreateRolDto {
 }
 
 export interface UpdateRolDto {
-  name: string;
-  isActive: boolean;
+  name?: string;
+  isActive?: boolean;
   addPermissions: string[];
   removePermissions: string[];
 }
+
+export interface Rol extends CreateRolDto {
+
+} 

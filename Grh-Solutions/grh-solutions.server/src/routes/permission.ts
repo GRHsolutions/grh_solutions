@@ -8,6 +8,7 @@ router.delete('/', permissionController.delete);
 router.get('/', permissionController.get);
 router.get('/getPagination', permissionController.getPagination);
 router.post('/create', permissionController.create);
-router.post('/getPermissions', permissionController.getUrsPermissions)
+router.post('/getPermissions', permissionController.getUrsPermissions);
+router.get('/getPermsFromRol', permissionController.getPermsFromRol)
 
 export default router;

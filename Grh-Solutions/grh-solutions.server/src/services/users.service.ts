@@ -27,7 +27,7 @@ export const userService = {
   },
 
 create: async (entity: any) => {
-  const rol = await rolService.getBasicRol("Administrador");
+  const rol = await rolService.getBasicRol("Cliente");
 
   if (!rol) {
     throw Error("No se encontró el id del rol cliente"); 

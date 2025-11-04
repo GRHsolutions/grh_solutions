@@ -1,5 +1,6 @@
 import { permissionModel } from "../models/permission.model";
 import { Pagination } from "../filters/pagination.filters";
+import { PermissionsFilter } from "../filters/permissions.filter";
 
 export const permissionService = {
   create: async (entity: any) => {
@@ -22,7 +23,7 @@ export const permissionService = {
     }
   },
 
-  getAll: async (filter: Pagination) => {
+  getAll: async (filter: PermissionsFilter) => {
     const query: any = {};
 
     // Filtros dinámicos
@@ -49,12 +50,11 @@ export const permissionService = {
       .skip(skip)
       .limit(filter.rowsPerPage);
 
-    console.log("get");
 
     return data;
   },
 
-  getPaginated: async (filter: Pagination) => {
+  getPaginated: async (filter: PermissionsFilter) => {
     const query: any = {};
 
     if (filter.method) {

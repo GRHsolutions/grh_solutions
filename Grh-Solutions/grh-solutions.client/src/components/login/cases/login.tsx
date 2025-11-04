@@ -36,7 +36,7 @@ export default function Login({ onRegister }: LoginProps) {
             position: "top-right",
             duration: 4000,
           });
-          navigate("/hv-user");
+          //navigate("/hv-user");
           //navigate("/");
         } else if (res.t == "SUCCESS") {
           // addNotification({

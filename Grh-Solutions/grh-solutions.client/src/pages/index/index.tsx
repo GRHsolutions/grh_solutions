@@ -1,4 +1,3 @@
-import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation, Autoplay } from "swiper/modules";
 import {
@@ -14,9 +13,10 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import "./index.styles.scss";
-
+import DownloadIcon from '@mui/icons-material/Download';
 import disolinImage from "../../img/disolin.jpg";
 import disolinImage2 from "../../img/disolin2.png";
+import { FloatingButton } from "../../generics/floatingButton/floatingButton";
 
 export default function Index() {
   const theme = useTheme();
@@ -117,6 +117,20 @@ export default function Index() {
           </div>
         </footer>
       </Box>
+      <FloatingButton
+        labelP="right"
+        bgColor={theme.palette.secondary.main}
+        borderColor={theme.palette.secondary.hover}
+        positions={{
+          right: "2.2rem",
+          bottom: "2.2rem",
+        }}
+        onClick={() => {
+          console.log("clicked to download");
+        }}
+        label="Descargar android"
+        icon={<DownloadIcon />}
+      />
     </div>
   );
 }
