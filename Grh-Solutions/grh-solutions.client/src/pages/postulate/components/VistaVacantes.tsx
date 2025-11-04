@@ -7,10 +7,10 @@ import { useAuth } from "../../../hooks/auth";
 
 interface Vacante {
   setSelectOption: React.Dispatch<React.SetStateAction<VacanteData | null>>;
+  reload?: boolean;
 }
 
-export default function VistaVacantes({ setSelectOption }: Vacante) {
-  const [page, setPage] = useState(1);
+export default function VistaVacantes({ setSelectOption, reload }: Vacante) {
   const [vacantes, setVacantes] = useState<VacanteData[]>([]);
   const { auth } = useAuth();
 
@@ -22,7 +22,7 @@ export default function VistaVacantes({ setSelectOption }: Vacante) {
       .catch((error) => {
         console.error("Error al obtener las vacantes:", error);
       });
-  }, [page]);
+  }, [ reload]);
   return (
     <Box sx={{ maxWidth: "85%", margin: "auto", textAlign: "center", mt: 4, height: "100%" }}>
       <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -79,12 +79,6 @@ export default function VistaVacantes({ setSelectOption }: Vacante) {
           ))}
         </Box>
       </Box>
-      {/* <Pagination
-        count={10}
-        page={page}
-        onChange={(event, value) => setPage(value)}
-        sx={{ mt: 2, display: "flex", justifyContent: "center" }}
-      /> */}
     </Box>
   );
 }

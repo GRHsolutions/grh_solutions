@@ -5,14 +5,17 @@ import GrhGenericTable2 from "../../../../generics/grh-generics/tableWrapper2";
 import BasicModal from "./ModalTurno";
 import { Horarios } from "../../../../domain/models/horarios/Horarios.entities";
 import { useAuth } from "../../../../hooks/auth";
-import { getSchedules, getUsersAll } from "../../../../domain/services/horarios/horarios.service";
+import { getSchedules, } from "../../../../domain/services/horarios/horarios.service";
 import { Usuario } from "../../../../domain/models/usuario/user.entities";
-
-export const ListHorario = () => {
+import { getProfiles } from "../../../../domain/services/profile/profile.service";
+interface IListHorarioProps {
+  reload: boolean;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export const ListHorario = ({ reload, setReload }: IListHorarioProps) => {
   const { pagination, setPagination } = useHorarios();
   const [current, setCurrent] = useState<Horarios | null>(null);
   const [horariosItems, setHorariosItems] = useState<Horarios[]>([]);
-  const [reload, setReload] = useState<boolean>(false);
   const { auth } = useAuth();
   const [users, setUsers] = useState<Usuario[]>([]);
 
@@ -26,12 +29,12 @@ export const ListHorario = () => {
   }, [reload, auth.token]);
 
   useEffect(() => {
-    getUsersAll(auth.token).then((res) => {
+    getProfiles(auth.token).then((res) => {
       setUsers(res.data || []);
       setReload(false);
 
     })
-  }, [auth.token]);
+  }, [auth.token, reload]);
   const ChangeCurrentPage = (page: number) => {
     setPagination({
       ...pagination,
@@ -78,6 +81,8 @@ export const ListHorario = () => {
        current={current} 
        handleClose={handleClose} 
        users={users}
+        token={auth.token}
+        setReload={setReload}
        />
     </Box>
   );

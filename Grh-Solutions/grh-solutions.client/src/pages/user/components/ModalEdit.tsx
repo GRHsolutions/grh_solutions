@@ -157,13 +157,13 @@ export default function ModalEdit({ open, profile, handleClose, documentType }: 
                   <GrhTextField label="Teléfono fijo" name="telephone" value={values.telephone} onChange={handleChange} fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
-                  <GrhCustomSelect name="type_document" label="Tipo de documento" options={documentType} value={values.type_document} onChange={handleChange} />
+                  <GrhCustomSelect name="type_document" label="Tipo de documento" options={documentType} value={values.type_document} onChange={handleChange}  fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
                   <GrhTextField label="Número de documento" name="document" value={values.document} onChange={handleChange} fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
-                  <GrhCustomSelect name="rh" label="RH" options={rhOptions} value={values.rh} onChange={handleChange} />
+                  <GrhCustomSelect name="rh" label="RH" options={rhOptions} value={values.rh} onChange={handleChange} fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
                   <GrhTextField label="Estado" name="status" value={values.status} onChange={handleChange} fullWidth />

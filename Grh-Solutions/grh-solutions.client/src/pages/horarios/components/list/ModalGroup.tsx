@@ -1,22 +1,19 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Groups3Icon from "@mui/icons-material/Groups3";
-import GrhTextField from "../../../../generics/grh-generics/textField";
-import GrhButton from "../../../../generics/grh-generics/button";
 import LogoutIcon from "@mui/icons-material/Logout";
-import {
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-  useTheme,
-} from "@mui/material";
-import MultipleSelect from "../../../../generics/grh-generics/multipleSelect";
+import { Alert, IconButton, Snackbar, useTheme } from "@mui/material";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import { createGroup } from "../../../../domain/services/grupos/grupos.service";
+import GrhTextField from "../../../../generics/grh-generics/textField";
 import GrhCustomSelect from "../../../../generics/grh-generics/inputSelect";
+import MultipleSelectString from "../../../../generics/grh-generics/multipleSelectString";
+import GrhButton from "../../../../generics/grh-generics/button";
+
 
 const style = {
   position: "absolute",
@@ -36,173 +33,133 @@ const style = {
 interface IModalOptionsProps {
   open: boolean;
   handleClose: () => void;
+  setReload?: React.Dispatch<React.SetStateAction<boolean>>;
+  areasOptions: { value: string; name: string }[];
+  usersOptions: { id: number; nombre: string }[];
+  token: string;
 }
-export default function ModalGroup({ open, handleClose }: IModalOptionsProps) {
+
+const validationSchema = Yup.object({
+  name: Yup.string().required("El nombre del grupo es obligatorio"),
+  area: Yup.string().required("Debe seleccionar un área"),
+  users: Yup.array()
+    .of(Yup.string())
+    .min(1, "Debe seleccionar al menos un usuario"),
+});
+
+const initialValues = {
+  name: "",
+  area: "",
+  users: [] as number[],
+};
+
+export default function ModalGroup({ open, handleClose, setReload, areasOptions, usersOptions, token }: IModalOptionsProps) {
   const theme = useTheme();
-  const [areasOptions, setAreasOptions] = React.useState<
-    { value: string; name: string }[]
-  >([]);
-  const [usersOptions, setUsersOptions] = React.useState<
-    { value: string; name: string }[]
-  >([]);
+  const [openAlert, setOpenAlert] = React.useState(false);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const token = localStorage.getItem("token") || "";
-      try {
-        const [areasRes, usersRes] = await Promise.all([
-          fetch("http://localhost:3000/api/area/getAllNoPage", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch("http://localhost:3000/api/user/getAll", {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-        ]);
-
-        const areas = await areasRes.json();
-        const users = await usersRes.json();
-
-        setAreasOptions(
-          areas.map((a: any) => ({ value: a._id, name: a.name }))
-        );
-        setUsersOptions(
-          users.map((u: any) => ({
-            value: u._id,
-            name: `${u.firstName} ${u.middleName} ${u.lastName} ${u.secondLastName}`,
-          }))
-        );
-      } catch (err) {
-        console.error("Error cargando áreas o usuarios:", err);
-      }
+  const handleSubmit = async (values: typeof initialValues) => {
+    const payload = {
+      ...values,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    fetchData();
-  }, []); // ← se ejecuta solo al montar el modal
-
-  const [text, setText] = React.useState("");
-  const [currentInputSelected, setCurrentInputSelected] =
-    React.useState<string>("");
-  const [mult, setMult] = React.useState<string[]>([]);
-  console.log("usersOptions:", usersOptions);
-  console.log("mult:", mult);
-  const setFieldValue = (_f: string, v: string[]) => setMult(v);
-
-  const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:3000/api/group/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          name: text.trim(),
-          users: mult.map(String),
-          area: String(currentInputSelected),
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        console.error("Error al crear grupo:", data.message);
-        return;
-      }
-
-      console.log("Grupo creado:", data);
-      // Puedes cerrar el modal y limpiar inputs:
+      const response = await createGroup(payload, token);
+      console.log("✅ Grupo creado:", response.data);
       handleClose();
-      setText("");
-      setMult([]);
-      setCurrentInputSelected("");
-    } catch (error) {
-      console.error("Error al enviar solicitud:", error);
+      setOpenAlert(true);
+      if (setReload) {
+        setReload((prev) => !prev);
+      }
+    } catch (error: any) {
+      console.error("❌ Error al crear grupo:", error.response?.data || error.message);
     }
   };
+
   return (
-    <div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+    <>
+      <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-              <Groups3Icon
-                sx={{ fontSize: 40, color: theme.palette.text.primary }}
-              />
+              <Groups3Icon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
               <Box>
-                <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  color={theme.palette.text.primary}
-                >
+                <Typography variant="h6" fontWeight="bold">
                   Crea un nuevo grupo
                 </Typography>
-                <Typography variant="body2" color={theme.palette.text.primary}>
-                  para facilitar la opcion de horarios
-                </Typography>
+                <Typography variant="body2">para facilitar la opción de horarios</Typography>
               </Box>
             </Box>
             <IconButton onClick={handleClose}>
               <CloseIcon />
             </IconButton>
           </Box>
-          <Box sx={{ mt: 2, display: "flex", gap: 2, alignItems: "center" }}>
-            <GrhTextField
-              sx={{ mt: 1.3 }}
-              label="Nombre"
-              value={text}
-              onChange={(e) => {
-                setText(e.target.value || "");
-              }}
-            />
-            <GrhCustomSelect
-              label="Del Área"
-              options={areasOptions}
-              value={currentInputSelected}
-              onChange={(e) =>
-                setCurrentInputSelected(e.target.value as string)
-              }
-            />
-          </Box>
-          <Box sx={{ mt: 1 }}>
-            {/* <MultipleSelect
-              label="Listado de usuarios"
-              name="users"
-              // options={usersOptions} 
-              // value={mult} 
-              setFieldValue={setFieldValue}
-            /> */}
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "flex-end",
-              height: "64vh",
-              p: 2,
-            }}
+
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
           >
-            <GrhButton
-              onClick={handleSubmit}
-              startIcon={<LogoutIcon />}
-              label={"Enviar solicitud"}
-              variant="principal"
-              sx={{
-                width: "30%",
-              }}
-              id={"solicitud"}
-            />
-          </Box>
+            {({ values, handleChange, setFieldValue, errors, touched }) => (
+              <Form>
+                <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+                  <Box sx={{ mt: 1, width: '100%' }}>
+                    <GrhTextField
+                      name="name"
+                      label="Nombre del grupo"
+                      value={values.name}
+                      onChange={handleChange}
+                      error={touched.name && Boolean(errors.name)}
+                      fullWidth
+                    />
+                  </Box>
+                  <GrhCustomSelect
+                    label="Área"
+                    name="area"
+                    options={areasOptions}
+                    value={values.area}
+                    onChange={(e) => setFieldValue("area", e.target.value)}
+                    error={touched.area && Boolean(errors.area)}
+                    fullWidth
+                  />
+
+                </Box>
+
+                <Box sx={{ mt: 3 }}>
+                  <MultipleSelectString
+                    label="Usuarios del grupo"
+                    name="users"
+                    options={usersOptions}
+                    value={values.users}
+                    setFieldValue={setFieldValue}
+                  />
+                </Box>
+
+                <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 4 }}>
+                  <GrhButton
+                    type="submit"
+                    startIcon={<LogoutIcon />}
+                    label="Enviar solicitud"
+                    variant="principal"
+                    sx={{ width: "40%" }}
+                  />
+                </Box>
+              </Form>
+            )}
+          </Formik>
         </Box>
       </Modal>
-    </div>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
+          Grupo creado exitosamente.
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

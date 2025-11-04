@@ -8,6 +8,8 @@ import {
   useTheme,
   Button,
   ButtonProps,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Groups3Icon from "@mui/icons-material/Groups3";
@@ -27,7 +29,8 @@ import { PeticionesDetalle } from "../Modales/ModalPeticiones";
 import ModalUsuarios from "../Modales/ModalUsuario";
 import ModalDesvincular from "../Modales/ModalDesvincular";
 import Vincular from "../Modales/ModalVincular";
-import { Usuario } from "../../../../domain/models/usuario/user.entities";
+import { Profile } from "../../../../domain/models/profile/profile.entities";
+import { deleteUserFromGroup } from "../../../../domain/services/grupos/grupos.service";
 
 const style = (theme: any) => ({
   position: "absolute",
@@ -48,7 +51,9 @@ const style = (theme: any) => ({
 interface BasicModalProps {
   current: Horarios | null;
   handleClose: () => void;
-  users: Usuario[];
+  users: Profile[];
+  token: string;
+  setReload?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface IconButtonSmallProps extends ButtonProps {
@@ -112,9 +117,9 @@ export function PersonaItem({
         {nombre} - {documento}
       </Typography>
       <Box sx={{ display: "flex", gap: 1 }}>
-        <Tooltip title="Generar una inasistencia">
+        {/* <Tooltip title="Generar una inasistencia">
           <IconButtonSmall icon={<CloseIcon />} color="error" onClick={onClick1} />
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title="Desvincular">
           <IconButtonSmall
             icon={<ArrowDownwardIcon />}
@@ -127,16 +132,36 @@ export function PersonaItem({
   );
 }
 
-export default function BasicModal({ current, handleClose, users }: BasicModalProps) {
+export default function BasicModal({ current, handleClose, users, token, setReload }: BasicModalProps) {
   const theme = useTheme();
   const [dialog, setDialog] = React.useState(false);
   const [dialog2, setDialog2] = React.useState(false);
+  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
   const [mdo, setMdo] = useState("");
+  const [openAlert, setOpenAlert] = useState(false);
   const [open, setOpen] = React.useState(false);
   const handleCls = () => setMdo("");
   const handleCls2 = () => setMdo("");
   const handleOpenVincular = () => setOpen(true);
   const handleCloseVincular = () => setOpen(false);
+  const handleDesvincularConfirm = async () => {
+    if (!selectedUserId || !current?.group?._id) return;
+
+    try {
+      await deleteUserFromGroup(current.group._id, selectedUserId, token);
+      setDialog2(false);
+      setSelectedUserId(null);
+      setOpenAlert(true);
+      if (setReload) setReload((prev) => !prev);
+    } catch (error) {
+      console.error("Error al desvincular usuario:", error);
+    }
+  };
+
+  const handleOpenDesvincular = (userId: string) => {
+    setSelectedUserId(userId);
+    setDialog2(true);
+  };
   const tabs: TabConfig[] = [
     {
       value: "1",
@@ -167,20 +192,20 @@ export default function BasicModal({ current, handleClose, users }: BasicModalPr
                   visible: true,
                   disabled: false,
                 },
-                {
-                  icon: <AcUnitIcon />,
-                  label: "Inasistencia",
-                  onClick: () => setMdo("Inasistencia"),
-                  visible: true,
-                  disabled: false,
-                },
-                {
-                  icon: <AcUnitIcon />,
-                  label: "Peticiones",
-                  onClick: () => setMdo("Peticiones"),
-                  visible: true,
-                  disabled: false,
-                },
+                // {
+                //   icon: <AcUnitIcon />,
+                //   label: "Inasistencia",
+                //   onClick: () => setMdo("Inasistencia"),
+                //   visible: true,
+                //   disabled: false,
+                // },
+                // {
+                //   icon: <AcUnitIcon />,
+                //   label: "Peticiones",
+                //   onClick: () => setMdo("Peticiones"),
+                //   visible: true,
+                //   disabled: false,
+                // },
               ]}
             />
           </Box>
@@ -235,10 +260,14 @@ export default function BasicModal({ current, handleClose, users }: BasicModalPr
                   color: theme.palette.primary.contrastText,
                 }}
               />
-              <Vincular handleClose={handleCloseVincular} open={open}  users={users}
+              <Vincular
+                handleClose={handleCloseVincular}
+                open={open}
+                users={users}
                 groupId={current?.group?._id}
                 areaId={current?.group?.area}
                 groupName={current?.group?.name}
+                setReload={setReload}
               />
             </Box>
           </Box>
@@ -251,15 +280,14 @@ export default function BasicModal({ current, handleClose, users }: BasicModalPr
             }}
           >
             {current?.group?.users.map((userId: string) => {
-              const user = users.find((u) => u._id === userId || u.id === userId);
-
+              const user = users.find((u) => u._id === userId || u.user === userId);
               return (
                 <PersonaItem
                   key={userId}
-                  nombre={user ? user.email.trim() : "Usuario desconocido"}
-                  documento={user?.documento || "Sin documento"}
+                  nombre={user ? user.name.trim() + " " + user.lastname : "Usuario desconocido"}
+                  documento={user?.document || "Sin documento"}
                   onClick1={() => setDialog(true)}
-                  onClick2={() => setDialog2(true)}
+                  onClick2={() => handleOpenDesvincular(userId)}
                 />
               );
             })}
@@ -272,7 +300,7 @@ export default function BasicModal({ current, handleClose, users }: BasicModalPr
             }}
             open={dialog2}
             onClose={() => setDialog2(false)}
-            onConfirm={() => setDialog2(false)}
+            onConfirm={handleDesvincularConfirm}
           />
 
           <ModalUsuarios
@@ -325,13 +353,24 @@ export default function BasicModal({ current, handleClose, users }: BasicModalPr
           <TabsCompo tabs={tabs} />
         </Box>
       </Modal>
-      {mdo === "Editar" && <EditarDetalle handleClose={handleCls} />}
+      {mdo === "Editar" && <EditarDetalle handleClose={handleCls} current={current} token={token} setReload={setReload} />}
       {mdo === "Inasistencia" && (
         <InasistenciaDetalle handleClose={handleCls2} current={null} />
       )}
       {mdo === "Peticiones" && (
         <PeticionesDetalle handleClose={handleCls2} current={null} />
       )}
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
+          Usuarios desvinculados correctamente.
+        </Alert>
+      </Snackbar>
+
     </div>
   );
 }

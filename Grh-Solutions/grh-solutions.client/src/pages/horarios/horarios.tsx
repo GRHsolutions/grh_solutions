@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { HorariosProvider } from "../../contexts/horarios.provider";
 import { ListHorario } from "./components/list/list";
@@ -6,6 +6,7 @@ import PositionedMenu from "./components/list/MenuGroup";
 
 
 const Horarios: React.FC = () => {
+    const [reload, setReload] = useState<boolean>(false);
   return (
     <HorariosProvider>
       <Box
@@ -25,9 +26,9 @@ const Horarios: React.FC = () => {
            style={{ display: "flex", justifyContent: "space-between", width: "100%" }}
            >
           <Typography variant={"h5"}>Bienvenidos al portal de horarios</Typography>
-          <PositionedMenu />
+          <PositionedMenu reload={reload}  setReload={setReload} />
           </div>
-        <ListHorario />
+        <ListHorario  reload={reload} setReload={setReload}  />
       </Box>
     </HorariosProvider>
   );

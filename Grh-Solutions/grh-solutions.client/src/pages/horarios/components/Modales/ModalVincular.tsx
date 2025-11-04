@@ -6,14 +6,15 @@ import Groups3Icon from "@mui/icons-material/Groups3";
 import GrhTextField from "../../../../generics/grh-generics/textField";
 import GrhButton from "../../../../generics/grh-generics/button";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Grid2, IconButton, useTheme } from "@mui/material";
-import MultipleSelect from "../../../../generics/grh-generics/multipleSelect";
-import { Usuario } from "../../../../domain/models/usuario/user.entities";
+import { Alert, Grid2, IconButton, Snackbar, useTheme } from "@mui/material";
 import { putGroup } from "../../../../domain/services/grupos/grupos.service";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../../../hooks/auth";
 import { UpdateGroupDto } from "../../../../domain/models/group/group.entities";
+import { Profile } from "../../../../domain/models/profile/profile.entities";
+import MultipleSelectString from "../../../../generics/grh-generics/multipleSelectString";
+import { useState } from "react";
 
 const style = {
   position: "absolute",
@@ -31,10 +32,11 @@ const style = {
 interface VincularProps {
   open: boolean;
   handleClose: () => void;
-  users: Usuario[];
-  groupId: string; // 👈 id del grupo actual
-  areaId: string; // 👈 área asociada
-  groupName: string; // 👈 nombre del grupo actual
+  users: Profile[];
+  groupId: string;
+  areaId: string;
+  groupName: string;
+  setReload?: React.Dispatch<React.SetStateAction<boolean>>; 
 }
 
 export default function Vincular({
@@ -44,10 +46,11 @@ export default function Vincular({
   groupId,
   areaId,
   groupName,
+  setReload
 }: VincularProps) {
   const theme = useTheme();
   const { auth } = useAuth();
-
+  const [openAlert, setOpenAlert] = useState(false);
   const formik = useFormik({
     initialValues: {
       userIds: [] as string[],
@@ -68,8 +71,8 @@ export default function Vincular({
             return putGroup(groupId, payload, auth.token);
           })
         );
-
-        alert("Usuarios vinculados correctamente ✅");
+        setOpenAlert(true);
+        if (setReload) setReload(prev => !prev);
         resetForm();
         handleClose();
       } catch (error) {
@@ -78,90 +81,97 @@ export default function Vincular({
       }
     },
   });
-
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        {/* Encabezado */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Groups3Icon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
-            <Box>
-              <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
-                Vincular nuevo usuario
-              </Typography>
-              <Typography variant="body2" color={theme.palette.text.primary}>
-                Al vincular un nuevo usuario, se notificará a los empleados.
-              </Typography>
+    <>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Groups3Icon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
+              <Box>
+                <Typography variant="h6" fontWeight="bold" color={theme.palette.text.primary}>
+                  Vincular nuevo usuario
+                </Typography>
+                <Typography variant="body2" color={theme.palette.text.primary}>
+                  Al vincular un nuevo usuario, se notificará a los empleados.
+                </Typography>
+              </Box>
             </Box>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
           </Box>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
 
-        {/* Selector de usuarios */}
-        <Box sx={{ mt: 4 }}>
-          <MultipleSelect
-            sx={{ mt: 2 }}
-            label="Listado de usuarios"
-            name="userIds"
-            options={users.map((item, index) => ({
-              id: index,
-              nombre: `${item.primerNombre || ""} ${item.primerApellido || ""} (${item.email})`,
-            }))}
-            value={formik.values.userIds}
-            setFieldValue={formik.setFieldValue}
-            error={formik.errors.userIds as string}
-            touched={formik.touched.userIds}
-          />
-        </Box>
-
-        {/* Campo de observaciones */}
-        <Box sx={{ mt: 4, width: "100%" }}>
-          <Grid2 size={12}>
-            <GrhTextField
-              label="Observaciones"
-              name="observaciones"
-              value={formik.values.observaciones}
-              rows={4}
-              multirows
-              onChange={formik.handleChange}
-              sx={{
-                width: "100%",
-                "& .MuiInputBase-root": {
-                  height: "100%",
-                },
-              }}
+          <Box sx={{ mt: 4 }}>
+            <MultipleSelectString
+              sx={{ mt: 2 }}
+              label="Listado de usuarios"
+              name="userIds"
+              options={users.map((item, index) => ({
+                id: item.user,
+                nombre: `${item.name || ""} ${item.lastname || ""} (${item.email})`,
+              }))}
+              value={formik.values.userIds}
+              setFieldValue={formik.setFieldValue}
+              error={formik.errors.userIds as string}
+              touched={formik.touched.userIds}
             />
-          </Grid2>
-        </Box>
+          </Box>
 
-        {/* Botón enviar */}
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "flex-end",
-            height: "64vh",
-            p: 2,
-          }}
-        >
-          <GrhButton
-            onClick={formik.handleSubmit}
-            startIcon={<LogoutIcon />}
-            label="Enviar solicitud"
-            variant="principal"
-            sx={{ width: "30%" }}
-            id="solicitud"
-          />
+          <Box sx={{ mt: 4, width: "100%" }}>
+            <Grid2 size={12}>
+              <GrhTextField
+                label="Observaciones"
+                name="observaciones"
+                value={formik.values.observaciones}
+                rows={4}
+                multirows
+                onChange={formik.handleChange}
+                sx={{
+                  width: "100%",
+                  "& .MuiInputBase-root": {
+                    height: "100%",
+                  },
+                }}
+              />
+            </Grid2>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "flex-end",
+              height: "64vh",
+              p: 2,
+            }}
+          >
+            <GrhButton
+              onClick={formik.handleSubmit}
+              startIcon={<LogoutIcon />}
+              label="Enviar solicitud"
+              variant="principal"
+              sx={{ width: "30%" }}
+              id="solicitud"
+            />
+          </Box>
         </Box>
-      </Box>
-    </Modal>
+      </Modal>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
+          Usuarios vinculados correctamente.
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

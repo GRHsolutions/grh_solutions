@@ -3,7 +3,7 @@ import { createHorario } from "../../models/horarios/Horarios.entities";
 
 const schedules_API = "/api/schedules";
 const users_API = "/api/user";
-
+const scheduleTypesAPI = "/api/scheduleType";
 export const getSchedules = (token: string): AxiosPromise => {
     const url = `${schedules_API}/getAllNoPage`;
     return axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
@@ -37,6 +37,7 @@ export const updateSchedule = (id: string, data: createHorario, token: string): 
     return axios.put(url, body, { headers: { Authorization: `Bearer ${token}` } });
 };
 
+
 export const getScheduleById = (id: string, token: string): AxiosPromise => {
     const url = `${schedules_API}/getById?id=${id}`;
     return axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
@@ -46,3 +47,8 @@ export const getUsersAll = (token: string): AxiosPromise => {
     const url = `${users_API}/getAll`;
     return axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
 };
+
+export const getScheduleTypes = (token: string): AxiosPromise => {
+    const url = `${scheduleTypesAPI}/getAllNoPage`;
+    return axios.get(url, { headers: { Authorization: `Bearer ${token}` } });
+}
