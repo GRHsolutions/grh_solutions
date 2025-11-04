@@ -91,6 +91,7 @@ export const postulanteController = {
 
       const updatedPostulante = await postulanteService.update(id, updates);
 
+
       if (
         updates.status === "contratado" &&
         postulante.status !== "contratado"
@@ -100,6 +101,7 @@ export const postulanteController = {
         });
 
         if (!empleadoExistente) {
+
           const vacante = await VacanciesModel.findById(postulante.vacante);
 
           if (!vacante) {
@@ -108,24 +110,42 @@ export const postulanteController = {
               .json({ message: "Vacante no encontrada para el postulante." });
           }
 
+          const userId =
+            typeof postulante.user === "object" && "_id" in postulante.user
+              ?(postulante.user as any)._id
+              : postulante.user;
+
+          if (!userId) {
+            console.error(
+              "❌ El postulante no tiene un ID de usuario válido:",
+              postulante.user
+            );
+            return res.status(400).json({
+              message: "El postulante no tiene un usuario válido asociado.",
+            });
+          }
+
           await empleadosModel.create({
-            user: postulante.user,
+            user: userId,
             area: vacante.area,
             puesto: vacante.charge,
             status: "activo",
           });
+
         }
+
+        return res.status(200).json(updatedPostulante);
       }
 
       return res.status(200).json(updatedPostulante);
     } catch (error: any) {
+      console.error("❌ Error al actualizar postulante:", error);
       return res.status(500).json({
         message: "Error al actualizar el postulante",
         error: error.message,
       });
     }
   },
-
   delete: async (req: Request, res: Response) => {
     try {
       const { id } = req.params;

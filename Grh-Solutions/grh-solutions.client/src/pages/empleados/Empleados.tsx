@@ -1,107 +1,120 @@
 import { Box, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import GrhGenericTable2 from "../../generics/grh-generics/tableWrapper2";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
-interface EmpleadosProps {}
+import { getEmployees } from "../../domain/services/employee/employee.service";
+import { useAuth } from "../../hooks/auth";
+import { EmpleadoDemo } from "../../domain/models/employee/employee.entities";
+import { getRoles } from "../../domain/services/Roles/Roles.service";
+import { RolDemo } from "../../domain/models/role/role.entities";
+import { getProfileById } from "../../domain/services/profile/profile.service";
 
-interface EmpleadoDemo {
-  name: string,
-  state : "contratado"|"por-renobar"
-  cedula: string
-  telefono:string
-  fechaContratacion:Dayjs
-  [key: string] : any
-}
+const Empleados: React.FC = () => {
+  const { auth } = useAuth();
+  const [employees, setEmployees] = useState<EmpleadoDemo[]>([]);
+  const [roles, setRoles] = useState<RolDemo[]>([]);
+  const navigate = useNavigate();
 
-const createData =(name:string,state : "contratado"|"por-renobar",  cedula: string,  telefono:string,  fechaContratacion:Dayjs)=>{
-  return {
-    name:name,
-    state:state,
-    cedula: cedula,
-    telefono:telefono,
-    fechaContratacion:fechaContratacion
-  }
+  useEffect(() => {
+    document.title = "Empleados - GRH Solutions";
+    getEmployees(auth.token)
+      .then((res) => {
+        setEmployees(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [auth.token]);
 
-}
-const Empleados: React.FC = ({}: EmpleadosProps) => {
-  const rows : EmpleadoDemo[] = [
-    createData("juan","contratado","1231242","42413536", dayjs()),
-    createData("miguel","por-renobar","53242","42423536", dayjs()),
-    createData("arturo","contratado","14324242","4246536", dayjs()),
-    createData("andres","por-renobar","1342","4243354536", dayjs()),
-    createData("santiago","contratado","1131242","43456536", dayjs()),
-    createData("deiby","por-renobar","12312342","42433536", dayjs()),
-    createData("sebastian","contratado","126456242","426466", dayjs()),
+  useEffect(() => {
+    getRoles("", auth.token).then((res) => {
+      setRoles(res.data);
+    });
+  }, [employees]);
 
-  ];  
-  const navigate= useNavigate()
-  const handleClick =(value : any)=>{
-    navigate("/user")
-  } 
+  const rows = employees.map((emp) => ({
+    _id: emp._id,
+    name: emp.user?.email || "Sin nombre",
+    area: emp.area?.name || "Sin área",
+    puesto: emp.puesto?.name || "Sin puesto",
+        rol: roles.find((r) => r._id === emp.user?.rol)?.name || "Sin rol",
+    estado: emp.status || "Sin estado",
+    activo: emp.user?.isActive ? "Sí" : "No",
+    fechaCreacion: dayjs(emp.area?.createdAt).format("YYYY-MM-DD"),
+    profile_id: emp.profile_id,
+  }));
+
   return (
     <Box
-    sx={{
-      flexDirection: "column",
-      gap: "30px",
-      display: "flex",
-      padding: 3,
-      justifyContent: "start",
-      alignItems: "start",
-      height: "100%",
-      width: "100%",
-      fontSize: "2rem",
-    }}
-  >
-    <Typography variant={"h6"}>Bienvenidos al portal de Empleados</Typography>
-        <Box width={'100%'}>
-    <GrhGenericTable2 
-            maxHeight={"20rem"}
-            columns={[{
+      sx={{
+        flexDirection: "column",
+        gap: "30px",
+        display: "flex",
+        padding: 3,
+        justifyContent: "start",
+        alignItems: "start",
+        height: "100%",
+        width: "100%",
+      }}
+    >
+      <Typography variant="h6">Bienvenidos al portal de Empleados</Typography>
+
+      <Box width="100%">
+        <GrhGenericTable2
+          maxHeight="25rem"
+          columns={[
+            {
               key: "name",
-              label: "nombre",
-              onRowClick: (value)=>{
-                handleClick (value)
-              },
-              type: "string"
-            },{
-              key: "state",
-              label: "estado",
-              onRowClick: undefined,
-              type: "string"
+              label: "Nombre (click para ver perfil)",
+              type: "string",
+              onRowClick: (row) => navigate(`/user/${row.profile_id}`),
             },
             {
-              key: "cedula",
-              label: "cedula?",
-              onRowClick: undefined,
-              type: "string"
-            },{
-              key: "telefono",
-              label: "telefono",
-              onRowClick: undefined,
-              type: "string"
-            },{
-              key: "fechaContratacion",
-              label: "fecha de contratacion",
-              onRowClick: undefined,
-              type: "date"
-            }
-          ]} 
-            data={rows} 
-            pagination={{
-              pageSize: 5,
-              totalPages: 10,
-              currentPage: 1,
-              totalRows: 510
-            }} 
-            onPageChange={(value)=>{
-              console.log(value);
-            }}                    
-          />
-          </Box>
-  </Box>
+              key: "area",
+              label: "Área",
+              type: "string",
+            },
+            {
+              key: "puesto",
+              label: "Puesto",
+              type: "string",
+            },
+            {
+              key: "rol",
+              label: "Rol",
+              type: "string",
+            },
+            {
+              key: "estado",
+              label: "Estado",
+              type: "string",
+            },
+            {
+              key: "activo",
+              label: "Activo",
+              type: "string",
+            },
+            {
+              key: "fechaCreacion",
+              label: "Fecha de Creación",
+              type: "date",
+            },
+          ]}
+          data={rows}
+          pagination={{
+            pageSize: 10,
+            totalPages: 1,
+            currentPage: 1,
+            totalRows: employees.length,
+          }}
+          onPageChange={(page) => {
+            console.log("Página:", page);
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
 
 export default Empleados;
-
