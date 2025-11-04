@@ -17,6 +17,7 @@ import { getAreas } from "../../domain/services/area/area.service";
 export default function Postulate() {
   const [selectOption, setSelectOption] = useState<VacanteData | null>(null);
   const [openModal, setOpenModal] = useState(false);
+  const [reload, setReload] = useState<boolean>(false);
   const { parametros } = useParametros();
   const theme = useTheme();
   const { usePhoneScreen } = parametros;
@@ -26,7 +27,7 @@ export default function Postulate() {
   useEffect(() => {
     getPuestos(auth.token).then((response) => setCharge(response.data));
     getAreas(auth.token).then((response) => setArea(response.data));
-  }, []);
+  }, [reload]);
   return (
     <Box
       sx={{
@@ -55,7 +56,7 @@ export default function Postulate() {
             overflowY: "hidden",
           }}
         >
-          <VistaVacantes setSelectOption={setSelectOption} />
+          <VistaVacantes setSelectOption={setSelectOption}  reload={reload}/>
         </Grid2>
         {!usePhoneScreen && (
           <Grid2
@@ -66,7 +67,7 @@ export default function Postulate() {
               height: "100%",
             }}
           >
-            <SelectVacation selectedVacante={selectOption} areas={area} charges={charge} />
+            <SelectVacation selectedVacante={selectOption} areas={area} charges={charge} setReload={setReload} reload={reload} />
           </Grid2>
         )}
       </Grid2>
@@ -83,7 +84,7 @@ export default function Postulate() {
         }}
         borderColor={theme.palette.secondary.hover}
       />
-      <ModalCreateVacant open={openModal} handleClose={() => setOpenModal(false)} charges={charge} areas={area} />
+      <ModalCreateVacant open={openModal} handleClose={() => setOpenModal(false)} charges={charge} areas={area} setReload={setReload} reload={reload} />
     </Box>
   );
 }

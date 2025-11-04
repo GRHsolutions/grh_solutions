@@ -31,6 +31,8 @@ interface IModalOptionsProps {
   handleClose: () => void;
   charges: Charge[]
   areas: Area[]
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+  reload: boolean;
 }
 
 const initialValues = {
@@ -74,19 +76,36 @@ const modalityOptions = [
   { value: "internship", name: "Pasantía" }
 ];
 
-export default function ModalCreateVacant({ open, handleClose, charges, areas }: IModalOptionsProps) {
+const typeContractOptions = [
+  { value: "Tiempo completo", name: "Tiempo completo" },
+  { value: "Medio tiempo", name: "Medio tiempo" },
+  { value: "Contrato", name: "Contrato" },
+  { value: "Pasantía", name: "Pasantía" }
+];
+
+const schedulesOptions = [
+  { value: "Diurno", name: "Diurno" },
+  { value: "Nocturno", name: "Nocturno" },
+  { value: "Mixto", name: "Mixto" }
+];
+
+const stateOptions = [
+  { value: "Activo", name: "Activo" },
+  { value: "Inactivo", name: "Inactivo" },
+  { value: "Cerrado", name: "Cerrado" }
+];
+
+export default function ModalCreateVacant({ open, handleClose, charges, areas, setReload }: IModalOptionsProps) {
   const theme = useTheme();
   const [openAlert, setOpenAlert] = useState(false);
   const { auth } = useAuth();
 
   const handleSubmit = (values: typeof initialValues) => {
     createVacancy(values, auth.token)
-      .then((response) => {
-        console.log("Vacante creada:", response.data);
+      .then(() => {
         setOpenAlert(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
+        setReload(prev => !prev);
+        handleClose();
       })
       .catch((error) => {
         console.error("Error al crear la vacante:", error);
@@ -94,113 +113,138 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas }:
   };
 
   return (
-    <Modal open={open} onClose={handleClose}>
-      <Box sx={{ ...modalStyle, color: theme.palette.primary.contrastText }}>
-        <Box sx={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          borderBottom: `1px solid ${theme.palette.primary.hover, 0.1}`
-        }}>
-          <Stack direction="row" spacing={1} alignItems="center">
-            <WorkOutlineIcon fontSize="large" sx={{ color: theme.palette.primary.contrastText }} />
-            <Typography variant="h6" fontWeight="bold">Crear nueva vacante</Typography>
-          </Stack>
-          <IconButton onClick={handleClose}><CloseIcon /></IconButton>
+    <>
+      <Modal open={open} onClose={handleClose}>
+        <Box sx={{ ...modalStyle, color: theme.palette.primary.contrastText }}>
+          <Box sx={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            borderBottom: `1px solid ${theme.palette.primary.hover, 0.1}`
+          }}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <WorkOutlineIcon fontSize="large" sx={{ color: theme.palette.primary.contrastText }} />
+              <Typography variant="h6" fontWeight="bold">Crear nueva vacante</Typography>
+            </Stack>
+            <IconButton onClick={handleClose}><CloseIcon /></IconButton>
+          </Box>
+
+          <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
+            {({ values, handleChange }) => (
+              <Form>
+                <Grid2 container spacing={2} mt={2}>
+                  <Grid2 size={12}>
+                    <GrhTextField name="tittle" label="Título" value={values.tittle} onChange={handleChange} fullWidth />
+                  </Grid2>
+
+                  <Grid2 size={12}>
+                    <GrhTextField name="description" label="Descripción" value={values.description} onChange={handleChange} multirows rows={4} fullWidth />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhCustomSelect
+                      name="type_contract"
+                      label="Tipo de Contrato"
+                      options={typeContractOptions.map((charge) => ({ value: charge.value, name: charge.name }))}
+                      value={values.type_contract}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhTextField name="salary" label="Salario" value={values.salary} onChange={handleChange} fullWidth />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhCustomSelect
+                      name="horary"
+                      label="Horario"
+                      options={schedulesOptions.map((charge) => ({ value: charge.value, name: charge.name }))}
+                      value={values.horary}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhCustomSelect
+                      name="charge"
+                      label="Cargo"
+                      options={charges.map((charge) => ({ value: charge._id, name: charge.name }))}
+                      value={values.charge}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </Grid2>
+
+                  <Grid2 size={6}>
+                    <GrhTextField name="address" label="Dirección" value={values.address} onChange={handleChange} fullWidth />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhTextField name="telephone" label="Teléfono" value={values.telephone} onChange={handleChange} fullWidth />
+                  </Grid2>
+
+                  <Grid2 size={12}>
+                    <GrhTextField name="email" label="Correo electrónico" value={values.email} onChange={handleChange} fullWidth />
+                  </Grid2>
+
+                  <Grid2 size={6}>
+                    <GrhCustomSelect
+                      name="type_modality"
+                      label="Modalidad"
+                      options={modalityOptions}
+                      value={values.type_modality}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </Grid2>
+
+                  <Grid2 size={6}>
+                    <GrhCustomSelect
+                      name="status"
+                      label="Estado"
+                      options={stateOptions.map((area) => ({ value: area.value, name: area.name }))}
+                      value={values.status}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </Grid2>
+
+                  <Grid2 size={12}>
+                    <GrhCustomSelect
+                      name="area"
+                      label="Area"
+                      options={areas.map((area) => ({ value: area._id, name: area.name }))}
+                      value={values.area}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhTextField name="experience" label="Experiencia" value={values.experience} onChange={handleChange} fullWidth />
+                  </Grid2>
+                  <Grid2 size={6}>
+                    <GrhTextField name="formation" label="Formación" value={values.formation} onChange={handleChange} fullWidth />
+                  </Grid2>
+
+                  <Grid2 size={12} display="flex" justifyContent="flex-end" gap={1}>
+                    <Button onClick={handleClose} color="secondary" variant="outlined">Cancelar</Button>
+                    <Button type="submit" color="primary" variant="contained">Guardar</Button>
+                  </Grid2>
+                </Grid2>
+              </Form>
+            )}
+          </Formik>
+
+
         </Box>
-
-        <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-          {({ values, handleChange }) => (
-            <Form>
-              <Grid2 container spacing={2} mt={2}>
-                <Grid2 size={12}>
-                  <GrhTextField name="tittle" label="Título" value={values.tittle} onChange={handleChange} fullWidth />
-                </Grid2>
-
-                <Grid2 size={12}>
-                  <GrhTextField name="description" label="Descripción" value={values.description} onChange={handleChange} multirows rows={4} fullWidth />
-                </Grid2>
-
-                <Grid2 size={6}>
-                  <GrhTextField name="type_contract" label="Tipo de Contrato" value={values.type_contract} onChange={handleChange} fullWidth />
-                </Grid2>
-                <Grid2 size={6}>
-                  <GrhTextField name="salary" label="Salario" value={values.salary} onChange={handleChange} fullWidth />
-                </Grid2>
-
-                <Grid2 size={6}>
-                  <GrhTextField name="horary" label="Horario" value={values.horary} onChange={handleChange} fullWidth />
-                </Grid2>
-                <Grid2 size={6}>
-                  <GrhCustomSelect
-                    name="charge"
-                    label="Cargo"
-                    options={charges.map((charge) => ({ value: charge._id, name: charge.name }))}
-                    value={values.charge}
-                    onChange={handleChange}
-                  />
-                </Grid2>
-
-                <Grid2 size={6}>
-                  <GrhTextField name="address" label="Dirección" value={values.address} onChange={handleChange} fullWidth />
-                </Grid2>
-                <Grid2 size={6}>
-                  <GrhTextField name="telephone" label="Teléfono" value={values.telephone} onChange={handleChange} fullWidth />
-                </Grid2>
-
-                <Grid2 size={12}>
-                  <GrhTextField name="email" label="Correo electrónico" value={values.email} onChange={handleChange} fullWidth />
-                </Grid2>
-
-                <Grid2 size={6}>
-                  <GrhCustomSelect
-                    name="type_modality"
-                    label="Modalidad"
-                    options={modalityOptions}
-                    value={values.type_modality}
-                    onChange={handleChange}
-                  />
-                </Grid2>
-
-                <Grid2 size={6}>
-                  <GrhTextField name="status" label="Estado" value={values.status} onChange={handleChange} fullWidth />
-                </Grid2>
-
-                <Grid2 size={12}>
-                  <GrhCustomSelect
-                    name="area"
-                    label="Area"
-                    options={areas.map((area) => ({ value: area._id, name: area.name }))}
-                    value={values.area}
-                    onChange={handleChange}
-                  />
-                </Grid2>
-                <Grid2 size={6}>
-                  <GrhTextField name="experience" label="Experiencia" value={values.experience} onChange={handleChange} fullWidth />
-                </Grid2>
-                <Grid2 size={6}>
-                  <GrhTextField name="formation" label="Formación" value={values.formation} onChange={handleChange} fullWidth />
-                </Grid2>
-
-                <Grid2 size={12} display="flex" justifyContent="flex-end" gap={1}>
-                  <Button onClick={handleClose} color="secondary" variant="outlined">Cancelar</Button>
-                  <Button type="submit" color="primary" variant="contained">Guardar</Button>
-                </Grid2>
-              </Grid2>
-            </Form>
-          )}
-        </Formik>
-
-        <Snackbar
-          open={openAlert}
-          autoHideDuration={6000}
-          onClose={() => setOpenAlert(false)}
-          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-        >
-          <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
-            <Typography variant="body1"><strong>La vacante se ha creado con éxito.</strong></Typography>
-            Puedes verla en la sección de vacantes.
-          </Alert>
-        </Snackbar>
-      </Box>
-    </Modal>
+      </Modal>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
+          <Typography variant="body1"><strong>La vacante se ha creado con éxito.</strong></Typography>
+          Puedes verla en la sección de vacantes.
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
