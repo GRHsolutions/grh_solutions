@@ -1,5 +1,4 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Box } from "@mui/material";
@@ -7,12 +6,26 @@ import ModalGroup from "./ModalGroup";
 import ModalHorario from "./ModalHorario";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-
-export default function PositionedMenu() {
+import GrhButton from "../../../../generics/grh-generics/button";
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import { getAreas } from "../../../../domain/services/area/area.service";
+import { getProfiles } from "../../../../domain/services/profile/profile.service";
+import { useAuth } from "../../../../hooks/auth";
+interface IPositionedMenuProps {
+  reload: boolean;
+  setReload: React.Dispatch<React.SetStateAction<boolean>>;
+}
+export default function PositionedMenu({ setReload, reload }: IPositionedMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [modalType, setModalType] = React.useState<string | null>(null);
+      const [areasOptions, setAreasOptions] = React.useState<
+    { value: string; name: string }[]
+  >([]);
+  const [usersOptions, setUsersOptions] = React.useState<
+    { id: number; nombre: string }[]
+  >([]);
   const open = Boolean(anchorEl);
-
+  const { auth } = useAuth();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -26,22 +39,41 @@ export default function PositionedMenu() {
   const handleCloseModal = () => {
     setModalType(null);
   };
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [areasRes, usersRes] = await Promise.all([
+          getAreas(auth.token),
+          getProfiles(auth.token),
+        ]);
+
+        const areas = areasRes.data;
+        const users = usersRes.data;
+
+        setAreasOptions(areas.map((a: any) => ({ value: a._id, name: a.name })));
+        setUsersOptions(
+          users.map((u: any) => ({
+            id: u.user,
+            nombre: `${u.name} ${u.lastname}`.trim(),
+          }))
+        );
+      } catch (err) {
+        console.error("Error cargando áreas o usuarios:", err);
+      }
+    };
+    fetchData();
+  }, []);
+
   return (
     <div>
-      <Button
-        sx={{
-          backgroundColor: "#ff5722",
-          color: "white",
-        }}
-        id="demo-positioned-button"
-        aria-controls={open ? "demo-positioned-menu" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+      <GrhButton
+        label="Crear"
+        variant="principal"
+        startIcon={<AddCircleOutlineIcon />}
         onClick={handleClick}
-        color="primary"
-      >
-        Crear
-      </Button>
+        sx={{ width: "100%" }}
+      />
       <Menu
         sx={{ mt: 5.5 }}
         id="demo-positioned-menu"
@@ -61,7 +93,7 @@ export default function PositionedMenu() {
         <Box sx={{ textAlign: "center" }}>Opciones</Box>
         <MenuItem
           onClick={() => handleOpenModal("Group")}
-          sx={{           
+          sx={{
             gap: 1,
             border: "1px solid #ccc",
             borderRadius: "4px",
@@ -87,10 +119,10 @@ export default function PositionedMenu() {
         </MenuItem>
       </Menu>
       {modalType === "Group" && (
-        <ModalGroup open={true} handleClose={handleCloseModal} />
+        <ModalGroup open={true} handleClose={handleCloseModal} setReload={setReload} areasOptions={areasOptions} usersOptions={usersOptions} token={auth.token} />
       )}
       {modalType === "Horario" && (
-        <ModalHorario open={true} handleClose={handleCloseModal} />
+        <ModalHorario open={true} handleClose={handleCloseModal} setReload={setReload} token={auth.token} reload={reload} />
       )}
     </div>
   );

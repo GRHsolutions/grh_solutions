@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import Pagination from "@mui/material/Pagination";
-import { Horarios } from "../../../../domain/models/horarios/Horarios-entities";
+import { Horarios } from "../../../../domain/models/horarios/Horarios.entities";
 import formatearFecha from "../../../../utils/formatearFecha";
 import CloseIcon from "@mui/icons-material/Close";
 

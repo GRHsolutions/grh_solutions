@@ -13,9 +13,11 @@ interface SelectVacationProps {
   selectedVacante: VacanteData | null;
   charges: Charge[]
   areas: Area[]
+  setReload?: React.Dispatch<React.SetStateAction<boolean>>;
+  reload?: boolean;
 }
 
-export default function SelectVacation({ selectedVacante, charges, areas }: SelectVacationProps) {
+export default function SelectVacation({ selectedVacante, charges, areas, setReload, reload }: SelectVacationProps) {
   const [openAlert, setOpenAlert] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const { auth } = useAuth();
@@ -23,9 +25,7 @@ export default function SelectVacation({ selectedVacante, charges, areas }: Sele
     CreatePostulante(selectedVacante?._id, "pendiente", auth.token)
       .then(() => {
         setOpenAlert(true);
-        setTimeout(() => {
-          window.location.reload();
-        }, 5000);
+        if (setReload) setReload(prev => !prev);
       })
       .catch((err) => {
         console.error("Error al postularse:", err);
@@ -114,6 +114,8 @@ export default function SelectVacation({ selectedVacante, charges, areas }: Sele
         vacantData={selectedVacante}
         areas={areas}
         charges={charges}
+        setReload={setReload}
+        reload={reload}
       />
     </Box>
   );
