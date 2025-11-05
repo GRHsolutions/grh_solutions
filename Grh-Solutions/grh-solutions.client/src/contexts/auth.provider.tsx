@@ -1,0 +1,133 @@
+import React from "react";
+import { localStorageUtil } from "../utils/localStorage";
+import { LoginRepository } from "../infrastructure/repositories/usuario";
+import { LoginService } from "../domain/services/login/login.service";
+import { ReturnableLogin } from "../domain/models/usuario/login.entities";
+import { usePermissions } from "./permissions.provider";
+import { PermisosPostLoginRender } from "../const/permisos";
+
+interface AuthContextType {
+  auth: ReturnableLogin;
+  login: (
+    correo: string,
+    contr: string
+  ) => Promise<{ t: LoginNoti; m: string }>;
+  logout: () => void;
+  isLoggedIn: boolean;
+}
+
+type LoginNoti = "SUCCESS" | "SUCCESS-CRAETE-CV" | "ERROR";
+
+export const AuthContext = React.createContext<AuthContextType | undefined>(
+  undefined
+);
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  // Inicializar auth desde localStorage, asegurándose de que esté de acuerdo con ReturnableLogin
+  const initialAuthState = {
+    user: {
+      email: localStorageUtil.get("usr_items_correo") || "",
+      photo: localStorageUtil.get("usr_items_photo") || "",
+      profile: localStorageUtil.get("usr_items_profile_id") || "",
+    },
+    token: localStorageUtil.get("usr_items_token") || "",
+  } as ReturnableLogin;
+
+  const [auth, setAuth] = React.useState<ReturnableLogin>(initialAuthState);
+  const [isLoggedIn, setIsLoggedIn] = React.useState<boolean>(
+    !!initialAuthState.token
+  );
+  const service = new LoginService(new LoginRepository());
+  const { fetchPermissions } = usePermissions("post-login-renderer");
+
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<{ t: LoginNoti; m: string }> => {
+    try {
+      const res = await service.login({ email, password });
+
+      // 1️⃣ Guardar datos en localStorage
+      localStorageUtil.set("usr_items_token", res.token);
+      localStorageUtil.set("usr_items_correo", res.user.email);
+      localStorageUtil.set("usr_items_profile_id", res.user.profile);
+      if (res.user.photo)
+        localStorageUtil.set("usr_items_photo", res.user.photo);
+
+      // 3️⃣ Asegurarse de que el token esté listo antes de llamar fetchPermissions
+      console.log("Token listo:", localStorageUtil.get("usr_items_token"));
+
+      // 4️⃣ Ejecutar permisos y esperar correctamente
+      const r = await fetchPermissions(PermisosPostLoginRender);
+
+      if(r){
+        // 2️⃣ Actualizar estado de autenticación antes de pedir permisos
+        setAuth({
+          user: {
+            email: res.user.email,
+            photo: res.user.photo,
+            profile: res.user.profile,
+          },
+          token: res.token,
+        });
+        setIsLoggedIn(true);
+
+        // 5️⃣ Respuesta final según warnings
+        if (!res.warnings) {
+          return {
+            t: "SUCCESS",
+            m: "Acceso concedido",
+          };
+        }
+
+        if (res.warnings.message === "Debe crear su hoja de vida") {
+          return {
+            t: "SUCCESS-CRAETE-CV",
+            m: res.warnings.message,
+          };
+        }
+      }
+
+      setIsLoggedIn(false);
+      
+      return {
+        t: "ERROR",
+        m: "aa",
+      };
+    } catch (err: any) {
+      setIsLoggedIn(false);
+
+      return {
+        t: "ERROR",
+        m: err?.message || "Error en el endpoint del login",
+      };
+    }
+  };
+
+  // Maneja el logout
+  const logout = () => {
+    localStorageUtil.deleteExclude(["theme"]);
+    setIsLoggedIn(false); // Deslogueado, se establece isLoggedIn en false
+    setAuth({
+      user: { email: "", photo: "", profile: "" },
+      token: "",
+    }); // Limpiar auth
+    window.location.href = "/";
+  };
+
+  const actualValues = {
+    auth,
+    login,
+    logout,
+    isLoggedIn,
+  };
+
+  return (
+    <AuthContext.Provider value={actualValues}>{children}</AuthContext.Provider>
+  );
+};

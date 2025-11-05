@@ -1,0 +1,90 @@
+.Title {
+    margin-left: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    font-size: 40px;
+}
+
+
+.divIcon {
+    display: flex;
+    align-items: center; 
+}
+
+.LabelEstado {
+    background-color: #05c9ff;
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-top: 3%;
+    padding: 6px 12px; 
+    border-radius: 12px; 
+    color: #ffffff; 
+    font-size: 16px; 
+    font-weight: bold; 
+    text-align: center; 
+    height: 30px; 
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+}
+
+h1 {
+    padding-top: 3%;
+    font-size: 30px;
+    margin-left: 10px;
+    font-weight: normal;
+    color: #333;
+    margin-bottom: -2px; 
+}
+
+.LabelInfo {
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin-top: -1; 
+    padding-left: 5%;
+}
+
+.jiji {
+    display: block;
+    margin-top: 0;
+}
+
+
+.menuSolicitudes {
+
+    padding-left: 50px;
+}
+
+.menuContainer {
+    font-size: 20px;
+    position: absolute;
+    right: 0;
+    background: white;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 200px;
+    z-index: 100;
+    top: 110px;
+
+}
+
+.menuContainer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menuContainer li {
+    padding: 8px;
+    cursor: pointer;
+    border: 1px solid #000000;
+    margin-bottom: 5px;
+}
+
+.menuContainer li:hover {
+    background: #f0f0f0;
+}
+  
