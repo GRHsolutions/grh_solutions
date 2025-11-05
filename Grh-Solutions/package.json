@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"npm run dev --prefix grh-solutions.server\" \"npm run dev --prefix grh-solutions.client\""
+    "dev": "concurrently \"npm run dev --prefix grh-solutions.server\" \"npm run dev --prefix grh-solutions.client\"",
+    "install-all": "npm --prefix grh-solutions.server install && npm --prefix grh-solutions.client install"
   },
   "devDependencies": {
     "concurrently": "^9.2.0"
