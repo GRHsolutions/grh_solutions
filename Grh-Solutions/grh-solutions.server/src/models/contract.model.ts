@@ -2,45 +2,104 @@ import { Schema, Types, model } from "mongoose";
 
 const contractSchema = new Schema(
   {
-    empleados: {
-      // Relación con empleados
+    perfil_creador: {
       type: Types.ObjectId,
-      ref: "empleados",
+      ref: "profile",
       required: true,
     },
-    tittle: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    content: {
-      type: String,
-      required: true,
-    },
-    type_contract: {
+
+    perfil_empleado: {
       type: Types.ObjectId,
-      ref: "type_contract", // Relación con tipo de contrato
+      ref: "profile",
       required: true,
     },
-    status: {
+
+    eps: {
       type: String,
       enum: [
-        "activo",
-        "por revisar",
-        "aprobado",
-        "reprobado",
-        "por firmar",
-        "firmado",
-        "por renovar",
-      ], // opcional: restricción de valores válidos
+        "Nueva EPS",
+        "Sanitas",
+        "Sura",
+        "Compensar",
+        "Salud Total",
+        "Coomeva",
+        "Medimás",
+        "Mutual Ser",
+        "Capresoca",
+        "Famisanar",
+      ],
       required: true,
     },
-    signatures: {
-      type: Boolean, // ahora es un campo booleano
-      default: false, // por defecto el contrato NO está firmado
+
+    estrato: {
+      type: Number,
+      enum: [1, 2, 3, 4, 5, 6],
+      required: true,
+    },
+
+    start_date: {
+      type: Date,
+      required: true,
+    },
+
+    end_date: {
+      type: Date,
+      default: null,
+    },
+
+    tipo_contrato: {
+      type: Types.ObjectId,
+      ref: "type_contract",
+      required: true,
+    },
+
+    arl: {
+      type: String,
+      enum: [
+        "Sura",
+        "Bolívar",
+        "Colmena",
+        "Positiva",
+        "Equidad",
+        "Mapfre",
+      ],
+      required: true,
+    },
+
+    firma_empleado: {
+      type: String, // USAR: URL o base64 de la imagen
+      default: null,
+    },
+
+    firma_empleador: {
+      type: String, // USAR: URL o base64 de la imagen
+      default: null,
+    },
+
+    estado: {
+      type: String,
+      enum: [
+        "borrador",
+        "por revisar",
+        "aprobado",
+        "por firmar",
+        "firmado",
+        "activo",
+        "vencido",
+        "cancelado",
+      ],
+      default: "borrador",
+      required: true,
+    },
+
+    title: {
+      type: String,
+      required: true,
+    },
+
+    vacante: {
+      type: Types.ObjectId,
+      ref: "Vacancy",
       required: true,
     },
   },

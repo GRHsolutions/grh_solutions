@@ -20,6 +20,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
+
   "/api/contract/getAll": {
     get: {
       summary: "Listar todos los contratos",
@@ -31,6 +32,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
+
   "/api/contract/getById": {
     get: {
       summary: "Obtener contrato por ID",
@@ -52,6 +54,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
+
   "/api/contract/update": {
     put: {
       summary: "Actualizar contrato",
@@ -80,6 +83,7 @@ export const ContractPaths: Record<string, PathItem> = {
       },
     },
   },
+
   "/api/contract/delete": {
     delete: {
       summary: "Eliminar contrato",
@@ -95,7 +99,7 @@ export const ContractPaths: Record<string, PathItem> = {
         },
       ],
       responses: {
-        "200": { description: "Contrato eliminado" },
+        "200": { description: "Contrato eliminado correctamente" },
         "400": { description: "ID inválido" },
         "404": { description: "Contrato no encontrado" },
       },
@@ -108,42 +112,73 @@ export const ContractSchema: { schemas: Record<string, Schema> } = {
     Contract: {
       type: "object",
       required: [
-        "empleados",
-        "tittle",
-        "description",
-        "content",
-        "type_contract",
-        "status",
+        "perfil_creador",
+        "perfil_empleado",
+        "eps",
+        "estrato",
+        "start_date",
+        "tipo_contrato",
+        "arl",
+        "title",
+        "vacante",
       ],
       properties: {
-        empleados: {
+        perfil_creador: {
           type: "string",
-          example: "64e8f5e12345678901234567",
+          example: "686c4e565d285a66d56ba4bd",
+          description: "ID del perfil que crea el contrato",
         },
-        tittle: {
+        perfil_empleado: {
           type: "string",
-          example: "Contrato indefinido",
+          example: "686d6063de898a945328f4d0",
+          description: "ID del perfil del empleado contratado",
         },
-        description: {
+        eps: {
           type: "string",
-          example: "Contrato para desarrollador senior",
+          example: "Nueva EPS",
         },
-        content: {
+        estrato: {
+          type: "number",
+          example: 3,
+        },
+        start_date: {
           type: "string",
-          example:
-            "El contrato incluye todas las cláusulas estipuladas en el acuerdo general entre las partes...",
+          format: "date",
+          example: "2025-02-01",
         },
-        type_contract: {
+        end_date: {
           type: "string",
-          example: "64e8f5e12345678901234568",
+          format: "date",
+          nullable: true,
+          example: null,
         },
-        status: {
+        tipo_contrato: {
+          type: "string",
+          example: "68630150c1221fc95abda21a",
+        },
+        arl: {
+          type: "string",
+          example: "Sura",
+        },
+        firma_empleado: {
+          type: "string",
+          example: "data:image/png;base64,iVBORw0K...",
+        },
+        firma_empleador: {
+          type: "string",
+          example: "data:image/png;base64,iVBORw0K...",
+        },
+        estado: {
           type: "string",
           example: "activo",
         },
-        signatures: {
+        title: {
           type: "string",
-          example: "64e8f5e12345678901234569",
+          example: "Contrato a término indefinido",
+        },
+        vacante: {
+          type: "string",
+          example: "686301bec27c61a5e06bec24",
         },
       },
     },

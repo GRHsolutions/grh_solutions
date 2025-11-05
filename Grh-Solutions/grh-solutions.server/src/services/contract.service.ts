@@ -1,47 +1,63 @@
 import { contractModel } from "../models/contract.model";
-import { contractFilter } from "../filters/contract.filter";
+import { ContractFilter } from "../filters/contract.filter";
 
 export const contractService = {
   // Crear contrato
   create: async (entity: {
-    empleados: string;
-    tittle: string;
-    description: string;
-    content: string;
-    type_contract: string;
-    status: string;
-    signatures?: boolean; // ahora es boolean
+    perfil_creador: string;
+    perfil_empleado: string;
+    eps: string;
+    estrato: number;
+    start_date: Date;
+    end_date?: Date | null;
+    tipo_contrato: string;
+    arl: string;
+    firma_empleado?: string | null;
+    firma_empleador?: string | null;
+    estado?: string;
+    title: string;
+    vacante: string;
   }) => {
     return await contractModel.create(entity);
   },
 
-  // Obtener todos los contratos con poblaciones
+  // Obtener todos los contratos con relaciones
   getAll: async () => {
     return await contractModel
       .find()
-      .populate("empleados")
-      .populate("type_contract"); // se quitó signatures
+      .populate("perfil_creador")
+      .populate("perfil_empleado")
+      .populate("tipo_contrato")
+      .populate("vacante");
   },
 
-  // Obtener por ID
+  // Obtener contrato por ID
   getById: async (id: string) => {
     return await contractModel
       .findById(id)
-      .populate("empleados")
-      .populate("type_contract"); // se quitó signatures
+      .populate("perfil_creador")
+      .populate("perfil_empleado")
+      .populate("tipo_contrato")
+      .populate("vacante");
   },
 
   // Actualizar contrato
   update: async (
     id: string,
     entity: Partial<{
-      empleados: string;
-      tittle: string;
-      description: string;
-      content: string;
-      type_contract: string;
-      status: string;
-      signatures?: boolean; // ahora es boolean
+      perfil_creador: string;
+      perfil_empleado: string;
+      eps: string;
+      estrato: number;
+      start_date: Date;
+      end_date?: Date | null;
+      tipo_contrato: string;
+      arl: string;
+      firma_empleado?: string | null;
+      firma_empleador?: string | null;
+      estado?: string;
+      title: string;
+      vacante: string;
     }>
   ) => {
     return await contractModel.findByIdAndUpdate(id, entity, { new: true });
@@ -53,20 +69,55 @@ export const contractService = {
   },
 
   // Filtro dinámico
-  findByFilter: async (filters: contractFilter) => {
-    const query: any = {};
+findByFilter: async (filters: ContractFilter) => {
+  const query: any = {};
 
-    if (filters.tittle) query.tittle = { $regex: filters.tittle, $options: "i" };
-    if (filters.description)
-      query.description = { $regex: filters.description, $options: "i" };
-    if (filters.content)
-      query.content = { $regex: filters.content, $options: "i" };
-    if (filters.status) query.status = filters.status;
-    if (filters.signatures !== undefined) query.signatures = filters.signatures; // permite filtrar por firmado o no
+  if (filters.title)
+    query.title = { $regex: filters.title, $options: "i" };
 
-    return await contractModel
-      .find(query)
-      .populate("empleados")
-      .populate("type_contract"); // se quitó signatures
-  },
+  if (filters.estado)
+    query.estado = filters.estado;
+
+  if (filters.perfil_empleado)
+    query.perfil_empleado = filters.perfil_empleado;
+
+  if (filters.perfil_creador)
+    query.perfil_creador = filters.perfil_creador;
+
+  if (filters.tipo_contrato)
+    query.tipo_contrato = filters.tipo_contrato;
+
+  if (filters.vacante)
+    query.vacante = filters.vacante;
+
+  if (filters.eps)
+    query.eps = filters.eps;
+
+  if (filters.arl)
+    query.arl = filters.arl;
+
+  if (filters.estrato)
+    query.estrato = filters.estrato;
+
+  // Rango de fecha inicio
+  if (filters.start_date_from || filters.start_date_to) {
+    query.start_date = {};
+    if (filters.start_date_from) query.start_date.$gte = new Date(filters.start_date_from);
+    if (filters.start_date_to) query.start_date.$lte = new Date(filters.start_date_to);
+  }
+
+  // Rango de fecha fin
+  if (filters.end_date_from || filters.end_date_to) {
+    query.end_date = {};
+    if (filters.end_date_from) query.end_date.$gte = new Date(filters.end_date_from);
+    if (filters.end_date_to) query.end_date.$lte = new Date(filters.end_date_to);
+  }
+
+  return await contractModel
+    .find(query)
+    .populate("perfil_creador")
+    .populate("perfil_empleado")
+    .populate("tipo_contrato")
+    .populate("vacante");
+},
 };

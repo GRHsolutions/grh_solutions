@@ -5,20 +5,51 @@ export const contractController = {
   // Crear contrato
   create: async (req: Request, res: Response) => {
     try {
-      const { empleados, tittle, description, content, type_contract, status, signatures } = req.body;
+      const {
+        perfil_creador,
+        perfil_empleado,
+        eps,
+        estrato,
+        start_date,
+        end_date,
+        tipo_contrato,
+        arl,
+        firma_empleado,
+        firma_empleador,
+        estado,
+        title,
+        vacante
+      } = req.body;
 
-      if (!empleados || !tittle || !description || !content || !type_contract || !status) {
+      // Validación de campos obligatorios
+      if (
+        !perfil_creador ||
+        !perfil_empleado ||
+        !eps ||
+        !estrato ||
+        !start_date ||
+        !tipo_contrato ||
+        !arl ||
+        !title ||
+        !vacante
+      ) {
         return res.status(400).json({ message: "Faltan campos obligatorios" });
       }
 
       const data = await contractService.create({
-        empleados: empleados.trim(),
-        tittle: tittle.trim(),
-        description: description.trim(),
-        content: content.trim(),
-        type_contract: type_contract.trim(),
-        status: status.trim(),
-        signatures: typeof signatures === "boolean" ? signatures : false, // ahora es boolean
+        perfil_creador: perfil_creador.trim(),
+        perfil_empleado: perfil_empleado.trim(),
+        eps: eps.trim(),
+        estrato,
+        start_date,
+        end_date: end_date ?? null,
+        tipo_contrato: tipo_contrato.trim(),
+        arl: arl.trim(),
+        firma_empleado: firma_empleado?.trim(),
+        firma_empleador: firma_empleador?.trim(),
+        estado: estado?.trim(),
+        title: title.trim(),
+        vacante: vacante.trim(),
       });
 
       return res.status(201).json(data);
@@ -54,24 +85,44 @@ export const contractController = {
     }
   },
 
-  // Actualizar
+  // Actualizar contrato
   update: async (req: Request, res: Response) => {
     try {
       const { id } = req.query;
-      const { empleados, tittle, description, content, type_contract, status, signatures } = req.body;
-
       if (!id || typeof id !== "string" || id.trim() === "") {
         return res.status(400).json({ message: "ID inválido" });
       }
 
+      const {
+        perfil_creador,
+        perfil_empleado,
+        eps,
+        estrato,
+        start_date,
+        end_date,
+        tipo_contrato,
+        arl,
+        firma_empleado,
+        firma_empleador,
+        estado,
+        title,
+        vacante
+      } = req.body;
+
       const body: any = {};
-      if (empleados) body.empleados = empleados.trim();
-      if (tittle) body.tittle = tittle.trim();
-      if (description) body.description = description.trim();
-      if (content) body.content = content.trim();
-      if (type_contract) body.type_contract = type_contract.trim();
-      if (status) body.status = status.trim();
-      if (typeof signatures === "boolean") body.signatures = signatures;
+      if (perfil_creador) body.perfil_creador = perfil_creador.trim();
+      if (perfil_empleado) body.perfil_empleado = perfil_empleado.trim();
+      if (eps) body.eps = eps.trim();
+      if (estrato !== undefined) body.estrato = estrato;
+      if (start_date) body.start_date = start_date;
+      if (end_date !== undefined) body.end_date = end_date;
+      if (tipo_contrato) body.tipo_contrato = tipo_contrato.trim();
+      if (arl) body.arl = arl.trim();
+      if (firma_empleado) body.firma_empleado = firma_empleado.trim();
+      if (firma_empleador) body.firma_empleador = firma_empleador.trim();
+      if (estado) body.estado = estado.trim();
+      if (title) body.title = title.trim();
+      if (vacante) body.vacante = vacante.trim();
 
       if (Object.keys(body).length === 0) {
         return res.status(400).json({ message: "No hay campos para actualizar" });
@@ -84,7 +135,7 @@ export const contractController = {
     }
   },
 
-  // Eliminar
+  // Eliminar contrato
   delete: async (req: Request, res: Response) => {
     try {
       const { id } = req.query;
