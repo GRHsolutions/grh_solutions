@@ -10,6 +10,7 @@ import { HistoryPaths, HistorySchema } from "./history.swagger";
 import { newPaths, NewsSchema } from "./comunicados.swagger";
 //import { BadRequestErrorSchemas } from "./error.swagger";
 import { permissionPaths, permissionSchemas } from "./permission.swagger";
+import { TypeContractPaths, TypeContractSchema } from "./typeContract.swagger";
 
 // Combinar todos los paths
 export const globalPaths: Paths = {
@@ -23,6 +24,7 @@ export const globalPaths: Paths = {
   ...InvolvedPaths,
   ...HistoryPaths,
   ...newPaths,
+  ...TypeContractPaths,
 };
 
 // Combinar todos los components/schemas
@@ -60,6 +62,9 @@ export const globalComponents: Components = {
     ...NewsSchema,
 
     // Schema permission
-    ...permissionSchemas.schemas
+    ...permissionSchemas.schemas,
+
+    // Schemas de tipo de contrato
+    ...(TypeContractSchema.schemas || {}),
   },
 };

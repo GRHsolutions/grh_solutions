@@ -154,7 +154,7 @@ export const ContractSchema: { schemas: Record<string, Schema> } = {
         },
         tipo_contrato: {
           type: "string",
-          example: "68630150c1221fc95abda21a",
+          example: "690b0c33c2cf7e8ce75dc141",
         },
         arl: {
           type: "string",

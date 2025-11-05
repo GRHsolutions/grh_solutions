@@ -1372,114 +1372,114 @@ export const swaggerPaths: Paths = {
     },
   },
   /// TYPECONTRACT ENDPOINTS FOR SWAGGER
-  "/api/typeContract/create": {
-    post: {
-      summary: "Crear un tipo de contrato",
-      tags: ["TypeContract"],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/TypeContract",
-            },
-          },
-        },
-      },
-      responses: {
-        201: {
-          description: "Tipo de contrato creado exitosamente",
-        },
-        400: {
-          description: "Error al crear el tipo de contrato",
-        },
-      },
-    },
-  },
-  "/api/typeContract/update": {
-    put: {
-      summary: "Actualizar un tipo de contrato",
-      tags: ["TypeContract"],
-      parameters: [
-        {
-          name: "id",
-          in: "query",
-          required: true,
-          schema: {
-            type: "string",
-          },
-          description: "ID del tipo de contrato a actualizar",
-        },
-      ],
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/TypeContract",
-            },
-          },
-        },
-      },
-      responses: {
-        201: {
-          description: "Tipo de contrato actualizado exitosamente",
-        },
-        400: {
-          description: "Error al actualizar",
-        },
-      },
-    },
-  },
-  "/api/typeContract/delete": {
-    delete: {
-      summary: "Eliminar un tipo de contrato",
-      tags: ["TypeContract"],
-      parameters: [
-        {
-          name: "id",
-          in: "query",
-          required: true,
-          schema: {
-            type: "string",
-          },
-          description: "ID del tipo de contrato a eliminar",
-        },
-      ],
-      responses: {
-        201: {
-          description: "Tipo de contrato eliminado exitosamente",
-        },
-        400: {
-          description: "Error al eliminar",
-        },
-      },
-    },
-  },
-  "/api/typeContract/getAll": {
-    get: {
-      summary: "Obtener todos los tipos de contrato",
-      tags: ["TypeContract"],
-      responses: {
-        201: {
-          description: "Lista de tipos de contrato",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  $ref: "#/components/schemas/TypeContract",
-                },
-              },
-            },
-          },
-        },
-        400: {
-          description: "Error al obtener los tipos de contrato",
-        },
-      },
-    },
-  },
+  // "/api/typeContract/create": {
+  //   post: {
+  //     summary: "Crear un tipo de contrato",
+  //     tags: ["TypeContract"],
+  //     requestBody: {
+  //       required: true,
+  //       content: {
+  //         "application/json": {
+  //           schema: {
+  //             $ref: "#/components/schemas/TypeContract",
+  //           },
+  //         },
+  //       },
+  //     },
+  //     responses: {
+  //       201: {
+  //         description: "Tipo de contrato creado exitosamente",
+  //       },
+  //       400: {
+  //         description: "Error al crear el tipo de contrato",
+  //       },
+  //     },
+  //   },
+  // },
+  // "/api/typeContract/update": {
+  //   put: {
+  //     summary: "Actualizar un tipo de contrato",
+  //     tags: ["TypeContract"],
+  //     parameters: [
+  //       {
+  //         name: "id",
+  //         in: "query",
+  //         required: true,
+  //         schema: {
+  //           type: "string",
+  //         },
+  //         description: "ID del tipo de contrato a actualizar",
+  //       },
+  //     ],
+  //     requestBody: {
+  //       required: true,
+  //       content: {
+  //         "application/json": {
+  //           schema: {
+  //             $ref: "#/components/schemas/TypeContract",
+  //           },
+  //         },
+  //       },
+  //     },
+  //     responses: {
+  //       201: {
+  //         description: "Tipo de contrato actualizado exitosamente",
+  //       },
+  //       400: {
+  //         description: "Error al actualizar",
+  //       },
+  //     },
+  //   },
+  // },
+  // "/api/typeContract/delete": {
+  //   delete: {
+  //     summary: "Eliminar un tipo de contrato",
+  //     tags: ["TypeContract"],
+  //     parameters: [
+  //       {
+  //         name: "id",
+  //         in: "query",
+  //         required: true,
+  //         schema: {
+  //           type: "string",
+  //         },
+  //         description: "ID del tipo de contrato a eliminar",
+  //       },
+  //     ],
+  //     responses: {
+  //       201: {
+  //         description: "Tipo de contrato eliminado exitosamente",
+  //       },
+  //       400: {
+  //         description: "Error al eliminar",
+  //       },
+  //     },
+  //   },
+  // },
+  // "/api/typeContract/getAll": {
+  //   get: {
+  //     summary: "Obtener todos los tipos de contrato",
+  //     tags: ["TypeContract"],
+  //     responses: {
+  //       201: {
+  //         description: "Lista de tipos de contrato",
+  //         content: {
+  //           "application/json": {
+  //             schema: {
+  //               type: "array",
+  //               items: {
+  //                 $ref: "#/components/schemas/TypeContract",
+  //               },
+  //             },
+  //           },
+  //         },
+  //       },
+  //       400: {
+  //         description: "Error al obtener los tipos de contrato",
+  //       },
+  //     },
+  //   },
+  // },
   /// PERMISSIONS ENDPOINTS  FOR SWAGGER
   "/api/permission/": {
     get: {
