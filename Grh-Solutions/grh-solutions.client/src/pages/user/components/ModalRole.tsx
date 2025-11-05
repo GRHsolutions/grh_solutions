@@ -141,7 +141,7 @@ export default function ModalRole({ open, handleClose }: IModalRoleProps) {
   // Fetch permisos, paginación y permisos asignados al rol seleccionado
   useEffect(() => {
     const fetchData = async () => {
-      if (!selectedRoleId) {
+      if (selectedRoleId == "") {
         setPermissions([]);
         setCurrentRol(undefined);
         setAssignedPermissions([]);
