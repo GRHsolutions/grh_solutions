@@ -140,7 +140,7 @@ const Screen: React.FC = () => {
           onClick={() => {
             noCurrnt("create");
           }}
-          label="Crear correo"
+          label="Crear comunicado"
           bgColor={theme.palette.secondary.main}
           positions={{
             bottom: "2.2rem",
