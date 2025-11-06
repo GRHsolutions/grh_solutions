@@ -3,6 +3,7 @@ import { postulanteService } from "../services/postulante.service";
 import jwt from "jsonwebtoken";
 import { empleadosModel } from "../models/empleados.model";
 import { VacanciesModel } from "../models/vacancies.model";
+import { postulantesModel } from "../models/postulante.model";
 
 export const postulanteController = {
   create: async (req: Request, res: Response) => {
@@ -13,9 +14,7 @@ export const postulanteController = {
         return res.status(401).json({ message: "Token no proporcionado" });
       }
 
-      const token = authHeader.split(" ")[1]; // Elimina el 'Bearer '
-
-      // Verifica y decodifica el token
+      const token = authHeader.split(" ")[1];
       const decoded = jwt.verify(token, "my_secret") as {
         id: string;
         email: string;
@@ -30,8 +29,19 @@ export const postulanteController = {
           .json({ message: "Debe enviar el ID de la vacante" });
       }
 
+      const postulacionExistente = await postulantesModel.findOne({
+        user: decoded.id,
+        vacante: vacante,
+      });
+
+      if (postulacionExistente) {
+        return res.status(400).json({
+          message: "Ya has aplicado a esta vacante.",
+        });
+      }
+
       const newPostulante = {
-        user: decoded.id, // 👈 El ID del usuario autenticado viene del token
+        user: decoded.id,
         vacante,
         application_date: new Date(),
         status: status || "Pendiente",
@@ -91,7 +101,6 @@ export const postulanteController = {
 
       const updatedPostulante = await postulanteService.update(id, updates);
 
-
       if (
         updates.status === "contratado" &&
         postulante.status !== "contratado"
@@ -101,7 +110,6 @@ export const postulanteController = {
         });
 
         if (!empleadoExistente) {
-
           const vacante = await VacanciesModel.findById(postulante.vacante);
 
           if (!vacante) {
@@ -112,7 +120,7 @@ export const postulanteController = {
 
           const userId =
             typeof postulante.user === "object" && "_id" in postulante.user
-              ?(postulante.user as any)._id
+              ? (postulante.user as any)._id
               : postulante.user;
 
           if (!userId) {
@@ -131,7 +139,6 @@ export const postulanteController = {
             puesto: vacante.charge,
             status: "activo",
           });
-
         }
 
         return res.status(200).json(updatedPostulante);

@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { vacanciesService } from "../services/vacancies.service";
+import { VacanciesModel } from "../models/vacancies.model";
 
 export const vacanciesController = {
   create: async (req: Request, res: Response) => {
@@ -22,15 +23,34 @@ export const vacanciesController = {
       } = req.body;
 
       if (
-        !tittle || !description || !type_contract || !salary || !horary ||
-        !address || !telephone || !email || !type_modality || !experience ||
-        !formation || !status
+        !tittle ||
+        !description ||
+        !type_contract ||
+        !salary ||
+        !horary ||
+        !address ||
+        !telephone ||
+        !email ||
+        !type_modality ||
+        !experience ||
+        !formation ||
+        !status
       ) {
         return res.status(400).json({
           message: "Faltan campos obligatorios por rellenar",
         });
       }
 
+      const existingVacancy = await VacanciesModel.findOne({
+        tittle: { $regex: new RegExp(`^${tittle}$`, "i") },
+        area: area || null,
+      });
+
+      if (existingVacancy) {
+        return res.status(400).json({
+          message: "Ya existe una vacante con este título y área.",
+        });
+      }
       const data = await vacanciesService.create({
         tittle,
         description,
@@ -50,7 +70,8 @@ export const vacanciesController = {
 
       return res.status(201).json(data);
     } catch (error: any) {
-      res.status(500).json({
+      console.error("Error al crear la vacante:", error);
+      return res.status(500).json({
         message: "Error al crear la vacante",
         error: error.message,
       });
@@ -122,7 +143,9 @@ export const vacanciesController = {
       }
 
       const data = await vacanciesService.delete(id);
-      return res.status(200).json({ message: "Vacante eliminada correctamente", data });
+      return res
+        .status(200)
+        .json({ message: "Vacante eliminada correctamente", data });
     } catch (error: any) {
       res.status(500).json({
         message: "Error al eliminar la vacante",

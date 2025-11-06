@@ -131,7 +131,7 @@ export default function ModalEditVacant({ open, handleClose, initialValues, toke
                       name="charge"
                       label="Cargo"
                       options={charges.map((charge) => ({ value: charge._id, name: charge.name }))}
-                      value={values.charge}
+                      value={charges.find((charge) => charge._id === values.charge)?._id || ''}
                       onChange={handleChange}
                       fullWidth
                     />
@@ -166,7 +166,7 @@ export default function ModalEditVacant({ open, handleClose, initialValues, toke
                       name="area"
                       label="Area"
                       options={areas.map((area) => ({ value: area._id, name: area.name }))}
-                      value={values.area}
+                      value={values.area?._id || ''}
                       onChange={handleChange}
                       fullWidth
                     />
