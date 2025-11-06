@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import ContratoTable from "./componentes/contratoTable";
-import ContratoForm from "./componentes/contratoForm";
+import ContratoFormDrawer from "./componentes/contratoForm";
 import ContratoView from "./componentes/contratoView";
 import PDFModal from "./componentes/contratoPDFModal"; // <-- Modal PDF
 import contratoService from "../../domain/services/contract/contract.service";
@@ -131,7 +131,7 @@ export default function Contrato() {
       </Paper>
 
       {/* MODAL CREAR / EDITAR */}
-      <ContratoForm
+      <ContratoFormDrawer
         open={openForm}
         onClose={() => setOpenForm(false)}
         onSubmit={handleGuardar}
