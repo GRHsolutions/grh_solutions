@@ -30,7 +30,7 @@ export interface GrhPagination {
 interface GrhGenericTableProps<T> {
   columns: GrhItemColumn<T>[];
   data: T[];
-  pagination: GrhPagination;
+  pagination?: GrhPagination;
   onPageChange: (page: number) => void;
   maxHeight?: string | number;
   maxWidth?: string | number;
@@ -127,15 +127,16 @@ const GrhGenericTable2 = <T,>({
           </TableBody>
         </Table>
       </TableContainer>
-
-      <TablePagination
-        component="div"
-        count={pagination.totalRows}
-        page={pagination.currentPage}
-        rowsPerPage={pagination.pageSize}
-        onPageChange={(_, newPage) => onPageChange(newPage)}
-        rowsPerPageOptions={[pagination.pageSize]}
-      />
+      {pagination && (
+        <TablePagination
+          component="div"
+          count={pagination.totalRows}
+          page={pagination.currentPage}
+          rowsPerPage={pagination.pageSize}
+          onPageChange={(_, newPage) => onPageChange(newPage)}
+          rowsPerPageOptions={[pagination.pageSize]}
+        />
+      )}
     </Box>
   );
 };
