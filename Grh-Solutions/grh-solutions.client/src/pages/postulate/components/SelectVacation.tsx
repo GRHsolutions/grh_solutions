@@ -16,18 +16,33 @@ interface SelectVacationProps {
   setReload?: React.Dispatch<React.SetStateAction<boolean>>;
   reload?: boolean;
 }
+const modalityOptions = [
+  { value: "remote", name: "Remoto" },
+  { value: "onsite", name: "Presencial" },
+  { value: "hybrid", name: "Híbrido" },
+  { value: "freelance", name: "Freelance" },
+  { value: "internship", name: "Pasantía" }
+];
+
 
 export default function SelectVacation({ selectedVacante, charges, areas, setReload, reload }: SelectVacationProps) {
-  const [openAlert, setOpenAlert] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [openAlert, setOpenAlert] = useState<boolean>(false);
+  const [openModal, setOpenModal] = useState<boolean>(false);
+    const [alertType, setAlertType] = useState<"success" | "error">("success");
+  const [alertMessage, setAlertMessage] = useState("");
   const { auth } = useAuth();
   const handleApply = () => {
     CreatePostulante(selectedVacante?._id, "pendiente", auth.token)
       .then(() => {
-        setOpenAlert(true);
         if (setReload) setReload(prev => !prev);
+        setAlertType("success");
+        setAlertMessage("Postulación enviada exitosamente");
+        setOpenAlert(true);
       })
       .catch((err) => {
+        setAlertType("error");
+        setAlertMessage(err.response?.data?.message || "Error al postularse");
+        setOpenAlert(true);
         console.error("Error al postularse:", err);
       });
   };
@@ -40,7 +55,6 @@ export default function SelectVacation({ selectedVacante, charges, areas, setRel
     setOpenModal(false);
   };
 
-  console.log("Selected Vacante:", selectedVacante);
   return (
     <Box sx={{ width: "95%", minHeight: "95vh", display: "flex", alignItems: "center", justifyContent: "center", px: 2 }}>
       {!selectedVacante ? (
@@ -83,7 +97,7 @@ export default function SelectVacation({ selectedVacante, charges, areas, setRel
 
             <Typography variant="h6" fontWeight="bold">📌 Detalles:</Typography>
             <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 2, mt: 1 }}>
-              <Typography><strong>Modalidad:</strong> {selectedVacante.type_modality}</Typography>
+              <Typography><strong>Modalidad:</strong> {modalityOptions.find((option) => option.value === selectedVacante.type_modality)?.name}</Typography>
               <Typography><strong>Tipo de contrato:</strong> {selectedVacante.type_contract}</Typography>
               <Typography><strong>Salario:</strong> {selectedVacante.salary}</Typography>
               <Typography><strong>Horario:</strong> {selectedVacante.horary}</Typography>
@@ -104,8 +118,8 @@ export default function SelectVacation({ selectedVacante, charges, areas, setRel
         </Card>
       )}
       <Snackbar open={openAlert} autoHideDuration={6000} onClose={() => setOpenAlert(false)} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "65%" }}>
-          <Typography variant="body1"><strong>Su CV fue enviado correctamente.</strong></Typography>
+        <Alert onClose={() => setOpenAlert(false)} severity={alertType} sx={{ width: "100%" }}>
+          <Typography variant="body1"><strong>{alertMessage}</strong></Typography>
         </Alert>
       </Snackbar>
       <ViewSelectVacante
