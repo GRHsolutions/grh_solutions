@@ -30,6 +30,7 @@ const Screen: React.FC = () => {
   } = useNewsSecurity();
 
   React.useEffect(() => {
+    console.log("checking url from current data")
     const id = queryParams["id"] || undefined;
     const action = queryParams["action"] || undefined;
 

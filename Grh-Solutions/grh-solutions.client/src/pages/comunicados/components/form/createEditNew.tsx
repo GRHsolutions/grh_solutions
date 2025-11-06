@@ -44,10 +44,13 @@ export const CreateEditNew = () => {
 
   React.useEffect(() => {
     console.log("entrando a formulario : ", current);
-    if (current.action === "create" || current.action === "edit") {
+    if(current.action === "create"){
+      setInitial(null);
+    }
+    if (current.action === "edit") {
       setInitial(current.item);
     }
-  }, [current.item]);
+  }, [current.item, current.action]);
 
   return (
     <Modal
