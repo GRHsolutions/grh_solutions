@@ -40,7 +40,7 @@ export default function SelectVacation({ selectedVacante, charges, areas, setRel
     setOpenModal(false);
   };
 
-
+  console.log("Selected Vacante:", selectedVacante);
   return (
     <Box sx={{ width: "95%", minHeight: "95vh", display: "flex", alignItems: "center", justifyContent: "center", px: 2 }}>
       {!selectedVacante ? (
