@@ -1178,11 +1178,32 @@ export const swaggerPaths: Paths = {
   },
   "/api/vacancies/getAll": {
     get: {
-      summary: "Get all vacancies",
+      summary: "Obtener todas las vacantes (con filtros opcionales)",
       tags: ["Vacantes"],
+      parameters: [
+        {
+          name: "tittle",
+          in: "query",
+          description: "Filtrar por título de la vacante (opcional)",
+          required: false,
+          schema: {
+            type: "string",
+          },
+        },
+        {
+          name: "isRemoto",
+          in: "query",
+          description:
+            "Filtrar por modalidad de trabajo (Remoto, Presencial, Híbrido) (opcional)",
+          required: false,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
       responses: {
-        201: {
-          description: "Vacancies retrieved successfully",
+        "200": {
+          description: "Vacantes obtenidas correctamente",
           content: {
             "application/json": {
               schema: {
@@ -1194,12 +1215,13 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        400: {
-          description: "Error retrieving vacancies",
+        "500": {
+          description: "Error al obtener las vacantes",
         },
       },
     },
   },
+
   "/api/vacancies/update": {
     put: {
       summary: "Update a vacancy",

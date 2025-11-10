@@ -80,15 +80,16 @@ export const vacanciesController = {
 
   getAll: async (req: Request, res: Response) => {
     try {
-      const { tittle } = req.query;
+      const { tittle, isRemoto } = req.query;
 
       const data = await vacanciesService.getAll({
-        tittle: tittle as string,
+        tittle: tittle as string | undefined,
+        isRemoto: isRemoto as string | undefined,
       });
 
       return res.status(200).json(data);
     } catch (error: any) {
-      res.status(500).json({
+      return res.status(500).json({
         message: "Error al obtener las vacantes",
         error: error.message,
       });
