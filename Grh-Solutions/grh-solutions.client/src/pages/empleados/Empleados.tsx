@@ -6,14 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { getEmployees } from "../../domain/services/employee/employee.service";
 import { useAuth } from "../../hooks/auth";
 import { EmpleadoDemo } from "../../domain/models/employee/employee.entities";
-import { getRoles } from "../../domain/services/Roles/Roles.service";
 import { RolDemo } from "../../domain/models/role/role.entities";
-import { getProfileById } from "../../domain/services/profile/profile.service";
 
 const Empleados: React.FC = () => {
   const { auth } = useAuth();
   const [employees, setEmployees] = useState<EmpleadoDemo[]>([]);
-  const [roles, setRoles] = useState<RolDemo[]>([]);
+  const [roles, _setRoles] = useState<RolDemo[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,9 +26,9 @@ const Empleados: React.FC = () => {
   }, [auth.token]);
 
   useEffect(() => {
-    getRoles("", auth.token).then((res) => {
-      setRoles(res.data);
-    });
+    // getAllRoles("", auth.token).then((res) => {
+    //   setRoles(res.data);
+    // });
   }, [employees]);
 
   const rows = employees.map((emp) => ({

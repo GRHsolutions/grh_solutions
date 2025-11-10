@@ -5,7 +5,6 @@ import { AppRoutes } from "./routes/routes";
 import { useAuth } from "./hooks/auth";
 import React from "react";
 import { http } from "./infrastructure/axios/axios";
-import { SnackbarProvider } from "notistack";
 
 function App() {
   const unt = AppRoutes();
@@ -17,21 +16,21 @@ function App() {
     http.setLogout(logout); // Configurar el logout globalmente si quieres
   }, []);
 
+  return (
+    <Suspense>
+      <NavBar />
+      {routes}
+    </Suspense>
+  );
+
   // return (
+  //   <SnackbarProvider maxSnack={3} autoHideDuration={4000}> // eso pa que wey 
   //     <Suspense>
   //       <NavBar />
   //       {routes}
   //     </Suspense>
+  //   </SnackbarProvider>
   // );
-
-  return (
-    <SnackbarProvider maxSnack={3} autoHideDuration={4000}>
-      <Suspense>
-        <NavBar />
-        {routes}
-      </Suspense>
-    </SnackbarProvider>
-  );
 }
 
 export default App;
