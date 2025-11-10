@@ -81,7 +81,7 @@ export default function Contrato() {
   const handleCrearContrato = async (payload: Partial<Contract>) => {
     try {
       await contratoService.createContract(payload);
-      enqueueSnackbar("Contrato creado correctamente ✅", {
+      enqueueSnackbar("Contrato creado correctamente", {
         variant: "success",
       });
       setOpenForm(false);
@@ -89,7 +89,7 @@ export default function Contrato() {
       return true;
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("Error creando contrato ❌", { variant: "error" });
+      enqueueSnackbar("Error creando contrato", { variant: "error" });
       return false;
     }
   };
@@ -97,14 +97,14 @@ export default function Contrato() {
   const handleActualizarContrato = async (payload: Partial<Contract>) => {
     try {
       if (!selectedContrato?._id) {
-        enqueueSnackbar("ID del contrato no encontrado ❌", {
+        enqueueSnackbar("ID del contrato no encontrado", {
           variant: "error",
         });
         return false;
       }
 
       await contratoService.updateContract(selectedContrato._id, payload);
-      enqueueSnackbar("Contrato actualizado correctamente ✅", {
+      enqueueSnackbar("Contrato actualizado correctamente", {
         variant: "success",
       });
       setOpenForm(false);
@@ -112,7 +112,7 @@ export default function Contrato() {
       return true;
     } catch (error) {
       console.error(error);
-      enqueueSnackbar("Error actualizando contrato ❌", { variant: "error" });
+      enqueueSnackbar("Error actualizando contrato", { variant: "error" });
       return false;
     }
   };
