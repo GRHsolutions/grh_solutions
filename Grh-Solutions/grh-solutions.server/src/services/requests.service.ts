@@ -12,7 +12,14 @@ type RequestUpdateDto = {
 export const requestsService = {
   create: async (data: any, by: string) => {
     try {
-      const requestData = { ...data, createdBy: by };
+      const requestData = {
+        ...data,
+        createdBy: by,
+      };
+      if (data.createdAt) {
+        requestData.createdAt = new Date(data.createdAt);
+      }
+
       const createdObject = await RequestModel.create(requestData);
       return createdObject.toObject();
     } catch (err) {
@@ -49,15 +56,24 @@ export const requestsService = {
       if (!mongoose.Types.ObjectId.isValid(id)) return null;
 
       const allowedFields: Partial<RequestUpdateDto> = {};
-      (["title", "status", "type_request", "infoDx", "file"] as (keyof RequestUpdateDto)[]).forEach(
-        (key) => {
-          if (body[key] !== undefined) allowedFields[key] = body[key];
-        }
-      );
+      (
+        [
+          "title",
+          "status",
+          "type_request",
+          "infoDx",
+          "file",
+        ] as (keyof RequestUpdateDto)[]
+      ).forEach((key) => {
+        if (body[key] !== undefined) allowedFields[key] = body[key];
+      });
 
-      if (Object.keys(allowedFields).length === 0) return await RequestModel.findById(id).lean();
+      if (Object.keys(allowedFields).length === 0)
+        return await RequestModel.findById(id).lean();
 
-      return await RequestModel.findByIdAndUpdate(id, allowedFields, { new: true }).lean();
+      return await RequestModel.findByIdAndUpdate(id, allowedFields, {
+        new: true,
+      }).lean();
     } catch (err) {
       console.error("[requestsService.update] ERROR:", err);
       throw err;
