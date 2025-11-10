@@ -838,28 +838,28 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-"/api/user/getById/{id}": {
-  get: {
-    summary: "Obtener usuario por ID",
-    tags: ["User"],
-    parameters: [
-      {
-        name: "id",
-        in: "path",
-        required: true,
-        schema: {
-          type: "string"
+  "/api/user/getById/{id}": {
+    get: {
+      summary: "Obtener usuario por ID",
+      tags: ["User"],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del usuario",
         },
-        description: "ID del usuario"
-      }
-    ],
-    responses: {
-      "200": { description: "Usuario encontrado" },
-      "400": { description: "ID inválido" },
-      "404": { description: "Usuario no encontrado" }
-    }
-  }
-},
+      ],
+      responses: {
+        "200": { description: "Usuario encontrado" },
+        "400": { description: "ID inválido" },
+        "404": { description: "Usuario no encontrado" },
+      },
+    },
+  },
   "/api/user/updateUser": {
     put: {
       summary: "Actualizar cualquier usuario por ID",
@@ -3254,6 +3254,20 @@ export const swaggerPaths: Paths = {
         },
         "404": {
           description: "Perfil no encontrado",
+        },
+      },
+    },
+  },
+  "/api/profiles/getAll": {
+    get: {
+      summary: "Obtener todos los perfiles",
+      tags: ["Profiles"],
+      responses: {
+        "200": {
+          description: "Lista de perfiles obtenida correctamente",
+        },
+        "400": {
+          description: "Error al obtener perfiles",
         },
       },
     },

@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import {
   Drawer,
   Box,
@@ -10,54 +10,58 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Chip,
   Divider,
   Alert,
+  Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { Contract, TypeContract, Vacancy } from "../../../domain/models/contratos/contratos.entities";
+import {
+  Contract,
+  TypeContract,
+  Vacancy,
+} from "../../../domain/models/contratos/contratos.entities";
 import { Usuario } from "../../../domain/models/usuario/user.entities";
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSubmit: (data: Partial<Contract>) => void;
+  onCreate: (data: Partial<Contract>) => Promise<boolean>;
+  onUpdate: (data: Partial<Contract>) => Promise<boolean>;
   initialData: Contract | null;
-  // Props para recibir los datos desde el componente padre
-  perfiles?: Usuario[];
-  tiposContrato?: TypeContract[];
+  empleados?: Usuario[];
+  tiposContratos?: TypeContract[];
   vacantes?: Vacancy[];
-  // Opcional: loading state
-  isLoading?: boolean;
+  estratoList: number[];
 }
 
-const ContratoFormDrawer: FC<Props> = ({ 
-  open, 
-  onClose, 
-  onSubmit, 
+const canvasWidth = 600;
+const canvasHeight = 160;
+
+const ContratoFormDrawer: FC<Props> = ({
+  open,
+  onClose,
+  onCreate,
+  onUpdate,
   initialData,
-  perfiles = [],
-  tiposContrato = [],
+  empleados = [],
+  tiposContratos = [],
   vacantes = [],
-  isLoading = false
+  estratoList,
 }) => {
+  const [errorMsg, setErrorMsg] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const isEditMode = Boolean(initialData);
+
   const [formData, setFormData] = useState<Partial<Contract>>({
     title: "",
     estado: "borrador",
-    perfil_creador: undefined,
-    perfil_empleado: undefined,
     eps: "",
     estrato: 1,
     start_date: "",
-    end_date: "",
-    tipo_contrato: undefined,
+    end_date: null,
     arl: "",
-    firma_empleado: "",
-    firma_empleador: "",
-    vacante: undefined,
   });
 
-  // Estado para almacenar los IDs seleccionados
   const [selectedIds, setSelectedIds] = useState({
     perfil_creador: "",
     perfil_empleado: "",
@@ -65,156 +69,374 @@ const ContratoFormDrawer: FC<Props> = ({
     vacante: "",
   });
 
-  // 🔹 Cargar datos iniciales cuando se edita un contrato
+  const [firmaEmpleadoB64, setFirmaEmpleadoB64] = useState<string>("");
+  const [firmaEmpleadorB64, setFirmaEmpleadorB64] = useState<string>("");
+
+  const canvasEmpleadoRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasEmpleadorRef = useRef<HTMLCanvasElement | null>(null);
+
+  const drawingStateEmpleado = useRef({ drawing: false, lastX: 0, lastY: 0 });
+  const drawingStateEmpleador = useRef({ drawing: false, lastX: 0, lastY: 0 });
+
+  // Reset form cuando cambia el modo o se cierra
+  const resetForm = () => {
+    setFormData({
+      title: "",
+      estado: "borrador",
+      eps: "",
+      estrato: 1,
+      start_date: "",
+      end_date: null,
+      arl: "",
+    });
+    setSelectedIds({
+      perfil_creador: "",
+      perfil_empleado: "",
+      tipo_contrato: "",
+      vacante: "",
+    });
+    setFirmaEmpleadoB64("");
+    setFirmaEmpleadorB64("");
+    clearCanvas(canvasEmpleadoRef.current);
+    clearCanvas(canvasEmpleadorRef.current);
+    setErrorMsg("");
+  };
+
+  // Cargar datos cuando es edición
   useEffect(() => {
+    if (!open) return;
+
     if (initialData) {
-      // Extrae los IDs de los objetos anidados
-      const perfilCreadorId = typeof initialData.perfil_creador === 'object' 
-        ? initialData.perfil_creador?._id || ""
-        : initialData.perfil_creador || "";
-
-      const perfilEmpleadoId = typeof initialData.perfil_empleado === 'object'
-        ? initialData.perfil_empleado?._id || ""
-        : initialData.perfil_empleado || "";
-
-      const tipoContratoId = typeof initialData.tipo_contrato === 'object'
-        ? initialData.tipo_contrato?._id || ""
-        : initialData.tipo_contrato || "";
-
-      const vacanteId = typeof initialData.vacante === 'object'
-        ? initialData.vacante?._id || ""
-        : initialData.vacante || "";
-
-      setSelectedIds({
-        perfil_creador: perfilCreadorId,
-        perfil_empleado: perfilEmpleadoId,
-        tipo_contrato: tipoContratoId,
-        vacante: vacanteId,
-      });
-
-      // Formatear fechas para el input type="date"
-      const formatDate = (date: any) => {
-        if (!date) return "";
-        const d = new Date(date);
-        return d.toISOString().split('T')[0];
-      };
+      // MODO EDICIÓN
+      const formatDate = (date: any) =>
+        date ? new Date(date).toISOString().split("T")[0] : "";
 
       setFormData({
-        ...initialData,
-        start_date: formatDate(initialData.start_date),
-        end_date: formatDate(initialData.end_date),
-        perfil_creador: initialData.perfil_creador,
-        perfil_empleado: initialData.perfil_empleado,
-        tipo_contrato: initialData.tipo_contrato,
-        vacante: initialData.vacante,
+        _id: (initialData as any)._id,
+        title: initialData.title || "",
+        estado: initialData.estado || "borrador",
+        eps: initialData.eps || "",
+        estrato: (initialData.estrato as any) ?? 1,
+        start_date: formatDate((initialData as any).start_date),
+        end_date: formatDate((initialData as any).end_date) || null,
+        arl: initialData.arl || "",
       });
+
+      setSelectedIds({
+        perfil_creador:
+          (initialData as any).perfil_creador?._id ||
+          (initialData as any).perfil_creador ||
+          "",
+        perfil_empleado:
+          (initialData as any).perfil_empleado?._id ||
+          (initialData as any).perfil_empleado ||
+          "",
+        tipo_contrato:
+          (initialData as any).tipo_contrato?._id ||
+          (initialData as any).tipo_contrato ||
+          "",
+        vacante:
+          (initialData as any).vacante?._id ||
+          (initialData as any).vacante ||
+          "",
+      });
+
+      if ((initialData as any).firma_empleado) {
+        setFirmaEmpleadoB64((initialData as any).firma_empleado);
+      } else {
+        setFirmaEmpleadoB64("");
+        clearCanvas(canvasEmpleadoRef.current);
+      }
+
+      if ((initialData as any).firma_empleador) {
+        setFirmaEmpleadorB64((initialData as any).firma_empleador);
+      } else {
+        setFirmaEmpleadorB64("");
+        clearCanvas(canvasEmpleadorRef.current);
+      }
     } else {
-      // Resetear el formulario si no hay datos iniciales
-      setFormData({
-        title: "",
-        estado: "borrador",
-        perfil_creador: undefined,
-        perfil_empleado: undefined,
-        eps: "",
-        estrato: 1,
-        start_date: "",
-        end_date: "",
-        tipo_contrato: undefined,
-        arl: "",
-        firma_empleado: "",
-        firma_empleador: "",
-        vacante: undefined,
-      });
-      setSelectedIds({
-        perfil_creador: "",
-        perfil_empleado: "",
-        tipo_contrato: "",
-        vacante: "",
-      });
+      // MODO CREACIÓN
+      resetForm();
     }
+
+    setErrorMsg("");
   }, [initialData, open]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Cargar imágenes de firmas en canvas cuando está en modo edición
+  useEffect(() => {
+    if (!open || !isEditMode) return;
+
+    const timeout = setTimeout(() => {
+      if (firmaEmpleadoB64 && canvasEmpleadoRef.current) {
+        loadImageToCanvas(canvasEmpleadoRef.current, firmaEmpleadoB64);
+      }
+      if (firmaEmpleadorB64 && canvasEmpleadorRef.current) {
+        loadImageToCanvas(canvasEmpleadorRef.current, firmaEmpleadorB64);
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [open, isEditMode, firmaEmpleadoB64, firmaEmpleadorB64]);
+
+  // Helpers canvas
+  function getCtx(canvas: HTMLCanvasElement | null) {
+    if (!canvas) return null;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return null;
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.lineWidth = 2.5;
+    ctx.strokeStyle = "#111827";
+    return ctx;
+  }
+
+  function clearCanvas(canvas: HTMLCanvasElement | null) {
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function loadImageToCanvas(canvas: HTMLCanvasElement | null, base64: string) {
+    if (!canvas || !base64) return;
+    const ctx = getCtx(canvas);
+    if (!ctx) return;
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const ratio = Math.min(
+        canvas.width / img.width,
+        canvas.height / img.height
+      );
+      const w = img.width * ratio;
+      const h = img.height * ratio;
+      const x = (canvas.width - w) / 2;
+      const y = (canvas.height - h) / 2;
+      ctx.drawImage(img, x, y, w, h);
+    };
+    img.src = base64;
+  }
+
+  // Eventos dibujo empleado
+  const startDrawEmpleado = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasEmpleadoRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    drawingStateEmpleado.current.drawing = true;
+    drawingStateEmpleado.current.lastX = clientX - rect.left;
+    drawingStateEmpleado.current.lastY = clientY - rect.top;
   };
 
-  const handleSelectChange = (name: keyof typeof selectedIds, value: string) => {
-    setSelectedIds({ ...selectedIds, [name]: value });
+  const moveDrawEmpleado = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasEmpleadoRef.current;
+    if (!canvas || !drawingStateEmpleado.current.drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const ctx = getCtx(canvas);
+    if (!ctx) return;
+    ctx.beginPath();
+    ctx.moveTo(
+      drawingStateEmpleado.current.lastX,
+      drawingStateEmpleado.current.lastY
+    );
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    drawingStateEmpleado.current.lastX = x;
+    drawingStateEmpleado.current.lastY = y;
   };
 
-  const handleGuardar = () => {
-    // Preparar los datos para enviar al API
-    // Solo enviar IDs, no los objetos completos
-    const dataToSubmit: any = {
-      ...formData,
-      perfil_creador: selectedIds.perfil_creador || undefined,
-      perfil_empleado: selectedIds.perfil_empleado || undefined,
-      tipo_contrato: selectedIds.tipo_contrato || undefined,
-      vacante: selectedIds.vacante || undefined,
+  const endDrawEmpleado = () => {
+    drawingStateEmpleado.current.drawing = false;
+    const canvas = canvasEmpleadoRef.current;
+    if (!canvas) return;
+    const b64 = canvas.toDataURL("image/png");
+    setFirmaEmpleadoB64(b64);
+  };
+
+  // Eventos dibujo empleador
+  const startDrawEmpleador = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasEmpleadorRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    drawingStateEmpleador.current.drawing = true;
+    drawingStateEmpleador.current.lastX = clientX - rect.left;
+    drawingStateEmpleador.current.lastY = clientY - rect.top;
+  };
+
+  const moveDrawEmpleador = (e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasEmpleadorRef.current;
+    if (!canvas || !drawingStateEmpleador.current.drawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
+    const ctx = getCtx(canvas);
+    if (!ctx) return;
+    ctx.beginPath();
+    ctx.moveTo(
+      drawingStateEmpleador.current.lastX,
+      drawingStateEmpleador.current.lastY
+    );
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    drawingStateEmpleador.current.lastX = x;
+    drawingStateEmpleador.current.lastY = y;
+  };
+
+  const endDrawEmpleador = () => {
+    drawingStateEmpleador.current.drawing = false;
+    const canvas = canvasEmpleadorRef.current;
+    if (!canvas) return;
+    const b64 = canvas.toDataURL("image/png");
+    setFirmaEmpleadorB64(b64);
+  };
+
+  const clearFirmaEmpleado = () => {
+    clearCanvas(canvasEmpleadoRef.current);
+    setFirmaEmpleadoB64("");
+  };
+
+  const clearFirmaEmpleador = () => {
+    clearCanvas(canvasEmpleadorRef.current);
+    setFirmaEmpleadorB64("");
+  };
+
+  const handleInput = (e: any) => {
+    const name = e.target.name;
+    let value = e.target.value;
+    if (name === "estrato") value = Number(value);
+    setFormData((s) => ({ ...s, [name]: value }));
+  };
+
+  const handleSelect = (key: keyof typeof selectedIds, value: string) =>
+    setSelectedIds((s) => ({ ...s, [key]: value }));
+
+  // Validaciones comunes
+  const validateForm = (): string | null => {
+    if (!formData.title) return "El título es obligatorio";
+    if (!selectedIds.perfil_creador) return "Debe seleccionar un empleador";
+    if (!selectedIds.vacante) return "Debe seleccionar una vacante";
+    if (!selectedIds.perfil_empleado) return "Debe seleccionar un empleado";
+    if (!selectedIds.tipo_contrato) return "Debe seleccionar un tipo de contrato";
+    if (!formData.eps) return "Debe seleccionar una EPS";
+    if (!formData.arl) return "Debe seleccionar una ARL";
+    if (!formData.start_date) return "Debe seleccionar la fecha de inicio";
+    return null;
+  };
+
+  // Construir payload común
+  const buildPayload = (): Partial<Contract> => {
+    const payload: any = {
+      title: formData.title!,
+      estado: formData.estado!,
+      eps: formData.eps!,
+      arl: formData.arl!,
+      estrato: Number(formData.estrato),
+      start_date: formData.start_date!,
+      perfil_creador: selectedIds.perfil_creador,
+      perfil_empleado: selectedIds.perfil_empleado,
+      tipo_contrato: selectedIds.tipo_contrato,
+      vacante: selectedIds.vacante,
+      firma_empleado: firmaEmpleadoB64,
+      firma_empleador: firmaEmpleadorB64,
     };
 
-    // Eliminar campos que son objetos completos (el API espera IDs)
-    if (typeof dataToSubmit.perfil_creador === 'object') {
-      dataToSubmit.perfil_creador = selectedIds.perfil_creador;
-    }
-    if (typeof dataToSubmit.perfil_empleado === 'object') {
-      dataToSubmit.perfil_empleado = selectedIds.perfil_empleado;
-    }
-    if (typeof dataToSubmit.tipo_contrato === 'object') {
-      dataToSubmit.tipo_contrato = selectedIds.tipo_contrato;
-    }
-    if (typeof dataToSubmit.vacante === 'object') {
-      dataToSubmit.vacante = selectedIds.vacante;
+    // Solo incluir end_date si tiene valor
+    if (formData.end_date) {
+      payload.end_date = formData.end_date;
     }
 
-    onSubmit(dataToSubmit);
+    return payload;
   };
 
-  // Función para mostrar información del perfil seleccionado
-  const renderPerfilInfo = (perfilId: string) => {
-    const perfil = perfiles.find(p => p._id === perfilId);
-    if (!perfil) return null;
-    
-    return (
-      <Box sx={{ mt: 1, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
-        <Typography variant="caption" color="text.secondary">
-          Email: {perfil.email}
-        </Typography>
-        <br />
-        <Typography variant="caption" color="text.secondary">
-          Documento: {perfil.document}
-        </Typography>
-      </Box>
-    );
+  // LÓGICA DE CREACIÓN
+  const handleCrear = async () => {
+    const error = validateForm();
+    if (error) {
+      setErrorMsg(error);
+      return;
+    }
+
+    setErrorMsg("");
+    setIsSaving(true);
+
+    const payload = buildPayload();
+
+    try {
+      const success = await onCreate(payload);
+      if (success) {
+        resetForm();
+        onClose();
+      }
+    } catch (err: any) {
+      setErrorMsg(err?.message || "Error creando contrato");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  // Función para mostrar información de la vacante seleccionada
-  const renderVacanteInfo = (vacanteId: string) => {
-    const vacante = vacantes.find(v => v._id === vacanteId);
-    if (!vacante) return null;
-    
-    return (
-      <Box sx={{ mt: 1, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
-        <Typography variant="caption" color="text.secondary">
-          Descripción: {vacante.description || 'N/A'}
-        </Typography>
-        <br />
-        <Typography variant="caption" color="text.secondary">
-          Salario: {vacante.salary || 'N/A'}
-        </Typography>
-        <br />
-        <Typography variant="caption" color="text.secondary">
-          Modalidad: {vacante.type_modality || 'N/A'}
-        </Typography>
-      </Box>
-    );
+  // LÓGICA DE EDICIÓN
+  const handleEditar = async () => {
+    const error = validateForm();
+    if (error) {
+      setErrorMsg(error);
+      return;
+    }
+
+    if (!initialData?._id) {
+      setErrorMsg("ID del contrato no encontrado");
+      return;
+    }
+
+    setErrorMsg("");
+    setIsSaving(true);
+
+    const payload = buildPayload();
+    // NO incluir _id en el payload, se envía por separado en la URL
+    // payload._id = initialData._id; // ❌ ELIMINAR ESTA LÍNEA
+
+    try {
+      const success = await onUpdate(payload);
+      if (success) {
+        onClose();
+      }
+    } catch (err: any) {
+      setErrorMsg(err?.message || "Error actualizando contrato");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Handler unificado que decide qué hacer
+  const handleGuardar = () => {
+    if (isEditMode) {
+      handleEditar();
+    } else {
+      handleCrear();
+    }
   };
 
   return (
     <Drawer anchor="right" open={open} onClose={onClose}>
       <Box
         sx={{
-          width: { xs: "100%", sm: 550 },
+          width: { xs: "100%", sm: 620 },
           padding: 3,
           display: "flex",
           flexDirection: "column",
@@ -223,270 +445,300 @@ const ContratoFormDrawer: FC<Props> = ({
           overflowY: "auto",
         }}
       >
-        {/* Botón cerrar */}
-        <IconButton 
-          onClick={onClose} 
-          sx={{ position: "absolute", top: 10, right: 10, zIndex: 1 }}
+        <IconButton
+          onClick={onClose}
+          sx={{ position: "absolute", top: 10, right: 10 }}
         >
           <CloseIcon />
         </IconButton>
 
-        <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
-          {initialData ? "Editar Contrato" : "Nuevo Contrato"}
+        <Typography variant="h5" fontWeight="bold">
+          {isEditMode ? "Editar Contrato" : "Nuevo Contrato"}
         </Typography>
 
-        {initialData && (
-          <Alert severity="info" sx={{ mb: 2 }}>
-            ID: {initialData._id}
-          </Alert>
-        )}
+        {errorMsg && <Alert severity="error">{errorMsg}</Alert>}
 
-        <Divider sx={{ mb: 1 }}>Información General</Divider>
+        <Divider>Información General</Divider>
 
-        {/* Título */}
         <TextField
-          label="Título del Contrato"
+          label="Título"
           name="title"
           value={formData.title || ""}
-          onChange={handleChange}
+          onChange={handleInput}
           fullWidth
-          required
         />
 
-        {/* Estado */}
-        <TextField
-          label="Estado"
-          name="estado"
-          value={formData.estado || "borrador"}
-          onChange={handleChange}
-          fullWidth
-          select
-          required
-        >
-          <MenuItem value="borrador">Borrador</MenuItem>
-          <MenuItem value="activo">Activo</MenuItem>
-          <MenuItem value="terminado">Terminado</MenuItem>
-          <MenuItem value="cancelado">Cancelado</MenuItem>
-        </TextField>
-
-        <Divider sx={{ my: 1 }}>Partes del Contrato</Divider>
-
-        {/* Perfil creador */}
-        <FormControl fullWidth required>
-          <InputLabel>Perfil Creador (Empleador)</InputLabel>
+        <FormControl fullWidth>
+          <InputLabel>Estado</InputLabel>
           <Select
-            name="perfil_creador"
+            name="estado"
+            value={formData.estado || "borrador"}
+            onChange={handleInput}
+            label="Estado"
+          >
+            {[
+              "borrador",
+              "por revisar",
+              "aprobado",
+              "por firmar",
+              "firmado",
+              "activo",
+              "vencido",
+              "cancelado",
+            ].map((estado) => (
+              <MenuItem key={estado} value={estado}>
+                {estado}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <Divider>Partes</Divider>
+
+        <FormControl fullWidth>
+          <InputLabel>Empleador</InputLabel>
+          <Select
             value={selectedIds.perfil_creador}
-            onChange={(e) => handleSelectChange("perfil_creador", e.target.value)}
-            label="Perfil Creador (Empleador)"
+            onChange={(e) => handleSelect("perfil_creador", e.target.value)}
           >
-            <MenuItem value="">
-              <em>Seleccione un perfil</em>
-            </MenuItem>
-            {perfiles.map((p) => (
+            {empleados.map((p) => (
               <MenuItem key={p._id} value={p._id}>
-                {p.name} {p.lastname} - {p.document}
+                {p.name} {p.lastname} {p.document ? `- ${p.document}` : ""}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        {selectedIds.perfil_creador && renderPerfilInfo(selectedIds.perfil_creador)}
 
-        {/* Perfil empleado */}
-        <FormControl fullWidth required>
-          <InputLabel>Perfil Empleado</InputLabel>
+        <FormControl fullWidth>
+          <InputLabel>Empleado</InputLabel>
           <Select
-            name="perfil_empleado"
             value={selectedIds.perfil_empleado}
-            onChange={(e) => handleSelectChange("perfil_empleado", e.target.value)}
-            label="Perfil Empleado"
+            onChange={(e) => handleSelect("perfil_empleado", e.target.value)}
           >
-            <MenuItem value="">
-              <em>Seleccione un perfil</em>
-            </MenuItem>
-            {perfiles.map((p) => (
+            {empleados.map((p) => (
               <MenuItem key={p._id} value={p._id}>
-                {p.name} {p.lastname} - {p.document}
+                {p.name} {p.lastname} {p.document ? `- ${p.document}` : ""}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        {selectedIds.perfil_empleado && renderPerfilInfo(selectedIds.perfil_empleado)}
 
-        <Divider sx={{ my: 1 }}>Tipo de Contrato y Vacante</Divider>
+        <Divider>Tipo / Vacante</Divider>
 
-        {/* Tipo de contrato */}
-        <FormControl fullWidth required>
+        <FormControl fullWidth>
           <InputLabel>Tipo de Contrato</InputLabel>
           <Select
-            name="tipo_contrato"
             value={selectedIds.tipo_contrato}
-            onChange={(e) => handleSelectChange("tipo_contrato", e.target.value)}
-            label="Tipo de Contrato"
+            onChange={(e) => handleSelect("tipo_contrato", e.target.value)}
           >
-            <MenuItem value="">
-              <em>Seleccione un tipo</em>
-            </MenuItem>
-            {tiposContrato.map((t) => (
+            {tiposContratos.map((t) => (
               <MenuItem key={t._id} value={t._id}>
                 {t.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        {selectedIds.tipo_contrato && (
-          <Box sx={{ mt: 1, p: 1, bgcolor: 'grey.100', borderRadius: 1 }}>
-            <Typography variant="caption" color="text.secondary">
-              {tiposContrato.find(t => t._id === selectedIds.tipo_contrato)?.description || ''}
-            </Typography>
-          </Box>
-        )}
 
-        {/* Vacante */}
         <FormControl fullWidth>
-          <InputLabel>Vacante Asociada</InputLabel>
+          <InputLabel>Vacante</InputLabel>
           <Select
-            name="vacante"
             value={selectedIds.vacante}
-            onChange={(e) => handleSelectChange("vacante", e.target.value)}
-            label="Vacante Asociada"
+            onChange={(e) => handleSelect("vacante", e.target.value)}
           >
             <MenuItem value="">
               <em>Sin vacante</em>
             </MenuItem>
             {vacantes.map((v) => (
               <MenuItem key={v._id} value={v._id}>
-                {v.tittle}
+                {v.tittle || v.title}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
-        {selectedIds.vacante && renderVacanteInfo(selectedIds.vacante)}
 
-        <Divider sx={{ my: 1 }}>Información Laboral</Divider>
+        <Divider>Información Laboral</Divider>
 
-        {/* EPS */}
         <TextField
           label="EPS"
           name="eps"
-          value={formData.eps || ""}
-          onChange={handleChange}
+          select
           fullWidth
-          required
-        />
+          value={formData.eps || ""}
+          onChange={handleInput}
+        >
+          {[
+            "Nueva EPS",
+            "Sanitas",
+            "Sura",
+            "Compensar",
+            "Salud Total",
+            "Coomeva",
+            "Medimás",
+            "Mutual Ser",
+            "Capresoca",
+            "Famisanar",
+          ].map((eps) => (
+            <MenuItem key={eps} value={eps}>
+              {eps}
+            </MenuItem>
+          ))}
+        </TextField>
 
-        {/* ARL */}
         <TextField
           label="ARL"
           name="arl"
-          value={formData.arl || ""}
-          onChange={handleChange}
+          select
           fullWidth
-          required
-        />
+          value={formData.arl || ""}
+          onChange={handleInput}
+        >
+          {["Sura", "Bolívar", "Colmena", "Positiva", "Equidad", "Mapfre"].map(
+            (arl) => (
+              <MenuItem key={arl} value={arl}>
+                {arl}
+              </MenuItem>
+            )
+          )}
+        </TextField>
 
-        {/* Estrato */}
         <TextField
           label="Estrato"
           name="estrato"
-          type="number"
-          value={formData.estrato || 1}
-          onChange={handleChange}
+          select
           fullWidth
-          inputProps={{ min: 1, max: 6 }}
-        />
+          value={formData.estrato || 1}
+          onChange={handleInput}
+        >
+          {estratoList.map((n) => (
+            <MenuItem key={n} value={n}>
+              {n}
+            </MenuItem>
+          ))}
+        </TextField>
 
-        <Divider sx={{ my: 1 }}>Fechas</Divider>
+        <Divider>Fechas</Divider>
 
-        {/* Fecha Inicio */}
         <TextField
-          label="Fecha de Inicio"
+          label="Fecha Inicio"
           name="start_date"
           type="date"
           value={formData.start_date || ""}
-          onChange={handleChange}
+          onChange={handleInput}
           fullWidth
-          required
           InputLabelProps={{ shrink: true }}
         />
 
-        {/* Fecha Fin */}
         <TextField
-          label="Fecha de Fin (opcional)"
+          label="Fecha Fin"
           name="end_date"
           type="date"
           value={formData.end_date || ""}
-          onChange={handleChange}
+          onChange={handleInput}
           fullWidth
           InputLabelProps={{ shrink: true }}
-          helperText="Dejar vacío para contratos indefinidos"
         />
 
-        {initialData?.firma_empleado && (
-          <>
-            <Divider sx={{ my: 1 }}>Firmas</Divider>
-            <Box>
-              <Typography variant="subtitle2" gutterBottom>
-                Firma del Empleado
-              </Typography>
-              <Box
-                component="img"
-                src={initialData.firma_empleado}
-                alt="Firma Empleado"
-                sx={{
-                  width: '100%',
-                  maxHeight: 150,
-                  objectFit: 'contain',
-                  border: '1px solid',
-                  borderColor: 'grey.300',
-                  borderRadius: 1,
-                  bgcolor: 'white',
+        <Divider>Firmas (dibujar con mouse / touch)</Divider>
+
+        <Stack direction="column" spacing={1}>
+          <Box>
+            <Typography variant="subtitle2">Firma Empleado</Typography>
+            <Box
+              sx={{
+                border: "1px solid rgba(0,0,0,0.12)",
+                width: canvasWidth,
+                height: canvasHeight,
+                position: "relative",
+                mb: 1,
+              }}
+            >
+              <canvas
+                ref={canvasEmpleadoRef}
+                width={canvasWidth}
+                height={canvasHeight}
+                style={{
+                  touchAction: "none",
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
                 }}
+                onMouseDown={startDrawEmpleado}
+                onMouseMove={moveDrawEmpleado}
+                onMouseUp={endDrawEmpleado}
+                onMouseLeave={endDrawEmpleado}
+                onTouchStart={startDrawEmpleado}
+                onTouchMove={moveDrawEmpleado}
+                onTouchEnd={endDrawEmpleado}
               />
             </Box>
-          </>
-        )}
-
-        {initialData?.firma_empleador && (
-          <Box>
-            <Typography variant="subtitle2" gutterBottom>
-              Firma del Empleador
-            </Typography>
-            <Box
-              component="img"
-              src={initialData.firma_empleador}
-              alt="Firma Empleador"
-              sx={{
-                width: '100%',
-                maxHeight: 150,
-                objectFit: 'contain',
-                border: '1px solid',
-                borderColor: 'grey.300',
-                borderRadius: 1,
-                bgcolor: 'white',
-              }}
-            />
+            <Button
+              variant="contained"
+              color="inherit"
+              size="small"
+              onClick={clearFirmaEmpleado}
+            >
+              Limpiar Firma
+            </Button>
           </Box>
-        )}
 
-        {/* Botones */}
-        <Box sx={{ display: "flex", justifyContent: "space-between", mt: 3, gap: 2 }}>
-          <Button 
-            onClick={onClose} 
-            color="error" 
-            variant="outlined"
+          <Box>
+            <Typography variant="subtitle2">Firma Empleador</Typography>
+            <Box
+              sx={{
+                border: "1px solid rgba(0,0,0,0.12)",
+                width: canvasWidth,
+                height: canvasHeight,
+                position: "relative",
+                mb: 1,
+              }}
+            >
+              <canvas
+                ref={canvasEmpleadorRef}
+                width={canvasWidth}
+                height={canvasHeight}
+                style={{
+                  touchAction: "none",
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                }}
+                onMouseDown={startDrawEmpleador}
+                onMouseMove={moveDrawEmpleador}
+                onMouseUp={endDrawEmpleador}
+                onMouseLeave={endDrawEmpleador}
+                onTouchStart={startDrawEmpleador}
+                onTouchMove={moveDrawEmpleador}
+                onTouchEnd={endDrawEmpleador}
+              />
+            </Box>
+            <Button
+              variant="contained"
+              color="inherit"
+              size="small"
+              onClick={clearFirmaEmpleador}
+            >
+              Limpiar Firma
+            </Button>
+          </Box>
+        </Stack>
+
+        <Box sx={{ display: "flex", gap: 2, mt: 3 }}>
+          <Button
+            onClick={onClose}
+            color="error"
             fullWidth
-            disabled={isLoading}
+            variant="outlined"
+            disabled={isSaving}
           >
             Cancelar
           </Button>
-          <Button 
-            onClick={handleGuardar} 
-            variant="contained"
+          <Button
+            onClick={handleGuardar}
             fullWidth
-            disabled={isLoading}
+            variant="contained"
+            disabled={isSaving}
           >
-            {isLoading ? "Guardando..." : "Guardar"}
+            {isSaving ? "Guardando..." : isEditMode ? "Actualizar" : "Crear"}
           </Button>
         </Box>
       </Box>

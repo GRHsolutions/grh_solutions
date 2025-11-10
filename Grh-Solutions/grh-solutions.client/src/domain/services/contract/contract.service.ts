@@ -4,7 +4,7 @@ const BASE_URL = "http://localhost:5200/api/contract";
 
 function getToken() {
   const raw = localStorage.getItem("usr_items_token") || "";
-  return raw.replace(/^"|"$/g, ""); // 🔥 elimina comillas al inicio/fin
+  return raw.replace(/^"|"$/g, "");
 }
 
 async function request<T>(
@@ -31,21 +31,18 @@ async function request<T>(
   return await res.json();
 }
 
-// ---------------------------------------------------------------------
-// SERVICES
-// ---------------------------------------------------------------------
+// =====================================================================
+// SERVICIOS DE CONTRATOS
+// =====================================================================
 
-/** Obtener lista completa de contratos */
 export function getContracts(signal?: AbortSignal) {
   return request<Contract[]>("/getAll", { method: "GET" }, signal);
 }
 
-/** Obtener contrato por ID */
 export function getContractById(id: string, signal?: AbortSignal) {
   return request<Contract>(`/getById?id=${id}`, { method: "GET" }, signal);
 }
 
-/** Crear un contrato */
 export function createContract(data: Partial<Contract>, signal?: AbortSignal) {
   return request<Contract>(
     "/create",
@@ -57,29 +54,80 @@ export function createContract(data: Partial<Contract>, signal?: AbortSignal) {
   );
 }
 
-/** Actualizar contrato */
-export function updateContract(id: string, data: Partial<Contract>, signal?: AbortSignal) {
+// ✅ VERSIÓN CORREGIDA - ID por query parameter (como espera tu backend actual)
+export function updateContract(
+  id: string,
+  data: Partial<Contract>,
+  signal?: AbortSignal
+) {
+  // Crear payload sin el _id
+  const payload = { ...data };
+  delete (payload as any)._id;
+
   return request<Contract>(
-    "/update",
+    `/update?id=${id}`, // ✅ ID por query parameter
     {
       method: "PUT",
-      body: JSON.stringify({ id, ...data }),
+      body: JSON.stringify(payload),
     },
     signal
   );
 }
 
-/** Eliminar contrato */
 export function deleteContract(id: string, signal?: AbortSignal) {
   return request<{ message: string }>(
-    "/delete",
+    `/delete?id=${id}`, // ✅ Consistente con el backend
     {
       method: "DELETE",
-      body: JSON.stringify({ id }),
     },
     signal
   );
 }
+
+// =====================================================================
+// SERVICIOS PARA LOS SELECTS
+// =====================================================================
+
+const BASE_PROFILES = "http://localhost:5200/api/profiles";
+const BASE_TYPES = "http://localhost:5200/api/typeContract";
+const BASE_VACANTS = "http://localhost:5200/api/vacancies";
+
+async function requestExternal<T>(
+  url: string,
+  method: string = "GET",
+  signal?: AbortSignal
+): Promise<T> {
+  const res = await fetch(url, {
+    method,
+    signal,
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+  if (!res.ok) throw new Error("Error cargando datos externos");
+  return await res.json();
+}
+
+export function getLoggedProfile(signal?: AbortSignal) {
+  return requestExternal<any>(`${BASE_PROFILES}/getByUserId`, "GET", signal);
+}
+
+export function getEmployees(signal?: AbortSignal) {
+  return requestExternal<any[]>(`${BASE_PROFILES}/getAll`, "GET", signal);
+}
+
+export function getContractTypes(signal?: AbortSignal) {
+  return requestExternal<any[]>(`${BASE_TYPES}/getAll`, "GET", signal);
+}
+
+export function getVacants(signal?: AbortSignal) {
+  return requestExternal<any[]>(`${BASE_VACANTS}/getAll`, "GET", signal);
+}
+
+// =====================================================================
+// EXPORT DEFAULT
+// =====================================================================
 
 export default {
   getContracts,
@@ -87,4 +135,8 @@ export default {
   createContract,
   updateContract,
   deleteContract,
+  getLoggedProfile,
+  getEmployees,
+  getContractTypes,
+  getVacants,
 };
