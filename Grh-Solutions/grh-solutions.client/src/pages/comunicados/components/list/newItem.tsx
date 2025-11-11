@@ -137,6 +137,7 @@ const NewItem: React.FC<NewItemProps> = ({
         >
         {(item.type === "publication-with-images" && item.images.length > 0)  && (
           <ImageGrid 
+            height={"50rem"}
             images={item.images}
           />
         )}
