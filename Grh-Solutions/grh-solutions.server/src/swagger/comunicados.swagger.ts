@@ -44,6 +44,40 @@ export const newPaths: Record<string, PathItem> = {
         400: { description: "Error en la petición" },
       },
     },
+    put: {
+      summary: "Editar un horario",
+      tags: ["News"],
+      parameters: [
+        {
+          name: "id",
+          in: "query",
+          required: false,
+          schema: { type: "string" },
+          description: "ID del grupo para filtrar",
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/NewsForm",
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: "Comunicado editado",
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/News" },
+            },
+          },
+        },
+        400: { description: "Error de validación" },
+      },
+    },
     post: {
       summary: "Crear un horario",
       tags: ["News"],
