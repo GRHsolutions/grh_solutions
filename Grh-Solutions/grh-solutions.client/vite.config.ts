@@ -7,18 +7,15 @@ export default defineConfig({
   server: {
     proxy: {
       '^/api/': {
-        target: 'http://localhost:3000', // definir puerto donde el backend se aloja
+        target: 'http://localhost:3000', // backend
         secure: false,
         ws: true,
-      }
+      },
     },
-    port: 5200, // definir otro fucking puerto de ejecucion.
+    port: 5200, 
+    host: '0.0.0.0',
   },
   define: {
-    // Some libraries use the global object, even though it doesn't exist in the browser.
-    // Alternatively, we could add <script>window.global = window;</script> to index.html.
-    // https://github.com/vitejs/vite/discussions/5912
     global: {},
   },
-
 })

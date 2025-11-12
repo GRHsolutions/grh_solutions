@@ -11,15 +11,21 @@ export const requestsController = {
   create: async (req: Request, res: Response) => {
     try {
       const userId = (req as any).userId;
-      const { title, type_request, infoDx, file } = req.body;
+      const { title, type_request, infoDx, file, createdAt } = req.body;
 
       if (!userId) return res.status(401).json({ message: "Token inválido" });
       if (!title) return res.status(400).json({ message: "Título requerido" });
-      if (!type_request) return res.status(400).json({ message: "Tipo requerido" });
-
-      // 1) Crear la solicitud
+      if (!type_request)
+        return res.status(400).json({ message: "Tipo requerido" });
       const newReq = await requestsService.create(
-        { title, status: "pendiente", type_request, infoDx, file },
+        {
+          title,
+          status: "pendiente",
+          type_request,
+          infoDx,
+          file,
+          ...(createdAt && { createdAt: new Date(createdAt) }), 
+        },
         userId
       );
 
@@ -64,7 +70,8 @@ export const requestsController = {
   getById: async (req: Request, res: Response) => {
     try {
       const { id } = req.query;
-      if (!id || typeof id !== "string") return res.status(400).json({ message: "ID requerido" });
+      if (!id || typeof id !== "string")
+        return res.status(400).json({ message: "ID requerido" });
 
       const data = await requestsService.getById(id);
       if (!data) return res.status(404).json({ message: "No encontrada" });
@@ -80,12 +87,14 @@ export const requestsController = {
     try {
       const userId = (req as any).userId;
       const { id } = req.query;
-      if (!id || typeof id !== "string") return res.status(400).json({ message: "ID requerido" });
+      if (!id || typeof id !== "string")
+        return res.status(400).json({ message: "ID requerido" });
       if (!userId) return res.status(401).json({ message: "Token inválido" });
 
       // 1) Obtener la solicitud antes de actualizar para detectar diferencias
       const oldRequest = await requestsService.getById(id);
-      if (!oldRequest) return res.status(404).json({ message: "Solicitud no encontrada" });
+      if (!oldRequest)
+        return res.status(404).json({ message: "Solicitud no encontrada" });
 
       // 2) Preparar y ejecutar actualización
       const { title, status, type_request, infoDx, file } = req.body;
@@ -93,7 +102,8 @@ export const requestsController = {
       if (file !== undefined) body.file = file;
 
       const updated = await requestsService.update(id, body);
-      if (!updated) return res.status(404).json({ message: "Solicitud no encontrada" });
+      if (!updated)
+        return res.status(404).json({ message: "Solicitud no encontrada" });
 
       // 3) Obtener perfil del usuario que hace el cambio
       const profile = await profileService.getByUserId(userId);
@@ -102,16 +112,32 @@ export const requestsController = {
       const changes: string[] = [];
 
       if (status !== undefined && oldRequest.status !== status) {
-        changes.push(`Se cambió el estado de '${oldRequest.status}' a '${status}'`);
+        changes.push(
+          `Se cambió el estado de '${oldRequest.status}' a '${status}'`
+        );
       }
       if (title !== undefined && (oldRequest.title ?? "") !== (title ?? "")) {
-        changes.push(`Se cambió el título de '${oldRequest.title ?? ""}' a '${title}'`);
+        changes.push(
+          `Se cambió el título de '${oldRequest.title ?? ""}' a '${title}'`
+        );
       }
-      if (type_request !== undefined && (oldRequest.type_request ?? "") !== (type_request ?? "")) {
-        changes.push(`Se cambió el tipo de '${oldRequest.type_request ?? ""}' a '${type_request}'`);
+      if (
+        type_request !== undefined &&
+        (oldRequest.type_request ?? "") !== (type_request ?? "")
+      ) {
+        changes.push(
+          `Se cambió el tipo de '${
+            oldRequest.type_request ?? ""
+          }' a '${type_request}'`
+        );
       }
-      if (infoDx !== undefined && (oldRequest.infoDx ?? "") !== (infoDx ?? "")) {
-        changes.push(`Se cambió la infoDx de '${oldRequest.infoDx ?? ""}' a '${infoDx}'`);
+      if (
+        infoDx !== undefined &&
+        (oldRequest.infoDx ?? "") !== (infoDx ?? "")
+      ) {
+        changes.push(
+          `Se cambió la infoDx de '${oldRequest.infoDx ?? ""}' a '${infoDx}'`
+        );
       }
       // Comparación simple de archivos (si los envías como array)
       if (file !== undefined) {
@@ -141,10 +167,12 @@ export const requestsController = {
   delete: async (req: Request, res: Response) => {
     try {
       const { id } = req.query;
-      if (!id || typeof id !== "string") return res.status(400).json({ message: "ID requerido" });
+      if (!id || typeof id !== "string")
+        return res.status(400).json({ message: "ID requerido" });
 
       const deleted = await requestsService.delete(id);
-      if (!deleted) return res.status(404).json({ message: "Solicitud no encontrada" });
+      if (!deleted)
+        return res.status(404).json({ message: "Solicitud no encontrada" });
 
       return res.status(200).json({ message: "Solicitud desactivada" });
     } catch (e: any) {

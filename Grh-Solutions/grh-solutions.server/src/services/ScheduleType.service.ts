@@ -1,5 +1,6 @@
-import { ScheduleTypeModel } from "../models/scheduleType.model";
+
 import { scheduleTypeFilter } from "../filters/scheduleType.filter";
+import { ScheduleTypeModel } from "../models/ScheduleType.model";
 
 export const scheduleTypeService = {
   create: async (entity: {

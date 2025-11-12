@@ -15,13 +15,22 @@ function App() {
   React.useEffect(() => {
     http.setLogout(logout); // Configurar el logout globalmente si quieres
   }, []);
-  
+
   return (
-      <Suspense>
-        <NavBar />
-        {routes}
-      </Suspense>
+    <Suspense>
+      <NavBar />
+      {routes}
+    </Suspense>
   );
+
+  // return (
+  //   <SnackbarProvider maxSnack={3} autoHideDuration={4000}> // eso pa que wey 
+  //     <Suspense>
+  //       <NavBar />
+  //       {routes}
+  //     </Suspense>
+  //   </SnackbarProvider>
+  // );
 }
 
 export default App;

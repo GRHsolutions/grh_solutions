@@ -6,11 +6,15 @@ export const vacanciesService = {
     return await VacanciesModel.create(entity);
   },
 
-  getAll: async (filter: any) => {
+  getAll: async (filter: { tittle?: string; isRemoto?: string }) => {
     const query: any = {};
 
     if (filter.tittle && filter.tittle.trim() !== "") {
       query.tittle = { $regex: filter.tittle, $options: "i" };
+    }
+
+    if (filter.isRemoto && filter.isRemoto.trim() !== "") {
+      query.type_modality = { $regex: filter.isRemoto, $options: "i" };
     }
 
     return await VacanciesModel.find(query)

@@ -838,28 +838,28 @@ export const swaggerPaths: Paths = {
       },
     },
   },
-"/api/user/getById/{id}": {
-  get: {
-    summary: "Obtener usuario por ID",
-    tags: ["User"],
-    parameters: [
-      {
-        name: "id",
-        in: "path",
-        required: true,
-        schema: {
-          type: "string"
+  "/api/user/getById/{id}": {
+    get: {
+      summary: "Obtener usuario por ID",
+      tags: ["User"],
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          schema: {
+            type: "string",
+          },
+          description: "ID del usuario",
         },
-        description: "ID del usuario"
-      }
-    ],
-    responses: {
-      "200": { description: "Usuario encontrado" },
-      "400": { description: "ID inválido" },
-      "404": { description: "Usuario no encontrado" }
-    }
-  }
-},
+      ],
+      responses: {
+        "200": { description: "Usuario encontrado" },
+        "400": { description: "ID inválido" },
+        "404": { description: "Usuario no encontrado" },
+      },
+    },
+  },
   "/api/user/updateUser": {
     put: {
       summary: "Actualizar cualquier usuario por ID",
@@ -1178,11 +1178,32 @@ export const swaggerPaths: Paths = {
   },
   "/api/vacancies/getAll": {
     get: {
-      summary: "Get all vacancies",
+      summary: "Obtener todas las vacantes (con filtros opcionales)",
       tags: ["Vacantes"],
+      parameters: [
+        {
+          name: "tittle",
+          in: "query",
+          description: "Filtrar por título de la vacante (opcional)",
+          required: false,
+          schema: {
+            type: "string",
+          },
+        },
+        {
+          name: "isRemoto",
+          in: "query",
+          description:
+            "Filtrar por modalidad de trabajo (Remoto, Presencial, Híbrido) (opcional)",
+          required: false,
+          schema: {
+            type: "string",
+          },
+        },
+      ],
       responses: {
-        201: {
-          description: "Vacancies retrieved successfully",
+        "200": {
+          description: "Vacantes obtenidas correctamente",
           content: {
             "application/json": {
               schema: {
@@ -1194,12 +1215,13 @@ export const swaggerPaths: Paths = {
             },
           },
         },
-        400: {
-          description: "Error retrieving vacancies",
+        "500": {
+          description: "Error al obtener las vacantes",
         },
       },
     },
   },
+
   "/api/vacancies/update": {
     put: {
       summary: "Update a vacancy",
@@ -3254,6 +3276,20 @@ export const swaggerPaths: Paths = {
         },
         "404": {
           description: "Perfil no encontrado",
+        },
+      },
+    },
+  },
+  "/api/profiles/getAll": {
+    get: {
+      summary: "Obtener todos los perfiles",
+      tags: ["Profiles"],
+      responses: {
+        "200": {
+          description: "Lista de perfiles obtenida correctamente",
+        },
+        "400": {
+          description: "Error al obtener perfiles",
         },
       },
     },
