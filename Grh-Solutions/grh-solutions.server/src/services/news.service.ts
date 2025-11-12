@@ -64,9 +64,9 @@ export const newsService = {
   },
 
   create: async (entity: object) => {
-    const newNew = new NewsModel(entity).populate("madeBy", "name email"); // aquí seleccionas qué campos del usuario mostrar;
+    const newNew = new NewsModel(entity)
 
-    return NewsModel.create(newNew);
+    return (await NewsModel.create(newNew)).populate("madeBy", "name email"); // aquí seleccionas qué campos del usuario mostrar
   },
 
   delete: async (id: string) => {
