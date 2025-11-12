@@ -218,7 +218,10 @@ export const ViewMail = ({}: ViewMailProps) => {
                 multirows
                 rows={3}
                 lenght={400}
-                disabled={loading.fetch_comments || !hasPermission('POST', "/api/commentary/")}
+                disabled={
+                  loading.fetch_comments ||
+                  !hasPermission("POST", "/api/commentary/")
+                }
                 sx={{
                   width: "100%",
                 }}
@@ -284,9 +287,16 @@ export const ViewMail = ({}: ViewMailProps) => {
                         <CircularProgress color="error" />
                       </Box>
                     ) : comments.length == 0 ? (
-                      <Typography display={"flex"} justifyContent={"center"}>
-                        No hay comentarios
-                      </Typography>
+                      <Alert
+                        severity="info"
+                        sx={{
+                          width: "auto",
+                        }}
+                      >
+                        <Typography display={"flex"} justifyContent={"center"}>
+                          No hay comentarios
+                        </Typography>
+                      </Alert>
                     ) : (
                       <>
                         {comments.map((item) => {

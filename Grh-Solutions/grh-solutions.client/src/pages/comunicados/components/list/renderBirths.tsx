@@ -33,7 +33,14 @@ const RenderBirths: React.FC<RenderBirthsProps> = ({}: RenderBirthsProps) => {
     >
       {hasPermission("GET", "/api/news/births") ? (
         birthdays.length <= 0 ? (
-          <Typography variant="body1">Hoy no cumple naiden</Typography>
+          <Alert
+            severity="info"
+            sx={{
+              width: "auto",
+            }}
+          >
+            <Typography>No hay cumpleaños hoy</Typography>
+          </Alert>
         ) : (
           birthdays.map((birthday: Birthday) => (
             <Grid2

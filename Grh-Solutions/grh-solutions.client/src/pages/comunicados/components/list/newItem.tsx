@@ -88,10 +88,10 @@ const NewItem: React.FC<NewItemProps> = ({
             </Avatar>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
               <Typography variant="subtitle1" fontWeight="bold">
-                {item.madeBy.email}
+                {item.madeBy.email || ""}
               </Typography>
               <Typography variant="caption" color="textSecondary" mt={'-6px'}>
-                {formatearFecha(item.createdAt)}
+                {formatearFecha(item.createdAt)|| ""}
               </Typography>
             </Box>
           </Box>
@@ -137,6 +137,7 @@ const NewItem: React.FC<NewItemProps> = ({
         >
         {(item.type === "publication-with-images" && item.images.length > 0)  && (
           <ImageGrid 
+            height={"50rem"}
             images={item.images}
           />
         )}

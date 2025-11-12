@@ -59,9 +59,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (res.user.photo)
         localStorageUtil.set("usr_items_photo", res.user.photo);
 
-      // 3️⃣ Asegurarse de que el token esté listo antes de llamar fetchPermissions
-      console.log("Token listo:", localStorageUtil.get("usr_items_token"));
-
       // 4️⃣ Ejecutar permisos y esperar correctamente
       const r = await fetchPermissions(PermisosPostLoginRender);
 

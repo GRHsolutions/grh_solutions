@@ -72,7 +72,7 @@ export const newsController = {
 
       return resp.status(200).json({
         obj: conf,
-        message: "new borrada exitosamente",
+        message: "Comunicado eliminado exitosamente",
       });
     } catch (Error: any) {
       return resp.status(500).json({
@@ -91,7 +91,7 @@ export const newsController = {
         type, 
         title, 
         description, 
-        images 
+        images
       } = req.body;
 
       if (!id || typeof id != "string" || id == "") {
@@ -99,6 +99,7 @@ export const newsController = {
           message: "Id no puede ser null o vacio",
         });
       }
+      console.log(req.body);
 
       const ed = await newsService.edit(id, {
         type: type,

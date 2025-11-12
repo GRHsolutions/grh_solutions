@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper';
 import { SxProps } from '@mui/material';
 
 interface DataTableProps<T> {
-  paginationModel: GridPaginationModel;
+  paginationModel?: GridPaginationModel;
   columns: GridColDef[];
   rows: T[];
   paperSx?: SxProps;

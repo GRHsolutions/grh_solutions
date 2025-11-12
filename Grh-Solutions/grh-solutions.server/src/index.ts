@@ -18,7 +18,9 @@ console.log(`Running on Node.js version: ${process.version}`);
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({
+  limit: '600kb'
+}));
 
 // Swagger Configuration
 const swaggerOptions = {
@@ -65,7 +67,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
-  console.log(`Swagger documentation available at http://localhost:${PORT}/swagger`);
+  console.log(`Swagger documentation available at http://192.168.1.14:${PORT}/swagger`);
 });

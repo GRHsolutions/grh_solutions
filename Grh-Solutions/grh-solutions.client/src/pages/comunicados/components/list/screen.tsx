@@ -30,6 +30,7 @@ const Screen: React.FC = () => {
   } = useNewsSecurity();
 
   React.useEffect(() => {
+    console.log("checking url from current data")
     const id = queryParams["id"] || undefined;
     const action = queryParams["action"] || undefined;
 
@@ -140,7 +141,7 @@ const Screen: React.FC = () => {
           onClick={() => {
             noCurrnt("create");
           }}
-          label="Crear correo"
+          label="Crear comunicado"
           bgColor={theme.palette.secondary.main}
           positions={{
             bottom: "2.2rem",

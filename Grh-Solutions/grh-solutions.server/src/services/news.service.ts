@@ -64,7 +64,7 @@ export const newsService = {
   },
 
   create: async (entity: object) => {
-    const newNew = new NewsModel(entity);
+    const newNew = new NewsModel(entity).populate("madeBy", "name email"); // aquí seleccionas qué campos del usuario mostrar;
 
     return NewsModel.create(newNew);
   },
@@ -74,7 +74,7 @@ export const newsService = {
       new Types.ObjectId(id),
       { status: "deleted" }, // cambia el estado
       { new: true } // devuelve el documento actualizado
-    ).populate("madeBy", "name email") // aquí seleccionas qué campos del usuario mostrar;
+    ).populate("madeBy", "name email"); // aquí seleccionas qué campos del usuario mostrar;
 
     if (conf) {
       return conf;
@@ -82,27 +82,31 @@ export const newsService = {
   },
 
   getId: async (id: string) => {
-    const d = await NewsModel.findById(new Types.ObjectId(id)).lean();
+    const d = await NewsModel.findById(new Types.ObjectId(id))
+      .populate("madeBy", "name email") // aquí seleccionas qué campos del usuario mostrar
+      .lean();
 
     return d;
   },
 
   edit: async (id: string, d: object) => {
     // el { new: true } hace que devuelva el documento actualizado
-    const updatedNews = await NewsModel.findByIdAndUpdate(id, d, { new: true });
+    const updatedNews = await NewsModel.findByIdAndUpdate(id, d, { new: true })
+      .populate("madeBy", "name email") // aquí seleccionas qué campos del usuario mostrar;
+      .lean();
 
     if (!updatedNews) {
       throw new Error("Noticia no encontrada");
     }
 
     const commsCount = await CommentaryModel.countDocuments({
-          fromNew: updatedNews._id,
-    })
+      fromNew: updatedNews._id,
+    });
 
     const re = {
       ...updatedNews,
-      comms: commsCount
-    }
+      comms: commsCount,
+    };
 
     return re;
   },

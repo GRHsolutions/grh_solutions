@@ -4,7 +4,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import WorkOutlineIcon from '@mui/icons-material/WorkOutline';
-import { Formik, Form } from 'formik';
+import { Formik, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import GrhTextField from '../../../generics/grh-generics/textField';
 import GrhCustomSelect from '../../../generics/grh-generics/inputSelect';
@@ -53,14 +53,22 @@ const initialValues = {
 };
 
 const validationSchema = Yup.object({
-  tittle: Yup.string().required("Título obligatorio"),
-  description: Yup.string().required("Descripción obligatoria"),
+  tittle: Yup.string()
+    .required("Título obligatorio")
+    .max(200, "El título no puede exceder los 200 caracteres"),
+
+  description: Yup.string()
+    .required("Descripción obligatoria")
+    .max(500, "La descripción no puede exceder los 500 caracteres"),
+
   type_contract: Yup.string().required("Tipo de contrato obligatorio"),
   salary: Yup.string().required("Salario obligatorio"),
   horary: Yup.string().required("Horario obligatorio"),
   charge: Yup.string().required("Cargo obligatorio"),
   address: Yup.string().required("Dirección obligatoria"),
-  telephone: Yup.string().required("Teléfono obligatorio"),
+  telephone: Yup.string()
+    .required("Teléfono obligatorio")
+    .max(10, "El teléfono no puede exceder los 10 caracteres"),
   email: Yup.string().email("Correo inválido").required("Correo obligatorio"),
   type_modality: Yup.string().required("Modalidad obligatoria"),
   experience: Yup.string().required("Experiencia obligatoria"),
@@ -99,17 +107,24 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
   const theme = useTheme();
   const [openAlert, setOpenAlert] = useState(false);
   const { auth } = useAuth();
-
-  const handleSubmit = (values: typeof initialValues) => {
-    createVacancy(values, auth.token)
-      .then(() => {
-        setOpenAlert(true);
-        setReload(prev => !prev);
-        handleClose();
-      })
-      .catch((error) => {
-        console.error("Error al crear la vacante:", error);
-      });
+  const [alertType, setAlertType] = useState<"success" | "error">("success");
+  const [alertMessage, setAlertMessage] = useState("");
+  const handleSubmit = async (values: typeof initialValues, { setSubmitting }: any) => {
+    try {
+      await createVacancy(values, auth.token);
+      setAlertType("success");
+      setAlertMessage("La vacante se ha creado con éxito. Puedes verla en la sección de vacantes.");
+      setOpenAlert(true);
+      setReload(prev => !prev);
+      handleClose();
+    } catch (error) {
+      console.error("Error al crear la vacante:", error.response.data.message);
+      setAlertType("error");
+      setAlertMessage(`Ocurrió un error al crear la vacante. ${error.response.data.message}`);
+      setOpenAlert(true);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -128,15 +143,27 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
           </Box>
 
           <Formik initialValues={initialValues} onSubmit={handleSubmit} validationSchema={validationSchema}>
-            {({ values, handleChange }) => (
-              <Form>
+            {({ values, handleChange, validateForm, submitForm, errors }) => (
+              <Form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const errors = await validateForm();
+                  if (Object.keys(errors).length > 0) {
+                    setAlertType("error");
+                    setAlertMessage("Los campos obligatorios deben ser completados.");
+                    setOpenAlert(true);
+                    return;
+                  }
+                  submitForm();
+                }}
+              >
                 <Grid2 container spacing={2} mt={2}>
                   <Grid2 size={12}>
-                    <GrhTextField name="tittle" label="Título" value={values.tittle} onChange={handleChange} fullWidth />
+                    <GrhTextField name="tittle" label="Título" value={values.tittle} onChange={handleChange} fullWidth error={Boolean(errors.tittle)} helperText={errors.tittle} />
                   </Grid2>
 
                   <Grid2 size={12}>
-                    <GrhTextField name="description" label="Descripción" value={values.description} onChange={handleChange} multirows rows={4} fullWidth />
+                    <GrhTextField name="description" label="Descripción" value={values.description} onChange={handleChange} multirows rows={4} fullWidth error={Boolean(errors.description)} helperText={errors.description} />
                   </Grid2>
                   <Grid2 size={6}>
                     <GrhCustomSelect
@@ -146,10 +173,13 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
                       value={values.type_contract}
                       onChange={handleChange}
                       fullWidth
+                      error={Boolean(errors.type_contract)}
+                      helperText={errors.type_contract}
                     />
+
                   </Grid2>
                   <Grid2 size={6}>
-                    <GrhTextField name="salary" label="Salario" value={values.salary} onChange={handleChange} fullWidth />
+                    <GrhTextField name="salary" label="Salario" value={values.salary} onChange={handleChange} fullWidth error={Boolean(errors.salary)} helperText={errors.salary} />
                   </Grid2>
                   <Grid2 size={6}>
                     <GrhCustomSelect
@@ -159,6 +189,8 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
                       value={values.horary}
                       onChange={handleChange}
                       fullWidth
+                      error={Boolean(errors.horary)}
+                      helperText={errors.horary}
                     />
                   </Grid2>
                   <Grid2 size={6}>
@@ -169,18 +201,20 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
                       value={values.charge}
                       onChange={handleChange}
                       fullWidth
+                      error={Boolean(errors.charge)}
+                      helperText={errors.charge}
                     />
                   </Grid2>
 
                   <Grid2 size={6}>
-                    <GrhTextField name="address" label="Dirección" value={values.address} onChange={handleChange} fullWidth />
+                    <GrhTextField name="address" label="Dirección" value={values.address} onChange={handleChange} fullWidth error={Boolean(errors.address)} helperText={errors.address} />
                   </Grid2>
                   <Grid2 size={6}>
-                    <GrhTextField name="telephone" label="Teléfono" value={values.telephone} onChange={handleChange} fullWidth />
+                    <GrhTextField name="telephone" label="Teléfono" value={values.telephone} onChange={handleChange} fullWidth    error={Boolean(errors.telephone)} helperText={errors.telephone} />
                   </Grid2>
 
                   <Grid2 size={12}>
-                    <GrhTextField name="email" label="Correo electrónico" value={values.email} onChange={handleChange} fullWidth />
+                    <GrhTextField name="email" label="Correo electrónico" value={values.email} onChange={handleChange} fullWidth    error={Boolean(errors.email)} helperText={errors.email} />
                   </Grid2>
 
                   <Grid2 size={6}>
@@ -191,7 +225,10 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
                       value={values.type_modality}
                       onChange={handleChange}
                       fullWidth
+                      error={Boolean(errors.type_modality)}
+                      helperText={errors.type_modality}
                     />
+
                   </Grid2>
 
                   <Grid2 size={6}>
@@ -202,6 +239,8 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
                       value={values.status}
                       onChange={handleChange}
                       fullWidth
+                      error={Boolean(errors.status)}
+                      helperText={errors.status}
                     />
                   </Grid2>
 
@@ -213,13 +252,15 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
                       value={values.area}
                       onChange={handleChange}
                       fullWidth
+                      error={Boolean(errors.area)}
+                      helperText={errors.area}  
                     />
                   </Grid2>
                   <Grid2 size={6}>
-                    <GrhTextField name="experience" label="Experiencia" value={values.experience} onChange={handleChange} fullWidth />
+                    <GrhTextField name="experience" label="Experiencia" value={values.experience} onChange={handleChange} fullWidth error={Boolean(errors.experience)} helperText={errors.experience} />
                   </Grid2>
                   <Grid2 size={6}>
-                    <GrhTextField name="formation" label="Formación" value={values.formation} onChange={handleChange} fullWidth />
+                    <GrhTextField name="formation" label="Formación" value={values.formation} onChange={handleChange} fullWidth error={Boolean(errors.formation)} helperText={errors.formation} />
                   </Grid2>
 
                   <Grid2 size={12} display="flex" justifyContent="flex-end" gap={1}>
@@ -240,9 +281,12 @@ export default function ModalCreateVacant({ open, handleClose, charges, areas, s
         onClose={() => setOpenAlert(false)}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       >
-        <Alert onClose={() => setOpenAlert(false)} severity="success" sx={{ width: "100%" }}>
-          <Typography variant="body1"><strong>La vacante se ha creado con éxito.</strong></Typography>
-          Puedes verla en la sección de vacantes.
+        <Alert
+          onClose={() => setOpenAlert(false)}
+          severity={alertType}
+          sx={{ width: "100%" }}
+        >
+          <Typography variant="body1"><strong>{alertMessage}</strong></Typography>
         </Alert>
       </Snackbar>
     </>

@@ -33,7 +33,7 @@ export const JustImages = ({
       </Grid2>
       <DragDropInput
         acceptedMimeTypes={["jpg", "png", "gif"]}
-        maxSizeInKB={340}
+        maxSizeInKB={130}
         maxFiles={4}
         onFileSelect={(files: DragNDropVariables[]) => {
           changeImages("images", files);
