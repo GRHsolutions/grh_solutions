@@ -19,6 +19,8 @@ import { useAuth } from "../../../hooks/auth";
 interface InfoUserProps { id?: string, documentType: IOption[] }
 export default function InfoUser({ id, documentType }: InfoUserProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const [reload, setReload] = useState<boolean>(false);
   const [modalType, setModalType] = useState<string | null>(null);
   const [profile, setProfile] = useState<Partial<Profile>>({});
   const open = Boolean(anchorEl);
@@ -53,7 +55,7 @@ export default function InfoUser({ id, documentType }: InfoUserProps) {
     getProfileById(id, auth.token).then((res) => {
       setProfile(res.data)
     })
-  }, [id]);
+  }, [id, reload, auth.token]);
 
   return (
     <>
@@ -176,7 +178,7 @@ export default function InfoUser({ id, documentType }: InfoUserProps) {
         </Box>
       </Box>
 
-      {modalType === "edit" && <ModalEdit open={true} handleClose={handleCloseModal} profile={profile} documentType={documentType} />}
+      {modalType === "edit" && <ModalEdit open={true} handleClose={handleCloseModal} profile={profile} documentType={documentType} token={auth.token} setReload={setReload}/>}
       {modalType === "certificate" && <ModalCertificate open={true} handleClose={handleCloseModal}  profile={profile} documentType={documentType}/>}
       {modalType === "contratos" && <ModalContratos open={true} handleClose={handleCloseModal} />}
       {modalType === "roles" && <ModalRole open={true} handleClose={handleCloseModal} />}
