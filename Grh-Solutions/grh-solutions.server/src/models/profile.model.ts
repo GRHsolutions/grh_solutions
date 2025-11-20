@@ -29,11 +29,11 @@ const profileSchema = new Schema({
     required: false
   },
   number_phone: {
-    type: Number,
+    type: String,
     required: false
   },
   telephone: {
-    type: Number,
+    type: String,
     required: false
   },
   rh: {
