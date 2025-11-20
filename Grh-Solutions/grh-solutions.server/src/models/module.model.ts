@@ -20,7 +20,6 @@ const moduleSchema = new Schema({
 });
 
 // Índices
-moduleSchema.index({ name: 1 });
 moduleSchema.index({ disabled: 1 });
 
 export const ModuleModel = model("module", moduleSchema);
