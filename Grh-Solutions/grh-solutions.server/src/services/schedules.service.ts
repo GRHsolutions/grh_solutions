@@ -9,6 +9,12 @@ export const schedulesService = {
     group: string;
     scheduleType: string;
   })=> {
+    if (!entity.start_date || !entity.end_date || !entity.group || !entity.scheduleType) {
+      throw new Error("Faltan campos obligatorios");
+    }
+    if (entity.start_date >= entity.end_date) {
+      throw new Error("la feccha inicial no debe ser posterior a la final");
+    }
     return await schedulesModel.create(entity);
   },
   getAll: async () => {

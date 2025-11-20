@@ -37,6 +37,8 @@ interface IModalOptionsProps {
   profile: Partial<Profile>;
   handleClose: () => void;
   documentType: IOption[]
+  token: string
+  setReload?: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const validationSchema = Yup.object({
@@ -63,7 +65,12 @@ const rhOptions = [
   { value: 'AB+', name: 'AB+' },
   { value: 'AB-', name: 'AB-' }
 ];
-export default function ModalEdit({ open, profile, handleClose, documentType }: IModalOptionsProps) {
+
+const statusOptions = [
+  { value: 'enabled', name: 'Activo' },
+  { value: 'disabled', name: 'Inactivo' }
+];
+export default function ModalEdit({ open, profile, handleClose, documentType, token, setReload }: IModalOptionsProps) {
   const [openAlert, setOpenAlert] = useState(false);
   const theme = useTheme();
   const initialValues = {
@@ -83,7 +90,6 @@ export default function ModalEdit({ open, profile, handleClose, documentType }: 
     vacancy_name: profile.vacancy_name || '',
     date_application: profile.date_application?.split('T')[0] || '',
   };
-
   const handleSubmit = (values: typeof initialValues) => {
     if (!values.user) {
       console.error("El ID del usuario es obligatorio");
@@ -98,12 +104,10 @@ export default function ModalEdit({ open, profile, handleClose, documentType }: 
     };
 
     if (profile._id) {
-      updateProfile(profile._id, dataToSend, values.user)
+      updateProfile(profile._id, dataToSend, token)
         .then(() => {
           setOpenAlert(true);
-          setTimeout(() => {
-            window.location.reload();
-          }, 3000);
+          if (setReload) setReload(prev => !prev);
         })
         .catch((err) => console.error("Error actualizando perfil", err));
     } else {
@@ -113,6 +117,7 @@ export default function ModalEdit({ open, profile, handleClose, documentType }: 
           setTimeout(() => {
             window.location.reload();
           })
+          if (setReload) setReload(prev => !prev);
         })
         .catch((err) => console.error("Error creando perfil", err));
     }
@@ -166,7 +171,7 @@ export default function ModalEdit({ open, profile, handleClose, documentType }: 
                   <GrhCustomSelect name="rh" label="RH" options={rhOptions} value={values.rh} onChange={handleChange} fullWidth />
                 </Grid2>
                 <Grid2 size={6}>
-                  <GrhTextField label="Estado" name="status" value={values.status} onChange={handleChange} fullWidth />
+                  <GrhCustomSelect label="Estado" name="status" options={statusOptions} value={values.status} onChange={handleChange} fullWidth />
                 </Grid2>
 
                 <Grid2 size={12} display="flex" justifyContent="flex-end" gap={1} mt={2}>

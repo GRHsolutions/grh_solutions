@@ -1,6 +1,6 @@
 import { Contract } from "../../models/contratos/contratos.entities";
 
-const BASE_URL = "http://localhost:5200/api/contract";
+const BASE_URL = "/api/contract";
 
 function getToken() {
   const raw = localStorage.getItem("usr_items_token") || "";
@@ -88,9 +88,9 @@ export function deleteContract(id: string, signal?: AbortSignal) {
 // SERVICIOS PARA LOS SELECTS
 // =====================================================================
 
-const BASE_PROFILES = "http://localhost:5200/api/profiles";
-const BASE_TYPES = "http://localhost:5200/api/typeContract";
-const BASE_VACANTS = "http://localhost:5200/api/vacancies";
+const BASE_PROFILES = "/api/profiles";
+const BASE_TYPES = "/api/typeContract";
+const BASE_VACANTS = "/api/vacancies";
 
 async function requestExternal<T>(
   url: string,
