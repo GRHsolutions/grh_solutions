@@ -126,7 +126,7 @@ export default function Index() {
           bottom: "2.2rem",
         }}
         onClick={() => {
-          window.open("https://drive.google.com/file/d/1-6ZXTTPkG88Y2j49T2hBL_F3OB9ABdD9/view?usp=sharing", "_blank");
+          window.open("https://drive.google.com/drive/folders/1TA0huK9dhxuWU0KmyAkGLHsrvRlKQY8p", "_blank");
         }}
         label="Descargar android"
         icon={<DownloadIcon />}
