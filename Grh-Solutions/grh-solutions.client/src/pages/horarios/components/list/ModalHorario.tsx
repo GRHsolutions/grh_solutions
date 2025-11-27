@@ -5,15 +5,16 @@ import {
   IconButton,
   useTheme,
   Modal,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import Groups3Icon from "@mui/icons-material/Groups3";
 import LogoutIcon from "@mui/icons-material/Logout";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import GrhCustomSelect from "../../../../generics/grh-generics/inputSelect";
-import GenericDatePicker from "../../../../generics/grh-generics/inputDatePicker";
 import GrhButton from "../../../../generics/grh-generics/button";
 import { getGroups } from "../../../../domain/services/grupos/grupos.service";
 import { createSchedule, getScheduleTypes } from "../../../../domain/services/horarios/horarios.service";
@@ -66,6 +67,9 @@ export default function ModalHorario({
 }: IModalOptionsProps) {
   const theme = useTheme();
   const [groups, setGroups] = React.useState<{ id2: string; name2: string }[]>([]);
+  const [alertType, setAlertType] = React.useState<"success" | "error">("success");
+  const [alertMessage, setAlertMessage] = React.useState("");
+  const [openAlert, setOpenAlert] = React.useState(false);
   const [scheduleTypes, setScheduleTypes] = React.useState<
     { id: string; name: string; startTime: string; endTime: string }[]
   >([]);
@@ -116,127 +120,149 @@ export default function ModalHorario({
       );
 
       setReload?.((prev) => !prev);
-      handleClose();
       resetForm();
+      setAlertMessage("Se regitro el horario con exito");
+      setAlertType("success");
+      setOpenAlert(true);
+      handleClose();
     } catch (error) {
-      console.error("Error al crear el horario:", error);
+      setAlertType("error");
+      setAlertMessage(`Ocurrio un error al crear el horario. ${error.response.data.message}`);
+      setOpenAlert(true);
+      console.error("Error al crear el horario:", error?.response?.data?.message);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Groups3Icon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
-            <Box>
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                color={theme.palette.text.primary}
-              >
-                Crea un horario
-              </Typography>
-              <Typography variant="body2" color={theme.palette.text.primary}>
-                Asigna un horario a un grupo existente
-              </Typography>
+    <>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Groups3Icon sx={{ fontSize: 40, color: theme.palette.text.primary }} />
+              <Box>
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  color={theme.palette.text.primary}
+                >
+                  Crea un horario
+                </Typography>
+                <Typography variant="body2" color={theme.palette.text.primary}>
+                  Asigna un horario a un grupo existente
+                </Typography>
+              </Box>
             </Box>
+            <IconButton onClick={handleClose}>
+              <CloseIcon />
+            </IconButton>
           </Box>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
+
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ values, setFieldValue, touched, errors, isSubmitting }) => (
+              <Form>
+                <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+                  <GrhCustomSelect
+                    label="Del área"
+                    name="scheduleType"
+                    options={scheduleTypes.map((s) => ({
+                      value: s.id,
+                      name: s.name,
+                    }))}
+                    value={values.scheduleType}
+                    onChange={(e) =>
+                      setFieldValue("scheduleType", e.target.value)
+                    }
+                    error={touched.scheduleType && Boolean(errors.scheduleType)}
+                    fullWidth
+                  />
+
+                  <GrhCustomSelect
+                    label="El grupo"
+                    name="group"
+                    options={groups.map((g) => ({
+                      value: g.id2,
+                      name: g.name2,
+                    }))}
+                    value={values.group}
+                    onChange={(e) => setFieldValue("group", e.target.value)}
+                    error={touched.group && Boolean(errors.group)}
+                    fullWidth
+                  />
+                </Box>
+                <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+                  <GenericDatePickerHours
+                    name="startDate"
+                    label="Fecha y hora inicial"
+                    type="datetime"
+                    value={dayjs(values.startDate)}
+                    onChange={(newValue) => setFieldValue("startDate", newValue?.toDate())}
+                  />
+                  <GenericDatePickerHours
+                    name="endDate"
+                    label="Fecha y hora final"
+                    type="datetime"
+                    value={dayjs(values.endDate)}
+                    onChange={(newValue) => setFieldValue("endDate", newValue?.toDate())}
+                  />
+                </Box>
+
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    alignItems: "flex-end",
+                    height: "64vh",
+                    p: 2,
+                  }}
+                >
+                  <GrhButton
+                    type="submit"
+                    startIcon={<LogoutIcon />}
+                    label={isSubmitting ? "Publicando..." : "Publicar horario"}
+                    variant="principal"
+                    sx={{ width: "30%" }}
+                    id="horario"
+                    disabled={isSubmitting}
+                  />
+                </Box>
+              </Form>
+            )}
+          </Formik>
         </Box>
-
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
+      </Modal>
+      <Snackbar
+        open={openAlert}
+        autoHideDuration={6000}
+        onClose={() => setOpenAlert(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setOpenAlert(false)}
+          severity={alertType}
+          sx={{ width: "100%" }}
         >
-          {({ values, setFieldValue, touched, errors, isSubmitting }) => (
-            <Form>
-              <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-                <GrhCustomSelect
-                  label="Del área"
-                  name="scheduleType"
-                  options={scheduleTypes.map((s) => ({
-                    value: s.id,
-                    name: s.name,
-                  }))}
-                  value={values.scheduleType}
-                  onChange={(e) =>
-                    setFieldValue("scheduleType", e.target.value)
-                  }
-                  error={touched.scheduleType && Boolean(errors.scheduleType)}
-                  fullWidth
-                />
-
-                <GrhCustomSelect
-                  label="El grupo"
-                  name="group"
-                  options={groups.map((g) => ({
-                    value: g.id2,
-                    name: g.name2,
-                  }))}
-                  value={values.group}
-                  onChange={(e) => setFieldValue("group", e.target.value)}
-                  error={touched.group && Boolean(errors.group)}
-                  fullWidth
-                />
-              </Box>
-              <Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-                <GenericDatePickerHours
-                  name="startDate"
-                  label="Fecha y hora inicial"
-                  type="datetime" 
-                  value={dayjs(values.startDate)}
-                  onChange={(newValue) => setFieldValue("startDate", newValue?.toDate())}
-                />
-                <GenericDatePickerHours
-                  name="endDate"
-                  label="Fecha y hora final"
-                  type="datetime"
-                  value={dayjs(values.endDate)}
-                  onChange={(newValue) => setFieldValue("endDate", newValue?.toDate())}
-                />
-              </Box>
-
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  alignItems: "flex-end",
-                  height: "64vh",
-                  p: 2,
-                }}
-              >
-                <GrhButton
-                  type="submit"
-                  startIcon={<LogoutIcon />}
-                  label={isSubmitting ? "Publicando..." : "Publicar horario"}
-                  variant="principal"
-                  sx={{ width: "30%" }}
-                  id="horario"
-                  disabled={isSubmitting}
-                />
-              </Box>
-            </Form>
-          )}
-        </Formik>
-      </Box>
-    </Modal>
+          <Typography variant="body1"><strong>{alertMessage}</strong></Typography>
+        </Alert>
+      </Snackbar>
+    </>
   );
 }

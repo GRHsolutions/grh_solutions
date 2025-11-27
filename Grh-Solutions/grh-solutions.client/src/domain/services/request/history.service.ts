@@ -1,7 +1,7 @@
 import { History } from "../../models/request/history.entities";
 
 export class HistoryService {
-    private baseUrl = "http://localhost:3000/api/history";
+    private baseUrl = "/api/history";
   
     async getByRequestId(requestId: string, signal?: AbortSignal): Promise<History[]> {
       const res = await fetch(`${this.baseUrl}/request/${requestId}`, { signal });
@@ -14,4 +14,4 @@ export class HistoryService {
       if (!res.ok) throw new Error("Error al obtener historial por ID");
       return res.json();
     }
-  }
+  } 

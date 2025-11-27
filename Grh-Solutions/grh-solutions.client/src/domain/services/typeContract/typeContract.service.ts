@@ -1,6 +1,6 @@
 import { TypeContract } from "../../models/typeContract/typeContract.entities";
 
-const BASE_URL = import.meta.env.VITE_API_URL + "/typeContract"; // Ajusta si tu endpoint es otro
+const BASE_URL = "/api/typeContract"
 
 function getToken() {
   return localStorage.getItem("token") || "";
