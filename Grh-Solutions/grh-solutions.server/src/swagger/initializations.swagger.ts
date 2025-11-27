@@ -75,6 +75,84 @@ export const swaggerComponents: Components = {
         },
       },
     },
+    profile: {
+      type: "object",
+      properties: {
+        user: {
+          type: "string",
+          description: "ID del usuario dueño del perfil",
+          example: "67a12d8e23fa2417ac5e1a31",
+        },
+        name: {
+          type: "string",
+          example: "Juan",
+        },
+        lastname: {
+          type: "string",
+          example: "Pérez",
+        },
+        date_of_birth: {
+          type: "string",
+          format: "date",
+          example: "1998-04-21",
+        },
+        email: {
+          type: "string",
+          example: "correo@gmail.com",
+        },
+        address: {
+          type: "string",
+          example: "Calle 123 #45-67",
+        },
+        number_phone: {
+          type: "string",
+          example: "3001234567",
+        },
+        telephone: {
+          type: "string",
+          example: "6012345678",
+        },
+        rh: {
+          type: "string",
+          example: "O+",
+        },
+        status: {
+          type: "string",
+          enum: ["disabled", "enabled"],
+          example: "enabled",
+        },
+        type_document: {
+          type: "string",
+          description: "ID del tipo de documento",
+          example: "67a12fc4da312a319ab8e77b",
+        },
+        document: {
+          type: "string",
+          example: "1234567890",
+        },
+        signature: {
+          type: "object",
+          description: "Imagen o archivo en Base64",
+          properties: {
+            filename: { type: "string", example: "firma.png" },
+            mimetype: { type: "string", example: "image/png" },
+            size: { type: "number", example: 12345 },
+            base64: {
+              type: "string",
+              example: "data:image/png;base64,iVBORw0KGgoAAA...",
+            },
+          },
+        },
+        createdAt: {
+          type: "string",
+          format: "date-time",
+        },
+        updatedAt: {
+          type: "string",
+          format: "date-time",
+        },
+      },
+    },
     User: {
       type: "object",
       properties: {
