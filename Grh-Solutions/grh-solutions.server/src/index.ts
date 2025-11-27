@@ -7,11 +7,24 @@ import dotenv from 'dotenv';
 import routes from './routes/routes';
 import { MONGO_URI } from './config';
 import { globalComponents, globalPaths } from './swagger/global.swagger';
+import os from 'os';
+
+function getLocalIP() {
+  const interfaces = os.networkInterfaces();
+  for (const name in interfaces) {
+    for (const iface of interfaces[name]!) {
+      if (iface.family === 'IPv4' && !iface.internal) {
+        return iface.address;
+      }
+    }
+  }
+}
 
 dotenv.config();
 
 const app: Express = express();
 const PORT: number = parseInt(process.env.PORT || '3000', 10);
+const localIp = getLocalIP();
 
 // Log Node.js version
 console.log(`Running on Node.js version: ${process.version}`);
@@ -33,7 +46,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}`
+        url: `http://${localIp}:${PORT}`
       }
     ],
     components: globalComponents,
@@ -68,6 +81,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server is running on port ${PORT}`);
-  console.log(`Swagger documentation available at http://192.168.1.14:${PORT}/swagger`);
+  console.log(`Server is running on port ${PORT} in ip: ${localIp}`);
+  console.log(`Swagger documentation available at http://${localIp}:${PORT}/swagger`);
 });
