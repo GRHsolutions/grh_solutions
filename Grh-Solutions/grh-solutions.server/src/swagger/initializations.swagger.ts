@@ -75,7 +75,7 @@ export const swaggerComponents: Components = {
         },
       },
     },
-    profile: {
+    Profile: {
       type: "object",
       properties: {
         user: {
